@@ -1,0 +1,83 @@
+name: "\U0001F4D1 文档审查"
+description: "派发文档给团队成员审查反馈"
+title: "[审查] "
+labels: ["doc-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 文档审查请求
+        请认真审阅文档并在下方评论区给出反馈。
+
+  - type: input
+    id: doc-name
+    attributes:
+      label: "文档名称"
+      placeholder: "例：唤龙平台-项目启动培训包-v1.0.docx"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: "文档类型"
+      options:
+        - 培训包
+        - 审计报告
+        - 架构设计文档
+        - 契约变更草案
+        - OPS 清单
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: review-focus
+    attributes:
+      label: "审查重点"
+      description: "请说明本次审查需要重点关注的方面"
+      placeholder: |
+        例：
+        - 技术栈版本是否准确
+        - 基础设施状态是否与实际一致
+        - 编码规范是否完整
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reviewer-role
+    attributes:
+      label: "审查角色"
+      options:
+        - 架构审计师（许久明）
+        - 运维工程师（曾正龙）
+        - 全员审查
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "优先级"
+      options:
+        - P0 - 紧急（24h 内反馈）
+        - P1 - 重要（3 天内反馈）
+        - P2 - 常规（1 周内反馈）
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "背景说明"
+      description: "文档生成的背景、目的、关联决策等"
+    validations:
+      required: false
+
+  - type: textarea
+    id: attachment
+    attributes:
+      label: "文档附件/链接"
+      description: "上传文档或提供链接"
+    validations:
+      required: true

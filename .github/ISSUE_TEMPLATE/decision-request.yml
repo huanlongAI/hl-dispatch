@@ -1,0 +1,85 @@
+name: "\U0001F3DB\uFE0F 裁决征询"
+description: "就技术方案或架构决策征询团队意见"
+title: "[裁决] "
+labels: ["decision-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 裁决征询
+        创始人就以下事项征询团队意见，请在评论区给出你的判断和理由。
+
+  - type: input
+    id: decision-title
+    attributes:
+      label: "决策主题"
+      placeholder: "例：RocketMQ vs Kafka 消息中间件选型"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: decision-type
+    attributes:
+      label: "决策类型"
+      options:
+        - 技术选型
+        - 架构设计
+        - 基础设施
+        - 流程规范
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: "背景"
+      description: "当前状态和决策需求"
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: "候选方案"
+      description: "列出可选方案及各自优劣"
+      value: |
+        ### 方案 A：
+        - 优势：
+        - 劣势：
+
+        ### 方案 B：
+        - 优势：
+        - 劣势：
+    validations:
+      required: true
+
+  - type: dropdown
+    id: consulted-role
+    attributes:
+      label: "征询对象"
+      options:
+        - 架构审计师（许久明）
+        - 运维工程师（曾正龙）
+        - 全员
+    validations:
+      required: true
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: "决策紧迫度"
+      options:
+        - 紧急（需 24h 内回复）
+        - 正常（3 天内回复）
+        - 低优（1 周内回复即可）
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: "约束条件"
+      description: "相关裁决（RULINGS.md）、不变量、预算限制等"
+    validations:
+      required: false

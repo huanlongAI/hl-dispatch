@@ -1,0 +1,11 @@
+# 唤龙平台 hl-dispatch CODEOWNERS
+# 所有变更默认需要创始人审批
+
+* @tzhOS
+
+# 架构相关文档变更需要架构审计师 review
+deliverables/contracts/ @tzhOS
+deliverables/audit-reports/ @tzhOS
+
+# 基础设施相关需要运维工程师 review
+deliverables/tasks/ @tzhOS

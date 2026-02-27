@@ -1,0 +1,80 @@
+name: "\u2705 任务派发"
+description: "派发执行任务给团队成员"
+title: "[任务] "
+labels: ["task-assign"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 任务派发
+        请按清单逐项执行，完成后勾选并在评论区说明。
+
+  - type: input
+    id: task-name
+    attributes:
+      label: "任务名称"
+      placeholder: "例：PostgreSQL 18 生产环境建库"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: assignee-role
+    attributes:
+      label: "执行角色"
+      options:
+        - 架构审计师（许久明）
+        - 运维工程师（曾正龙）
+        - 全员协作
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "优先级"
+      options:
+        - P0 - 紧急（当天完成）
+        - P1 - 重要（3 天内完成）
+        - P2 - 常规（1 周内完成）
+    validations:
+      required: true
+
+  - type: textarea
+    id: task-checklist
+    attributes:
+      label: "任务清单"
+      description: "使用 Markdown checklist 格式"
+      value: |
+        - [ ] 任务项 1
+        - [ ] 任务项 2
+        - [ ] 任务项 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "验收标准"
+      description: "任务完成的判定标准"
+      placeholder: |
+        例：
+        - 数据库可连接，schema 已创建
+        - 配置文件已提交到仓库
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: "背景说明 / 参考文档"
+      description: "关联的裁决、文档、Issue 等"
+    validations:
+      required: false
+
+  - type: input
+    id: deadline
+    attributes:
+      label: "期望完成时间"
+      placeholder: "例：2026-03-01"
+    validations:
+      required: false

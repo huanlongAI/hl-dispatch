@@ -1,0 +1,26 @@
+# 唤龙平台 hl-dispatch 团队角色映射
+# Cowork 通过此文件自动识别"派给运维" → 对应 GitHub 用户名
+# 新增成员时在此文件添加即可，所有 session 自动生效
+
+roles:
+  founder:
+    name: 汤正辉
+    github: tzhOS
+    email: ***@***.***
+    responsibility: 创建 Issue/PR、合并裁决、最终审批
+
+  architect:
+    name: 许久明
+    github: ""          # ← 拿到用户名后填入
+    responsibility: 架构设计审查、契约变更审查、代码规范审查
+    labels: [architect, doc-review]
+
+  ops:
+    name: 曾正龙
+    github: ""          # ← 拿到用户名后填入
+    responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行
+    labels: [ops, task-assign]
+
+# 使用方式：
+# 用户说"派给运维" → Cowork 读取 ops.github → 自动 @mention 或 assign
+# 用户说"派给架构师" → Cowork 读取 architect.github → 自动 @mention 或 assign

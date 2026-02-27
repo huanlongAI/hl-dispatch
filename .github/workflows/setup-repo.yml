@@ -1,0 +1,102 @@
+name: "Setup hl-dispatch repo"
+
+# 一次性配置工作流：推送后自动创建标签 + 邀请协作者
+# 协作者用户名通过 workflow_dispatch 手动触发时输入，或在 env 中预配置
+on:
+  push:
+    paths:
+      - '.github/workflows/setup-repo.yml'
+  workflow_dispatch:
+    inputs:
+      architect_username:
+        description: '架构审计师 GitHub 用户名（许久明）'
+        required: false
+        type: string
+      ops_username:
+        description: '运维工程师 GitHub 用户名（曾正龙）'
+        required: false
+        type: string
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  setup-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              { name: 'doc-review', color: '0075ca', description: '文档审查请求' },
+              { name: 'task-assign', color: '0e8a16', description: '任务派发' },
+              { name: 'decision-request', color: '7057ff', description: '裁决征询' },
+              { name: 'architect', color: 'e36209', description: '指派架构审计师' },
+              { name: 'ops', color: 'fbca04', description: '指派运维工程师' },
+              { name: 'priority-p0', color: 'd93f0b', description: '紧急' },
+              { name: 'priority-p1', color: 'e36209', description: '重要' },
+              { name: 'priority-p2', color: 'c5def5', description: '常规' },
+              { name: 'feedback-given', color: '0075ca', description: '已反馈待裁决' },
+              { name: 'approved', color: '0e8a16', description: '已通过' },
+              { name: 'blocked', color: 'd93f0b', description: '阻塞中' },
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ...label,
+                });
+                core.info(`Created label: ${label.name}`);
+              } catch (e) {
+                if (e.status === 422) {
+                  // Label already exists, update it
+                  await github.rest.issues.updateLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ...label,
+                  });
+                  core.info(`Updated label: ${label.name}`);
+                } else {
+                  core.warning(`Failed to create label ${label.name}: ${e.message}`);
+                }
+              }
+            }
+            core.info('All labels configured!');
+
+  invite-collaborators:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Invite collaborators
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const architect = '${{ inputs.architect_username }}'.trim();
+            const ops = '${{ inputs.ops_username }}'.trim();
+
+            const members = [
+              { username: architect, role: '架构审计师（许久明）' },
+              { username: ops, role: '运维工程师（曾正龙）' },
+            ];
+
+            for (const m of members) {
+              if (!m.username) {
+                core.info(`Skipped: ${m.role} (no username provided)`);
+                continue;
+              }
+              try {
+                await github.rest.repos.addCollaborator({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  username: m.username,
+                  permission: 'push',
+                });
+                core.info(`Invited ${m.username} as ${m.role} (push permission)`);
+              } catch (e) {
+                core.warning(`Failed to invite ${m.username}: ${e.message}`);
+              }
+            }

@@ -14,14 +14,14 @@ roles:
 
   architect:
     name: 许久明
-    github: ""          # ← 接受邀请后回填
+    github: ming
     email: ***@***.***
     responsibility: 架构设计审查、契约变更审查、代码规范审查
     labels: [architect, doc-review]
 
   ops:
     name: 曾正龙
-    github: ""          # ← 接受邀请后回填
+    github: ZDragon.Meta
     email: ***@***.***
     responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行
     labels: [ops, task-assign]

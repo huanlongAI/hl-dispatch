@@ -21,7 +21,7 @@ roles:
 
   ops:
     name: 曾正龙
-    github: ZDragon.Meta
+    github: ZDragonMeta
     email: ***@***.***
     responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行
     labels: [ops, task-assign]

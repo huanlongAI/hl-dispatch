@@ -1,6 +1,9 @@
 # 唤龙平台 hl-dispatch 团队角色映射
-# Cowork 通过此文件自动识别"派给运维" → 对应 GitHub 用户名
+# Cowork 通过此文件自动识别"派给运维" → 对应 GitHub 用户名 / 邮箱
 # 新增成员时在此文件添加即可，所有 session 自动生效
+#
+# github 字段为空时，使用 email 邀请并 @mention
+# 成员接受邀请后，回填 github 用户名
 
 roles:
   founder:
@@ -11,16 +14,35 @@ roles:
 
   architect:
     name: 许久明
-    github: ""          # ← 拿到用户名后填入
+    github: ""          # ← 接受邀请后回填
+    email: ***@***.***
     responsibility: 架构设计审查、契约变更审查、代码规范审查
     labels: [architect, doc-review]
 
   ops:
     name: 曾正龙
-    github: ""          # ← 拿到用户名后填入
+    github: ""          # ← 接受邀请后回填
+    email: ***@***.***
     responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行
     labels: [ops, task-assign]
 
+  frontend:
+    name: 李旭阳
+    github: ""          # ← 接受邀请后回填
+    email: ***@***.***
+    responsibility: 前端开发、UI 审查
+    labels: [doc-review]
+
+  backend:
+    name: 魏鹏
+    github: ""          # ← 接受邀请后回填
+    email: ***@***.***
+    responsibility: 后端开发、技术审查
+    labels: [doc-review]
+
 # 使用方式：
-# 用户说"派给运维" → Cowork 读取 ops.github → 自动 @mention 或 assign
-# 用户说"派给架构师" → Cowork 读取 architect.github → 自动 @mention 或 assign
+# "派给运维" → ops.github / ops.email
+# "派给架构师" → architect.github / architect.email
+# "派给前端" → frontend.github / frontend.email
+# "派给后端" → backend.github / backend.email
+# "全员审查" → 所有非 founder 角色

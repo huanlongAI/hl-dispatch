@@ -1,0 +1,92 @@
+name: Create OPS Issue
+
+on:
+  push:
+    paths:
+      - '.github/workflows/create-ops-issue.yml'
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Create OPS 运维就绪清单 Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[任务] OPS 运维就绪清单执行 + P0 阻塞项推进',
+              assignees: ['ZDragon.Meta'],
+              labels: ['ops', 'task-assign', 'priority-p0'],
+              body: `## 执行角色
+            运维工程师（曾正龙）
+
+            ## 优先级
+            P0 - 紧急（当天确认进展）
+
+            ## 任务清单
+
+            ### P0 阻塞项（必须优先完成）
+
+            - [ ] **RocketMQ 部署**：非生产环境 + 生产环境各部署一套 RocketMQ 5.x 集群。当前 HK 内核的 \`@EventListener\` 模块间通信和审计存证依赖 MQ，未部署则无法端到端集成测试
+            - [ ] **PostgreSQL 生产 RDS 采购**：阿里云 RDS PostgreSQL 18，规格按团队预算确定。采购后提供连接信息（host/port/master密码）
+            - [ ] **H-009 PG 初始化执行**：在 PG 实例上执行以下 SQL（参考 OPS 审计清单 v1.1 §6.2）：
+              \`\`\`sql
+              -- 1. 创建 schema
+              CREATE SCHEMA IF NOT EXISTS hlhk;
+
+              -- 2. 创建业务账号（禁止使用 superuser）
+              CREATE ROLE b_hlhk WITH LOGIN PASSWORD '<由OPS生成强密码>';
+
+              -- 3. 授权
+              GRANT USAGE ON SCHEMA hlhk TO b_hlhk;
+              GRANT CREATE ON SCHEMA hlhk TO b_hlhk;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA hlhk GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO b_hlhk;
+              ALTER DEFAULT PRIVILEGES IN SCHEMA hlhk GRANT USAGE, SELECT ON SEQUENCES TO b_hlhk;
+
+              -- 4. 设置默认 schema
+              ALTER ROLE b_hlhk SET search_path TO hlhk, public;
+              \`\`\`
+
+            ### P1 重要项
+
+            - [ ] **SkyWalking 恢复**：当前因硬盘 IO 过大暂停。根因是非企业级 SSD。评估：① 采购企业级 SSD 成本 ② 或切换到轻量替代方案（Jaeger/Zipkin）
+            - [ ] **Alertmanager 告警策略配置**：当前已部署但未配置策略。需至少配置：CPU/内存阈值告警、磁盘空间告警、服务存活探针
+
+            ### P2 常规项
+
+            - [ ] **验证 K8s 原生 LB**：验证非生产 K8s 环境的原生负载均衡中间件代理兼容性（二审 Comment 2 提出的风险点）
+            - [ ] **备份策略确认**：确认当前「每日 3:00 全量 → Aliyun OSS → 跨区备份」策略是否覆盖新增的 PG 实例
+            - [ ] **Nacos 现状确认**：确认 Nacos 实例版本、当前承载的配置项数量、是否需要升级（H-007 裁决保留 Nacos）
+
+            ## 验收标准
+
+            - RocketMQ 集群可连接，Topic 可创建
+            - PG RDS 可连接，\`hlhk\` schema 和 \`b_hlhk\` 账号已创建并可正常读写
+            - SkyWalking 恢复方案已评估（给出成本对比即可，不要求立即执行）
+            - 每项完成后在本 Issue 评论说明，附截图或命令输出
+
+            ## 参考文档
+
+            文档已推送到仓库 \`deliverables/audit-reports/\` 目录：
+
+            - [OPS 技术审计裁决核对清单 v1.1](https://github.com/huanlongAI/hl-dispatch/blob/main/deliverables/audit-reports/唤龙平台-OPS技术审计裁决核对清单-v1.1.docx)
+            - [OPS 审计定稿说明 v1.1](https://github.com/huanlongAI/hl-dispatch/blob/main/deliverables/audit-reports/唤龙平台-OPS审计定稿说明-v1.1.docx)
+
+            ## 背景说明
+
+            OPS 技术审计经历一审（16 条）+ 二审（10 条）共 26 条意见，创始人已全部裁决完毕。关键变更包括：H-007 翻转（保留 Nacos）、H-009 新增（PG 标准）、R-026~R-028 新增。本 Issue 为定稿后的执行阶段，请按 P0→P1→P2 顺序推进。
+
+            ## 期望完成时间
+
+            - P0 阻塞项：2026-03-05 前
+            - P1 重要项：2026-03-10 前
+            - P2 常规项：2026-03-15 前
+
+            ---
+            > 由 Cowork 自动派发 · 创始人已审批`
+            });
+            core.notice(`Issue created: ${issue.data.html_url}`);

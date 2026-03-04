@@ -9,8 +9,8 @@
 
 roles:
   founder:
-    name: 汤正辉
-    github: tzhOS
+    name: 童正辉
+    github: tongzhenghui
     email: ***@***.***
     responsibility: 创建 Issue/PR、合并裁决、最终审批
 

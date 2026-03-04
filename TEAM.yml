@@ -16,7 +16,7 @@ roles:
 
   architect:
     name: 许久明
-    github: ""
+    github: xujiuming
     email: ***@***.***
     responsibility: 架构设计审查、契约变更审查、代码规范审查
     labels: [architect, doc-review]

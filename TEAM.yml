@@ -35,12 +35,12 @@ roles:
     responsibility: 项目管理、进度跟踪、资源协调（R-034 S0 入职）
     labels: [task-assign, doc-review]
 
-  test:
+  product:
     name: 邹骢
     github: zoucong121
     email: ***@***.***
-    responsibility: 测试工程师
-    labels: [task-assign, doc-review]
+    responsibility: 产品经理（暂不参与旧系统改造，后续另行分工）
+    labels: [doc-review, decision-request]
 
   frontend:
     name: 李旭阳

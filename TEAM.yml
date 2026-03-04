@@ -4,6 +4,8 @@
 #
 # github 字段为空时，使用 email 邀请并 @mention
 # 成员接受邀请后，回填 github 用户名
+#
+# R-034 核心团队（4 人）+ 前端 / 后端开发
 
 roles:
   founder:
@@ -14,7 +16,7 @@ roles:
 
   architect:
     name: 许久明
-    github: ming
+    github: ""
     email: ***@***.***
     responsibility: 架构设计审查、契约变更审查、代码规范审查
     labels: [architect, doc-review]
@@ -26,23 +28,23 @@ roles:
     responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行
     labels: [ops, task-assign]
 
+  pm:
+    name: 刘建成
+    github: ""
+    email: ""
+    responsibility: 项目管理、进度跟踪、资源协调（R-034 S0 入职）
+    labels: [task-assign, doc-review]
+
   frontend:
     name: 李旭阳
-    github: ""          # ← 接受邀请后回填
+    github: ""
     email: ***@***.***
     responsibility: 前端开发、UI 审查
     labels: [doc-review]
 
   backend:
     name: 魏鹏
-    github: ""          # ← 接受邀请后回填
+    github: ""
     email: ***@***.***
     responsibility: 后端开发、技术审查
     labels: [doc-review]
-
-# 使用方式：
-# "派给运维" → ops.github / ops.email
-# "派给架构师" → architect.github / architect.email
-# "派给前端" → frontend.github / frontend.email
-# "派给后端" → backend.github / backend.email
-# "全员审查" → 所有非 founder 角色

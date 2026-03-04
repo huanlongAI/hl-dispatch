@@ -1,8 +1,5 @@
-name: "Setup hl-dispatch repo"
+name: Setup hl-dispatch repo
 
-# 一次性配置工作流
-# push 时自动创建标签
-# workflow_dispatch 时邀请协作者（支持邮箱邀请）
 on:
   push:
     paths:
@@ -27,6 +24,7 @@ jobs:
               { name: 'decision-request', color: '7057ff', description: '裁决征询' },
               { name: 'architect', color: 'e36209', description: '指派架构审计师' },
               { name: 'ops', color: 'fbca04', description: '指派运维工程师' },
+              { name: 'pm', color: 'c2e0c6', description: '指派项目经理' },
               { name: 'priority-p0', color: 'd93f0b', description: '紧急' },
               { name: 'priority-p1', color: 'e36209', description: '重要' },
               { name: 'priority-p2', color: 'c5def5', description: '常规' },
@@ -34,7 +32,6 @@ jobs:
               { name: 'approved', color: '0e8a16', description: '已通过' },
               { name: 'blocked', color: 'd93f0b', description: '阻塞中' },
             ];
-
             for (const label of labels) {
               try {
                 await github.rest.issues.createLabel({
@@ -42,7 +39,7 @@ jobs:
                   repo: context.repo.repo,
                   ...label,
                 });
-                core.info(`Created: ${label.name}`);
+                core.info('Created: ' + label.name);
               } catch (e) {
                 if (e.status === 422) {
                   await github.rest.issues.updateLabel({
@@ -50,51 +47,10 @@ jobs:
                     repo: context.repo.repo,
                     ...label,
                   });
-                  core.info(`Updated: ${label.name}`);
+                  core.info('Updated: ' + label.name);
                 } else {
-                  core.warning(`Failed: ${label.name} - ${e.message}`);
+                  core.warning('Failed: ' + label.name + ' - ' + e.message);
                 }
               }
             }
             core.info('All labels configured!');
-
-  invite-team:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Invite all team members by email
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // 团队成员列表（邮箱邀请，无需提前知道用户名）
-            const team = [
-              { email: '***@***.***', role: '运维工程师（曾正龙）' },
-              { email: '***@***.***', role: '架构审计师（许久明）' },
-              { email: '***@***.***', role: '前端开发（李旭阳）' },
-              { email: '***@***.***', role: '后端开发（魏鹏）' },
-            ];
-
-            for (const m of team) {
-              try {
-                // GitHub API 支持用邮箱邀请，对方邮件中会收到邀请链接
-                const resp = await github.request('PUT /repos/{owner}/{repo}/collaborators/{username}', {
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  username: m.email,
-                  permission: 'push',
-                });
-                core.info(`Invited ${m.role}: ${m.email} (status: ${resp.status})`);
-              } catch (e) {
-                // 邮箱邀请可能需要 org invitation API
-                try {
-                  const resp = await github.request('POST /repos/{owner}/{repo}/invitations', {
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                  });
-                  core.info(`Fallback invite attempted for ${m.role}`);
-                } catch (e2) {
-                  core.warning(`Could not invite ${m.role} (${m.email}): ${e.message}. Manual invite needed.`);
-                }
-              }
-            }
-
-            core.info('Team invitation process complete. Members who could not be auto-invited need manual addition via Settings > Collaborators.');

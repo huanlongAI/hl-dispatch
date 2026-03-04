@@ -5,7 +5,7 @@
 # github 字段为空时，使用 email 邀请并 @mention
 # 成员接受邀请后，回填 github 用户名
 #
-# R-034 核心团队（4 人）+ 前端 / 后端开发
+# R-034 核心团队（4 人）+ Java 技术验收 / 后端核心开发
 
 roles:
   founder:
@@ -18,21 +18,21 @@ roles:
     name: 许久明
     github: xujiuming
     email: ***@***.***
-    responsibility: 架构设计审查、契约变更审查、代码规范审查
+    responsibility: 架构设计审查、契约变更审查、代码规范审查、Gate H 技术验收
     labels: [architect, doc-review]
 
   ops:
     name: 曾正龙
     github: ZDragonMeta
     email: ***@***.***
-    responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行
+    responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行、Gate R 运维验收
     labels: [ops, task-assign]
 
   pm:
     name: 刘建成
     github: jianchengl
     email: ***@***.***
-    responsibility: 项目管理、进度跟踪、资源协调（R-034 S0 入职）
+    responsibility: 项目管理、进度跟踪、资源协调（R-034 S0 入职、WS-C 项目负责人）
     labels: [task-assign, doc-review]
 
   product:
@@ -42,16 +42,16 @@ roles:
     responsibility: 产品经理（暂不参与旧系统改造，后续另行分工）
     labels: [doc-review, decision-request]
 
-  frontend:
+  java-qa:
     name: 李旭阳
     github: LUXBYA
     email: ***@***.***
-    responsibility: 前端开发、UI 审查
-    labels: [doc-review]
+    responsibility: Java 工程师 · 技术验收官（WS-C 能力包适配 + 端到端验收）
+    labels: [doc-review, task-assign]
 
   backend:
     name: 魏鹏
     github: wp159951
     email: ***@***.***
-    responsibility: 后端开发、技术审查
-    labels: [doc-review]
+    responsibility: 后端核心开发（Keycloak 集成 / Nacos / MQ Starter / HK Client SDK）
+    labels: [doc-review, task-assign]

@@ -1,0 +1,86 @@
+name: Sensitive Content Guard
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for sensitive patterns
+        shell: bash
+        run: |
+          echo '=== 唤龙平台 hl-dispatch 敏感信息扫描 ==='
+          FAILED=0
+
+          # 1. API 密钥 / Token
+          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+            '(api[_-]?key|api[_-]?secret|access[_-]?token|auth[_-]?token)\s*[:=]\s*[A-Za-z0-9_\-]{16,}' . 2>/dev/null; then
+            echo '❌ BLOCKED: API 密钥/Token 泄露'; FAILED=1
+          fi
+
+          # 2. 密码字段赋值
+          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+            '(password|passwd|pwd)\s*[:=]\s*\S{6,}' . 2>/dev/null; then
+            echo '❌ BLOCKED: 密码字段泄露'; FAILED=1
+          fi
+
+          # 3. AWS / Aliyun 密钥
+          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+            'AKIA[0-9A-Z]{16}|LTAI[0-9A-Za-z]{12,}' . 2>/dev/null; then
+            echo '❌ BLOCKED: 云平台密钥泄露'; FAILED=1
+          fi
+
+          # 4. 私钥文件内容
+          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+            '-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----' . 2>/dev/null; then
+            echo '❌ BLOCKED: 私钥内容泄露'; FAILED=1
+          fi
+
+          # 5. 内网 IP 地址
+          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+            '\b(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[01])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})\b' . 2>/dev/null; then
+            echo '❌ BLOCKED: 内网 IP 泄露'; FAILED=1
+          fi
+
+          # 6. 数据库连接串
+          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+            '(jdbc:|mysql://|postgresql://|mongodb://)\S+' . 2>/dev/null; then
+            echo '❌ BLOCKED: 数据库连接串泄露'; FAILED=1
+          fi
+
+          # 7. 身份证号（18 位）
+          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+            '\b[1-9]\d{5}(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[0-9Xx]\b' . 2>/dev/null; then
+            echo '❌ BLOCKED: 身份证号泄露'; FAILED=1
+          fi
+
+          # 8. 敏感文件名检测
+          SENSITIVE_FILES=$(find . -not -path './.git/*' \( \
+            -name '*.pem' -o -name '*.key' -o -name '*.p12' -o -name '*.pfx' \
+            -o -name '.env' -o -name '.env.*' -o -name '*.env' \
+            -o -name 'credentials*' -o -name '*secret*' \
+            -o -name 'id_rsa*' -o -name 'id_ed25519*' \
+          \) 2>/dev/null || true)
+
+          if [ -n "$SENSITIVE_FILES" ]; then
+            echo "❌ BLOCKED: 发现敏感文件"
+            echo "$SENSITIVE_FILES"
+            FAILED=1
+          fi
+
+          if [ $FAILED -eq 1 ]; then
+            echo ''
+            echo '🚫 扫描未通过 — 请移除敏感信息后重新提交'
+            echo '📋 参考: SECURITY-POLICY.md'
+            exit 1
+          fi
+
+          echo '✅ 扫描通过 — 未发现敏感信息'

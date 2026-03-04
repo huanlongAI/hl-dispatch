@@ -1,1 +1,21 @@
 /.idea/
+# === 敏感文件 ===
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+credentials*
+*secret*
+id_rsa*
+id_ed25519*
+*.credential
+
+# === 系统文件 ===
+.DS_Store
+Thumbs.db
+*.swp
+*~

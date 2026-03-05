@@ -17,47 +17,48 @@ jobs:
       - name: Scan for sensitive patterns
         shell: bash
         run: |
-          echo '=== 唤龙平台 hl-dispatch 敏感信息扫描 ==='
+          echo '=== 唤龙平台 hl-dispatch 敏感信息扫描 v2.0 ==='
           FAILED=0
+          EXCLUDE='--exclude-dir=.git --exclude=sensitive-scan.yml --exclude=SECURITY-POLICY.md'
 
           # 1. API 密钥 / Token
-          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+          if grep -rPn $EXCLUDE \
             '(api[_-]?key|api[_-]?secret|access[_-]?token|auth[_-]?token)\s*[:=]\s*[A-Za-z0-9_\-]{16,}' . 2>/dev/null; then
             echo '❌ BLOCKED: API 密钥/Token 泄露'; FAILED=1
           fi
 
           # 2. 密码字段赋值
-          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+          if grep -rPn $EXCLUDE \
             '(password|passwd|pwd)\s*[:=]\s*\S{6,}' . 2>/dev/null; then
             echo '❌ BLOCKED: 密码字段泄露'; FAILED=1
           fi
 
           # 3. AWS / Aliyun 密钥
-          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+          if grep -rPn $EXCLUDE \
             'AKIA[0-9A-Z]{16}|LTAI[0-9A-Za-z]{12,}' . 2>/dev/null; then
             echo '❌ BLOCKED: 云平台密钥泄露'; FAILED=1
           fi
 
           # 4. 私钥文件内容
-          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+          if grep -rPn $EXCLUDE \
             '-----BEGIN (RSA |EC |DSA )?PRIVATE KEY-----' . 2>/dev/null; then
             echo '❌ BLOCKED: 私钥内容泄露'; FAILED=1
           fi
 
           # 5. 内网 IP 地址
-          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+          if grep -rPn $EXCLUDE \
             '\b(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[01])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3})\b' . 2>/dev/null; then
             echo '❌ BLOCKED: 内网 IP 泄露'; FAILED=1
           fi
 
           # 6. 数据库连接串
-          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+          if grep -rPn $EXCLUDE \
             '(jdbc:|mysql://|postgresql://|mongodb://)\S+' . 2>/dev/null; then
             echo '❌ BLOCKED: 数据库连接串泄露'; FAILED=1
           fi
 
           # 7. 身份证号（18 位）
-          if grep -rPn --exclude-dir=.git --exclude='sensitive-scan.yml' --exclude='SECURITY-POLICY.md' \
+          if grep -rPn $EXCLUDE \
             '\b[1-9]\d{5}(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[0-9Xx]\b' . 2>/dev/null; then
             echo '❌ BLOCKED: 身份证号泄露'; FAILED=1
           fi
@@ -69,11 +70,36 @@ jobs:
             -o -name 'credentials*' -o -name '*secret*' \
             -o -name 'id_rsa*' -o -name 'id_ed25519*' \
           \) 2>/dev/null || true)
-
           if [ -n "$SENSITIVE_FILES" ]; then
             echo "❌ BLOCKED: 发现敏感文件"
             echo "$SENSITIVE_FILES"
             FAILED=1
+          fi
+
+          # === v2.0 新增 ===
+
+          # 9. 个人邮箱地址（排除 GitHub noreply）
+          if grep -rPn $EXCLUDE \
+            '\b[A-Za-z0-9._%+-]+@(gmail|qq|163|126|outlook|hotmail|yahoo|sina|sohu)\.(com|cn|net)\b' . 2>/dev/null; then
+            echo '❌ BLOCKED: 个人邮箱泄露'; FAILED=1
+          fi
+
+          # 10. 中国手机号
+          if grep -rPn $EXCLUDE \
+            '\b1[3-9]\d{9}\b' . 2>/dev/null; then
+            echo '❌ BLOCKED: 手机号泄露'; FAILED=1
+          fi
+
+          # 11. 银行卡号（16-19 位纯数字，排除常见误报）
+          if grep -rPn $EXCLUDE \
+            '\b[3-6]\d{15,18}\b' . 2>/dev/null | grep -v -E '(node_id|sha|commit|id.*:)'; then
+            echo '❌ BLOCKED: 疑似银行卡号泄露'; FAILED=1
+          fi
+
+          # 12. WeChat / 微信 ID 模式
+          if grep -rPn $EXCLUDE \
+            '(wechat|weixin|微信)[_\s:：]*[A-Za-z0-9_\-]{6,}' . 2>/dev/null; then
+            echo '❌ BLOCKED: 微信号泄露'; FAILED=1
           fi
 
           if [ $FAILED -eq 1 ]; then
@@ -83,4 +109,4 @@ jobs:
             exit 1
           fi
 
-          echo '✅ 扫描通过 — 未发现敏感信息'
+          echo '✅ 扫描通过 — 未发现敏感信息（v2.0: 12 项检测）'

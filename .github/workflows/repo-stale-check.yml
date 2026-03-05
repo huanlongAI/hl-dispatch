@@ -1,0 +1,63 @@
+name: Repo Stale Check
+
+on:
+  schedule:
+    - cron: '0 2 * * 1-5'  # 工作日 10:00 CST (UTC+8)
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check repo staleness
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo '=== 唤龙平台仓库同步检查 ==='
+          STALE_THRESHOLD=172800  # 48 hours in seconds
+          NOW=$(date +%s)
+          STALE_REPOS=""
+          REPORT=""
+
+          for repo in hl-contracts hl-platform hl-console-native hl-factory hl-dispatch; do
+            PUSHED_AT=$(gh api repos/huanlongAI/$repo --jq '.pushed_at' 2>/dev/null)
+            if [ -z "$PUSHED_AT" ]; then
+              REPORT="${REPORT}| $repo | ❓ 无法获取 | - |\n"
+              continue
+            fi
+            PUSHED_TS=$(date -d "$PUSHED_AT" +%s 2>/dev/null || date -j -f '%Y-%m-%dT%H:%M:%SZ' "$PUSHED_AT" +%s 2>/dev/null)
+            DIFF=$((NOW - PUSHED_TS))
+            DAYS=$((DIFF / 86400))
+            HOURS=$(( (DIFF % 86400) / 3600 ))
+
+            if [ $DIFF -gt $STALE_THRESHOLD ]; then
+              STALE_REPOS="${STALE_REPOS}${repo} (${DAYS}d ${HOURS}h), "
+              REPORT="${REPORT}| $repo | 🔴 ${DAYS}d ${HOURS}h | $PUSHED_AT |\n"
+            else
+              REPORT="${REPORT}| $repo | 🟢 ${DAYS}d ${HOURS}h | $PUSHED_AT |\n"
+            fi
+          done
+
+          echo -e "$REPORT"
+
+          if [ -n "$STALE_REPOS" ]; then
+            echo "::warning::Stale repos detected: $STALE_REPOS"
+
+            EXISTING=$(gh api repos/huanlongAI/hl-dispatch/issues --jq '[.[] | select(.title | startswith("[自动]  仓库同步滞后")) | select(.state=="open")] | length' 2>/dev/null)
+            if [ "$EXISTING" != "0" ] && [ -n "$EXISTING" ]; then
+              echo "Already have open stale alert issue, skipping creation"
+              exit 0
+            fi
+
+            BODY="## 仓库同步滞后告警\n\n自动检测发现以下仓库超过 48h 未推送更新。\n\n| 仓库 | 滞后 | 最后推送 |\n|------|------|---------|\n${REPORT}\n\n**建议操作：** 检查本地是否有未推送的 commit，及时同步到远端。\n\n> 本 Issue 由 CI 自动创建，问题解决后请关闭。"
+
+            gh issue create \
+              --repo huanlongAI/hl-dispatch \
+              --title "[自动] 仓库同步滞后告警 — $(date +%Y-%m-%d)" \
+              --body "$(echo -e "$BODY")" \
+              --label "ops" 2>&1
+
+            echo "Stale alert issue created"
+          else
+            echo "✅ All repos up to date (within 48h)"
+          fi

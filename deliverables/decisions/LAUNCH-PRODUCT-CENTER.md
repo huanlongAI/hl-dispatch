@@ -5,8 +5,8 @@
 ---
 
 **文档编号**：LAUNCH-BIZ-PRODUCT-001
-**版本**：v1.0
-**日期**：2026-03-17
+**版本**：v1.1
+**日期**：2026-03-18
 **派生自**：TPL-PM-LAUNCH-001 v1.0（PM 分支业务启动模板）
 **适用阶段**：Phase 1 S3(demo 候选) / S4(正式)
 **状态**：DRAFT（待创始人裁决确认）
@@ -22,10 +22,12 @@
 | **一句话定义** | 管理商品的完整生命周期（创建、编辑、上下架、定价、分类），为订单/库存/营销等下游能力包提供商品数据 SSOT；不涉及库存扣减、订单履约、支付结算 |
 | **所属 Phase** | Phase 1 — S3 demo 候选（中等复杂度 + 跨租户场景，符合 R-053 S3 选型原则）；或 S4 首批 |
 | **优先级批次** | 建议 S4 首批（商品是订单/库存/营销的前置依赖） |
-| **PM 负责人** | 邹骢（待创始人确认） |
-| **后端 Owner** | 待指定（核心组 6 人 + WS-C） |
-| **前端 Owner** | 待指定（hl-console-native + 消费者端） |
-| **验收人** | Gate H（许久明）+ Gate R（曾正龙） |
+| **PM 负责人** | 邹骢 |
+| **代码生成** | 创始人 + AI（R-057：全覆盖模型） |
+| **Gate H 审计** | 许久明（代码质量 + 架构合规） |
+| **Gate 3 验收** | 李旭阳（端到端业务正确性） |
+| **Gate R 发布** | 曾正龙（运维 + 发布验证） |
+| **前端** | 待指定（hl-console-native + 消费者端） |
 
 ---
 
@@ -63,7 +65,7 @@
 - 商品分类管理（品类树维护）
 - 商品上下架状态管理
 - 商品定价（基础价格，非促销价）
-- SPU-SKU 二级模型
+- SPU-SKU 二级模型（**统一 SPU 入口，R-061**：所有商品必须先建 SPU 再挂 SKU，即使只有单规格也必须经过 SPU → 默认 SKU 链路，不允许裸 SKU 直接入库）
 - 商品图片/富文本描述绑定（存储引用，非文件服务本身）
 - 跨租户商品授权查看（基于 OrgLink Cooperate）
 
@@ -161,12 +163,12 @@
 
 | 文档 | 文件名 | 负责人 | 状态 |
 |------|--------|--------|------|
-| MVP 规格 | `PRD-Biz.Product.MVP.v1.0.md` | PM | 待编写 |
-| Facts 定义 | `PRD-Biz.Product.MVP.Facts.v1.0.md` | PM + 后端 | 待编写 |
-| Decision Trace | `PRD-Biz.Product.MVP.Decision-Trace.v1.0.md` | 后端 | 待编写 |
-| API Return Codes | `PRD-Biz.Product.MVP.API-Return-Codes.v1.0.md` | 后端 | 待编写 |
-| 验收用例 | `PRD-Biz.Product.MVP.Core-Acceptance-Cases.v1.0.md` | QA + PM | 待编写 |
-| Dev Checklist | `PRD-Biz.Product.MVP.Dev-Checklist.v1.0.md` | 后端 | 待编写 |
+| MVP 规格 | `PRD-Biz.Product.MVP.v1.0.md` | PM（邹骢） | 待编写 |
+| Facts 定义 | `PRD-Biz.Product.MVP.Facts.v1.0.md` | PM + 创始人 | 待编写 |
+| Decision Trace | `PRD-Biz.Product.MVP.Decision-Trace.v1.0.md` | 创始人+AI | 待编写 |
+| API Return Codes | `PRD-Biz.Product.MVP.API-Return-Codes.v1.0.md` | 创始人+AI | 待编写 |
+| 验收用例 | `PRD-Biz.Product.MVP.Core-Acceptance-Cases.v1.0.md` | PM + Gate 3（李旭阳） | 待编写 |
+| Dev Checklist | `PRD-Biz.Product.MVP.Dev-Checklist.v1.0.md` | 创始人+AI | 待编写 |
 
 ---
 
@@ -265,8 +267,8 @@ CREATE TABLE biz_product.product (
     description     TEXT,
     image_urls      JSONB           DEFAULT '[]'::jsonb,
     status          VARCHAR(32)     NOT NULL DEFAULT 'DRAFT',
-    base_price      NUMERIC(12,2),
-    floor_price     NUMERIC(12,2),
+    base_price      NUMERIC(12,2),   -- 品牌建议零售价（只读参考，不参与交易，R-061）
+    floor_price     NUMERIC(12,2),   -- 品牌底价（只读参考，R-061）
     event_id        UUID,
     reason_code     VARCHAR(128),
     created_by      UUID            NOT NULL,
@@ -348,7 +350,8 @@ CREATE POLICY tenant_isolation_category ON biz_product.category
 | 编辑商品 | 仅 Claim 关系持有方 | `can_update_product: edge_type == CLAIM AND product.tenant_id == caller.tenant_id` |
 | 上架/下架 | 仅 Claim 关系持有方 + admin 角色 | `can_publish_product: edge_type == CLAIM AND role == admin` |
 | 查看商品 | Claim 持有方 + Cooperate 合作方 | `can_view_product: edge_type IN [CLAIM, COOPERATE] AND product.status == PUBLISHED` |
-| 设置价格 | 仅 Claim 关系持有方 + admin 角色 | `can_change_price: edge_type == CLAIM AND role == admin` |
+| 设置品牌价格 | 仅 Claim 关系持有方 + admin 角色 | `can_change_price: edge_type == CLAIM AND role == admin` |
+| 设置渠道价格 | Cooperate 合作方 + admin 角色 | `can_change_channel_price: edge_type == COOPERATE AND role == admin AND target == SKU.channel_price`（R-061：渠道价不得低于 SPU floor_price） |
 
 ---
 
@@ -356,18 +359,18 @@ CREATE POLICY tenant_isolation_category ON biz_product.category
 
 > 以 2 周 Sprint 为例（S4 首批，非 S3 demo）。
 
-| 天 | PM | 后端 | 前端 | QA | DevOps |
-|----|-----|------|------|-----|--------|
-| D1 | MVP 规格交付 | 审读 MVP + 契约设计 | 交互线框 | 测试计划 | Schema DDL |
-| D2 | Facts 定义 + reason_codes PR | contract 层接口 | — | — | RLS + feature_toggle |
-| D3 | 验收用例初稿 | OpenAPI + capabilities.yaml | 页面设计确认 | 评审验收用例 | Grafana 模板 |
-| D4 | — | domain 层 Can/Action 实现 | API 对接开始 | — | — |
-| D5 | — | domain 层完成 + DDL 确认 | API 对接 | — | Flyway 脚本 |
-| D6 | — | adapter 层实现 | API 对接 | 自动化测试编写 | — |
-| D7 | — | adapter 层完成 + 联调 | 联调 | 自动化测试 | — |
-| D8 | — | 五必过测试 + CI green | 审计回放集成 | 端到端测试 | Outbox 监控 |
-| D9 | UAT 验证 | bug fix | bug fix | 性能基线测试 | 上线 SOP |
-| D10 | UAT 签收 | Dev Checklist ✅ | 端到端截图 | 缺陷报告关闭 | 灰度发布 |
+| 天 | PM（邹骢） | 创始人+AI | Gate H（许久明） | Gate 3（李旭阳） | 运维（曾正龙） | 前端 |
+|----|-----------|-----------|------------------|------------------|----------------|------|
+| D1 | MVP 规格交付 | 审读 MVP + 契约设计 | — | — | Schema DDL | 交互线框 |
+| D2 | Facts 定义 + reason_codes PR | contract 层接口 | — | — | RLS + feature_toggle | — |
+| D3 | 验收用例初稿 | OpenAPI + capabilities.yaml | 评审契约 | 评审验收用例 | Grafana 模板 | 页面设计确认 |
+| D4 | — | 完整实现（domain + adapter + DDL + 测试） | — | — | — | API 对接开始 |
+| D5 | — | 完整实现继续 | — | — | Flyway 脚本 | API 对接 |
+| D6 | — | 实现完成 + CI green | Gate H 代码审计 | — | — | API 对接 |
+| D7 | — | 审计修复 | Gate H 复审 | Gate 3 端到端验收 | — | 联调 |
+| D8 | — | 联调 + 五必过测试通过 | — | Gate 3 业务回归 | Outbox 监控 | 审计回放集成 |
+| D9 | UAT 验证 | bug fix | — | — | 上线 SOP | bug fix |
+| D10 | UAT 签收 | Dev Checklist ✅ | 签收确认 | 签收确认 | 灰度发布 | 端到端截图 |
 
 ---
 
@@ -429,7 +432,10 @@ CREATE POLICY tenant_isolation_category ON biz_product.category
 
 ### 9.5 团队就绪
 
-- [ ] PM / 后端 / 前端 / QA / DevOps Owner 已指定
+- [x] PM 已指定（邹骢）
+- [x] 代码生成模型已确认（创始人+AI，R-057）
+- [x] Gate H / Gate 3 / Gate R 审计人已确认（许久明 / 李旭阳 / 曾正龙）
+- [ ] 前端 Owner 已指定
 - [ ] Sprint 周期已确定
 - [ ] GitHub Issue 已创建（hl-dispatch task-assign 模板）
 - [ ] Kickoff 会议完成
@@ -441,3 +447,4 @@ CREATE POLICY tenant_isolation_category ON biz_product.category
 | 日期 | 版本 | 变更 |
 |------|------|------|
 | 2026-03-17 | v1.0 | DRAFT — 基于 TPL-PM-LAUNCH-001 首个实例，待创始人裁决确认 |
+| 2026-03-18 | v1.1 | R-061 裁决应用：统一 SPU 入口 + SPU 价格只读参考 + Cooperate 渠道定价策略；v1.2 团队模型对齐（创始人+AI 全覆盖，无后端/QA 角色） |

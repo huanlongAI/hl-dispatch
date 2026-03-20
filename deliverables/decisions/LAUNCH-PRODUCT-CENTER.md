@@ -5,8 +5,8 @@
 ---
 
 **文档编号**：LAUNCH-BIZ-PRODUCT-001
-**版本**：v1.1
-**日期**：2026-03-18
+**版本**：v1.2
+**日期**：2026-03-20
 **派生自**：TPL-PM-LAUNCH-001 v1.0（PM 分支业务启动模板）
 **适用阶段**：Phase 1 S3(demo 候选) / S4(正式)
 **状态**：DRAFT（待创始人裁决确认）
@@ -140,6 +140,8 @@
 | GET | `/biz/product/list` | 查询商品列表 | Query | false |
 | GET | `/biz/product/{id}` | 查询商品详情 | Query | false |
 | GET | `/biz/product/category/tree` | 查询分类树 | Query | false |
+| GET | `/biz/product/sku/{id}/current-version` | 查询 SKU 当前版本号（R-062） | Query | false |
+| GET | `/biz/product/sku/{id}/versions` | 查询 SKU 版本历史（R-062，Phase 2 前端入口） | Query | false |
 
 ### 3.3 capabilities.yaml 注册
 
@@ -302,12 +304,39 @@ CREATE TABLE biz_product.category (
     created_at      TIMESTAMPTZ     NOT NULL DEFAULT now()
 );
 
+-- SKU 版本快照表（R-062：A 类交易字段快照，B 类展示字段复用 HK.Audit）
+CREATE TABLE biz_product.sku_version (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sku_id          UUID NOT NULL REFERENCES biz_product.sku(id),
+    version_no      INT  NOT NULL,
+    -- A 类字段全量快照
+    price           NUMERIC(12,2),
+    channel_price   NUMERIC(12,2),
+    floor_price     NUMERIC(12,2),
+    total_count     INT,            -- 限总次：总次数
+    consume_count   INT,            -- 限总次/总点：每次消耗数
+    total_points    INT,            -- 限总点：总点数
+    validity_value  INT,            -- 有效期时长
+    validity_unit   VARCHAR(16),    -- 有效期单位（天/月/年）
+    validity_start  VARCHAR(16),    -- 有效期起算方式
+    max_use_count   INT,            -- 限时：期内可用次数上限
+    redemption_mode VARCHAR(16),    -- 核销模式（整体/子项独立）
+    card_services   JSONB,          -- 卡内服务列表快照
+    -- 版本元数据
+    changed_by      UUID NOT NULL,
+    changed_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    change_reason   VARCHAR(256),
+    event_id        UUID,           -- 关联 HK.Audit event_id
+    UNIQUE (sku_id, version_no)
+);
+
 -- 索引
 CREATE INDEX idx_product_tenant ON biz_product.product(tenant_id);
 CREATE INDEX idx_product_category ON biz_product.product(category_id);
 CREATE INDEX idx_product_status ON biz_product.product(tenant_id, status);
 CREATE INDEX idx_sku_product ON biz_product.sku(product_id);
 CREATE INDEX idx_category_parent ON biz_product.category(parent_id);
+CREATE INDEX idx_sku_version_sku ON biz_product.sku_version(sku_id);
 
 -- RLS 策略
 ALTER TABLE biz_product.product ENABLE ROW LEVEL SECURITY;
@@ -321,6 +350,10 @@ CREATE POLICY tenant_isolation_sku ON biz_product.sku
 ALTER TABLE biz_product.category ENABLE ROW LEVEL SECURITY;
 CREATE POLICY tenant_isolation_category ON biz_product.category
     USING (tenant_id = current_setting('app.current_tenant')::uuid);
+
+ALTER TABLE biz_product.sku_version ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation_sku_version ON biz_product.sku_version
+    USING (sku_id IN (SELECT id FROM biz_product.sku WHERE tenant_id = current_setting('app.current_tenant')::uuid));
 ```
 
 ---
@@ -448,3 +481,4 @@ CREATE POLICY tenant_isolation_category ON biz_product.category
 |------|------|------|
 | 2026-03-17 | v1.0 | DRAFT — 基于 TPL-PM-LAUNCH-001 首个实例，待创始人裁决确认 |
 | 2026-03-18 | v1.1 | R-061 裁决应用：统一 SPU 入口 + SPU 价格只读参考 + Cooperate 渠道定价策略；v1.2 团队模型对齐（创始人+AI 全覆盖，无后端/QA 角色） |
+| 2026-03-20 | v1.2 | R-062 裁决应用：SKU 版本化方案 C（A 类快照 + B 类复用 Audit）；DDL 补充 sku_version 表 + RLS；API 补充版本查询端点 |

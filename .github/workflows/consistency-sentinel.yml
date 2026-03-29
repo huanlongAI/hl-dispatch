@@ -10,6 +10,8 @@ on:
     types: [opened, synchronize, reopened]
   push:
     branches: [main]
+  repository_dispatch:
+    types: [sentinel-cascade]
   workflow_dispatch:
     inputs:
       skip_llm:

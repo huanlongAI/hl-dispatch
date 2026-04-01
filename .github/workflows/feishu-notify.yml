@@ -1,0 +1,101 @@
+name: Feishu Notification
+
+on:
+  issues:
+    types: [opened, assigned, labeled, closed]
+  issue_comment:
+    types: [created]
+
+jobs:
+  notify-issue-task:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Issue to Task Channel
+        env:
+          WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
+          ACTION: ${{ github.event.action }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ASSIGNEE: ${{ github.event.issue.assignee.login }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
+        run: |
+          if [ "$ACTION" = "opened" ]; then
+            TITLE="新 Issue"; TEMPLATE="blue"
+          elif [ "$ACTION" = "assigned" ]; then
+            TITLE="Issue 已指派"; TEMPLATE="orange"
+          elif [ "$ACTION" = "closed" ]; then
+            TITLE="Issue 已关闭"; TEMPLATE="green"
+          else
+            TITLE="Issue ${ACTION}"; TEMPLATE="blue"
+          fi
+
+          [ -z "$ASSIGNEE" ] && ASSIGNEE="未指派"
+
+          jq -n \
+            --arg title "[hl-dispatch] ${TITLE}" \
+            --arg template "${TEMPLATE}" \
+            --arg content "**${ISSUE_TITLE}**\n标签: ${ISSUE_LABELS}\n指派: ${ASSIGNEE}" \
+            --arg url "${ISSUE_URL}" \
+            '{
+              msg_type: "interactive",
+              card: {
+                header: {title: {tag: "plain_text", content: $title}, template: $template},
+                elements: [
+                  {tag: "div", text: {tag: "lark_md", content: $content}},
+                  {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看 Issue"}, url: $url, type: "primary"}]}
+                ]
+              }
+            }' | curl -s -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d @-
+
+  notify-decision-request:
+    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'decision-request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decision Request to Command Channel
+        env:
+          WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_COMMAND }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: |
+          jq -n \
+            --arg title "🔔 有新的裁决请求" \
+            --arg content "**${ISSUE_TITLE}**\n提出者: ${ISSUE_AUTHOR}" \
+            --arg url "${ISSUE_URL}" \
+            '{
+              msg_type: "interactive",
+              card: {
+                header: {title: {tag: "plain_text", content: $title}, template: "red"},
+                elements: [
+                  {tag: "div", text: {tag: "lark_md", content: $content}},
+                  {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "立即查看"}, url: $url, type: "danger"}]}
+                ]
+              }
+            }' | curl -s -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d @-
+
+  notify-comment:
+    if: github.event_name == 'issue_comment' && github.event.action == 'created'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment Notification
+        env:
+          WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          COMMENTER: ${{ github.event.comment.user.login }}
+          COMMENT_URL: ${{ github.event.comment.html_url }}
+        run: |
+          jq -n \
+            --arg title "[hl-dispatch] Issue 新评论" \
+            --arg content "**${ISSUE_TITLE}**\n评论者: ${COMMENTER}" \
+            --arg url "${COMMENT_URL}" \
+            '{
+              msg_type: "interactive",
+              card: {
+                header: {title: {tag: "plain_text", content: $title}, template: "blue"},
+                elements: [
+                  {tag: "div", text: {tag: "lark_md", content: $content}},
+                  {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看评论"}, url: $url, type: "primary"}]}
+                ]
+              }
+            }' | curl -s -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d @-

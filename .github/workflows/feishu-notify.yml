@@ -35,14 +35,16 @@ jobs:
           jq -n \
             --arg title "[hl-dispatch] ${TITLE}" \
             --arg template "${TEMPLATE}" \
-            --arg content "**${ISSUE_TITLE}**\n标签: ${ISSUE_LABELS}\n指派: ${ASSIGNEE}" \
+            --arg line1 "**${ISSUE_TITLE}**" \
+            --arg line2 "标签: ${ISSUE_LABELS}" \
+            --arg line3 "指派: ${ASSIGNEE}" \
             --arg url "${ISSUE_URL}" \
             '{
               msg_type: "interactive",
               card: {
                 header: {title: {tag: "plain_text", content: $title}, template: $template},
                 elements: [
-                  {tag: "div", text: {tag: "lark_md", content: $content}},
+                  {tag: "div", text: {tag: "lark_md", content: $line1 + "\n" + $line2 + "\n" + $line3}},
                   {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看 Issue"}, url: $url, type: "primary"}]}
                 ]
               }
@@ -61,14 +63,15 @@ jobs:
         run: |
           jq -n \
             --arg title "🔔 有新的裁决请求" \
-            --arg content "**${ISSUE_TITLE}**\n提出者: ${ISSUE_AUTHOR}" \
+            --arg line1 "**${ISSUE_TITLE}**" \
+            --arg line2 "提出者: ${ISSUE_AUTHOR}" \
             --arg url "${ISSUE_URL}" \
             '{
               msg_type: "interactive",
               card: {
                 header: {title: {tag: "plain_text", content: $title}, template: "red"},
                 elements: [
-                  {tag: "div", text: {tag: "lark_md", content: $content}},
+                  {tag: "div", text: {tag: "lark_md", content: $line1 + "\n" + $line2}},
                   {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "立即查看"}, url: $url, type: "danger"}]}
                 ]
               }
@@ -87,14 +90,15 @@ jobs:
         run: |
           jq -n \
             --arg title "[hl-dispatch] Issue 新评论" \
-            --arg content "**${ISSUE_TITLE}**\n评论者: ${COMMENTER}" \
+            --arg line1 "**${ISSUE_TITLE}**" \
+            --arg line2 "评论者: ${COMMENTER}" \
             --arg url "${COMMENT_URL}" \
             '{
               msg_type: "interactive",
               card: {
                 header: {title: {tag: "plain_text", content: $title}, template: "blue"},
                 elements: [
-                  {tag: "div", text: {tag: "lark_md", content: $content}},
+                  {tag: "div", text: {tag: "lark_md", content: $line1 + "\n" + $line2}},
                   {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看评论"}, url: $url, type: "primary"}]}
                 ]
               }

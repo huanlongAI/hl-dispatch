@@ -1,6 +1,6 @@
 # 唤龙团队身份映射表
 
-> 版本：v1.1 | 更新日期：2026-04-02
+> 版本：v1.2 | 更新日期：2026-04-02
 > 维护人：童正辉（L0）
 
 ---
@@ -12,8 +12,8 @@
 | 1 | 童正辉 | `tongzhenghui` | gw.tzh@icloud.com | 创始人 / 架构师 | 裁决层 | `founder-only` |
 | 2 | 许久明 | `xujiuming` | 18120580001@163.com | Gate H 守护者 | 守护者环 | `guardian-team` |
 | 3 | 曾正龙 | `ZDragonMeta` | ZDragon.Share@gmail.com | Gate R 守护者 | 守护者环 | `guardian-team` |
-| 4 | 邹骢 | 待接受邀请 | zoucong121@gmail.com | PM（商品） | 领域环 | `pm-team` |
-| 5 | 朱阳 | 待接受邀请 | 644160417@qq.com | PM（交易） | 领域环 | `pm-team` |
+| 4 | 邹骢 | `zoucong121` | zoucong121@gmail.com | PM（商品） | 领域环 | `pm-team` |
+| 5 | 朱阳 | `zhuyang1204` | 644160417@qq.com | PM（交易） | 领域环 | `pm-team` |
 | 6 | 魏鹏 | `wp159951` | 767510277@qq.com | 后端基础设施 | 基础设施环 | `infra-team` |
 | 7 | 李旭阳 | `LUXBYA` | 790630573@qq.com | 技术验收官（Gate 3） | 基础设施环 | `infra-team` |
 
@@ -23,15 +23,15 @@
 |-------------|------------|---------|------|
 | `tongzhenghui` | 童正辉 | owner | ✅ 已加入 |
 | `xujiuming` | 许久明 | member | ✅ 已加入 |
+| `ZDragonMeta` | 曾正龙 | member | ✅ 已加入（guardian-team） |
 
-## 待接受邀请（5 人）
+## 待接受邀请（4 人）
 
 | GitHub 账号 | 飞书实名 | 邮箱 | Team | 状态 |
 |-------------|---------|------|------|------|
-| — | 邹骢 | zoucong121@gmail.com | `pm-team` | ✉️ 待接受 |
-| — | 朱阳 | 644160417@qq.com | `pm-team` | ✉️ 待接受 |
+| `zoucong121` | 邹骢 | zoucong121@gmail.com | `pm-team` | ✉️ 待接受 |
+| `zhuyang1204` | 朱阳 | 644160417@qq.com | `pm-team` | ✉️ 待接受 |
 | `LUXBYA` | 李旭阳 | 790630573@qq.com | `infra-team` | ✉️ 待接受 |
-| `ZDragonMeta` | 曾正龙 | ZDragon.Share@gmail.com | `guardian-team` | ✉️ 待接受 |
 | `wp159951` | 魏鹏 | 767510277@qq.com | `infra-team` | ✉️ 待接受 |
 
 ## 飞书群成员映射
@@ -62,7 +62,10 @@
 - [x] 创建 `infra-team`（id: 16914138）— 魏鹏、李旭阳待接受邀请后加入
 - [x] 仓库权限已配置：guardian-team → hl-platform/framework write, hl-contracts read
 - [x] 仓库权限已配置：infra-team → hl-platform/framework write
-- [ ] 5 人接受邀请后，将其加入对应 Team
+- [x] 曾正龙（ZDragonMeta）已接受邀请，已加入 guardian-team（2026-04-02）
+- [x] 邹骢 GitHub 账号确认为 `zoucong121`，朱阳确认为 `zhuyang1204`
+- [x] 重新发送邀请：zoucong121 + zhuyang1204 绑定 pm-team，LUXBYA + wp159951 绑定 infra-team
+- [ ] 4 人接受邀请后，自动加入对应 Team
 
 ---
 

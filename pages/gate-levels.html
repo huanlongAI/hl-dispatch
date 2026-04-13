@@ -86,36 +86,36 @@
 
 .check-tag.advisory { background: var(--accent); color: var(--bg); }
 
-/* Gate Flow Animation */
+/* Gate Flow Animation — compact vertical timeline */
 .gate-flow-animation {
-  position: relative; margin: 32px 0;
+  position: relative; margin: 20px 0; max-width: 700px;
 }
 
 .gate-flow-step {
-  display: flex; align-items: center; gap: 16px; margin: 16px 0;
-  padding: 16px; background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 8px; opacity: 0.6; transition: all 0.3s;
+  display: flex; align-items: center; gap: 10px; margin: 4px 0;
+  padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 6px; opacity: 0.55; transition: all 0.3s;
 }
 
 .gate-flow-step.active {
-  opacity: 1; border-color: var(--accent); box-shadow: 0 0 12px rgba(253, 203, 110, 0.3);
+  opacity: 1; border-color: var(--accent); box-shadow: 0 0 8px rgba(253,203,110,0.25);
 }
 
 .gate-flow-step .time {
-  flex-shrink: 0; font-size: 0.75em; color: var(--text-muted); width: 50px; text-align: center;
+  flex-shrink: 0; font-size: 0.75em; color: var(--text-muted); width: 56px; text-align: right;
 }
 
 .gate-flow-step .badge {
-  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 700; font-size: 0.85em;
+  color: #fff; font-weight: 700; font-size: 0.75em;
 }
 
 .gate-flow-step .content { flex: 1; }
-.gate-flow-step .stage { font-size: 0.85em; color: var(--text-muted); }
-.gate-flow-step .desc { font-weight: 600; color: var(--text); margin-top: 2px; }
+.gate-flow-step .stage { font-size: 0.8em; color: var(--text-muted); }
+.gate-flow-step .desc { font-weight: 600; color: var(--text); margin-top: 1px; font-size: 0.88em; }
 
-.gate-flow-connector { text-align: center; color: var(--primary); font-size: 1.2em; margin: 4px 0; }
+.gate-flow-connector { text-align: center; color: var(--primary); font-size: 0.85em; margin: 1px 0; line-height: 1.2; }
 
 .play-btn {
   display: inline-block; padding: 10px 24px; background: var(--accent);
@@ -205,33 +205,35 @@ body {
 <p>唤龙平台采用<strong>从下往上递进式</strong>的质量把控体系。每一层的失败都会阻止 PR 合并。点击任何层级查看具体检查项。</p>
 
 <div class="pyramid-container">
-  <svg viewBox="0 0 800 600" width="100%" height="500">
-    <!-- L4 语义门禁 (top) -->
-    <g class="pyramid-layer" data-gate="L4">
-      <polygon points="400,80 600,180 200,180" fill="rgba(108,92,231,0.3)" stroke="#6C5CE7" stroke-width="2"/>
-      <text x="400" y="140" text-anchor="middle" font-size="16" fill="#E8E8F0">L4 语义门禁</text>
-      <text x="400" y="160" text-anchor="middle" font-size="12" fill="#9999B0">ADVISORY</text>
-    </g>
+  <svg viewBox="0 0 800 440" width="800" height="440">
+    <!-- Proper centered pyramid: each layer is a trapezoid, stacked bottom-up -->
 
-    <!-- L3 行为门禁 -->
-    <g class="pyramid-layer" data-gate="L3">
-      <polygon points="600,180 750,300 50,300" fill="rgba(85,239,196,0.3)" stroke="#55EFC4" stroke-width="2"/>
-      <text x="400" y="250" text-anchor="middle" font-size="16" fill="#E8E8F0">L3 行为门禁</text>
-      <text x="400" y="270" text-anchor="middle" font-size="12" fill="#9999B0">BLOCKING</text>
+    <!-- L1 格式门禁 (bottom, widest) -->
+    <g class="pyramid-layer" data-gate="L1">
+      <polygon points="40,440 760,440 660,340 140,340" fill="rgba(253,203,110,0.25)" stroke="#FDCB6E" stroke-width="2"/>
+      <text x="400" y="395" text-anchor="middle" font-size="17" fill="#E8E8F0" font-weight="600">L1 格式门禁</text>
+      <text x="400" y="418" text-anchor="middle" font-size="13" fill="#9999B0">BLOCKING · 秒级反馈</text>
     </g>
 
     <!-- L2 确定性门禁 -->
     <g class="pyramid-layer" data-gate="L2">
-      <polygon points="750,300 800,450 0,450" fill="rgba(255,234,167,0.3)" stroke="#FFEAA7" stroke-width="2"/>
-      <text x="400" y="380" text-anchor="middle" font-size="16" fill="#E8E8F0">L2 确定性门禁</text>
-      <text x="400" y="400" text-anchor="middle" font-size="12" fill="#9999B0">BLOCKING</text>
+      <polygon points="140,330 660,330 580,230 220,230" fill="rgba(255,234,167,0.25)" stroke="#FFEAA7" stroke-width="2"/>
+      <text x="400" y="285" text-anchor="middle" font-size="17" fill="#E8E8F0" font-weight="600">L2 确定性门禁</text>
+      <text x="400" y="308" text-anchor="middle" font-size="13" fill="#9999B0">BLOCKING · 分钟级</text>
     </g>
 
-    <!-- L1 格式门禁 (bottom) -->
-    <g class="pyramid-layer" data-gate="L1">
-      <polygon points="800,450 800,520 0,520" fill="rgba(253,203,110,0.3)" stroke="#FDCB6E" stroke-width="2"/>
-      <text x="400" y="485" text-anchor="middle" font-size="16" fill="#E8E8F0">L1 格式门禁</text>
-      <text x="400" y="505" text-anchor="middle" font-size="12" fill="#9999B0">BLOCKING</text>
+    <!-- L3 行为门禁 -->
+    <g class="pyramid-layer" data-gate="L3">
+      <polygon points="220,220 580,220 510,130 290,130" fill="rgba(85,239,196,0.25)" stroke="#55EFC4" stroke-width="2"/>
+      <text x="400" y="180" text-anchor="middle" font-size="17" fill="#E8E8F0" font-weight="600">L3 行为门禁</text>
+      <text x="400" y="202" text-anchor="middle" font-size="13" fill="#9999B0">BLOCKING · 分钟~小时</text>
+    </g>
+
+    <!-- L4 语义门禁 (top, narrowest) -->
+    <g class="pyramid-layer" data-gate="L4">
+      <polygon points="290,120 510,120 430,40 370,40" fill="rgba(108,92,231,0.35)" stroke="#6C5CE7" stroke-width="2"/>
+      <text x="400" y="78" text-anchor="middle" font-size="16" fill="#E8E8F0" font-weight="600">L4 语义门禁</text>
+      <text x="400" y="98" text-anchor="middle" font-size="12" fill="#9999B0">ADVISORY</text>
     </g>
   </svg>
 </div>

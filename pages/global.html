@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>唤龙平台 · 全局团队分工与工作流</title>
+<link rel="stylesheet" href="../css/style.css">
 <style>
   :root {
     --primary: #6C5CE7;
@@ -274,20 +275,20 @@
 </head>
 <body>
 
-<nav style="display:flex;align-items:center;gap:16px;padding:12px 24px;background:#1A1A2E;border-bottom:1px solid #2D2D4A;position:sticky;top:0;z-index:200;flex-wrap:wrap;">
-  <a href="../index.html" style="font-weight:800;font-size:1.1em;background:linear-gradient(135deg,#A29BFE,#00B894);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none;">唤龙平台</a>
-  <div style="display:flex;gap:4px;flex-wrap:wrap;">
-    <a href="../index.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#9999B0;text-decoration:none;">首页</a>
-    <a href="global.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#fff;background:#6C5CE7;border-radius:20px;text-decoration:none;">全局工作流</a>
-    <a href="product.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#9999B0;text-decoration:none;">产品团队</a>
-    <a href="frontend-design.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#9999B0;text-decoration:none;">前端与设计</a>
-    <a href="engineering.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#9999B0;text-decoration:none;">工程师</a>
-    <a href="qa.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#9999B0;text-decoration:none;">测试团队</a>
-    <a href="ops.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#9999B0;text-decoration:none;">运维</a>
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
   </div>
 </nav>
 
-<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.5rem 1rem; text-align:center; font-size:0.82rem; color:rgba(232,232,240,0.6);">
     本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
 </div>
 
@@ -565,7 +566,7 @@
   </div>
 
   <!-- State Machine -->
-  <h2 style="margin: 32px 0 16px; font-size: 1.3em;">能力包状态机</h2>
+  <h2 style="margin: 32px 0 12px; font-size: 1.3em;">能力包状态机 · 12 状态</h2>
   <div class="state-flow">
     <div class="state-node" style="border-color:var(--pm)">Proposed</div>
     <span class="state-arrow">→</span>
@@ -573,11 +574,15 @@
     <span class="state-arrow">→</span>
     <div class="state-node" style="border-color:var(--pm)">Cap-Spec Frozen</div>
     <span class="state-arrow">→</span>
-    <div class="state-node" style="border-color:var(--pm)">HPRD Passed</div>
+    <div class="state-node" style="border-color:var(--eng)">HPRD Passed</div>
     <span class="state-arrow">→</span>
-    <div class="state-node" style="border-color:var(--eng)">Design Approved</div>
+    <div class="state-node" style="border-color:var(--design)">Design Approved</div>
     <span class="state-arrow">→</span>
-    <div class="state-node" style="border-color:var(--eng)">Draft PR Open</div>
+    <div class="state-node" style="border-color:var(--eng)">In Development</div>
+    <span class="state-arrow">→</span>
+    <div class="state-node" style="border-color:var(--eng)">Draft PR</div>
+    <span class="state-arrow">→</span>
+    <div class="state-node" style="border-color:var(--accent)">L1-L3 Gates</div>
     <span class="state-arrow">→</span>
     <div class="state-node" style="border-color:var(--secondary)">Gates Passed</div>
     <span class="state-arrow">→</span>
@@ -585,9 +590,10 @@
     <span class="state-arrow">→</span>
     <div class="state-node" style="border-color:var(--pm)">PM Accepted</div>
     <span class="state-arrow">→</span>
-    <div class="state-node" style="border-color:var(--secondary); background: rgba(0,184,148,0.1);">Merged</div>
-    <span class="state-arrow">→</span>
-    <div class="state-node" style="border-color:var(--ops)">Released</div>
+    <div class="state-node" style="border-color:var(--secondary); background: rgba(0,184,148,0.1);">Released ✓</div>
+  </div>
+  <div style="text-align:center;margin-top:12px;">
+    <a href="workflow-states.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 20px;background:rgba(108,92,231,0.1);border:1px solid var(--primary);border-radius:8px;color:var(--primary-light);text-decoration:none;font-size:0.85em;font-weight:600;transition:all 0.3s;">🔄 查看 12 状态详解（含动画 · 入口/出口/守卫规则）→</a>
   </div>
 </div>
 

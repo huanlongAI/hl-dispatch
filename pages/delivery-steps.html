@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>五步交付流详解 | 唤龙平台</title>
+    <link rel="stylesheet" href="../css/style.css">
     <style>
         :root {
             --bg: #0F0F1A;
@@ -201,27 +202,26 @@
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="../index.html" class="logo">唤龙平台</a>
-            <ul>
-                <li><a href="../index.html">首页</a></li>
-                <li><a href="global.html">全局工作流</a></li>
-                <li><a href="product.html">产品</a></li>
-                <li><a href="engineering.html">工程</a></li>
-                <li><a href="qa.html">质量</a></li>
-                <li><a href="ops.html">运维</a></li>
-                <li><a href="frontend-design.html">设计</a></li>
-            </ul>
-        </nav>
-    </header>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.5rem 1rem; text-align:center; font-size:0.82rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
 
     <div class="guide-banner">
         <strong>⚠️ 内部指南</strong> — 这是唤龙平台团队的工作流与权力结构指南。保密内容，请勿外泄。
-    </div>
-
-    <div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
-        本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
     </div>
 
     <main>
@@ -577,99 +577,41 @@
             </div>
         </section>
 
-        <!-- ════════ STATUS MACHINE (card grid, not long vertical list) ════════ -->
+        <!-- ════════ STATUS MACHINE — compact inline + link to detail page ════════ -->
         <section class="diagram-section">
-            <h2>状态转移机制</h2>
-            <p style="margin-bottom:1.5rem;">展示需求从提议到发布的 12 个关键状态。点击卡片查看入口、出口条件。</p>
+            <h2>能力包状态机 · 12 状态概览</h2>
+            <p style="margin-bottom:1rem;">能力包从提案到发布经历 12 个关键状态。下方为精简流转图，<a href="workflow-states.html" style="color:var(--primary-light);">点击查看带动效的详细状态说明 →</a></p>
 
-            <div class="state-grid">
-                <div class="state-card" data-sc="1">
-                    <div class="state-pair">
-                        <span class="state-badge">Proposed</span>
-                        <span class="state-arrow">→</span>
-                        <span class="state-badge">Cap-Spec Frozen</span>
-                    </div>
-                    <div class="state-info">
-                        <p><strong>入口：</strong>PM 提交 Spec 草稿</p>
-                        <p><strong>出口：</strong>创始人确认签字</p>
-                        <p><strong>条件：</strong>Spec 清晰、创始人同意，工程师确认技术可行</p>
-                    </div>
-                </div>
-
-                <div class="state-card" data-sc="2">
-                    <div class="state-pair">
-                        <span class="state-badge">HPRD In Review</span>
-                        <span class="state-arrow">→</span>
-                        <span class="state-badge">HPRD Approved</span>
-                    </div>
-                    <div class="state-info">
-                        <p><strong>入口：</strong>工程师提交 HPRD</p>
-                        <p><strong>出口：</strong>PM 和工程师确认理解一致</p>
-                        <p><strong>条件：</strong>HPRD 与 Spec 对标，QA 验收测试已编写</p>
-                    </div>
-                </div>
-
-                <div class="state-card" data-sc="3">
-                    <div class="state-pair">
-                        <span class="state-badge">Design Frozen</span>
-                        <span class="state-arrow">→</span>
-                        <span class="state-badge">In Development</span>
-                    </div>
-                    <div class="state-info">
-                        <p><strong>入口：</strong>HPRD 已批准，设计稿已确定</p>
-                        <p><strong>出口：</strong>工程师分配开始编码</p>
-                        <p><strong>条件：</strong>所有代码完成后提交 PR，本地测试通过</p>
-                    </div>
-                </div>
-
-                <div class="state-card" data-sc="4">
-                    <div class="state-pair">
-                        <span class="state-badge">PR Submitted</span>
-                        <span class="state-arrow">→</span>
-                        <span class="state-badge">In Review</span>
-                    </div>
-                    <div class="state-info">
-                        <p><strong>入口：</strong>工程师推送到远端</p>
-                        <p><strong>出口：</strong>触发 CI/CD 和代码审查</p>
-                        <p><strong>条件：</strong>PR 链接需求，门禁配置正确</p>
-                    </div>
-                </div>
-
-                <div class="state-card" data-sc="5">
-                    <div class="state-pair">
-                        <span class="state-badge">QA Verdict</span>
-                        <span class="state-arrow">→</span>
-                        <span class="state-badge">PM Acceptance</span>
-                    </div>
-                    <div class="state-info">
-                        <p><strong>入口：</strong>QA 完成手动测试</p>
-                        <p><strong>出口：</strong>PM 进行最终验收</p>
-                        <p><strong>条件：</strong>测试覆盖完整，功能符合 Cap-Spec</p>
-                    </div>
-                </div>
-
-                <div class="state-card" data-sc="6">
-                    <div class="state-pair">
-                        <span class="state-badge">Merged</span>
-                        <span class="state-arrow">→</span>
-                        <span class="state-badge">Released</span>
-                    </div>
-                    <div class="state-info">
-                        <p><strong>入口：</strong>PM 签署 pm-acceptance</p>
-                        <p><strong>出口：</strong>代码合并到 main，发布到生产环境</p>
-                        <p><strong>条件：</strong>无冲突，所有检查通过，DevOps 发布</p>
-                    </div>
-                </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;">
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(116,185,255,0.15);border:1px solid #74B9FF;color:#74B9FF;">❶ Proposed</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(162,155,254,0.15);border:1px solid #A29BFE;color:#A29BFE;">❷ Contract Locked</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(116,185,255,0.15);border:1px solid #74B9FF;color:#74B9FF;">❸ Cap-Spec Frozen</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(85,239,196,0.15);border:1px solid #55EFC4;color:#55EFC4;">❹ HPRD Passed</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(223,230,233,0.15);border:1px solid #DFE6E9;color:#DFE6E9;">❺ Design Approved</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(85,239,196,0.15);border:1px solid #55EFC4;color:#55EFC4;">❻ In Development</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(85,239,196,0.15);border:1px solid #55EFC4;color:#55EFC4;">❼ Draft PR</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(253,203,110,0.15);border:1px solid #FDCB6E;color:#FDCB6E;">❽ L1-L3 Running</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(0,184,148,0.15);border:1px solid #00B894;color:#00B894;">❾ Gates Passed</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(255,234,167,0.15);border:1px solid #FFEAA7;color:#FFEAA7;">❿ QA Passed</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(116,185,255,0.15);border:1px solid #74B9FF;color:#74B9FF;">⓫ PM Accepted</span>
+              <span style="color:var(--text-muted);">→</span>
+              <span style="padding:6px 14px;border-radius:8px;font-size:0.8em;font-weight:600;background:rgba(0,184,148,0.2);border:1px solid #00B894;color:#00B894;">⓬ Released ✓</span>
             </div>
 
-            <div style="background:rgba(253,203,110,0.15); border-left:4px solid var(--accent); border-radius:8px; padding:1.5rem; margin-top:1.5rem;">
-                <h4 style="color:var(--accent); margin-bottom:1rem;">
-                    <span class="status-pill status-proposed">PROPOSED</span> 测试阶段声明
-                </h4>
-                <p>
-                    上述 12 个状态转移机制是 <strong>v2.1 正式规范</strong> 中的定义。在当前测试阶段（v2.0），部分状态和转移仍在验证中。
-                    这个页面文档是为了帮助团队理解完整流程，实际执行中请参考项目管理系统的实时状态标记。
-                </p>
+            <div style="text-align:center;margin-top:14px;">
+              <a href="workflow-states.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(108,92,231,0.12);border:1px solid var(--primary);border-radius:10px;color:var(--primary-light);text-decoration:none;font-size:0.9em;font-weight:600;transition:all 0.3s;">
+                🔄 查看完整状态机详解（含动画播放 · 12 态入口/出口/守卫规则）→
+              </a>
             </div>
         </section>
 

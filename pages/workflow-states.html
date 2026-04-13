@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工作流状态机详解 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+body { min-width:1200px; }
+
+/* ── State Flow SVG ── */
+.flow-canvas { max-width:960px; margin:0 auto; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; position:relative; overflow:hidden; }
+.flow-canvas::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--primary),var(--secondary),var(--accent),var(--primary)); background-size:300% 100%; animation:shimmer 4s linear infinite; }
+@keyframes shimmer { 0%{background-position:300% 0} 100%{background-position:0 0} }
+
+.flow-svg { width:100%; }
+.flow-svg .node-bg { cursor:pointer; transition:all 0.35s; }
+.flow-svg .node-bg:hover { filter:brightness(1.3); }
+.flow-svg .node-label { pointer-events:none; font-size:11px; font-weight:700; fill:#E8E8F0; }
+.flow-svg .node-sub { pointer-events:none; font-size:8px; fill:#9999B0; }
+.flow-svg .arrow-path { stroke:#2D2D4A; stroke-width:2; fill:none; marker-end:url(#arrowhead); transition:stroke 0.4s; }
+.flow-svg .arrow-path.lit { stroke:var(--primary); stroke-width:2.5; }
+.flow-svg .node-ring { fill:none; stroke:transparent; stroke-width:3; transition:stroke 0.4s; }
+.flow-svg .node-ring.active { stroke:var(--primary); filter:drop-shadow(0 0 8px rgba(108,92,231,0.5)); }
+
+/* ── State Detail Panel ── */
+.state-panel { max-width:960px; margin:20px auto 0; }
+.sp-card { display:none; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:24px; animation:fadeUp 0.3s ease; }
+.sp-card.show { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.sp-header { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.sp-num { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1em; color:#fff; }
+.sp-title { font-size:1.15em; font-weight:700; }
+.sp-title small { font-size:0.72em; font-weight:400; color:var(--text-muted); margin-left:8px; }
+.sp-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+.sp-cell { padding:14px; background:rgba(15,15,26,0.6); border-radius:8px; }
+.sp-cell-label { font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:6px; }
+.sp-cell-value { font-size:0.88em; line-height:1.6; }
+.sp-cell-value .tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.78em; font-weight:600; margin:2px 2px 0 0; }
+.sp-transition { margin-top:14px; display:flex; gap:12px; }
+.sp-trans-box { flex:1; padding:12px; border-radius:8px; font-size:0.82em; }
+.sp-trans-box .trans-label { font-size:0.7em; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+
+/* ── Progress bar ── */
+.progress-bar { max-width:960px; margin:20px auto 0; display:flex; gap:2px; border-radius:8px; overflow:hidden; }
+.prog-seg { flex:1; height:6px; background:#2D2D4A; transition:background 0.4s; cursor:pointer; }
+.prog-seg.done { background:var(--secondary); }
+.prog-seg.active { background:var(--primary); box-shadow:0 0 8px rgba(108,92,231,0.5); }
+
+/* ── Legend ── */
+.legend-bar { max-width:960px; margin:14px auto 0; display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:0.75em; color:var(--text-muted); }
+.legend-dot { width:10px; height:10px; border-radius:50%; }
+
+/* ── Controls ── */
+.flow-controls { max-width:960px; margin:16px auto 0; display:flex; gap:10px; justify-content:center; }
+.fc-btn { padding:6px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:0.82em; cursor:pointer; transition:all 0.2s; }
+.fc-btn:hover { border-color:var(--primary); background:rgba(108,92,231,0.1); }
+.fc-btn.playing { border-color:var(--secondary); color:var(--secondary); }
+
+/* ── Topo link section ── */
+.topo-links { max-width:960px; margin:32px auto 0; padding:0 24px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.topo-link { display:flex; align-items:center; gap:12px; padding:14px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; text-decoration:none; color:var(--text); transition:all 0.3s; }
+.topo-link:hover { border-color:var(--primary); transform:translateX(3px); }
+.topo-link .tl-icon { font-size:1.3em; }
+.topo-link .tl-info h4 { font-size:0.9em; margin-bottom:2px; }
+.topo-link .tl-info p { font-size:0.75em; color:var(--text-muted); margin:0; }
+
+.top-nav a { cursor:pointer; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.5rem 1rem; text-align:center; font-size:0.82rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
+
+<div class="page-header" style="max-width:960px;margin:0 auto;padding:28px 24px 16px;">
+  <h1 style="font-size:1.8em;margin:0;">能力包状态机 · 12 状态全景</h1>
+  <p style="color:var(--text-muted);margin-top:6px;font-size:0.92em;">
+    从 Proposed 到 Released，一个能力包经历 12 个关键状态。点击节点查看详情，或播放动画观看完整旅程。
+  </p>
+</div>
+
+<!-- ═══ Progress Bar ═══ -->
+<div class="progress-bar" id="progBar"></div>
+
+<!-- ═══ SVG Flow Diagram ═══ -->
+<div class="flow-canvas">
+  <svg class="flow-svg" viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#6C5CE7"/>
+      </marker>
+    </defs>
+
+    <!-- Row 1: states 0-5 (y=60) -->
+    <g class="state-g" data-idx="0" onclick="showState(0)">
+      <rect class="node-bg" x="10" y="30" width="120" height="56" rx="10" fill="rgba(116,185,255,0.15)" stroke="#74B9FF" stroke-width="1.5"/>
+      <rect class="node-ring" x="7" y="27" width="126" height="62" rx="12"/>
+      <text class="node-label" x="70" y="55" text-anchor="middle">Proposed</text>
+      <text class="node-sub" x="70" y="72" text-anchor="middle">PM 提案</text>
+    </g>
+    <path class="arrow-path" d="M132,58 L152,58"/>
+
+    <g class="state-g" data-idx="1" onclick="showState(1)">
+      <rect class="node-bg" x="155" y="30" width="120" height="56" rx="10" fill="rgba(162,155,254,0.15)" stroke="#A29BFE" stroke-width="1.5"/>
+      <rect class="node-ring" x="152" y="27" width="126" height="62" rx="12"/>
+      <text class="node-label" x="215" y="55" text-anchor="middle">Contract Locked</text>
+      <text class="node-sub" x="215" y="72" text-anchor="middle">创始人锁定</text>
+    </g>
+    <path class="arrow-path" d="M277,58 L297,58"/>
+
+    <g class="state-g" data-idx="2" onclick="showState(2)">
+      <rect class="node-bg" x="300" y="30" width="120" height="56" rx="10" fill="rgba(116,185,255,0.15)" stroke="#74B9FF" stroke-width="1.5"/>
+      <rect class="node-ring" x="297" y="27" width="126" height="62" rx="12"/>
+      <text class="node-label" x="360" y="55" text-anchor="middle">Cap-Spec Frozen</text>
+      <text class="node-sub" x="360" y="72" text-anchor="middle">规格冻结</text>
+    </g>
+    <path class="arrow-path" d="M422,58 L442,58"/>
+
+    <g class="state-g" data-idx="3" onclick="showState(3)">
+      <rect class="node-bg" x="445" y="30" width="120" height="56" rx="10" fill="rgba(85,239,196,0.15)" stroke="#55EFC4" stroke-width="1.5"/>
+      <rect class="node-ring" x="442" y="27" width="126" height="62" rx="12"/>
+      <text class="node-label" x="505" y="55" text-anchor="middle">HPRD Passed</text>
+      <text class="node-sub" x="505" y="72" text-anchor="middle">方案互审通过</text>
+    </g>
+    <path class="arrow-path" d="M567,58 L587,58"/>
+
+    <g class="state-g" data-idx="4" onclick="showState(4)">
+      <rect class="node-bg" x="590" y="30" width="120" height="56" rx="10" fill="rgba(223,230,233,0.15)" stroke="#DFE6E9" stroke-width="1.5"/>
+      <rect class="node-ring" x="587" y="27" width="126" height="62" rx="12"/>
+      <text class="node-label" x="650" y="55" text-anchor="middle">Design Approved</text>
+      <text class="node-sub" x="650" y="72" text-anchor="middle">设计冻结</text>
+    </g>
+    <path class="arrow-path" d="M712,58 L732,58"/>
+
+    <g class="state-g" data-idx="5" onclick="showState(5)">
+      <rect class="node-bg" x="735" y="30" width="120" height="56" rx="10" fill="rgba(85,239,196,0.15)" stroke="#55EFC4" stroke-width="1.5"/>
+      <rect class="node-ring" x="732" y="27" width="126" height="62" rx="12"/>
+      <text class="node-label" x="795" y="55" text-anchor="middle">In Development</text>
+      <text class="node-sub" x="795" y="72" text-anchor="middle">AI-first 编码</text>
+    </g>
+
+    <!-- Connector: row1 → row2 -->
+    <path class="arrow-path" d="M855,58 Q880,58 880,130 Q880,165 855,165"/>
+
+    <!-- Row 2: states 6-11 (y=140, right to left) -->
+    <g class="state-g" data-idx="6" onclick="showState(6)">
+      <rect class="node-bg" x="735" y="135" width="120" height="56" rx="10" fill="rgba(85,239,196,0.15)" stroke="#55EFC4" stroke-width="1.5"/>
+      <rect class="node-ring" x="732" y="132" width="126" height="62" rx="12"/>
+      <text class="node-label" x="795" y="160" text-anchor="middle">Draft PR Open</text>
+      <text class="node-sub" x="795" y="177" text-anchor="middle">PR 提交</text>
+    </g>
+    <path class="arrow-path" d="M733,163 L713,163"/>
+
+    <g class="state-g" data-idx="7" onclick="showState(7)">
+      <rect class="node-bg" x="590" y="135" width="120" height="56" rx="10" fill="rgba(253,203,110,0.15)" stroke="#FDCB6E" stroke-width="1.5"/>
+      <rect class="node-ring" x="587" y="132" width="126" height="62" rx="12"/>
+      <text class="node-label" x="650" y="160" text-anchor="middle">L1-L3 Running</text>
+      <text class="node-sub" x="650" y="177" text-anchor="middle">门禁执行中</text>
+    </g>
+    <path class="arrow-path" d="M588,163 L568,163"/>
+
+    <g class="state-g" data-idx="8" onclick="showState(8)">
+      <rect class="node-bg" x="445" y="135" width="120" height="56" rx="10" fill="rgba(0,184,148,0.15)" stroke="#00B894" stroke-width="1.5"/>
+      <rect class="node-ring" x="442" y="132" width="126" height="62" rx="12"/>
+      <text class="node-label" x="505" y="160" text-anchor="middle">Gates Passed</text>
+      <text class="node-sub" x="505" y="177" text-anchor="middle">门禁全绿</text>
+    </g>
+    <path class="arrow-path" d="M443,163 L423,163"/>
+
+    <g class="state-g" data-idx="9" onclick="showState(9)">
+      <rect class="node-bg" x="300" y="135" width="120" height="56" rx="10" fill="rgba(255,234,167,0.15)" stroke="#FFEAA7" stroke-width="1.5"/>
+      <rect class="node-ring" x="297" y="132" width="126" height="62" rx="12"/>
+      <text class="node-label" x="360" y="160" text-anchor="middle">QA Passed</text>
+      <text class="node-sub" x="360" y="177" text-anchor="middle">qa-verdict PASS</text>
+    </g>
+    <path class="arrow-path" d="M298,163 L278,163"/>
+
+    <g class="state-g" data-idx="10" onclick="showState(10)">
+      <rect class="node-bg" x="155" y="135" width="120" height="56" rx="10" fill="rgba(116,185,255,0.15)" stroke="#74B9FF" stroke-width="1.5"/>
+      <rect class="node-ring" x="152" y="132" width="126" height="62" rx="12"/>
+      <text class="node-label" x="215" y="160" text-anchor="middle">PM Accepted</text>
+      <text class="node-sub" x="215" y="177" text-anchor="middle">语义验收通过</text>
+    </g>
+    <path class="arrow-path" d="M153,163 L133,163"/>
+
+    <g class="state-g" data-idx="11" onclick="showState(11)">
+      <rect class="node-bg" x="10" y="135" width="120" height="56" rx="10" fill="rgba(0,184,148,0.2)" stroke="#00B894" stroke-width="2"/>
+      <rect class="node-ring" x="7" y="132" width="126" height="62" rx="12"/>
+      <text class="node-label" x="70" y="160" text-anchor="middle">Released</text>
+      <text class="node-sub" x="70" y="177" text-anchor="middle">生产发布 ✓</text>
+    </g>
+
+    <!-- Failure return arrows (dashed) -->
+    <path d="M650,193 Q650,230 505,240 Q360,250 360,193" stroke="rgba(225,112,85,0.4)" stroke-width="1.5" stroke-dasharray="6 3" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="505" y="255" text-anchor="middle" font-size="8" fill="#E17055">门禁失败 → 返回开发</text>
+
+    <path d="M215,193 Q215,260 505,270 Q795,280 795,193" stroke="rgba(225,112,85,0.3)" stroke-width="1.5" stroke-dasharray="6 3" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="505" y="290" text-anchor="middle" font-size="8" fill="#E17055">PM 拒绝 → 返回开发修复</text>
+  </svg>
+</div>
+
+<!-- ═══ Controls ═══ -->
+<div class="flow-controls">
+  <button class="fc-btn" onclick="prevState()">← 上一步</button>
+  <button class="fc-btn" id="playBtn" onclick="togglePlay()">▶ 播放动画</button>
+  <button class="fc-btn" onclick="nextState()">下一步 →</button>
+</div>
+
+<!-- ═══ Legend ═══ -->
+<div class="legend-bar">
+  <div class="legend-item"><span class="legend-dot" style="background:#74B9FF;"></span>PM 主导</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#A29BFE;"></span>创始人</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#55EFC4;"></span>工程师</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#DFE6E9;"></span>设计师</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#FDCB6E;"></span>CI 自动</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#FFEAA7;"></span>QA</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#00B894;"></span>系统/完成</div>
+  <div class="legend-item" style="margin-left:10px;opacity:0.6;">虚线箭头 = 失败回退路径</div>
+</div>
+
+<!-- ═══ State Detail Panel ═══ -->
+<div class="state-panel" id="statePanel"></div>
+
+<!-- ═══ Related Pages ═══ -->
+<div class="topo-links">
+  <a class="topo-link" href="delivery-steps.html">
+    <span class="tl-icon">🔄</span>
+    <div class="tl-info"><h4>五步交付流详解</h4><p>步骤视角的详细说明与并行轨道</p></div>
+  </a>
+  <a class="topo-link" href="gate-levels.html">
+    <span class="tl-icon">🛡️</span>
+    <div class="tl-info"><h4>门禁体系详解</h4><p>L1-L4 四层金字塔与哨兵机制</p></div>
+  </a>
+  <a class="topo-link" href="global.html">
+    <span class="tl-icon">🌐</span>
+    <div class="tl-info"><h4>全局工作流</h4><p>返回全景总览页</p></div>
+  </a>
+</div>
+
+<footer class="site-footer" style="margin-top:40px;">
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 · Internal Guide<br>
+  能力包状态机 12 态 · 治理来源 TEAM-COLLAB-SPEC v2.1 §5
+</footer>
+
+<script>
+const STATES = [
+  {
+    name:'Proposed', owner:'PM', color:'#74B9FF',
+    desc:'PM 提出新能力包构想，编写初版 Cap-Spec 草稿，明确用户价值和业务目标。',
+    entry:'PM 在飞书/GitHub 创建能力包提案',
+    exit:'创始人审阅并决定是否纳入交付计划',
+    guard:'提案必须包含：用户场景、业务价值、初步范围边界',
+    output:'cap-spec-draft.md',
+    roles:[{t:'PM ⬤提案',bg:'rgba(116,185,255,0.2)',c:'#74B9FF'},{t:'创始人 审阅',bg:'rgba(162,155,254,0.2)',c:'#A29BFE'}],
+    fail:'创始人拒绝 → 状态回到 Backlog',
+    next:'Contract Locked'
+  },
+  {
+    name:'Contract Locked', owner:'创始人', color:'#A29BFE',
+    desc:'创始人确认能力包不违反治理契约（SAAC 包络），锁定契约边界，授权进入正式流程。',
+    entry:'创始人审阅 Cap-Spec 与契约的兼容性',
+    exit:'契约边界确认无冲突，签字锁定',
+    guard:'能力包范围不得超出 SAAC 契约包络；若涉及 kernel/gateway 变更需额外审批',
+    output:'contract-lock 签字记录',
+    roles:[{t:'创始人 ⬤签字',bg:'rgba(162,155,254,0.2)',c:'#A29BFE'},{t:'PM 等待',bg:'rgba(116,185,255,0.1)',c:'rgba(116,185,255,0.5)'}],
+    fail:'契约冲突 → 返回 PM 修改 Cap-Spec',
+    next:'Cap-Spec Frozen'
+  },
+  {
+    name:'Cap-Spec Frozen', owner:'PM', color:'#74B9FF',
+    desc:'PM 最终冻结能力包规格说明书，scope 不可再追加。这是五步交付流 Step 1 的交付物。',
+    entry:'契约已锁定，PM 完善 Cap-Spec 三件套',
+    exit:'Cap-Spec 冻结签字完成，通知全团队',
+    guard:'必须包含：cap-spec.yaml + scope-boundary.md + acceptance-criteria；创始人 + PM 双签',
+    output:'cap-spec.yaml（冻结版）',
+    roles:[{t:'PM ⬤冻结',bg:'rgba(116,185,255,0.2)',c:'#74B9FF'},{t:'创始人 ⬤签字',bg:'rgba(162,155,254,0.2)',c:'#A29BFE'}],
+    fail:'Spec 不清晰 → 创始人驳回，PM 修改',
+    next:'HPRD Passed'
+  },
+  {
+    name:'HPRD Passed', owner:'工程师', color:'#55EFC4',
+    desc:'工程师编写 HPRD（How-to-PRD），互审通过。这是五步交付流 Step 2 的工程侧交付物。',
+    entry:'Cap-Spec 已冻结，工程师开始技术方案设计',
+    exit:'HPRD 双人互审通过，PM 确认理解一致',
+    guard:'HPRD 6 字段完整（目标/方案/API/数据模型/风险/测试策略）；与 Cap-Spec 对标无偏差',
+    output:'HPRD.md + design.md',
+    roles:[{t:'工程师 ⬤编写',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'},{t:'PM ⬤审阅',bg:'rgba(116,185,255,0.2)',c:'#74B9FF'},{t:'QA ⬤manifest',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'}],
+    fail:'互审不通过 → 工程师修改 HPRD',
+    next:'Design Approved'
+  },
+  {
+    name:'Design Approved', owner:'设计师', color:'#DFE6E9',
+    desc:'设计师完成 Design Packet（12 字段），前端确认可实现性，PM 确认语义匹配。',
+    entry:'HPRD 通过后，设计师根据 Cap-Spec 产出设计稿',
+    exit:'Design Packet 冻结，全员确认',
+    guard:'12 字段完整（布局/组件/动效/Token/断点/文案等）；UI 风险分层 R0-R3 标注完成',
+    output:'Design Packet（Figma + 12 字段文档）',
+    roles:[{t:'设计师 ⬤设计',bg:'rgba(223,230,233,0.2)',c:'#DFE6E9'},{t:'前端 ⬤确认',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'},{t:'PM ⬤审阅',bg:'rgba(116,185,255,0.2)',c:'#74B9FF'}],
+    fail:'设计与 Spec 偏差 → 设计师修改',
+    next:'In Development'
+  },
+  {
+    name:'In Development', owner:'工程师', color:'#55EFC4',
+    desc:'工程师和前端以 AI-first 方式编码实现，遵循 HPRD 和 Design Packet。五步交付流 Step 3。',
+    entry:'HPRD + Design Packet 均已冻结',
+    exit:'功能代码完成，本地测试通过，准备提交 PR',
+    guard:'AI 生成代码必须经人工审阅；design.md 双人互审；单元测试覆盖关键路径',
+    output:'功能代码 + 单元测试 + design.md',
+    roles:[{t:'工程师 ⬤编码',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'},{t:'前端 ⬤UI实现',bg:'rgba(223,230,233,0.2)',c:'#DFE6E9'}],
+    fail:'技术阻塞 → 上报 Tech Lead 协助',
+    next:'Draft PR Open'
+  },
+  {
+    name:'Draft PR Open', owner:'工程师', color:'#55EFC4',
+    desc:'工程师将代码推送到远端，创建 PR 并关联能力包。PR 提交触发 CI 流水线。',
+    entry:'本地开发完成，git push 到 feature 分支',
+    exit:'PR 创建成功，CI 开始执行',
+    guard:'PR 必须包含 YAML 分类块（change_class: capability）；关联 Cap-Spec 编号；description 填写完整',
+    output:'PR（feature/cap-xxx → main）',
+    roles:[{t:'工程师 ⬤提交',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'}],
+    fail:'PR 格式不合规 → L1 门禁直接 BLOCK',
+    next:'L1-L3 Running'
+  },
+  {
+    name:'L1-L3 Running', owner:'CI 自动', color:'#FDCB6E',
+    desc:'CI 流水线自动执行三层 BLOCKING 门禁：L1 格式检查、L2 确定性测试、L3 行为验证。',
+    entry:'PR 创建或更新触发 GitHub Actions',
+    exit:'L1-L3 全部 PASS（绿色）',
+    guard:'三层均为 BLOCKING——任一失败即阻止合并；L4 哨兵同步执行但仅 ADVISORY',
+    output:'CI 检查报告 + L4 哨兵审阅意见',
+    roles:[{t:'CI ⬤自动执行',bg:'rgba(253,203,110,0.2)',c:'#FDCB6E'},{t:'哨兵 🤖ADVISORY',bg:'rgba(108,92,231,0.2)',c:'#A29BFE'},{t:'工程师 ⬤修复',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'}],
+    fail:'任一门禁 FAIL → 工程师修复后重新触发',
+    next:'Gates Passed'
+  },
+  {
+    name:'Gates Passed', owner:'系统', color:'#00B894',
+    desc:'L1-L3 全部通过，Required Status Checks 显示绿色。PR 已具备合并资格的技术前提。',
+    entry:'CI 报告 L1-L3 全 PASS',
+    exit:'通知 QA 开始验收测试',
+    guard:'GitHub Branch Protection 的 Required Status Checks 必须全绿；L4 哨兵报告已生成（ADVISORY）',
+    output:'绿色合并状态 + 哨兵报告',
+    roles:[{t:'系统 ⬤自动',bg:'rgba(0,184,148,0.2)',c:'#00B894'},{t:'QA 收到通知',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'}],
+    fail:'——（此状态由系统判定，不可手动覆盖）',
+    next:'QA Passed'
+  },
+  {
+    name:'QA Passed', owner:'QA', color:'#FFEAA7',
+    desc:'QA 根据 acceptance-manifest 执行验收测试，出具 qa-verdict = PASS。五步交付流 Step 4。',
+    entry:'门禁全绿后，QA 开始手动验收测试',
+    exit:'qa-verdict = PASS，通知 PM 进行最终验收',
+    guard:'必须覆盖 acceptance-manifest 中全部场景；verdict 必须明确 PASS/FAIL，不允许 PARTIAL',
+    output:'qa-verdict.yaml（PASS）',
+    roles:[{t:'QA ⬤verdict',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'},{t:'运维 ⬤staging',bg:'rgba(250,177,160,0.2)',c:'#FAB1A0'}],
+    fail:'qa-verdict = FAIL → 返回工程师修复',
+    next:'PM Accepted'
+  },
+  {
+    name:'PM Accepted', owner:'PM', color:'#74B9FF',
+    desc:'PM 最终验收能力包语义完整性——功能是否真正实现了 Cap-Spec 描述的用户价值。五步交付流 Step 5。',
+    entry:'qa-verdict = PASS 后，PM 开始语义验收',
+    exit:'pm-acceptance = approved，授权合并',
+    guard:'PM 验收的是「语义」而非「技术」——功能是否达到了 Cap-Spec 定义的用户期望',
+    output:'pm-acceptance 签字',
+    roles:[{t:'PM ⬤签字',bg:'rgba(116,185,255,0.2)',c:'#74B9FF'},{t:'工程师 ⬤待命',bg:'rgba(85,239,196,0.1)',c:'rgba(85,239,196,0.5)'}],
+    fail:'PM 拒绝 → 返回工程师修复，严重偏离回到设计评审',
+    next:'Released'
+  },
+  {
+    name:'Released', owner:'运维', color:'#00B894',
+    desc:'代码合并到 main，运维执行 prod 发布，能力包正式上线。流程闭环。',
+    entry:'PM 签字后，工程师合并 PR 到 main',
+    exit:'生产环境发布成功，监控无异常',
+    guard:'发布遵循 staging → QA 回归 → prod 路径；灰度发布策略按 DECISION-GRAYSCALE-STRATEGY 执行',
+    output:'生产发布记录 + 监控基线',
+    roles:[{t:'工程师 ⬤合并',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'},{t:'运维 ⬤发布',bg:'rgba(250,177,160,0.2)',c:'#FAB1A0'},{t:'QA ⬤回归',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'}],
+    fail:'发布失败 → 运维执行回滚，重新排期',
+    next:'——（终态）'
+  }
+];
+
+let current = 0;
+let playing = false;
+let timer = null;
+
+function initProgBar() {
+  const bar = document.getElementById('progBar');
+  bar.innerHTML = STATES.map((_,i) => '<div class="prog-seg" data-i="'+i+'" onclick="showState('+i+')"></div>').join('');
+}
+
+function showState(idx) {
+  current = idx;
+  // Update rings
+  document.querySelectorAll('.node-ring').forEach((r,i) => r.classList.toggle('active', i===idx));
+  // Update arrows
+  const arrows = document.querySelectorAll('.arrow-path');
+  arrows.forEach((a,i) => a.classList.toggle('lit', i < idx));
+  // Update progress bar
+  document.querySelectorAll('.prog-seg').forEach((s,i) => {
+    s.classList.toggle('done', i < idx);
+    s.classList.toggle('active', i === idx);
+  });
+  // Render detail
+  const s = STATES[idx];
+  let html = '<div class="sp-card show">';
+  html += '<div class="sp-header"><div class="sp-num" style="background:'+s.color+'">'+(idx+1)+'</div>';
+  html += '<div class="sp-title">'+s.name+'<small>'+s.owner+' 主导</small></div></div>';
+  html += '<p style="color:var(--text-muted);font-size:0.9em;margin-bottom:16px;">'+s.desc+'</p>';
+  html += '<div class="sp-grid">';
+  html += '<div class="sp-cell"><div class="sp-cell-label">入口条件</div><div class="sp-cell-value">'+s.entry+'</div></div>';
+  html += '<div class="sp-cell"><div class="sp-cell-label">出口条件</div><div class="sp-cell-value">'+s.exit+'</div></div>';
+  html += '<div class="sp-cell"><div class="sp-cell-label">核心产出</div><div class="sp-cell-value" style="color:var(--secondary);font-weight:600;">'+s.output+'</div></div>';
+  html += '</div>';
+  html += '<div class="sp-grid" style="margin-top:10px;">';
+  html += '<div class="sp-cell"><div class="sp-cell-label">守卫规则</div><div class="sp-cell-value" style="font-size:0.82em;">'+s.guard+'</div></div>';
+  html += '<div class="sp-cell"><div class="sp-cell-label">参与角色</div><div class="sp-cell-value">';
+  s.roles.forEach(r => { html += '<span class="tag" style="background:'+r.bg+';color:'+r.c+';">'+r.t+'</span>'; });
+  html += '</div></div>';
+  html += '<div class="sp-cell"><div class="sp-cell-label">失败路径</div><div class="sp-cell-value" style="color:#E17055;font-size:0.82em;">'+s.fail+'</div></div>';
+  html += '</div>';
+  html += '<div class="sp-transition">';
+  html += '<div class="sp-trans-box" style="background:rgba(108,92,231,0.08);border:1px solid rgba(108,92,231,0.2);"><div class="trans-label" style="color:var(--primary-light);">下一状态</div>'+s.next+'</div>';
+  if(idx > 0) html += '<div class="sp-trans-box" style="background:rgba(85,239,196,0.08);border:1px solid rgba(85,239,196,0.2);"><div class="trans-label" style="color:var(--secondary);">上一状态</div>'+STATES[idx-1].name+'</div>';
+  html += '</div>';
+  html += '</div>';
+  document.getElementById('statePanel').innerHTML = html;
+}
+
+function nextState() { showState(Math.min(current+1, 11)); }
+function prevState() { showState(Math.max(current-1, 0)); }
+
+function togglePlay() {
+  playing = !playing;
+  const btn = document.getElementById('playBtn');
+  if (playing) {
+    btn.textContent = '⏸ 暂停';
+    btn.classList.add('playing');
+    timer = setInterval(() => {
+      if (current >= 11) { togglePlay(); return; }
+      nextState();
+    }, 2000);
+  } else {
+    btn.textContent = '▶ 播放动画';
+    btn.classList.remove('playing');
+    clearInterval(timer);
+  }
+}
+
+initProgBar();
+showState(0);
+</script>
+</body>
+</html>

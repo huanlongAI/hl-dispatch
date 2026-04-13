@@ -7,84 +7,142 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
   body { min-width: 1200px; }
-  .hero { text-align:center; padding:80px 24px 60px; background:linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%); position:relative; }
+
+  /* ── Hero: compact intro ── */
+  .hero { text-align:center; padding:60px 24px 36px; background:linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%); position:relative; }
   .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 50%,rgba(108,92,231,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(0,184,148,0.1) 0%,transparent 50%); }
-  .hero h1 { font-size:2.8em; font-weight:900; position:relative; z-index:1; line-height:1.3; }
+  .hero h1 { font-size:2.4em; font-weight:900; position:relative; z-index:1; line-height:1.3; margin:0; }
   .hero h1 span { background:linear-gradient(135deg,var(--primary-light),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  .hero p { font-size:1.15em; color:var(--text-muted); margin-top:16px; position:relative; z-index:1; }
-  .hero .badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:20px; position:relative; z-index:1; }
-  .hero .badge { padding:5px 16px; background:rgba(108,92,231,0.15); border:1px solid var(--primary); border-radius:20px; font-size:0.88rem; color:var(--primary-light); cursor:pointer; }
-  .hero .badge:hover { background:rgba(108,92,231,0.25); }
-  .hero .badge:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  .hero .intro { max-width:720px; margin:14px auto 0; font-size:0.95em; color:var(--text-muted); position:relative; z-index:1; line-height:1.7; }
+  .hero .intro strong { color:var(--text); font-weight:600; }
+  .hero .badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:16px; position:relative; z-index:1; }
+  .hero .badge { padding:4px 14px; background:rgba(108,92,231,0.15); border:1px solid var(--primary); border-radius:20px; font-size:0.82rem; color:var(--primary-light); }
+  .hero .badge.draft { background:rgba(253,203,110,0.15); border-color:#FDCB6E; color:#FDCB6E; }
 
-  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; max-width:900px; margin:-30px auto 0; padding:0 24px; position:relative; z-index:10; }
-  .stat { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; text-align:center; }
-  .stat .val { font-size:2.2em; font-weight:800; background:linear-gradient(135deg,var(--primary-light),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  .stat .lbl { font-size:0.88rem; color:var(--text-muted); margin-top:4px; }
+  /* ── Workflow Engine ── */
+  .workflow-engine { max-width:960px; margin:32px auto 0; padding:0 24px; }
+  .workflow-engine h2 { font-size:1.4em; font-weight:700; text-align:center; margin-bottom:6px; }
+  .workflow-engine .sub { text-align:center; font-size:0.85em; color:var(--text-muted); margin-bottom:20px; }
 
-  .guides { max-width:900px; margin:48px auto; padding:0 24px; }
-  .guides h2 { font-size:1.6em; font-weight:700; margin-bottom:24px; text-align:center; }
+  .pipeline-wrap { position:relative; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:28px 24px 20px; overflow:hidden; }
+  .pipeline-wrap::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--primary),var(--secondary),var(--accent),var(--primary)); background-size:300% 100%; animation:shimmer 4s linear infinite; }
+  @keyframes shimmer { 0%{background-position:300% 0} 100%{background-position:0 0} }
+
+  /* 5 steps row */
+  .pipeline { display:flex; align-items:stretch; gap:0; position:relative; }
+  .pipe-step { flex:1; text-align:center; padding:14px 8px; cursor:pointer; position:relative; transition:all 0.3s; border-radius:10px; }
+  .pipe-step:hover { background:rgba(108,92,231,0.08); }
+  .pipe-step.active { background:rgba(108,92,231,0.12); }
+  .pipe-step .step-num { width:36px; height:36px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1em; margin-bottom:6px; border:2px solid var(--border); color:var(--text-muted); transition:all 0.4s; }
+  .pipe-step.active .step-num { border-color:var(--primary); color:#fff; background:var(--primary); box-shadow:0 0 16px rgba(108,92,231,0.4); }
+  .pipe-step .step-label { font-size:0.82em; font-weight:600; color:var(--text-muted); transition:color 0.3s; }
+  .pipe-step.active .step-label { color:var(--text); }
+
+  /* connector arrows between steps */
+  .pipe-arrow { display:flex; align-items:center; padding:0; color:var(--border); font-size:1.1em; flex-shrink:0; }
+  .pipe-arrow.lit { color:var(--primary); }
+
+  /* role dots under each step */
+  .role-dots { display:flex; gap:4px; justify-content:center; margin-top:6px; }
+  .role-dot { width:8px; height:8px; border-radius:50%; opacity:0.3; }
+  .role-dot.on { opacity:1; box-shadow:0 0 6px currentColor; }
+
+  /* step detail panel */
+  .step-detail { margin-top:20px; padding:18px 20px; background:rgba(108,92,231,0.06); border:1px solid rgba(108,92,231,0.2); border-radius:10px; display:none; animation:fadeSlide 0.3s ease; }
+  .step-detail.show { display:block; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .step-detail h3 { font-size:1.05em; margin:0 0 8px; }
+  .step-detail .detail-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .detail-cell { padding:10px; background:rgba(15,15,26,0.5); border-radius:8px; }
+  .detail-cell .cell-label { font-size:0.72em; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; margin-bottom:4px; }
+  .detail-cell .cell-value { font-size:0.88em; color:var(--text); line-height:1.5; }
+  .detail-cell .role-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.78em; margin:2px 2px 0 0; font-weight:600; }
+
+  /* live pulse indicator */
+  .pulse-ring { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--secondary); margin-right:6px; animation:pulse 2s ease infinite; vertical-align:middle; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,184,148,0.4)} 50%{box-shadow:0 0 0 6px rgba(0,184,148,0)} }
+
+  /* ── Role Legend ── */
+  .role-legend { display:flex; gap:16px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+  .role-legend-item { display:flex; align-items:center; gap:5px; font-size:0.78em; color:var(--text-muted); }
+  .role-legend-dot { width:10px; height:10px; border-radius:50%; }
+
+  /* ── Gate overlay bar ── */
+  .gate-bar { margin-top:16px; display:flex; gap:4px; border-radius:8px; overflow:hidden; }
+  .gate-seg { flex:1; padding:8px 6px; text-align:center; font-size:0.72em; font-weight:700; color:rgba(255,255,255,0.85); cursor:default; transition:all 0.3s; position:relative; }
+  .gate-seg:hover { filter:brightness(1.2); }
+  .gate-seg .gate-tag { font-size:0.65em; display:block; font-weight:400; opacity:0.7; margin-top:2px; }
+
+  /* ── Guides ── */
+  .guides { max-width:960px; margin:40px auto; padding:0 24px; }
+  .guides h2 { font-size:1.4em; font-weight:700; margin-bottom:20px; text-align:center; }
 
   .guide-card {
-    display:flex; gap:20px; align-items:center; padding:24px;
+    display:flex; gap:18px; align-items:center; padding:18px 20px;
     background:var(--bg-card); border:1px solid var(--border); border-radius:12px;
-    margin-bottom:12px; text-decoration:none; color:var(--text);
+    margin-bottom:10px; text-decoration:none; color:var(--text);
     transition:all 0.3s; cursor:pointer;
   }
   .guide-card:hover { border-color:var(--primary); transform:translateX(4px); box-shadow:0 4px 24px rgba(108,92,231,0.15); }
   .guide-card:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
-  .guide-icon { font-size:2em; flex-shrink:0; width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .guide-icon { font-size:1.8em; flex-shrink:0; width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; }
   .guide-info { flex:1; }
-  .guide-info h3 { font-size:1.1em; margin-bottom:4px; }
-  .guide-info p { font-size:0.88em; color:var(--text-muted); margin:0; }
-  .guide-info .for { font-size:0.88rem; margin-top:6px; padding:2px 10px; border-radius:10px; display:inline-block; }
-  .guide-arrow { color:var(--text-muted); font-size:1.4em; transition:transform 0.3s; }
+  .guide-info h3 { font-size:1em; margin-bottom:3px; }
+  .guide-info p { font-size:0.82em; color:var(--text-muted); margin:0; }
+  .guide-info .for { font-size:0.82rem; margin-top:4px; padding:2px 10px; border-radius:10px; display:inline-block; }
+  .guide-arrow { color:var(--text-muted); font-size:1.3em; transition:transform 0.3s; }
   .guide-card:hover .guide-arrow { transform:translateX(4px); color:var(--primary-light); }
 
-  .doc-section { max-width:900px; margin:48px auto; padding:0 24px; }
-  .doc-section h2 { font-size:1.3em; margin-bottom:16px; color:var(--text-muted); }
+  /* deep-dive grid */
+  .deep-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .deep-grid .guide-card { padding:14px 16px; margin-bottom:0; }
+  .deep-grid .guide-icon { font-size:1.4em; width:40px; height:40px; }
+  .deep-grid .guide-info h3 { font-size:0.92em; }
+  .deep-grid .guide-info p { font-size:0.78em; }
 
   /* ── Detailed TOC ── */
-  .toc-section { max-width:900px; margin:48px auto 0; padding:0 24px; }
-  .toc-section > h2 { font-size:1.6em; font-weight:700; margin-bottom:8px; text-align:center; }
-  .toc-section > p { text-align:center; color:#9999B0; margin-bottom:28px; font-size:0.95em; }
-  .toc-group { margin-bottom:16px; border:1px solid #2D2D4A; border-radius:12px; overflow:hidden; background:#1A1A2E; }
+  .toc-section { max-width:960px; margin:40px auto 0; padding:0 24px; }
+  .toc-section > h2 { font-size:1.4em; font-weight:700; margin-bottom:6px; text-align:center; }
+  .toc-section > p { text-align:center; color:#9999B0; margin-bottom:20px; font-size:0.88em; }
+  .toc-group { margin-bottom:10px; border:1px solid #2D2D4A; border-radius:10px; overflow:hidden; background:#1A1A2E; }
   .toc-group-header {
-    display:flex; align-items:center; gap:12px; padding:16px 20px; cursor:pointer;
+    display:flex; align-items:center; gap:10px; padding:12px 16px; cursor:pointer;
     transition:background 0.2s; user-select:none;
   }
   .toc-group-header:hover { background:#222240; }
   .toc-group-header:focus-visible { outline:2px solid #6C5CE7; outline-offset:-2px; }
-  .toc-group-header .toc-icon { font-size:1.3em; flex-shrink:0; }
-  .toc-group-header .toc-title { flex:1; font-weight:700; font-size:1.05em; }
-  .toc-group-header .toc-badge { padding:3px 10px; border-radius:12px; font-size:0.88rem; font-weight:600; }
-  .toc-group-header .toc-arrow { transition:transform 0.3s; font-size:0.9em; color:#9999B0; }
+  .toc-group-header .toc-icon { font-size:1.2em; flex-shrink:0; }
+  .toc-group-header .toc-title { flex:1; font-weight:700; font-size:0.95em; }
+  .toc-group-header .toc-badge { padding:2px 8px; border-radius:10px; font-size:0.78rem; font-weight:600; }
+  .toc-group-header .toc-arrow { transition:transform 0.3s; font-size:0.85em; color:#9999B0; }
   .toc-group-header .toc-arrow.open { transform:rotate(180deg); }
   .toc-group-body { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
   .toc-group-body.open { max-height:2000px; }
-  .toc-group-body .toc-list { padding:0 20px 16px; }
+  .toc-group-body .toc-list { padding:0 16px 12px; }
   .toc-group-body .toc-item {
-    display:flex; align-items:center; gap:8px; padding:6px 0;
+    display:flex; align-items:center; gap:6px; padding:4px 0;
     border-bottom:1px solid rgba(45,45,74,0.5);
   }
   .toc-group-body .toc-item:last-child { border-bottom:none; }
   .toc-group-body .toc-item a {
-    color:#9999B0; text-decoration:none; font-size:0.88rem; transition:color 0.2s; cursor:pointer;
+    color:#9999B0; text-decoration:none; font-size:0.82rem; transition:color 0.2s; cursor:pointer;
   }
   .toc-group-body .toc-item a:hover { color:#E8E8F0; }
   .toc-group-body .toc-item a:focus-visible { outline:2px solid #6C5CE7; outline-offset:2px; }
   .toc-group-body .toc-item .num {
-    flex-shrink:0; width:24px; height:24px; border-radius:6px; font-size:0.7em;
+    flex-shrink:0; width:22px; height:22px; border-radius:5px; font-size:0.65em;
     display:flex; align-items:center; justify-content:center; font-weight:700;
   }
-  .toc-group-body .toc-sub { padding-left:32px; }
-  .toc-group-body .toc-sub a { font-size:0.88rem; }
+  .toc-group-body .toc-sub { padding-left:28px; }
+  .toc-group-body .toc-sub a { font-size:0.82rem; }
 
-  /* ── Navigation Link Styles ── */
+  /* doc cards */
+  .doc-section { max-width:960px; margin:40px auto; padding:0 24px; }
+  .doc-section h2 { font-size:1.2em; margin-bottom:12px; color:var(--text-muted); }
+
   .top-nav a { cursor:pointer; }
   .nav-links a:hover { text-decoration:underline; }
   .nav-links a:focus-visible { outline:2px solid var(--primary); outline-offset:4px; }
-
 </style>
 </head>
 <body>
@@ -102,33 +160,124 @@
   </div>
 </nav>
 
-<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.5rem 1rem; text-align:center; font-size:0.82rem; color:rgba(232,232,240,0.6);">
     本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
 </div>
 
+<!-- ═══════ Hero ═══════ -->
 <div class="hero">
   <h1><span>唤龙平台</span><br>团队协作指南</h1>
-  <p>23 人全组织 AI 驱动协作模型 · 四权分离 · 五步交付</p>
+  <p class="intro">
+    <strong>23 人</strong>全组织 AI 驱动协作模型 —
+    以<strong>四权分离</strong>（语义·技术·质量·治理）为制衡骨架，
+    <strong>五步交付流</strong>驱动每个能力包从构思到上线，
+    <strong>六仓库</strong>承载代码与治理，
+    <strong>四层门禁</strong>自动化守护质量底线。
+  </p>
   <div class="badges">
     <span class="badge">TEAM-COLLAB-SPEC v2.1</span>
     <span class="badge">UI-DELIVERY-SPEC v1.0</span>
-    <span class="badge" style="background:rgba(253,203,110,0.15);border-color:#FDCB6E;color:#FDCB6E;">Internal Guide · DRAFT</span>
+    <span class="badge draft">Internal Guide · DRAFT</span>
   </div>
 </div>
 
-<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
-  ⚠️ 本站为<strong>理解导览层</strong>（Guide Layer），不是制度真源层。权威依据以 hl-contracts 仓库中的正式规范文档为准。网页内容可能超前于已锁定的规范版本。
+<div style="max-width:960px;margin:12px auto;padding:10px 16px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.82em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本站为<strong>理解导览层</strong>（Guide Layer），不是制度真源层。权威依据以 hl-contracts 仓库中的正式规范文档为准。
 </div>
 
-<div class="stats">
-  <div class="stat"><div class="val">23</div><div class="lbl">团队成员</div></div>
-  <div class="stat"><div class="val">4</div><div class="lbl">权力分离</div></div>
-  <div class="stat"><div class="val">5</div><div class="lbl">交付步骤</div></div>
-  <div class="stat"><div class="val">6</div><div class="lbl">代码仓库</div></div>
-  <div class="stat"><div class="val">4</div><div class="lbl">门禁层级</div></div>
-  <div class="stat"><div class="val">10</div><div class="lbl">能力包</div></div>
+<!-- ═══════ Workflow Engine ═══════ -->
+<div class="workflow-engine">
+  <h2><span class="pulse-ring"></span>全局交付工作流</h2>
+  <div class="sub">点击任意步骤查看角色参与详情 · 动画展示能力包从构思到上线的完整旅程</div>
+
+  <div class="pipeline-wrap">
+    <!-- 5-step pipeline -->
+    <div class="pipeline">
+      <div class="pipe-step active" onclick="showStep(0)">
+        <div class="step-num">1</div>
+        <div class="step-label">Cap-Spec 冻结</div>
+        <div class="role-dots">
+          <span class="role-dot on" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(1)">
+        <div class="step-num">2</div>
+        <div class="step-label">Design + HPRD</div>
+        <div class="role-dots">
+          <span class="role-dot on" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot on" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot on" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(2)">
+        <div class="step-num">3</div>
+        <div class="step-label">AI-first 实现</div>
+        <div class="role-dots">
+          <span class="role-dot" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot on" style="background:#DFE6E9" title="前端"></span>
+          <span class="role-dot" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(3)">
+        <div class="step-num">4</div>
+        <div class="step-label">门禁 + 验收</div>
+        <div class="role-dots">
+          <span class="role-dot" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot on" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot on" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(4)">
+        <div class="step-num">5</div>
+        <div class="step-label">PM 验收 + 合并</div>
+        <div class="role-dots">
+          <span class="role-dot on" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot on" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot on" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- role legend -->
+    <div class="role-legend">
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#74B9FF;"></span>PM</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#55EFC4;"></span>工程师</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#DFE6E9;"></span>前端/设计</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#FFEAA7;"></span>QA</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#FAB1A0;"></span>运维</div>
+      <div class="role-legend-item" style="margin-left:12px; opacity:0.6;">●亮=主导/参与 ○暗=待命</div>
+    </div>
+
+    <!-- gate bar -->
+    <div class="gate-bar">
+      <div class="gate-seg" style="background:rgba(253,203,110,0.3);">L1 格式<span class="gate-tag">BLOCKING</span></div>
+      <div class="gate-seg" style="background:rgba(255,234,167,0.3);">L2 确定性<span class="gate-tag">BLOCKING</span></div>
+      <div class="gate-seg" style="background:rgba(85,239,196,0.25);">L3 行为<span class="gate-tag">BLOCKING</span></div>
+      <div class="gate-seg" style="background:rgba(108,92,231,0.3);">L4 语义 · 哨兵<span class="gate-tag">ADVISORY</span></div>
+    </div>
+
+    <!-- step detail (shows on click) -->
+    <div class="step-detail show" id="stepDetail"></div>
+  </div>
 </div>
 
+<!-- ═══════ Role Guides ═══════ -->
 <div class="guides">
   <h2>选择你的角色指南</h2>
 
@@ -193,63 +342,62 @@
   </a>
 </div>
 
-<!-- ══════════ Deep Dive Sub-Pages ══════════ -->
-<div class="guides" style="margin-top:24px;">
+<!-- ═══════ Deep Dive ═══════ -->
+<div class="guides" style="margin-top:20px;">
   <h2>深入专题</h2>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:16px;">
-    <a class="guide-card" href="pages/power-separation.html" style="padding:16px;">
-      <div class="guide-icon" style="background:rgba(162,155,254,0.15);font-size:1.5em;width:44px;height:44px;">⚖️</div>
+  <div class="deep-grid">
+    <a class="guide-card" href="pages/power-separation.html">
+      <div class="guide-icon" style="background:rgba(162,155,254,0.15);">⚖️</div>
       <div class="guide-info">
-        <h3 style="font-size:1em;">四权分离详解</h3>
-        <p style="font-size:0.8em;">语义主权 · 技术实现权 · 独立质量权 · 组织治理权 — 制衡矩阵 · 反模式</p>
+        <h3>四权分离详解</h3>
+        <p>语义主权 · 技术实现权 · 独立质量权 · 组织治理权</p>
       </div>
       <span class="guide-arrow">&rarr;</span>
     </a>
-    <a class="guide-card" href="pages/delivery-steps.html" style="padding:16px;">
-      <div class="guide-icon" style="background:rgba(0,184,148,0.15);font-size:1.5em;width:44px;height:44px;">🔄</div>
+    <a class="guide-card" href="pages/delivery-steps.html">
+      <div class="guide-icon" style="background:rgba(0,184,148,0.15);">🔄</div>
       <div class="guide-info">
-        <h3 style="font-size:1em;">五步交付流详解</h3>
-        <p style="font-size:0.8em;">Cap-Spec → Design+HPRD → 实现 → 门禁验收 → PM 验收 — 状态机 · 并行轨道</p>
+        <h3>五步交付流详解</h3>
+        <p>Cap-Spec → Design+HPRD → 实现 → 门禁 → PM验收</p>
       </div>
       <span class="guide-arrow">&rarr;</span>
     </a>
-    <a class="guide-card" href="pages/repo-directory.html" style="padding:16px;">
-      <div class="guide-icon" style="background:rgba(85,239,196,0.15);font-size:1.5em;width:44px;height:44px;">📂</div>
+    <a class="guide-card" href="pages/repo-directory.html">
+      <div class="guide-icon" style="background:rgba(85,239,196,0.15);">📂</div>
       <div class="guide-info">
-        <h3 style="font-size:1em;">六仓库架构详解</h3>
-        <p style="font-size:0.8em;">仓库依赖图 · CODEOWNERS 可视化 · 能力包流转动画</p>
+        <h3>六仓库架构详解</h3>
+        <p>仓库依赖图 · CODEOWNERS · 能力包流转</p>
       </div>
       <span class="guide-arrow">&rarr;</span>
     </a>
-    <a class="guide-card" href="pages/gate-levels.html" style="padding:16px;">
-      <div class="guide-icon" style="background:rgba(253,203,110,0.15);font-size:1.5em;width:44px;height:44px;">🛡️</div>
+    <a class="guide-card" href="pages/gate-levels.html">
+      <div class="guide-icon" style="background:rgba(253,203,110,0.15);">🛡️</div>
       <div class="guide-info">
-        <h3 style="font-size:1em;">门禁体系详解</h3>
-        <p style="font-size:0.8em;">L1-L4 四层金字塔 · 哨兵 · 技术合伙人智能体 · PR 全流程动画</p>
+        <h3>门禁体系详解</h3>
+        <p>L1-L4 四层金字塔 · 哨兵 · PR 全流程</p>
       </div>
       <span class="guide-arrow">&rarr;</span>
     </a>
-    <a class="guide-card" href="pages/governance-docs.html" style="padding:16px;">
-      <div class="guide-icon" style="background:rgba(162,155,254,0.15);font-size:1.5em;width:44px;height:44px;">📜</div>
+    <a class="guide-card" href="pages/governance-docs.html">
+      <div class="guide-icon" style="background:rgba(162,155,254,0.15);">📜</div>
       <div class="guide-info">
-        <h3 style="font-size:1em;">治理文档体系详解</h3>
-        <p style="font-size:0.8em;">文档层级树 · 状态定义 · 变更流程 · 团队×文档交叉矩阵</p>
+        <h3>治理文档体系详解</h3>
+        <p>文档层级树 · 状态定义 · 变更流程</p>
       </div>
       <span class="guide-arrow">&rarr;</span>
     </a>
-    <a class="guide-card" href="pages/qa-process.html" style="padding:16px;">
-      <div class="guide-icon" style="background:rgba(255,234,167,0.15);font-size:1.5em;width:44px;height:44px;">🔍</div>
+    <a class="guide-card" href="pages/qa-process.html">
+      <div class="guide-icon" style="background:rgba(255,234,167,0.15);">🔍</div>
       <div class="guide-info">
-        <h3 style="font-size:1em;">测试流程与分工详解</h3>
-        <p style="font-size:0.8em;">QA 全流程 · acceptance-manifest · CODEOWNERS 足迹 · Gap 分析</p>
+        <h3>测试流程与分工详解</h3>
+        <p>QA 全流程 · acceptance-manifest · Gap 分析</p>
       </div>
       <span class="guide-arrow">&rarr;</span>
     </a>
   </div>
 </div>
 
-<!-- ══════════ Detailed TOC ══════════ -->
+<!-- ═══════ Detailed TOC ═══════ -->
 <div class="toc-section">
   <h2>详细目录</h2>
   <p>点击展开各指南的完整章节，可直接跳转到具体内容</p>
@@ -259,7 +407,7 @@
     <div class="toc-group-header" onclick="toggleTocGroup(this)">
       <span class="toc-icon">🌐</span>
       <span class="toc-title">全局团队分工与工作流</span>
-      <span class="toc-badge" style="background:rgba(108,92,231,0.15);color:#A29BFE;">全员必读 · 交互式</span>
+      <span class="toc-badge" style="background:rgba(108,92,231,0.15);color:#A29BFE;">全员必读</span>
       <span class="toc-arrow">▼</span>
     </div>
     <div class="toc-group-body">
@@ -268,7 +416,7 @@
         <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">2</span><a href="pages/global.html">组织架构 — 23 人编制 · 能力包分配表</a></div>
         <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">3</span><a href="pages/global.html">能力包流程 — 五步交付流 · 12 状态机</a></div>
         <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">4</span><a href="pages/global.html">其他流程 — Bugfix / 技术改动 / 治理内核</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">5</span><a href="pages/global.html">门禁体系 — L1-L4 四层 + Required Status Checks + UI 门禁</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">5</span><a href="pages/global.html">门禁体系 — L1-L4 四层 + Required Status Checks</a></div>
         <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">6</span><a href="pages/global.html">仓库与权限 — 六仓库 · CODEOWNERS · PR 分类</a></div>
         <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">7</span><a href="pages/global.html">产物矩阵 — 谁产出什么 · 谁审批什么</a></div>
       </div>
@@ -280,21 +428,19 @@
     <div class="toc-group-header" onclick="toggleTocGroup(this)">
       <span class="toc-icon">📘</span>
       <span class="toc-title">产品团队指南</span>
-      <span class="toc-badge" style="background:rgba(116,185,255,0.15);color:#74B9FF;">PM + UI 设计师</span>
+      <span class="toc-badge" style="background:rgba(116,185,255,0.15);color:#74B9FF;">PM + 设计师</span>
       <span class="toc-arrow">▼</span>
     </div>
     <div class="toc-group-body">
       <div class="toc-list">
-        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">一</span><a href="pages/product.html#_1">角色定位 — PM 能力包语义 Owner · 设计师视觉/交互 Owner</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">一</span><a href="pages/product.html#_1">角色定位 — PM 能力包语义 Owner</a></div>
         <div class="toc-item toc-sub"><a href="pages/product.html#pm-owner">→ PM 的权力与不再做的事</a></div>
         <div class="toc-item toc-sub"><a href="pages/product.html#ui-owner">→ UI 设计师参与的两条线</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">二</span><a href="pages/product.html#_2">核心产出 — Cap-Spec 三件套 · Design Packet 12 字段</a></div>
-        <div class="toc-item toc-sub"><a href="pages/product.html#21-pm-cap-spec">→ PM 的三份 Cap-Spec</a></div>
-        <div class="toc-item toc-sub"><a href="pages/product.html#22-design-packet">→ 设计师的 Design Packet</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">三</span><a href="pages/product.html#_3">工作流程 — Step 1 冻结 · Step 2 审 HPRD · Step 5 验收</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">四</span><a href="pages/product.html#_4">协作边界 — 与工程师/QA/设计师/前端/创始人</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">五</span><a href="pages/product.html#_5">常见问题 — Cap-Spec 变更 · HPRD 冲突 · 设计冻结</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">六</span><a href="pages/product.html#_6">能力包分配 — PM-A/B/C 分工表</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">二</span><a href="pages/product.html#_2">核心产出 — Cap-Spec · Design Packet</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">三</span><a href="pages/product.html#_3">工作流程 — Step 1 冻结 · Step 5 验收</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">四</span><a href="pages/product.html#_4">协作边界</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">五</span><a href="pages/product.html#_5">常见问题</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">六</span><a href="pages/product.html#_6">能力包分配</a></div>
       </div>
     </div>
   </div>
@@ -304,23 +450,19 @@
     <div class="toc-group-header" onclick="toggleTocGroup(this)">
       <span class="toc-icon">🎨</span>
       <span class="toc-title">前端与设计团队指南</span>
-      <span class="toc-badge" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">前端 + 设计师</span>
+      <span class="toc-badge" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">前端 + 设计</span>
       <span class="toc-arrow">▼</span>
     </div>
     <div class="toc-group-body">
       <div class="toc-list">
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">一</span><a href="pages/frontend-design.html#_1">你们是谁 — 前端 Lead 胡杰威 · AI-first Flutter</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">二</span><a href="pages/frontend-design.html#_2">双线交付模型 — Foundation Lane + Capability UI Lane</a></div>
-        <div class="toc-item toc-sub"><a href="pages/frontend-design.html#1ui-foundation-lane">→ 线 1：UI Foundation（6 阶段）</a></div>
-        <div class="toc-item toc-sub"><a href="pages/frontend-design.html#2capability-ui-delivery-lane-ui">→ 线 2：Capability UI Delivery（10 阶段）</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">三</span><a href="pages/frontend-design.html#foundation-capability">Foundation ↔ Capability 依赖握手</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">四</span><a href="pages/frontend-design.html#design-packet">Design Packet 详解 — 12 个必填字段</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">五</span><a href="pages/frontend-design.html#ui">UI 变更风险分层 — R0/R1/R2/R3</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">六</span><a href="pages/frontend-design.html#ui_1">UI 门禁体系 — 9 项门禁 × 风险级别矩阵</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">七</span><a href="pages/frontend-design.html#_3">仓库路径与权限 — CODEOWNERS 规则表</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">八</span><a href="pages/frontend-design.html#web-flutter">Web → Flutter 转型 · Figma 约束</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">九</span><a href="pages/frontend-design.html#_4">四种最大失败模式</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">十</span><a href="pages/frontend-design.html#_5">常见问题</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">一</span><a href="pages/frontend-design.html#_1">你们是谁 — 前端 Lead · AI-first Flutter</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">二</span><a href="pages/frontend-design.html#_2">双线交付模型</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">三</span><a href="pages/frontend-design.html#foundation-capability">Foundation ↔ Capability 握手</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">四</span><a href="pages/frontend-design.html#design-packet">Design Packet 12 字段</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">五</span><a href="pages/frontend-design.html#ui">UI 风险分层 R0-R3</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">六</span><a href="pages/frontend-design.html#ui_1">UI 门禁体系</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">七</span><a href="pages/frontend-design.html#_3">仓库路径与权限</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">八</span><a href="pages/frontend-design.html#web-flutter">Web → Flutter 转型</a></div>
       </div>
     </div>
   </div>
@@ -335,18 +477,16 @@
     </div>
     <div class="toc-group-body">
       <div class="toc-list">
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">一</span><a href="pages/engineering.html#_1">角色定位 — 方案 Owner · AI-first 编码</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">二</span><a href="pages/engineering.html#_2">核心产出 — HPRD · design.md · 代码 · 测试 · demo</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">三</span><a href="pages/engineering.html#hprd">HPRD 怎么写 — 6 字段最小模板</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">四</span><a href="pages/engineering.html#_3">能力包流中的完整时间线</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">五</span><a href="pages/engineering.html#pr">PR 提交规范 — YAML 分类块 · 自动升级规则</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">六</span><a href="pages/engineering.html#ci">CI 门禁 — L1 格式 / L2 确定性 / L3 行为 / L4 审计</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">七</span><a href="pages/engineering.html#java-kotlin">后端 Java → Kotlin 适配</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">八</span><a href="pages/engineering.html#_4">前端额外说明 — 双线 · UI-R · frontend-design.md</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">九</span><a href="pages/engineering.html#_5">测试分工 — 你负责 vs QA 负责</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">十</span><a href="pages/engineering.html#_6">仓库路径与 CODEOWNERS</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">⑪</span><a href="pages/engineering.html#_7">各类变更怎么走</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">⑫</span><a href="pages/engineering.html#_8">常见问题</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">一</span><a href="pages/engineering.html#_1">角色定位 — 方案 Owner · AI-first</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">二</span><a href="pages/engineering.html#_2">核心产出 — HPRD · design.md · 代码</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">三</span><a href="pages/engineering.html#hprd">HPRD 怎么写</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">四</span><a href="pages/engineering.html#_3">完整时间线</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">五</span><a href="pages/engineering.html#pr">PR 提交规范</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">六</span><a href="pages/engineering.html#ci">CI 门禁 L1-L4</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">七</span><a href="pages/engineering.html#java-kotlin">Java → Kotlin</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">八</span><a href="pages/engineering.html#_4">前端额外说明</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">九</span><a href="pages/engineering.html#_5">测试分工</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">十</span><a href="pages/engineering.html#_6">仓库与 CODEOWNERS</a></div>
       </div>
     </div>
   </div>
@@ -356,23 +496,20 @@
     <div class="toc-group-header" onclick="toggleTocGroup(this)">
       <span class="toc-icon">🧪</span>
       <span class="toc-title">测试团队指南</span>
-      <span class="toc-badge" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">QA 架构师 + 工程师</span>
+      <span class="toc-badge" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">QA 团队</span>
       <span class="toc-arrow">▼</span>
     </div>
     <div class="toc-group-body">
       <div class="toc-list">
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">一</span><a href="pages/qa.html#_1">角色定位 — 质量 Owner · 独立验证权</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">二</span><a href="pages/qa.html#_2">团队内部分工 — 架构师 vs 工程师</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">三</span><a href="pages/qa.html#_3">核心产出 — manifest · 测试套件 · verdict</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">四</span><a href="pages/qa.html#acceptance-manifestyaml">acceptance-manifest.yaml 详解 · G-026 规则</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">五</span><a href="pages/qa.html#_4">能力包流中的时间线</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">六</span><a href="pages/qa.html#qa-verdict">qa-verdict 怎么出 · 出具标准</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">七</span><a href="pages/qa.html#_5">与工程师的测试分工表</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">八</span><a href="pages/qa.html#qa">QA 架构师额外职责</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">九</span><a href="pages/qa.html#ui">UI 相关验收 — golden / a11y / catalog</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">十</span><a href="pages/qa.html#_6">各类变更中你的角色</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">⑪</span><a href="pages/qa.html#_7">需要掌握的技能</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">⑫</span><a href="pages/qa.html#_8">常见问题</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">一</span><a href="pages/qa.html#_1">角色定位 — 质量 Owner</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">二</span><a href="pages/qa.html#_2">团队分工</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">三</span><a href="pages/qa.html#_3">核心产出</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">四</span><a href="pages/qa.html#acceptance-manifestyaml">acceptance-manifest</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">五</span><a href="pages/qa.html#_4">能力包流时间线</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">六</span><a href="pages/qa.html#qa-verdict">qa-verdict</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">七</span><a href="pages/qa.html#_5">测试分工表</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">八</span><a href="pages/qa.html#qa">QA 架构师职责</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">九</span><a href="pages/qa.html#ui">UI 验收</a></div>
       </div>
     </div>
   </div>
@@ -382,21 +519,20 @@
     <div class="toc-group-header" onclick="toggleTocGroup(this)">
       <span class="toc-icon">🚀</span>
       <span class="toc-title">运维人员指南</span>
-      <span class="toc-badge" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">运维工程师</span>
+      <span class="toc-badge" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">运维</span>
       <span class="toc-arrow">▼</span>
     </div>
     <div class="toc-group-body">
       <div class="toc-list">
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">一</span><a href="pages/ops.html#_1">角色定位 — Release & Infra Owner</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">二</span><a href="pages/ops.html#_2">核心产出 — 部署脚本 · 发布记录 · 监控配置</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">三</span><a href="pages/ops.html#_3">能力包流中的角色 — staging → QA 回归 → prod</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">四</span><a href="pages/ops.html#_4">发布策略 — 常规 / 紧急 / 治理 · 回滚</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">五</span><a href="pages/ops.html#_5">团队协作 — 与工程师/QA/PM/创始人</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">六</span><a href="pages/ops.html#cicd">CI/CD 基础设施维护 — workflow 清单</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">七</span><a href="pages/ops.html#_6">基础设施管理 — 环境矩阵 · 数据库 · 监控</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">八</span><a href="pages/ops.html#ai">AI 驱动模型中的你</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">九</span><a href="pages/ops.html#bugfix-p0">Bugfix P0 紧急流程</a></div>
-        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">十</span><a href="pages/ops.html#_7">常见问题</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">一</span><a href="pages/ops.html#_1">角色定位</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">二</span><a href="pages/ops.html#_2">核心产出</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">三</span><a href="pages/ops.html#_3">能力包流中的角色</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">四</span><a href="pages/ops.html#_4">发布策略</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">五</span><a href="pages/ops.html#_5">团队协作</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">六</span><a href="pages/ops.html#cicd">CI/CD 维护</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">七</span><a href="pages/ops.html#_6">基础设施</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">八</span><a href="pages/ops.html#ai">AI 驱动模型</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">九</span><a href="pages/ops.html#bugfix-p0">P0 紧急流程</a></div>
       </div>
     </div>
   </div>
@@ -419,17 +555,130 @@
 
 <script src="js/main.js"></script>
 <script>
+// ── Step data ──
+const STEPS = [
+  {
+    title: '❶ Cap-Spec 冻结',
+    desc: 'PM 主导编写能力包说明书并冻结语义边界，其他角色待命或了解需求。',
+    cols: [
+      { label: '核心产出', value: 'cap-spec.yaml<br>scope-boundary.md<br>acceptance-criteria' },
+      { label: '参与角色', tags: [
+        { text:'PM ⬤主导', bg:'rgba(116,185,255,0.2)', color:'#74B9FF' },
+        { text:'创始人 审批', bg:'rgba(162,155,254,0.2)', color:'#A29BFE' }
+      ]},
+      { label: '关键门控', value: '创始人签字冻结<br>scope 不可追加<br>→ 触发 Step 2' }
+    ]
+  },
+  {
+    title: '❷ Design + HPRD',
+    desc: '设计师产出 Design Packet，工程师编写 HPRD，QA 准备验收场景。多角色并行。',
+    cols: [
+      { label: '核心产出', value: 'Design Packet 12字段<br>HPRD 6字段<br>acceptance-manifest.yaml' },
+      { label: '参与角色', tags: [
+        { text:'PM ⬤审阅', bg:'rgba(116,185,255,0.2)', color:'#74B9FF' },
+        { text:'工程师 ⬤HPRD', bg:'rgba(85,239,196,0.2)', color:'#55EFC4' },
+        { text:'设计师 ⬤Packet', bg:'rgba(223,230,233,0.2)', color:'#DFE6E9' },
+        { text:'QA ⬤manifest', bg:'rgba(255,234,167,0.2)', color:'#FFEAA7' }
+      ]},
+      { label: '关键门控', value: 'HPRD 互审通过<br>Design Packet 冻结<br>→ 触发 Step 3' }
+    ]
+  },
+  {
+    title: '❸ AI-first 实现',
+    desc: '工程师和前端以 AI 辅助方式编码实现，遵循 HPRD 和 Design Packet。',
+    cols: [
+      { label: '核心产出', value: '功能代码 + 单元测试<br>design.md 互审<br>PR (feature/cap-xxx)' },
+      { label: '参与角色', tags: [
+        { text:'工程师 ⬤编码', bg:'rgba(85,239,196,0.2)', color:'#55EFC4' },
+        { text:'前端 ⬤UI实现', bg:'rgba(223,230,233,0.2)', color:'#DFE6E9' },
+        { text:'PM ○待命', bg:'rgba(116,185,255,0.1)', color:'rgba(116,185,255,0.5)' }
+      ]},
+      { label: '关键门控', value: 'AI 生成代码审阅<br>design.md 双人互审<br>→ PR 提交触发 CI' }
+    ]
+  },
+  {
+    title: '❹ 门禁 + QA 验收',
+    desc: 'CI 自动执行 L1-L4 门禁，QA 出具 qa-verdict，运维准备 staging 部署。',
+    cols: [
+      { label: '核心产出', value: 'L1-L3 全绿 (BLOCKING)<br>L4 哨兵报告 (ADVISORY)<br>qa-verdict PASS/FAIL' },
+      { label: '参与角色', tags: [
+        { text:'工程师 ⬤修复', bg:'rgba(85,239,196,0.2)', color:'#55EFC4' },
+        { text:'QA ⬤verdict', bg:'rgba(255,234,167,0.2)', color:'#FFEAA7' },
+        { text:'运维 ⬤staging', bg:'rgba(250,177,160,0.2)', color:'#FAB1A0' },
+        { text:'哨兵 🤖自动', bg:'rgba(108,92,231,0.2)', color:'#A29BFE' }
+      ]},
+      { label: '关键门控', value: 'L1-L3 BLOCKING 必过<br>qa-verdict = PASS<br>→ 解锁 Step 5' }
+    ]
+  },
+  {
+    title: '❺ PM 验收 + 合并',
+    desc: 'PM 最终验收语义完整性，确认后合并到 main，运维执行 prod 发布。',
+    cols: [
+      { label: '核心产出', value: 'pm-acceptance 签字<br>PR → main 合并<br>prod 发布 + 监控' },
+      { label: '参与角色', tags: [
+        { text:'PM ⬤签字', bg:'rgba(116,185,255,0.2)', color:'#74B9FF' },
+        { text:'工程师 ⬤合并', bg:'rgba(85,239,196,0.2)', color:'#55EFC4' },
+        { text:'QA ⬤回归', bg:'rgba(255,234,167,0.2)', color:'#FFEAA7' },
+        { text:'运维 ⬤发布', bg:'rgba(250,177,160,0.2)', color:'#FAB1A0' }
+      ]},
+      { label: '关键门控', value: 'pm-acceptance = approved<br>Required Status Checks 全绿<br>→ 能力包上线 ✓' }
+    ]
+  }
+];
+
+let currentStep = 0;
+let autoTimer = null;
+
+function showStep(idx) {
+  currentStep = idx;
+  // update pipeline UI
+  document.querySelectorAll('.pipe-step').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.pipe-arrow').forEach((el, i) => {
+    el.classList.toggle('lit', i < idx);
+  });
+  // render detail
+  const s = STEPS[idx];
+  let html = '<h3>' + s.title + '</h3><p style="font-size:0.88em;color:var(--text-muted);margin:0 0 12px;">' + s.desc + '</p><div class="detail-grid">';
+  s.cols.forEach(c => {
+    html += '<div class="detail-cell"><div class="cell-label">' + c.label + '</div><div class="cell-value">';
+    if (c.tags) {
+      c.tags.forEach(t => {
+        html += '<span class="role-tag" style="background:' + t.bg + ';color:' + t.color + ';">' + t.text + '</span>';
+      });
+    } else {
+      html += c.value;
+    }
+    html += '</div></div>';
+  });
+  html += '</div>';
+  const detail = document.getElementById('stepDetail');
+  detail.innerHTML = html;
+  detail.className = 'step-detail show';
+  // restart auto
+  clearInterval(autoTimer);
+  autoTimer = setInterval(autoAdvance, 5000);
+}
+
+function autoAdvance() {
+  showStep((currentStep + 1) % 5);
+}
+
+// TOC toggle
 function toggleTocGroup(header) {
   const body = header.nextElementSibling;
   const arrow = header.querySelector('.toc-arrow');
   body.classList.toggle('open');
   if (arrow) arrow.classList.toggle('open');
-
-  // Scroll expanded content into view
   if (body.classList.contains('open')) {
     body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }
+
+// init
+showStep(0);
+autoTimer = setInterval(autoAdvance, 5000);
 </script>
 </body>
 </html>

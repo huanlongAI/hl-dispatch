@@ -7,26 +7,38 @@
 <link rel="stylesheet" href="../css/style.css">
 
 <style>
-/* Interactive SVG Diagram */
-.svg-container {
-  display: flex; justify-content: center; align-items: center;
-  margin: 32px 0; background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 24px; overflow: auto; min-height: 400px;
+/* ── Repo Map ── */
+.repo-map {
+  margin: 24px 0; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; position: relative;
 }
+.repo-map svg { display: block; margin: 0 auto; }
 
-svg { max-width: 100%; height: auto; }
+/* Layer bands */
+.layer-band { opacity: 0.06; }
 
-.repo-node { cursor: pointer; transition: all 0.3s; outline: none; }
-.repo-node:focus-visible rect { stroke: var(--accent); stroke-width: 3; filter: drop-shadow(0 0 8px rgba(253,203,110,0.5)); }
-.repo-node rect { fill: var(--bg-card); stroke: var(--primary); stroke-width: 2; }
-.repo-node:hover rect { fill: var(--primary); stroke: var(--primary-light); stroke-width: 3; }
-.repo-node:hover text { fill: #fff; font-weight: 700; }
-.repo-node text { fill: var(--text); font-size: 14px; font-weight: 600; pointer-events: none; }
+/* Repo nodes */
+.repo-node { cursor: pointer; transition: all 0.25s; outline: none; }
+.repo-node rect {
+  fill: var(--bg); stroke-width: 2; rx: 10; ry: 10;
+  transition: fill 0.25s, stroke-width 0.25s, filter 0.25s;
+}
+.repo-node:hover rect {
+  fill: rgba(108,92,231,0.15); stroke-width: 3;
+  filter: drop-shadow(0 0 8px rgba(108,92,231,0.4));
+}
+.repo-node:focus-visible rect {
+  stroke: var(--accent) !important; stroke-width: 3;
+  filter: drop-shadow(0 0 10px rgba(253,203,110,0.5));
+}
+.repo-node .repo-name { font-size: 13px; font-weight: 700; pointer-events: none; }
+.repo-node .repo-desc { font-size: 10px; fill: var(--text-muted); pointer-events: none; }
+.repo-node .repo-tech { font-size: 9px; fill: var(--text-muted); pointer-events: none; opacity: 0.7; }
 
-.dependency-arrow { stroke: var(--primary); stroke-width: 2; fill: none; marker-end: url(#arrowhead); opacity: 0.6; }
-.dependency-arrow.active { stroke: var(--accent); stroke-width: 3; opacity: 1; }
-
-#arrowhead { fill: var(--primary); }
+/* Dependency arrows */
+.dep-line { stroke-width: 1.5; fill: none; opacity: 0.5; transition: all 0.3s; }
+.dep-line:hover, .dep-line.highlight { opacity: 1; stroke-width: 2.5; }
+.dep-label { font-size: 9px; fill: var(--text-muted); pointer-events: none; }
 
 /* Detail Cards */
 .repo-details-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
@@ -136,70 +148,118 @@ body {
 
 <h2 id="section1">📍 Section 1: 交互式仓库地图</h2>
 
-<p>以下是唤龙平台的六个核心仓库及其依赖关系。<strong>点击任何仓库节点可查看详细信息</strong>。</p>
+<p>点击仓库节点查看详细信息。箭头表示依赖方向（A → B = A 被 B 消费）。</p>
 
-<div class="svg-container">
-  <svg viewBox="0 0 1000 500" width="100%" height="500">
+<div class="repo-map">
+  <svg viewBox="0 0 860 380" width="860" height="380">
     <defs>
-      <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-        <polygon points="0 0, 10 3, 0 6" fill="#6C5CE7"/>
-      </marker>
+      <marker id="arr-purple" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6C5CE7"/></marker>
+      <marker id="arr-green" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#00B894"/></marker>
+      <marker id="arr-blue" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#74B9FF"/></marker>
+      <marker id="arr-yellow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#FDCB6E"/></marker>
+      <marker id="arr-gray" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#A29BFE"/></marker>
     </defs>
 
-    <!-- Layer Labels -->
-    <text x="80" y="30" font-size="14" fill="#9999B0" font-weight="600">治理层</text>
-    <text x="380" y="30" font-size="14" fill="#9999B0" font-weight="600">后端层</text>
-    <text x="680" y="30" font-size="14" fill="#9999B0" font-weight="600">前端+设计层</text>
+    <!-- ═══ Layer bands (background) ═══ -->
+    <rect class="layer-band" x="0" y="0" width="860" height="100" fill="#6C5CE7" rx="8"/>
+    <rect class="layer-band" x="0" y="110" width="860" height="100" fill="#00B894" rx="8"/>
+    <rect class="layer-band" x="0" y="220" width="860" height="100" fill="#74B9FF" rx="8"/>
+    <rect class="layer-band" x="0" y="330" width="860" height="50" fill="#FDCB6E" rx="8"/>
 
-    <!-- hl-contracts (治理层) -->
-    <g class="repo-node" data-repo="hl-contracts">
-      <rect x="20" y="60" width="140" height="80" rx="8"/>
-      <text x="90" y="110" text-anchor="middle" dominant-baseline="middle">hl-contracts</text>
-      <text x="90" y="130" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#A29BFE" font-weight="400">治理核心</text>
+    <!-- Layer labels -->
+    <text x="14" y="22" font-size="11" fill="#6C5CE7" font-weight="700" opacity="0.6">治理 + 基础设施层</text>
+    <text x="14" y="132" font-size="11" fill="#00B894" font-weight="700" opacity="0.6">后端业务层</text>
+    <text x="14" y="242" font-size="11" fill="#74B9FF" font-weight="700" opacity="0.6">前端 + 设计层</text>
+    <text x="14" y="352" font-size="11" fill="#FDCB6E" font-weight="700" opacity="0.6">CI/CD 质量层（横切所有仓库）</text>
+
+    <!-- ═══ NODES ═══ -->
+
+    <!-- hl-contracts (治理层, left) -->
+    <g class="repo-node" data-repo="hl-contracts" tabindex="0">
+      <rect x="30" y="36" width="200" height="56" stroke="#A29BFE"/>
+      <text x="130" y="56" text-anchor="middle" class="repo-name" fill="#A29BFE">hl-contracts</text>
+      <text x="130" y="72" text-anchor="middle" class="repo-desc">治理规范 · Cap-Spec · 业务码</text>
+      <text x="130" y="84" text-anchor="middle" class="repo-tech">YAML · Markdown · JSON Schema</text>
     </g>
 
-    <!-- hl-platform (后端) -->
-    <g class="repo-node" data-repo="hl-platform">
-      <rect x="320" y="60" width="140" height="80" rx="8"/>
-      <text x="390" y="110" text-anchor="middle" dominant-baseline="middle">hl-platform</text>
-      <text x="390" y="130" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#00B894" font-weight="400">后端业务</text>
+    <!-- hl-console-native (治理层, right) -->
+    <g class="repo-node" data-repo="hl-console-native" tabindex="0">
+      <rect x="600" y="36" width="220" height="56" stroke="#A29BFE"/>
+      <text x="710" y="56" text-anchor="middle" class="repo-name" fill="#A29BFE">hl-console-native</text>
+      <text x="710" y="72" text-anchor="middle" class="repo-desc">创始人 macOS 控制台 · 内部监控</text>
+      <text x="710" y="84" text-anchor="middle" class="repo-tech">Swift · AppKit</text>
     </g>
 
-    <!-- hl-design-system (设计系统) -->
-    <g class="repo-node" data-repo="hl-design-system">
-      <rect x="620" y="60" width="140" height="80" rx="8"/>
-      <text x="690" y="110" text-anchor="middle" dominant-baseline="middle">hl-design-system</text>
-      <text x="690" y="130" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#DFE6E9" font-weight="400">设计系统</text>
+    <!-- hl-platform (后端层, center) -->
+    <g class="repo-node" data-repo="hl-platform" tabindex="0">
+      <rect x="260" y="140" width="340" height="56" stroke="#00B894"/>
+      <text x="430" y="160" text-anchor="middle" class="repo-name" fill="#55EFC4">hl-platform</text>
+      <text x="430" y="176" text-anchor="middle" class="repo-desc">后端核心 · API 网关 · 数据模型 · 8 人（Kotlin 6 + PHP 2）</text>
+      <text x="430" y="188" text-anchor="middle" class="repo-tech">Kotlin · Spring Boot · PostgreSQL</text>
     </g>
 
-    <!-- hl-app (前端) -->
-    <g class="repo-node" data-repo="hl-app">
-      <rect x="620" y="260" width="140" height="80" rx="8"/>
-      <text x="690" y="310" text-anchor="middle" dominant-baseline="middle">hl-app</text>
-      <text x="690" y="330" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#74B9FF" font-weight="400">租户端应用</text>
+    <!-- hl-design-system (前端层, left) -->
+    <g class="repo-node" data-repo="hl-design-system" tabindex="0">
+      <rect x="30" y="250" width="220" height="56" stroke="#DFE6E9"/>
+      <text x="140" y="270" text-anchor="middle" class="repo-name" fill="#DFE6E9">hl-design-system</text>
+      <text x="140" y="286" text-anchor="middle" class="repo-desc">设计令牌 · 基础组件库 · 主题</text>
+      <text x="140" y="298" text-anchor="middle" class="repo-tech">Dart · Flutter · Design Token</text>
     </g>
 
-    <!-- hl-factory (CI 门禁) -->
-    <g class="repo-node" data-repo="hl-factory">
-      <rect x="20" y="260" width="140" height="80" rx="8"/>
-      <text x="90" y="310" text-anchor="middle" dominant-baseline="middle">hl-factory</text>
-      <text x="90" y="330" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#FDCB6E" font-weight="400">CI 门禁</text>
+    <!-- hl-app (前端层, right) -->
+    <g class="repo-node" data-repo="hl-app" tabindex="0">
+      <rect x="340" y="250" width="260" height="56" stroke="#74B9FF"/>
+      <text x="470" y="270" text-anchor="middle" class="repo-name" fill="#74B9FF">hl-app</text>
+      <text x="470" y="286" text-anchor="middle" class="repo-desc">租户端多端应用 · iOS · Android · Web · macOS</text>
+      <text x="470" y="298" text-anchor="middle" class="repo-tech">Dart · Flutter · Riverpod</text>
     </g>
 
-    <!-- hl-console-native (macOS) -->
-    <g class="repo-node" data-repo="hl-console-native">
-      <rect x="20" y="380" width="160" height="80" rx="8"/>
-      <text x="100" y="430" text-anchor="middle" dominant-baseline="middle">hl-console-native</text>
-      <text x="100" y="450" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#A29BFE" font-weight="400">macOS 控制台</text>
+    <!-- hl-factory (CI层, spanning) -->
+    <g class="repo-node" data-repo="hl-factory" tabindex="0">
+      <rect x="260" y="340" width="340" height="34" stroke="#FDCB6E"/>
+      <text x="430" y="362" text-anchor="middle" class="repo-name" fill="#FDCB6E">hl-factory — CI/CD 门禁规则 · GitHub Actions · 四层质量检查</text>
     </g>
 
-    <!-- Dependencies -->
-    <line class="dependency-arrow" x1="160" y1="100" x2="320" y2="100"/>
-    <line class="dependency-arrow" x1="460" y1="100" x2="620" y2="100"/>
-    <line class="dependency-arrow" x1="690" y1="140" x2="690" y2="260"/>
-    <line class="dependency-arrow" x1="160" y1="180" x2="100" y2="260"/>
+    <!-- ═══ DEPENDENCY ARROWS ═══ -->
 
+    <!-- contracts → platform (规范约束) -->
+    <path class="dep-line" d="M230,64 L280,64 L280,140" stroke="#A29BFE" marker-end="url(#arr-gray)"/>
+    <text class="dep-label" x="238" y="100">规范约束</text>
+
+    <!-- contracts → console-native (规范) -->
+    <path class="dep-line" d="M230,64 L600,64" stroke="#A29BFE" marker-end="url(#arr-gray)" stroke-dasharray="6,3"/>
+    <text class="dep-label" x="400" y="58">规范读取</text>
+
+    <!-- platform → app (API 提供) -->
+    <path class="dep-line" d="M470,196 L470,250" stroke="#00B894" marker-end="url(#arr-green)"/>
+    <text class="dep-label" x="478" y="226">API</text>
+
+    <!-- design-system → app (组件消费) -->
+    <path class="dep-line" d="M250,278 L340,278" stroke="#DFE6E9" marker-end="url(#arr-blue)"/>
+    <text class="dep-label" x="270" y="272">组件</text>
+
+    <!-- factory → platform (CI 检查) -->
+    <path class="dep-line" d="M430,340 L430,196" stroke="#FDCB6E" marker-end="url(#arr-yellow)" stroke-dasharray="4,4"/>
+
+    <!-- factory → app (CI 检查) -->
+    <path class="dep-line" d="M390,340 L390,306" stroke="#FDCB6E" marker-end="url(#arr-yellow)" stroke-dasharray="4,4"/>
+
+    <!-- factory → design-system (CI 检查) -->
+    <path class="dep-line" d="M310,340 L140,306" stroke="#FDCB6E" marker-end="url(#arr-yellow)" stroke-dasharray="4,4"/>
+
+    <!-- console-native → platform API (调用) -->
+    <path class="dep-line" d="M710,92 L710,160 L600,160" stroke="#A29BFE" marker-end="url(#arr-gray)" stroke-dasharray="6,3"/>
+    <text class="dep-label" x="718" y="130">API 调用</text>
   </svg>
+
+  <!-- Legend -->
+  <div style="display:flex; gap:20px; margin-top:12px; font-size:0.8em; color:var(--text-muted); flex-wrap:wrap;">
+    <span><svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#A29BFE" stroke-width="2"/></svg> 治理/规范依赖</span>
+    <span><svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#00B894" stroke-width="2"/></svg> API 数据流</span>
+    <span><svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#DFE6E9" stroke-width="2"/></svg> 组件消费</span>
+    <span><svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#FDCB6E" stroke-width="2" stroke-dasharray="4,4"/></svg> CI/CD 检查（横切）</span>
+    <span><svg width="24" height="10"><line x1="0" y1="5" x2="24" y2="5" stroke="#A29BFE" stroke-width="2" stroke-dasharray="6,3"/></svg> 内部工具调用</span>
+  </div>
 </div>
 
 <h2 id="section2">📋 Section 2: 仓库详情与技术栈</h2>

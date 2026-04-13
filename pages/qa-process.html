@@ -52,6 +52,12 @@
             color: var(--primary);
             cursor: pointer;
             text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-logo:focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
         }
 
         .nav-logo:hover {
@@ -71,10 +77,16 @@
             font-size: 0.95rem;
             transition: color 0.3s;
             padding: 0.5rem 0;
+            cursor: pointer;
         }
 
         .nav-links a:hover {
             color: var(--secondary);
+        }
+
+        .nav-links a:focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
         }
 
         /* Guide Layer Warning */
@@ -143,11 +155,17 @@
             border-radius: 8px;
             padding: 2rem;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .member-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(255, 234, 167, 0.2);
+        }
+
+        .member-card:focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
         }
 
         .member-title {
@@ -205,11 +223,17 @@
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .workflow-step:hover {
             background: var(--bg-card);
             box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .workflow-step:focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
         }
 
         .workflow-step h4 {
@@ -242,7 +266,7 @@
             margin: 1.5rem 0;
             overflow-x: auto;
             font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             line-height: 1.5;
         }
 
@@ -273,6 +297,10 @@
             margin: 2rem 0;
         }
 
+        .matrix-table-wrapper {
+            overflow-x: auto;
+        }
+
         .matrix-table thead {
             background: var(--qa);
         }
@@ -300,6 +328,11 @@
         .matrix-table td:hover {
             background: var(--qa);
             color: var(--bg);
+        }
+
+        .matrix-table tbody tr:focus-within {
+            outline: 2px solid var(--secondary);
+            outline-offset: -1px;
         }
 
         .change-class-name {
@@ -332,6 +365,11 @@
             background: rgba(225, 112, 85, 0.1);
         }
 
+        .gap-item:focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
+        }
+
         .gap-icon {
             font-size: 1.5rem;
             min-width: 2rem;
@@ -349,16 +387,21 @@
 
         .gap-answer {
             color: var(--text);
-            font-size: 0.9rem;
-            display: none;
+            font-size: 0.88rem;
+            max-height: 0;
+            opacity: 0;
+            overflow-y: auto;
             margin-top: 0.75rem;
-            padding: 0.75rem;
+            padding: 0;
             background: rgba(0, 184, 148, 0.1);
             border-radius: 4px;
+            transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
         }
 
         .gap-answer.show {
-            display: block;
+            max-height: 500px;
+            opacity: 1;
+            padding: 0.75rem;
         }
 
         .gap-status {
@@ -387,9 +430,15 @@
             background: var(--qa);
             color: var(--bg);
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.88rem;
             font-weight: bold;
             margin: 0.25rem;
+            cursor: pointer;
+        }
+
+        .role-badge:focus-visible {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
         }
 
         /* Footer */
@@ -404,6 +453,37 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            main {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+
+            .matrix-table {
+                font-size: 0.9rem;
+            }
+
+            .matrix-table th,
+            .matrix-table td {
+                padding: 0.85rem;
+            }
+
+            .code-block {
+                font-size: 0.82rem;
+            }
+        }
+
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
@@ -432,7 +512,7 @@
             }
 
             .matrix-table {
-                font-size: 0.85rem;
+                font-size: 0.82rem;
             }
 
             .matrix-table th,
@@ -449,7 +529,11 @@
             }
 
             .code-block {
-                font-size: 0.75rem;
+                font-size: 0.78rem;
+            }
+
+            .role-badge {
+                font-size: 0.82rem;
             }
         }
     </style>
@@ -672,15 +756,16 @@
             </div>
 
             <h3>字段说明</h3>
-            <table class="matrix-table">
-                <thead>
-                    <tr>
-                        <th>字段</th>
-                        <th>含义</th>
-                        <th>示例</th>
-                        <th>规则</th>
-                    </tr>
-                </thead>
+            <div class="matrix-table-wrapper">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th>字段</th>
+                            <th>含义</th>
+                            <th>示例</th>
+                            <th>规则</th>
+                        </tr>
+                    </thead>
                 <tbody>
                     <tr>
                         <td><strong>id</strong></td>
@@ -719,7 +804,8 @@
                         <td>见下方详解</td>
                     </tr>
                 </tbody>
-            </table>
+                </table>
+            </div>
 
             <h3>Status 字段详解</h3>
             <div class="info-box">
@@ -794,15 +880,16 @@
             <h2>第五部分：QA 决策矩阵</h2>
             <p>根据变更类型（change_class），QA 采取不同的行动</p>
 
-            <table class="matrix-table">
-                <thead>
-                    <tr>
-                        <th>change_class</th>
-                        <th>场景说明</th>
-                        <th>QA 的行动</th>
-                        <th>qa-verdict</th>
-                    </tr>
-                </thead>
+            <div class="matrix-table-wrapper">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th>change_class</th>
+                            <th>场景说明</th>
+                            <th>QA 的行动</th>
+                            <th>qa-verdict</th>
+                        </tr>
+                    </thead>
                 <tbody>
                     <tr>
                         <td><span class="change-class-name">capability</span></td>
@@ -829,7 +916,8 @@
                         <td style="color: var(--text);">❌ 不需</td>
                     </tr>
                 </tbody>
-            </table>
+                </table>
+            </div>
         </section>
 
         <!-- Section 6: Gap Analysis & Checklist -->
@@ -1020,6 +1108,11 @@
             answer.classList.toggle('show');
             const icon = element.querySelector('.gap-icon');
             icon.textContent = answer.classList.contains('show') ? '✅' : '❓';
+
+            // Scroll into view when expanding
+            if (answer.classList.contains('show')) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
         }
 
         // Add smooth scroll behavior
@@ -1036,10 +1129,16 @@
         // Make checkboxes persistent
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
+            // Load previous state
+            const saved = localStorage.getItem(`qa-checklist-${checkbox.id}`);
+            if (saved === 'true') {
+                checkbox.checked = true;
+            }
+
+            // Save on change
             checkbox.addEventListener('change', function () {
                 localStorage.setItem(`qa-checklist-${this.id}`, this.checked);
             });
-            this.checked = localStorage.getItem(`qa-checklist-${checkbox.id}`) === 'true';
         });
     </script>
 </body>

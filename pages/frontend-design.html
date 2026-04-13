@@ -9,16 +9,23 @@
 <style>
 .toc-toggle { position:fixed; right:20px; bottom:20px; width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer; font-size:1.3em; z-index:200; box-shadow:0 4px 16px rgba(108,92,231,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.3s; }
 .toc-toggle:hover { transform:scale(1.1); }
+.toc-toggle:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
 .toc-sidebar { position:fixed; right:0; top:0; bottom:0; width:320px; max-width:85vw; background:var(--bg-card); border-left:1px solid var(--border); z-index:199; transform:translateX(100%); transition:transform 0.3s; overflow-y:auto; padding:60px 20px 40px; }
 .toc-sidebar.open { transform:translateX(0); }
 .toc-sidebar h3 { font-size:0.95em; color:var(--primary-light); margin-bottom:16px; }
 .toc-sidebar .toc-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:1.4em; cursor:pointer; }
-.toc-sidebar a { display:block; padding:5px 0; color:var(--text-muted); text-decoration:none; font-size:0.85em; border-left:2px solid transparent; transition:all 0.2s; }
+.toc-sidebar .toc-close:hover { color:var(--text); }
+.toc-sidebar .toc-close:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+.toc-sidebar a { display:block; padding:5px 0; color:var(--text-muted); text-decoration:none; font-size:0.88rem; border-left:2px solid transparent; transition:all 0.2s; cursor:pointer; }
 .toc-sidebar a:hover { color:var(--text); border-left-color:var(--primary); padding-left:8px; }
+.toc-sidebar a:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
 .toc-sidebar a.h2 { font-weight:600; color:var(--text); margin-top:8px; }
-.toc-sidebar a.h3 { padding-left:16px; font-size:0.82em; }
+.toc-sidebar a.h3 { padding-left:16px; font-size:0.88rem; }
 .toc-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:198; display:none; }
 .toc-overlay.open { display:block; }
+@media (max-width:1024px) {
+  .toc-sidebar { width:280px; }
+}
 </style>
 </head>
 <body>
@@ -576,7 +583,18 @@ function closeToc() { tocBar.classList.remove('open'); tocOverlay.classList.remo
 tocBtn.addEventListener('click', openToc);
 tocClose.addEventListener('click', closeToc);
 tocOverlay.addEventListener('click', closeToc);
-tocBar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setTimeout(closeToc, 200)));
+tocBar.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', function(e) {
+    setTimeout(closeToc, 200);
+    const href = this.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const target = document.querySelector(href);
+      if (target) {
+        setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'nearest'}), 250);
+      }
+    }
+  });
+});
 </script>
 </body>
 </html>

@@ -21,11 +21,7 @@
             --founder: #A29BFE;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
@@ -34,401 +30,188 @@
             line-height: 1.6;
         }
 
-        /* Header & Navigation */
+        /* Header */
         header {
             background: var(--bg-card);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky; top: 0; z-index: 100;
         }
-
         nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            flex-wrap: wrap;
+            max-width: 1200px; margin: 0 auto; padding: 1rem;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 2rem; flex-wrap: wrap;
         }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .logo:hover {
-            color: var(--accent);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            color: var(--text);
-            text-decoration: none;
-            padding: 0.5rem 0;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        nav a.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); text-decoration: none; white-space: nowrap; }
+        .logo:hover { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 1.5rem; flex-wrap: wrap; }
+        nav a { color: var(--text); text-decoration: none; padding: 0.5rem 0; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 0.95rem; }
+        nav a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+        nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
 
         /* Warning Banner */
         .guide-banner {
-            background: linear-gradient(135deg, rgba(225, 112, 85, 0.2), rgba(253, 203, 110, 0.2));
-            border-left: 4px solid var(--danger);
-            padding: 1rem;
-            margin: 0;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--accent);
+            background: linear-gradient(135deg, rgba(225,112,85,0.2), rgba(253,203,110,0.2));
+            border-left: 4px solid var(--danger); padding: 1rem; text-align: center;
+            font-size: 0.9rem; color: var(--accent);
+        }
+        .guide-banner strong { color: var(--danger); }
+
+        /* Main */
+        main { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary); text-align: center; }
+        h2 { font-size: 1.8rem; margin-top: 2rem; margin-bottom: 1.5rem; color: var(--accent); border-bottom: 2px solid rgba(253,203,110,0.3); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 1rem; color: var(--primary); }
+
+        .diagram-section {
+            background: var(--bg-card); border-radius: 8px; padding: 2rem; margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .guide-banner strong {
-            color: var(--danger);
+        /* ─── Flow Explorer: SVG + Controls + Detail as ONE unit ─── */
+        .flow-explorer {
+            background: var(--bg-card); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Main Content */
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-            text-align: center;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin-top: 2rem;
-            margin-bottom: 1.5rem;
-            color: var(--accent);
-            border-bottom: 2px solid rgba(253, 203, 110, 0.3);
+        .svg-container {
+            display: flex; justify-content: center; overflow-x: auto;
             padding-bottom: 0.5rem;
         }
+        svg { max-width: 100%; height: auto; }
 
-        h3 {
-            font-size: 1.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
+        /* Compact inline controls directly under SVG */
+        .flow-nav {
+            display: flex; align-items: center; justify-content: center;
+            gap: 1rem; margin: 1rem 0 0.5rem;
+            flex-wrap: wrap;
+        }
+        .flow-nav .step-label {
+            font-size: 1rem; color: var(--accent); font-weight: bold;
+            min-width: 14rem; text-align: center;
+        }
+        .flow-nav button {
+            background: var(--primary); color: #fff; border: none;
+            padding: 0.5rem 1.2rem; border-radius: 6px; cursor: pointer;
+            font-size: 0.95rem; transition: all 0.3s;
+            min-width: 5.5rem;
+        }
+        .flow-nav button:hover:not(:disabled) {
+            background: var(--accent); color: #000; transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(253,203,110,0.3);
+        }
+        .flow-nav button:focus-visible {
+            outline: 2px solid var(--accent); outline-offset: 2px;
+        }
+        .flow-nav button:disabled { background: rgba(108,92,231,0.25); color: rgba(255,255,255,0.4); cursor: not-allowed; }
+
+        .flow-hint {
+            text-align: center; font-size: 0.85rem; color: rgba(232,232,240,0.5);
+            margin-bottom: 0.75rem;
         }
 
-        /* Section */
-        .diagram-section {
-            background: var(--bg-card);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* SVG Container */
-        .svg-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-            overflow-x: auto;
-        }
-
-        svg {
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* Step Detail Card */
+        /* Step detail card — appears directly below controls */
         .step-detail {
-            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(0, 184, 148, 0.1));
-            border-left: 4px solid var(--primary);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            transform: translateY(-10px);
+            background: linear-gradient(135deg, rgba(108,92,231,0.08), rgba(0,184,148,0.08));
+            border-left: 4px solid var(--primary); border-radius: 8px;
+            padding: 0; max-height: 0; overflow: hidden; opacity: 0;
+            transition: max-height 0.45s cubic-bezier(0.25,0.46,0.45,0.94),
+                        opacity 0.35s ease, padding 0.35s ease;
         }
-
         .step-detail.active {
-            max-height: 600px;
-            opacity: 1;
-            transform: translateY(0);
+            max-height: 800px; opacity: 1; padding: 1.5rem;
+            overflow-y: auto;
         }
-
-        .step-detail h4 {
-            color: var(--accent);
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
+        .step-detail h4 { color: var(--accent); margin-bottom: 0.8rem; font-size: 1.1rem; }
+        .step-detail > .detail-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem; margin-bottom: 0.5rem;
         }
-
-        .step-detail > div {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .step-detail strong {
-            color: var(--secondary);
-        }
-
         .detail-box {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.05); border-radius: 6px; padding: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .detail-box h5 { color: var(--primary); margin-bottom: 0.4rem; font-size: 0.9rem; }
+        .detail-box ul { margin-left: 1.1rem; font-size: 0.88rem; }
+        .detail-box li { margin-bottom: 0.3rem; }
+        .detail-box strong { color: var(--secondary); }
+
+        /* Step nodes in SVG */
+        .step-node { cursor: pointer; transition: all 0.3s; }
+        .step-node:hover { filter: brightness(1.2); }
+        .step-node.active rect, .step-node.active circle {
+            filter: drop-shadow(0 0 12px currentColor);
         }
 
-        .detail-box h5 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+        /* ─── Status Machine ─── */
+        .state-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem; margin: 1.5rem 0;
         }
-
-        .detail-box ul {
-            margin-left: 1.2rem;
-            font-size: 0.9rem;
+        .state-card {
+            background: rgba(255,255,255,0.04); border-radius: 8px; padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.08); cursor: pointer;
+            transition: all 0.3s;
         }
-
-        .detail-box li {
-            margin-bottom: 0.4rem;
+        .state-card:hover, .state-card.expanded {
+            border-color: var(--primary); background: rgba(108,92,231,0.1);
         }
-
-        /* Flow Control */
-        .flow-controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-            flex-wrap: wrap;
+        .state-card .state-pair {
+            display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;
         }
-
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(253, 203, 110, 0.3);
-        }
-
-        button:disabled {
-            background: rgba(108, 92, 231, 0.3);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Status Machine */
-        .state-diagram {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .state-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
         .state-badge {
-            background: var(--primary);
-            color: #000;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            font-weight: bold;
-            white-space: nowrap;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: var(--primary); color: #000; padding: 0.4rem 0.8rem;
+            border-radius: 16px; font-weight: bold; font-size: 0.82rem; white-space: nowrap;
         }
-
-        .state-badge:hover {
-            background: var(--accent);
-            transform: scale(1.05);
+        .state-arrow { color: var(--accent); font-size: 1.2rem; }
+        .state-card .state-info {
+            max-height: 0; overflow: hidden; opacity: 0;
+            transition: max-height 0.3s ease, opacity 0.25s ease, margin 0.3s ease;
+            font-size: 0.88rem;
         }
-
-        .state-badge.current {
-            box-shadow: 0 0 20px rgba(253, 203, 110, 0.6);
-            animation: statePulse 1s ease-in-out infinite;
+        .state-card.expanded .state-info {
+            max-height: 200px; opacity: 1; margin-top: 0.5rem;
         }
-
-        @keyframes statePulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.08);
-            }
-        }
-
-        .state-arrow {
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-
-        .state-popover {
-            background: var(--bg-card);
-            border: 1px solid var(--primary);
-            border-radius: 6px;
-            padding: 0.8rem;
-            font-size: 0.85rem;
-            max-width: 200px;
-            margin-top: 0.5rem;
-            display: none;
-            border-left: 3px solid var(--primary);
-        }
-
-        .state-popover.visible {
-            display: block;
-        }
+        .state-card .state-info p { margin-bottom: 0.3rem; }
+        .state-card .state-info strong { color: var(--secondary); }
 
         /* Parallel Tracks */
         .parallel-tracks {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;
         }
-
         .track {
-            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(85, 239, 196, 0.1));
-            border: 1px solid rgba(85, 239, 196, 0.3);
-            border-radius: 8px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(85,239,196,0.1));
+            border: 1px solid rgba(85,239,196,0.3); border-radius: 8px; padding: 1.5rem;
         }
+        .track h4 { color: var(--eng); margin-bottom: 1rem; font-size: 1.05rem; }
+        .track ol { margin-left: 1.5rem; }
+        .track li { margin-bottom: 0.8rem; font-size: 0.95rem; }
 
-        .track h4 {
-            color: var(--eng);
-            margin-bottom: 1rem;
-            font-size: 1.05rem;
-        }
-
-        .track ol {
-            margin-left: 1.5rem;
-        }
-
-        .track li {
-            margin-bottom: 0.8rem;
-            font-size: 0.95rem;
-        }
-
-        /* Status Pills */
         .status-pill {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-right: 0.5rem;
-            margin-top: 0.5rem;
+            display: inline-block; padding: 0.3rem 0.8rem; border-radius: 12px;
+            font-size: 0.8rem; font-weight: bold; margin-right: 0.5rem;
         }
+        .status-proposed { background: rgba(225,112,85,0.3); color: var(--danger); border: 1px solid var(--danger); }
 
-        .status-proposed {
-            background: rgba(225, 112, 85, 0.3);
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-
-        /* Footer */
         footer {
-            background: var(--bg-card);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            text-align: center;
-            color: rgba(232, 232, 240, 0.7);
-            font-size: 0.9rem;
+            background: var(--bg-card); border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem; text-align: center; color: rgba(232,232,240,0.7); font-size: 0.9rem;
         }
 
-        /* Interactive Step Nodes */
-        .step-node {
-            cursor: pointer;
-            transition: all 0.3s ease;
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .step-detail > .detail-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
         }
-
-        .step-node:hover {
-            filter: brightness(1.15);
-        }
-
-        .step-node.active circle {
-            filter: drop-shadow(0 0 15px currentColor);
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            nav ul {
-                flex-direction: column;
-                gap: 0.5rem;
-                width: 100%;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            h2 {
-                font-size: 1.4rem;
-            }
-
-            .diagram-section {
-                padding: 1rem;
-            }
-
-            .parallel-tracks {
-                grid-template-columns: 1fr;
-            }
-
-            .state-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .state-arrow {
-                display: none;
-            }
-
-            .step-detail.active {
-                max-height: 1000px;
-            }
+            nav { flex-direction: column; gap: 1rem; }
+            nav ul { flex-direction: column; gap: 0.5rem; width: 100%; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .flow-explorer, .diagram-section { padding: 1rem; }
+            .parallel-tracks { grid-template-columns: 1fr; }
+            .step-detail.active { max-height: 1200px; }
+            .flow-nav { gap: 0.6rem; }
+            .flow-nav .step-label { min-width: auto; font-size: 0.9rem; order: -1; width: 100%; }
+            .state-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -439,11 +222,11 @@
             <ul>
                 <li><a href="../index.html">首页</a></li>
                 <li><a href="global.html">全局工作流</a></li>
-                <li><a href="role-pm.html">产品</a></li>
-                <li><a href="role-eng.html">工程</a></li>
-                <li><a href="role-qa.html">质量</a></li>
-                <li><a href="role-ops.html">运维</a></li>
-                <li><a href="role-design.html">设计</a></li>
+                <li><a href="product.html">产品</a></li>
+                <li><a href="engineering.html">工程</a></li>
+                <li><a href="qa.html">质量</a></li>
+                <li><a href="ops.html">运维</a></li>
+                <li><a href="frontend-design.html">设计</a></li>
             </ul>
         </nav>
     </header>
@@ -454,80 +237,90 @@
 
     <main>
         <h1>五步交付流详解</h1>
-        <p style="text-align: center; margin-bottom: 2rem; color: rgba(232, 232, 240, 0.8);">
+        <p style="text-align:center; margin-bottom:2rem; color:rgba(232,232,240,0.8);">
             从 Cap-Spec 冻结到产品发布，理解唤龙平台的完整交付流程与门禁体系
         </p>
 
-        <!-- Section 1: Flow Diagram -->
-        <section class="diagram-section">
-            <h2>交付流程总览</h2>
-            <p style="margin-bottom: 1.5rem;">点击下方任意一个步骤，查看该阶段的详细信息、产出物、参与角色及通过条件。</p>
+        <!-- ════════ UNIFIED FLOW EXPLORER ════════ -->
+        <section class="flow-explorer" id="flow-explorer">
+            <h2 style="margin-top:0;">交付流程总览</h2>
+            <p style="margin-bottom:1rem;">点击流程图节点或使用导航按钮，查看每个阶段的详细信息。</p>
 
+            <!-- SVG Flow Diagram -->
             <div class="svg-container" id="flow-container">
-                <svg viewBox="0 0 1100 250" width="1100" height="250" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Step 1: Cap-Spec Freeze -->
-                    <circle class="step-node" id="step-1" cx="100" cy="125" r="45" fill="var(--pm)" opacity="0.8" data-step="1"/>
-                    <text x="100" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#000">Cap-Spec</text>
-                    <text x="100" y="135" text-anchor="middle" font-size="11" fill="#000">冻结</text>
-                    <text x="100" y="200" text-anchor="middle" font-size="10" fill="var(--pm)">Step 1</text>
-
-                    <!-- Arrow 1 -->
-                    <path d="M 145 125 L 205 125" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-
-                    <!-- Step 2: Design + HPRD -->
-                    <circle class="step-node" id="step-2" cx="250" cy="125" r="45" fill="var(--eng)" opacity="0.8" data-step="2"/>
-                    <text x="250" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#000">设计</text>
-                    <text x="250" y="135" text-anchor="middle" font-size="11" fill="#000">HPRD</text>
-                    <text x="250" y="200" text-anchor="middle" font-size="10" fill="var(--eng)">Step 2</text>
-
-                    <!-- Arrow 2 -->
-                    <path d="M 295 125 L 355 125" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-
-                    <!-- Step 3: Implementation -->
-                    <circle class="step-node" id="step-3" cx="400" cy="125" r="45" fill="var(--eng)" opacity="0.8" data-step="3"/>
-                    <text x="400" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#000">实现</text>
-                    <text x="400" y="135" text-anchor="middle" font-size="11" fill="#000">开发</text>
-                    <text x="400" y="200" text-anchor="middle" font-size="10" fill="var(--eng)">Step 3</text>
-
-                    <!-- Arrow 3 -->
-                    <path d="M 445 125 L 505 125" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-
-                    <!-- Step 4: Gates + Acceptance -->
-                    <circle class="step-node" id="step-4" cx="550" cy="125" r="45" fill="var(--qa)" opacity="0.8" data-step="4"/>
-                    <text x="550" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#000">门禁</text>
-                    <text x="550" y="130" text-anchor="middle" font-size="11" fill="#000">验收</text>
-                    <text x="550" y="200" text-anchor="middle" font-size="10" fill="var(--qa)">Step 4</text>
-
-                    <!-- Arrow 4 -->
-                    <path d="M 595 125 L 655 125" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
-
-                    <!-- Step 5: PM Acceptance + Merge -->
-                    <circle class="step-node" id="step-5" cx="700" cy="125" r="45" fill="var(--pm)" opacity="0.8" data-step="5"/>
-                    <text x="700" y="115" text-anchor="middle" font-size="11" font-weight="bold" fill="#000">产品</text>
-                    <text x="700" y="130" text-anchor="middle" font-size="11" fill="#000">验收</text>
-                    <text x="700" y="200" text-anchor="middle" font-size="10" fill="var(--pm)">Step 5</text>
-
-                    <!-- Arrow marker -->
+                <svg viewBox="0 0 900 180" width="900" height="180" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
                             <polygon points="0 0, 10 3, 0 6" fill="var(--accent)"/>
                         </marker>
+                        <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="var(--secondary)"/>
+                        </marker>
                     </defs>
 
-                    <!-- Release circle -->
-                    <circle cx="850" cy="125" r="35" fill="var(--secondary)" opacity="0.8"/>
-                    <text x="850" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#000" dominant-baseline="middle">发布</text>
-                    <path d="M 745 125 L 815 125" stroke="var(--secondary)" stroke-width="3" fill="none" marker-end="url(#arrowhead-green)"/>
-                    <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                        <polygon points="0 0, 10 3, 0 6" fill="var(--secondary)"/>
-                    </marker>
+                    <!-- Step 1 -->
+                    <g class="step-node" id="step-1" data-step="1">
+                        <circle cx="80" cy="75" r="50" fill="var(--pm)" opacity="0.85"/>
+                        <text x="80" y="68" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">Cap-Spec</text>
+                        <text x="80" y="84" text-anchor="middle" font-size="12" fill="#000">冻结</text>
+                        <text x="80" y="145" text-anchor="middle" font-size="11" fill="var(--pm)">Step 1</text>
+                    </g>
+                    <path d="M130 75 L195 75" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+
+                    <!-- Step 2 -->
+                    <g class="step-node" id="step-2" data-step="2">
+                        <circle cx="240" cy="75" r="50" fill="var(--eng)" opacity="0.85"/>
+                        <text x="240" y="68" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">设计</text>
+                        <text x="240" y="84" text-anchor="middle" font-size="12" fill="#000">HPRD</text>
+                        <text x="240" y="145" text-anchor="middle" font-size="11" fill="var(--eng)">Step 2</text>
+                    </g>
+                    <path d="M290 75 L355 75" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+
+                    <!-- Step 3 -->
+                    <g class="step-node" id="step-3" data-step="3">
+                        <circle cx="400" cy="75" r="50" fill="var(--eng)" opacity="0.85"/>
+                        <text x="400" y="68" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">实现</text>
+                        <text x="400" y="84" text-anchor="middle" font-size="12" fill="#000">开发</text>
+                        <text x="400" y="145" text-anchor="middle" font-size="11" fill="var(--eng)">Step 3</text>
+                    </g>
+                    <path d="M450 75 L515 75" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+
+                    <!-- Step 4 -->
+                    <g class="step-node" id="step-4" data-step="4">
+                        <circle cx="560" cy="75" r="50" fill="var(--qa)" opacity="0.85"/>
+                        <text x="560" y="68" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">门禁</text>
+                        <text x="560" y="84" text-anchor="middle" font-size="12" fill="#000">验收</text>
+                        <text x="560" y="145" text-anchor="middle" font-size="11" fill="var(--qa)">Step 4</text>
+                    </g>
+                    <path d="M610 75 L675 75" stroke="var(--accent)" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+
+                    <!-- Step 5 -->
+                    <g class="step-node" id="step-5" data-step="5">
+                        <circle cx="720" cy="75" r="50" fill="var(--pm)" opacity="0.85"/>
+                        <text x="720" y="68" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">产品</text>
+                        <text x="720" y="84" text-anchor="middle" font-size="12" fill="#000">验收</text>
+                        <text x="720" y="145" text-anchor="middle" font-size="11" fill="var(--pm)">Step 5</text>
+                    </g>
+                    <path d="M770 75 L825 75" stroke="var(--secondary)" stroke-width="3" fill="none" marker-end="url(#arrowhead-green)"/>
+
+                    <!-- Release -->
+                    <circle cx="860" cy="75" r="30" fill="var(--secondary)" opacity="0.85"/>
+                    <text x="860" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#000" dominant-baseline="middle">发布</text>
                 </svg>
             </div>
 
-            <!-- Step Details -->
+            <!-- Controls: directly below diagram, zero separation -->
+            <div class="flow-nav">
+                <button id="prev-btn" disabled>← 上一步</button>
+                <span class="step-label" id="current-step">第一步 — Cap-Spec 冻结</span>
+                <button id="next-btn">下一步 →</button>
+            </div>
+            <p class="flow-hint">点击节点可直接跳转 · 按钮同步切换</p>
+
+            <!-- Step Detail Cards (only one visible at a time, appears directly below controls) -->
             <div id="step-detail-1" class="step-detail">
                 <h4>第一步：Cap-Spec 冻结（语义冻结）</h4>
-                <div>
+                <div class="detail-grid">
                     <div class="detail-box">
                         <h5>产出物</h5>
                         <ul>
@@ -578,7 +371,7 @@
 
             <div id="step-detail-2" class="step-detail">
                 <h4>第二步：设计与理解确认（Design + HPRD）</h4>
-                <div>
+                <div class="detail-grid">
                     <div class="detail-box">
                         <h5>产出物</h5>
                         <ul>
@@ -633,7 +426,7 @@
 
             <div id="step-detail-3" class="step-detail">
                 <h4>第三步：实现（Implementation）</h4>
-                <div>
+                <div class="detail-grid">
                     <div class="detail-box">
                         <h5>产出物</h5>
                         <ul>
@@ -686,7 +479,7 @@
 
             <div id="step-detail-4" class="step-detail">
                 <h4>第四步：门禁与验收（Gates + Acceptance）</h4>
-                <div>
+                <div class="detail-grid">
                     <div class="detail-box">
                         <h5>产出物</h5>
                         <ul>
@@ -742,7 +535,7 @@
 
             <div id="step-detail-5" class="step-detail">
                 <h4>第五步：产品验收与合并（PM Acceptance + Merge）</h4>
-                <div>
+                <div class="detail-grid">
                     <div class="detail-box">
                         <h5>产出物</h5>
                         <ul>
@@ -795,111 +588,93 @@
             </div>
         </section>
 
-        <!-- Section 2: Status Machine -->
+        <!-- ════════ STATUS MACHINE (card grid, not long vertical list) ════════ -->
         <section class="diagram-section">
             <h2>状态转移机制</h2>
-            <p style="margin-bottom: 1.5rem;">展示需求从提议到发布的 12 个关键状态转移。点击各个状态查看入口条件和出口条件。</p>
+            <p style="margin-bottom:1.5rem;">展示需求从提议到发布的 12 个关键状态。点击卡片查看入口、出口条件。</p>
 
-            <div class="state-diagram">
-                <div class="state-row">
-                    <div class="state-badge" id="state-1" data-state="1">Proposed</div>
-                    <div class="state-arrow">→</div>
-                    <div class="state-badge" id="state-2" data-state="2">Cap-Spec Frozen</div>
-                </div>
-                <div id="popover-1" class="state-popover">
-                    <strong>入口：</strong> PM 提交 Spec 草稿<br/>
-                    <strong>出口：</strong> 创始人确认签字<br/>
-                    <strong>条件：</strong> Spec 清晰、创始人同意
-                </div>
-                <div id="popover-2" class="state-popover">
-                    <strong>入口：</strong> Cap-Spec 被创始人冻结<br/>
-                    <strong>出口：</strong> 开始 HPRD 与设计阶段<br/>
-                    <strong>条件：</strong> 无变更，工程师开工
+            <div class="state-grid">
+                <div class="state-card" data-sc="1">
+                    <div class="state-pair">
+                        <span class="state-badge">Proposed</span>
+                        <span class="state-arrow">→</span>
+                        <span class="state-badge">Cap-Spec Frozen</span>
+                    </div>
+                    <div class="state-info">
+                        <p><strong>入口：</strong>PM 提交 Spec 草稿</p>
+                        <p><strong>出口：</strong>创始人确认签字</p>
+                        <p><strong>条件：</strong>Spec 清晰、创始人同意，工程师确认技术可行</p>
+                    </div>
                 </div>
 
-                <div class="state-row" style="margin-top: 1.5rem;">
-                    <div class="state-badge" id="state-3" data-state="3">HPRD In Review</div>
-                    <div class="state-arrow">→</div>
-                    <div class="state-badge" id="state-4" data-state="4">HPRD Approved</div>
-                </div>
-                <div id="popover-3" class="state-popover">
-                    <strong>入口：</strong> 工程师提交 HPRD<br/>
-                    <strong>出口：</strong> PM 和工程师确认理解一致<br/>
-                    <strong>条件：</strong> HPRD 与 Spec 对标
-                </div>
-                <div id="popover-4" class="state-popover">
-                    <strong>入口：</strong> PM 和工程师签字<br/>
-                    <strong>出口：</strong> 开始编码<br/>
-                    <strong>条件：</strong> QA 验收测试已编写
+                <div class="state-card" data-sc="2">
+                    <div class="state-pair">
+                        <span class="state-badge">HPRD In Review</span>
+                        <span class="state-arrow">→</span>
+                        <span class="state-badge">HPRD Approved</span>
+                    </div>
+                    <div class="state-info">
+                        <p><strong>入口：</strong>工程师提交 HPRD</p>
+                        <p><strong>出口：</strong>PM 和工程师确认理解一致</p>
+                        <p><strong>条件：</strong>HPRD 与 Spec 对标，QA 验收测试已编写</p>
+                    </div>
                 </div>
 
-                <div class="state-row" style="margin-top: 1.5rem;">
-                    <div class="state-badge" id="state-5" data-state="5">Design Frozen</div>
-                    <div class="state-arrow">→</div>
-                    <div class="state-badge" id="state-6" data-state="6">In Development</div>
-                </div>
-                <div id="popover-5" class="state-popover">
-                    <strong>入口：</strong> HPRD 已批准<br/>
-                    <strong>出口：</strong> 工程师分配开始编码<br/>
-                    <strong>条件：</strong> 设计稿已确定
-                </div>
-                <div id="popover-6" class="state-popover">
-                    <strong>入口：</strong> 工程师开始编码<br/>
-                    <strong>出口：</strong> 所有代码完成，提交 PR<br/>
-                    <strong>条件：</strong> 本地测试通过
+                <div class="state-card" data-sc="3">
+                    <div class="state-pair">
+                        <span class="state-badge">Design Frozen</span>
+                        <span class="state-arrow">→</span>
+                        <span class="state-badge">In Development</span>
+                    </div>
+                    <div class="state-info">
+                        <p><strong>入口：</strong>HPRD 已批准，设计稿已确定</p>
+                        <p><strong>出口：</strong>工程师分配开始编码</p>
+                        <p><strong>条件：</strong>所有代码完成后提交 PR，本地测试通过</p>
+                    </div>
                 </div>
 
-                <div class="state-row" style="margin-top: 1.5rem;">
-                    <div class="state-badge" id="state-7" data-state="7">PR Submitted</div>
-                    <div class="state-arrow">→</div>
-                    <div class="state-badge" id="state-8" data-state="8">In Review</div>
-                </div>
-                <div id="popover-7" class="state-popover">
-                    <strong>入口：</strong> 工程师推送到远端<br/>
-                    <strong>出口：</strong> 触发 CI/CD 和代码审查<br/>
-                    <strong>条件：</strong> PR 链接需求
-                </div>
-                <div id="popover-8" class="state-popover">
-                    <strong>入口：</strong> CI/CD 门禁正在运行<br/>
-                    <strong>出口：</strong> 所有门禁通过，QA 测试<br/>
-                    <strong>条件：</strong> 门禁配置正确
+                <div class="state-card" data-sc="4">
+                    <div class="state-pair">
+                        <span class="state-badge">PR Submitted</span>
+                        <span class="state-arrow">→</span>
+                        <span class="state-badge">In Review</span>
+                    </div>
+                    <div class="state-info">
+                        <p><strong>入口：</strong>工程师推送到远端</p>
+                        <p><strong>出口：</strong>触发 CI/CD 和代码审查</p>
+                        <p><strong>条件：</strong>PR 链接需求，门禁配置正确</p>
+                    </div>
                 </div>
 
-                <div class="state-row" style="margin-top: 1.5rem;">
-                    <div class="state-badge" id="state-9" data-state="9">QA Verdict</div>
-                    <div class="state-arrow">→</div>
-                    <div class="state-badge" id="state-10" data-state="10">PM Acceptance</div>
-                </div>
-                <div id="popover-9" class="state-popover">
-                    <strong>入口：</strong> QA 完成手动测试<br/>
-                    <strong>出口：</strong> QA 出 Verdict（Approved/Rejected）<br/>
-                    <strong>条件：</strong> 测试覆盖完整
-                </div>
-                <div id="popover-10" class="state-popover">
-                    <strong>入口：</strong> QA Verdict = Approved<br/>
-                    <strong>出口：</strong> PM 进行最终验收<br/>
-                    <strong>条件：</strong> 功能符合 Cap-Spec
+                <div class="state-card" data-sc="5">
+                    <div class="state-pair">
+                        <span class="state-badge">QA Verdict</span>
+                        <span class="state-arrow">→</span>
+                        <span class="state-badge">PM Acceptance</span>
+                    </div>
+                    <div class="state-info">
+                        <p><strong>入口：</strong>QA 完成手动测试</p>
+                        <p><strong>出口：</strong>PM 进行最终验收</p>
+                        <p><strong>条件：</strong>测试覆盖完整，功能符合 Cap-Spec</p>
+                    </div>
                 </div>
 
-                <div class="state-row" style="margin-top: 1.5rem;">
-                    <div class="state-badge" id="state-11" data-state="11">Merged</div>
-                    <div class="state-arrow">→</div>
-                    <div class="state-badge" id="state-12" data-state="12">Released</div>
-                </div>
-                <div id="popover-11" class="state-popover">
-                    <strong>入口：</strong> PM 签署 pm-acceptance<br/>
-                    <strong>出口：</strong> 代码合并到 main 分支<br/>
-                    <strong>条件：</strong> 无冲突，所有检查通过
-                </div>
-                <div id="popover-12" class="state-popover">
-                    <strong>入口：</strong> 合并完成<br/>
-                    <strong>出口：</strong> 发布到生产环境<br/>
-                    <strong>条件：</strong> DevOps 手动或自动发布
+                <div class="state-card" data-sc="6">
+                    <div class="state-pair">
+                        <span class="state-badge">Merged</span>
+                        <span class="state-arrow">→</span>
+                        <span class="state-badge">Released</span>
+                    </div>
+                    <div class="state-info">
+                        <p><strong>入口：</strong>PM 签署 pm-acceptance</p>
+                        <p><strong>出口：</strong>代码合并到 main，发布到生产环境</p>
+                        <p><strong>条件：</strong>无冲突，所有检查通过，DevOps 发布</p>
+                    </div>
                 </div>
             </div>
 
-            <div style="background: rgba(253, 203, 110, 0.15); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin-top: 2rem;">
-                <h4 style="color: var(--accent); margin-bottom: 1rem;">
+            <div style="background:rgba(253,203,110,0.15); border-left:4px solid var(--accent); border-radius:8px; padding:1.5rem; margin-top:1.5rem;">
+                <h4 style="color:var(--accent); margin-bottom:1rem;">
                     <span class="status-pill status-proposed">PROPOSED</span> 测试阶段声明
                 </h4>
                 <p>
@@ -909,12 +684,11 @@
             </div>
         </section>
 
-        <!-- Section 3: Parallel Tracks -->
+        <!-- ════════ PARALLEL TRACKS ════════ -->
         <section class="diagram-section">
             <h2>平行开发轨道</h2>
-            <p style="margin-bottom: 1.5rem;">
+            <p style="margin-bottom:1.5rem;">
                 后端（hl-platform）和前端（hl-app）可以在共享 Cap-Spec 的基础上并行开发。
-                下图展示两条轨道如何分享和整合。
             </p>
 
             <div class="parallel-tracks">
@@ -928,12 +702,11 @@
                         <li><strong>PR → QA Verdict</strong> — 后端 PR 通过 QA 测试</li>
                     </ol>
                 </div>
-
                 <div class="track">
                     <h4>前端轨道（hl-app）</h4>
                     <ol>
                         <li><strong>Cap-Spec Frozen</strong> — 共享定义</li>
-                        <li><strong>Design Packet + HPRD for Frontend</strong> — 前端设计稿、交互规范、 API 调用说明</li>
+                        <li><strong>Design Packet + HPRD for Frontend</strong> — 前端设计稿、交互规范、API 调用说明</li>
                         <li><strong>Frontend Implementation</strong> — 前端编码、单元测试</li>
                         <li><strong>Integration Testing</strong> — 与后端集成测试</li>
                         <li><strong>PR → QA Verdict</strong> — 前端 PR 通过 QA 测试</li>
@@ -941,43 +714,24 @@
                 </div>
             </div>
 
-            <div style="background: linear-gradient(135deg, rgba(0, 184, 148, 0.15), rgba(85, 239, 196, 0.15)); border-left: 4px solid var(--secondary); border-radius: 8px; padding: 1.5rem; margin-top: 2rem;">
-                <h4 style="color: var(--secondary); margin-bottom: 1rem;">同步点与合并</h4>
-                <ul style="margin-left: 1.5rem;">
+            <div style="background:linear-gradient(135deg,rgba(0,184,148,0.15),rgba(85,239,196,0.15)); border-left:4px solid var(--secondary); border-radius:8px; padding:1.5rem; margin-top:2rem;">
+                <h4 style="color:var(--secondary); margin-bottom:1rem;">同步点与合并</h4>
+                <ul style="margin-left:1.5rem;">
                     <li><strong>同步点 1：Cap-Spec</strong> — 两条轨道从同一份产品定义出发</li>
                     <li><strong>同步点 2：集成测试</strong> — 后端 API Ready 后，前端可以集成测试</li>
                     <li><strong>同步点 3：pm-acceptance</strong> — PM 对两条轨道的共同功能进行验收</li>
                     <li><strong>同步点 4：Release</strong> — 后端和前端同时发布到生产环境（或按需序列化发布）</li>
                 </ul>
-                <p style="margin-top: 1rem; font-size: 0.95rem;">
+                <p style="margin-top:1rem; font-size:0.95rem;">
                     如果后端或前端轨道卡住，需要启动 escalation 流程，由创始人决定是否延迟发布、分阶段发布或调整范围。
                 </p>
             </div>
         </section>
 
-        <!-- Flow Navigation -->
-        <section class="diagram-section">
-            <h2>流程导航演练</h2>
-            <p style="margin-bottom: 1.5rem;">点击"下一步"按钮，逐步通过交付流程的每一个阶段。这有助于新团队成员理解整个交付周期。</p>
-
-            <div style="text-align: center; padding: 1.5rem;">
-                <div style="font-size: 1.1rem; margin-bottom: 1.5rem; color: var(--accent);">
-                    当前步骤：<span id="current-step" style="font-weight: bold;">第一步 — Cap-Spec 冻结</span>
-                </div>
-                <div class="flow-controls">
-                    <button id="prev-btn" onclick="previousStep()" style="background: rgba(108, 92, 231, 0.5);">← 上一步</button>
-                    <button id="next-btn" onclick="nextStep()">下一步 →</button>
-                </div>
-                <p style="font-size: 0.9rem; color: rgba(232, 232, 240, 0.7);">
-                    点击流程图中的任意步骤也可直接跳转
-                </p>
-            </div>
-        </section>
-
-        <!-- Key Insights -->
-        <section class="diagram-section" style="background: linear-gradient(135deg, rgba(0, 184, 148, 0.15), rgba(108, 92, 231, 0.15));">
-            <h2 style="color: var(--secondary);">五步交付流的核心原则</h2>
-            <ul style="margin-left: 1.5rem; font-size: 1rem;">
+        <!-- ════════ KEY PRINCIPLES ════════ -->
+        <section class="diagram-section" style="background:linear-gradient(135deg,rgba(0,184,148,0.15),rgba(108,92,231,0.15));">
+            <h2 style="color:var(--secondary);">五步交付流的核心原则</h2>
+            <ul style="margin-left:1.5rem; font-size:1rem;">
                 <li><strong>串行控制：</strong> 每一步都有明确的入口和出口条件，前一步未完成不能进入下一步。</li>
                 <li><strong>质量门禁：</strong> CI/CD 和 QA 测试是自动化的质量关卡，不受人为压力影响。</li>
                 <li><strong>角色分工：</strong> PM、工程师、QA、创始人各有各的验收职责，互相制约。</li>
@@ -993,91 +747,72 @@
     </footer>
 
     <script>
+        /* ─── Flow Explorer ─── */
         let currentStep = 1;
         const totalSteps = 5;
+        const stepTexts = [
+            '第一步 — Cap-Spec 冻结',
+            '第二步 — 设计与理解确认',
+            '第三步 — 实现开发',
+            '第四步 — 门禁与验收',
+            '第五步 — 产品验收与合并'
+        ];
 
-        // Step node click handlers
-        const stepNodes = document.querySelectorAll('.step-node');
-        stepNodes.forEach(node => {
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        prevBtn.addEventListener('click', () => { if (currentStep > 1) goToStep(currentStep - 1); });
+        nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) goToStep(currentStep + 1); });
+
+        document.querySelectorAll('.step-node').forEach(node => {
             node.addEventListener('click', function() {
-                const step = parseInt(this.getAttribute('data-step'));
-                goToStep(step);
-            });
-        });
-
-        // State badge click handlers
-        const stateBadges = document.querySelectorAll('.state-badge');
-        stateBadges.forEach(badge => {
-            badge.addEventListener('click', function() {
-                const state = this.getAttribute('data-state');
-                const popover = document.getElementById(`popover-${state}`);
-
-                // Close all other popovers
-                document.querySelectorAll('.state-popover').forEach(p => {
-                    p.classList.remove('visible');
-                });
-
-                // Open clicked popover
-                if (popover) {
-                    popover.classList.add('visible');
-                }
+                goToStep(parseInt(this.getAttribute('data-step')));
             });
         });
 
         function goToStep(step) {
-            // Close all detail cards
-            document.querySelectorAll('.step-detail').forEach(card => {
-                card.classList.remove('active');
-            });
+            // Close all, open selected
+            document.querySelectorAll('.step-detail').forEach(c => c.classList.remove('active'));
+            const card = document.getElementById('step-detail-' + step);
+            if (card) card.classList.add('active');
 
-            // Open selected step detail
-            const detailId = `step-detail-${step}`;
-            const detailCard = document.getElementById(detailId);
-            if (detailCard) {
-                detailCard.classList.add('active');
-                detailCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
+            // Highlight SVG node
+            document.querySelectorAll('.step-node').forEach(n => n.classList.remove('active'));
+            const node = document.getElementById('step-' + step);
+            if (node) node.classList.add('active');
 
-            // Update step nodes
-            stepNodes.forEach(node => {
-                node.classList.remove('active');
-            });
-            const activeNode = document.getElementById(`step-${step}`);
-            if (activeNode) {
-                activeNode.classList.add('active');
-            }
-
-            // Update current step text
-            const stepTexts = [
-                '第一步 — Cap-Spec 冻结',
-                '第二步 — 设计与理解确认',
-                '第三步 — 实现开发',
-                '第四步 — 门禁与验收',
-                '第五步 — 产品验收与合并'
-            ];
+            // Update label & buttons
             document.getElementById('current-step').textContent = stepTexts[step - 1];
-
-            // Update button states
-            document.getElementById('prev-btn').disabled = step === 1;
-            document.getElementById('next-btn').disabled = step === totalSteps;
-
+            prevBtn.disabled = step === 1;
+            nextBtn.disabled = step === totalSteps;
             currentStep = step;
-        }
 
-        function nextStep() {
-            if (currentStep < totalSteps) {
-                goToStep(currentStep + 1);
+            // Scroll the detail card into view smoothly — keeps context near the diagram
+            if (card) {
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 80);
             }
         }
 
-        function previousStep() {
-            if (currentStep > 1) {
-                goToStep(currentStep - 1);
-            }
-        }
-
-        // Initialize
+        // Initialize Step 1
         goToStep(1);
+
+        /* ─── State Machine Cards ─── */
+        document.querySelectorAll('.state-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const wasExpanded = this.classList.contains('expanded');
+                // Close all
+                document.querySelectorAll('.state-card').forEach(c => c.classList.remove('expanded'));
+                // Toggle clicked
+                if (!wasExpanded) {
+                    this.classList.add('expanded');
+                    setTimeout(() => {
+                        this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 60);
+                }
+            });
+        });
     </script>
 </body>
 </html>

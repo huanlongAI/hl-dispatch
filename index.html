@@ -12,12 +12,14 @@
   .hero h1 span { background:linear-gradient(135deg,var(--primary-light),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
   .hero p { font-size:1.15em; color:var(--text-muted); margin-top:16px; position:relative; z-index:1; }
   .hero .badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:20px; position:relative; z-index:1; }
-  .hero .badge { padding:5px 16px; background:rgba(108,92,231,0.15); border:1px solid var(--primary); border-radius:20px; font-size:0.82em; color:var(--primary-light); }
+  .hero .badge { padding:5px 16px; background:rgba(108,92,231,0.15); border:1px solid var(--primary); border-radius:20px; font-size:0.88rem; color:var(--primary-light); cursor:pointer; }
+  .hero .badge:hover { background:rgba(108,92,231,0.25); }
+  .hero .badge:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
 
   .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; max-width:900px; margin:-30px auto 0; padding:0 24px; position:relative; z-index:10; }
   .stat { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; text-align:center; }
   .stat .val { font-size:2.2em; font-weight:800; background:linear-gradient(135deg,var(--primary-light),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  .stat .lbl { font-size:0.8em; color:var(--text-muted); margin-top:4px; }
+  .stat .lbl { font-size:0.88rem; color:var(--text-muted); margin-top:4px; }
 
   .guides { max-width:900px; margin:48px auto; padding:0 24px; }
   .guides h2 { font-size:1.6em; font-weight:700; margin-bottom:24px; text-align:center; }
@@ -29,11 +31,12 @@
     transition:all 0.3s; cursor:pointer;
   }
   .guide-card:hover { border-color:var(--primary); transform:translateX(4px); box-shadow:0 4px 24px rgba(108,92,231,0.15); }
+  .guide-card:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
   .guide-icon { font-size:2em; flex-shrink:0; width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
   .guide-info { flex:1; }
   .guide-info h3 { font-size:1.1em; margin-bottom:4px; }
   .guide-info p { font-size:0.88em; color:var(--text-muted); margin:0; }
-  .guide-info .for { font-size:0.78em; margin-top:6px; padding:2px 10px; border-radius:10px; display:inline-block; }
+  .guide-info .for { font-size:0.88rem; margin-top:6px; padding:2px 10px; border-radius:10px; display:inline-block; }
   .guide-arrow { color:var(--text-muted); font-size:1.4em; transition:transform 0.3s; }
   .guide-card:hover .guide-arrow { transform:translateX(4px); color:var(--primary-light); }
 
@@ -50,9 +53,10 @@
     transition:background 0.2s; user-select:none;
   }
   .toc-group-header:hover { background:#222240; }
+  .toc-group-header:focus-visible { outline:2px solid #6C5CE7; outline-offset:-2px; }
   .toc-group-header .toc-icon { font-size:1.3em; flex-shrink:0; }
   .toc-group-header .toc-title { flex:1; font-weight:700; font-size:1.05em; }
-  .toc-group-header .toc-badge { padding:3px 10px; border-radius:12px; font-size:0.75em; font-weight:600; }
+  .toc-group-header .toc-badge { padding:3px 10px; border-radius:12px; font-size:0.88rem; font-weight:600; }
   .toc-group-header .toc-arrow { transition:transform 0.3s; font-size:0.9em; color:#9999B0; }
   .toc-group-header .toc-arrow.open { transform:rotate(180deg); }
   .toc-group-body { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
@@ -64,15 +68,57 @@
   }
   .toc-group-body .toc-item:last-child { border-bottom:none; }
   .toc-group-body .toc-item a {
-    color:#9999B0; text-decoration:none; font-size:0.88em; transition:color 0.2s;
+    color:#9999B0; text-decoration:none; font-size:0.88rem; transition:color 0.2s; cursor:pointer;
   }
   .toc-group-body .toc-item a:hover { color:#E8E8F0; }
+  .toc-group-body .toc-item a:focus-visible { outline:2px solid #6C5CE7; outline-offset:2px; }
   .toc-group-body .toc-item .num {
     flex-shrink:0; width:24px; height:24px; border-radius:6px; font-size:0.7em;
     display:flex; align-items:center; justify-content:center; font-weight:700;
   }
   .toc-group-body .toc-sub { padding-left:32px; }
-  .toc-group-body .toc-sub a { font-size:0.82em; }
+  .toc-group-body .toc-sub a { font-size:0.88rem; }
+
+  /* ── Navigation Link Styles ── */
+  .top-nav a { cursor:pointer; }
+  .nav-links a:hover { text-decoration:underline; }
+  .nav-links a:focus-visible { outline:2px solid var(--primary); outline-offset:4px; }
+
+  /* ── Tablet Breakpoint (max-width: 1024px) ── */
+  @media (max-width:1024px) {
+    .hero { padding:60px 20px 40px; }
+    .hero h1 { font-size:2.2em; }
+    .hero p { font-size:1em; }
+
+    .stats { grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; padding:0 20px; }
+    .stat { padding:16px 12px; }
+    .stat .val { font-size:1.8em; }
+    .stat .lbl { font-size:0.8rem; }
+
+    .guides { padding:0 20px; }
+    .guides h2 { font-size:1.4em; }
+
+    .guide-card { gap:16px; padding:20px; margin-bottom:10px; }
+    .guide-icon { width:48px; height:48px; font-size:1.6em; }
+    .guide-info h3 { font-size:1em; }
+    .guide-info p { font-size:0.85rem; }
+    .guide-arrow { font-size:1.2em; }
+
+    .doc-section { padding:0 20px; }
+    .toc-section { padding:0 20px; }
+    .toc-section > h2 { font-size:1.4em; }
+    .toc-group-header { padding:14px 16px; }
+    .toc-group-header .toc-title { font-size:1em; }
+    .toc-group-body .toc-item { padding:5px 0; }
+    .toc-group-body .toc-list { padding:0 16px 12px; }
+  }
+
+  /* ── Small devices (max-width: 640px) ── */
+  @media (max-width:640px) {
+    .hero { padding:40px 16px 30px; }
+    .hero h1 { font-size:1.8em; }
+    .nav-links { flex-wrap:wrap; gap:8px; }
+  }
 </style>
 </head>
 <body>
@@ -408,6 +454,11 @@ function toggleTocGroup(header) {
   const arrow = header.querySelector('.toc-arrow');
   body.classList.toggle('open');
   if (arrow) arrow.classList.toggle('open');
+
+  // Scroll expanded content into view
+  if (body.classList.contains('open')) {
+    body.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 </script>
 </body>

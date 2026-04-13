@@ -19,6 +19,7 @@
 .pyramid-layer { cursor: pointer; transition: all 0.3s; }
 .pyramid-layer rect { transition: fill 0.3s, stroke 0.3s; }
 .pyramid-layer:hover rect { opacity: 0.8; stroke-width: 3; }
+.pyramid-layer:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
 .pyramid-layer text { pointer-events: none; font-weight: 600; }
 
 /* Gate Details Panel */
@@ -75,6 +76,8 @@
 }
 
 .status-checks-table tr:hover { background: rgba(108, 92, 231, 0.05); }
+.status-checks-table tbody tr { transition: all 0.3s; }
+.status-checks-table tbody tr:focus-within { outline: 2px solid var(--primary); outline-offset: -1px; }
 
 .check-tag {
   display: inline-block; padding: 2px 8px; background: var(--primary); color: #fff;
@@ -121,6 +124,7 @@
 }
 
 .play-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(253, 203, 110, 0.4); }
+.play-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Table wrapper */
@@ -146,10 +150,17 @@
 /* Modal */
 .gate-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
 .gate-modal.open { display: flex; }
-.gate-modal-content { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 12px; padding: 32px; max-width: 700px; width: 90vw; max-height: 70vh; overflow-y: auto; position: relative; }
-.gate-modal-content .close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.6em; cursor: pointer; }
-.gate-modal-content .close:hover { color: var(--text); }
+.gate-modal-content { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 12px; padding: 32px; max-width: 700px; width: 90vw; max-height: 85vh; overflow-y: auto; position: relative; }
+.gate-modal-content .close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.6em; cursor: pointer; transition: all 0.3s; }
+.gate-modal-content .close:hover { color: var(--text); transform: scale(1.2); }
+.gate-modal-content .close:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .gate-modal-content h2 { margin: 0 0 16px; color: var(--primary-light); }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .gate-details .gate-items { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .gate-flow-step { gap: 12px; }
+}
 
 /* Mobile */
 @media (max-width: 768px) {
@@ -337,17 +348,25 @@
 </div>
 
 <script>
-document.querySelectorAll('.pyramid-layer').forEach(layer => {
+document.querySelectorAll('.pyramid-layer').forEach((layer, index) => {
+  layer.setAttribute('tabindex', '0');
   layer.addEventListener('click', function() {
     const gate = this.getAttribute('data-gate');
     // Hide all
     document.querySelectorAll('[id$="-details"]').forEach(el => el.style.display = 'none');
     // Show selected
-    document.getElementById(gate + '-details').style.display = 'block';
+    const detailsEl = document.getElementById(gate + '-details');
+    detailsEl.style.display = 'block';
     // Scroll to it
     setTimeout(() => {
-      document.getElementById(gate + '-details').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      detailsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 100);
+  });
+  layer.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      this.click();
+    }
   });
 });
 
@@ -556,11 +575,12 @@ document.getElementById('L1-details').style.display = 'block';
 
 <hr />
 
-<h2 id="section5">🎬 Section 5: 门禁流程动画</h2>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+  <h2 id="section5">🎬 Section 5: 门禁流程动画</h2>
+  <button class="play-btn" onclick="startGateFlowAnimation()">▶ 播放门禁流程演示</button>
+</div>
 
-<p>以下展示一个 PR 从提交到合并的全流程，包含所有门禁检查的顺序和耗时。点击<strong>播放</strong>按钮开始。</p>
-
-<button class="play-btn" onclick="startGateFlowAnimation()">▶ 播放门禁流程演示</button>
+<p>以下展示一个 PR 从提交到合并的全流程，包含所有门禁检查的顺序和耗时。</p>
 
 <div class="gate-flow-animation" id="gateFlowAnimation">
   <div class="gate-flow-step" id="gate-step-1">
@@ -703,11 +723,21 @@ function closeGateModal() {
   document.getElementById('gateModal').classList.remove('open');
 }
 
-document.getElementById('gateModal')?.addEventListener('click', function(e) {
-  if (e.target === this) {
-    closeGateModal();
-  }
-});
+const gateModal = document.getElementById('gateModal');
+if (gateModal) {
+  gateModal.addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeGateModal();
+    }
+  });
+
+  // Add keyboard escape support
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && gateModal.classList.contains('open')) {
+      closeGateModal();
+    }
+  });
+}
 </script>
 
 </body>

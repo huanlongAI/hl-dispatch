@@ -54,16 +54,13 @@ svg { max-width: 100%; height: auto; }
 .tree-item.qa .owner { color: var(--qa); }
 .tree-item.design .owner { color: var(--design); }
 
-/* Flow Animation — horizontal card strip */
-.flow-animation { margin: 20px 0; display: flex; align-items: stretch; gap: 6px; }
-.flow-step { flex: 1; padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; opacity: 0.5; transition: all 0.3s; min-width: 150px; position: relative; }
-.flow-step.active { opacity: 1; border-color: var(--accent); box-shadow: 0 0 10px rgba(253,203,110,0.3); }
-.flow-step .number { width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8em; margin-bottom: 8px; }
-.flow-step.active .number { background: var(--accent); color: var(--bg); }
-.flow-step .content { }
-.flow-step .label { font-size: 0.78em; color: var(--text-muted); margin-bottom: 4px; }
-.flow-step .desc { font-weight: 600; color: var(--text); font-size: 0.9em; line-height: 1.4; }
-.flow-arrow { display: flex; align-items: center; color: var(--accent); font-size: 1.1em; flex-shrink: 0; padding: 0 2px; }
+/* Flow Pipeline — SVG animated diagram */
+.flow-pipeline { margin: 20px 0; }
+.flow-pipeline svg { width: 100%; height: auto; }
+.flow-pipeline .pipe-node { cursor: default; }
+.flow-pipeline .pipe-node rect { transition: all 0.4s; }
+.flow-pipeline .pipe-node.active rect { filter: drop-shadow(0 0 10px rgba(253,203,110,0.5)); }
+.flow-pipeline .pipe-node text { pointer-events: none; }
 
 .play-btn { display: inline-block; padding: 8px 20px; background: var(--accent); color: var(--bg); border: none; border-radius: 20px; font-weight: 600; cursor: pointer; margin: 16px 0; transition: all 0.3s; }
 .play-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(253,203,110,0.4); }
@@ -120,8 +117,6 @@ body {
 <div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
     本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
 </div>
-
-<div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="global.html">全局工作流</a><span class="sep">/</span><span class="current">六仓库架构详解</span></div>
 
 <div class="page-header">
   <h1>🏗️ <span>六仓库架构详解</span></h1>
@@ -358,58 +353,83 @@ body {
 
 <h2 id="section4">🔄 Section 4: 依赖流动动画</h2>
 
-<p>以下展示一个能力的端到端流动：从契约定义到最终交付。点击 <strong>播放</strong> 按钮开始动画。</p>
+<p>展示一个能力从契约定义到上线的端到端流动。点击 <strong>播放</strong> 观看依赖如何在六仓库间传递。</p>
 
-<button class="play-btn" onclick="startFlowAnimation()">▶ 播放流动演示</button>
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+  <button class="play-btn" id="playFlowBtn">▶ 播放流动演示</button>
+  <span id="flowStatus" style="font-size:0.85em; color:var(--text-muted);"></span>
+</div>
 
-<div class="flow-animation" id="flowAnimation">
-  <div class="flow-step" id="step-1">
-    <div class="number">1</div>
-    <div class="content">
-      <div class="label">hl-contracts</div>
-      <div class="desc">PM 创建 Cap-Spec（能力规格书）</div>
-    </div>
-  </div>
+<div class="flow-pipeline">
+  <svg viewBox="0 0 860 200" width="860" height="200">
+    <defs>
+      <marker id="flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#4A4A6A"/>
+      </marker>
+      <marker id="flow-arrow-active" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#FDCB6E"/>
+      </marker>
+    </defs>
 
-  <div class="flow-arrow">↓</div>
+    <!-- Row 1: contracts → platform, contracts → design-system (parallel) -->
+    <!-- Step 1: hl-contracts -->
+    <g class="pipe-node" id="pipe-1">
+      <rect x="0" y="10" width="150" height="56" rx="8" fill="#1A1A2E" stroke="#6C5CE7" stroke-width="1.5"/>
+      <text x="12" y="32" font-size="11" fill="#A29BFE" font-weight="600">❶ hl-contracts</text>
+      <text x="12" y="50" font-size="10" fill="#9999B0">PM 创建 Cap-Spec</text>
+    </g>
 
-  <div class="flow-step" id="step-2">
-    <div class="number">2</div>
-    <div class="content">
-      <div class="label">hl-platform</div>
-      <div class="desc">工程师实现后端业务逻辑</div>
-    </div>
-  </div>
+    <!-- Arrow: contracts → platform -->
+    <path id="arrow-1a" d="M150,38 L210,38" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#flow-arrow)"/>
+    <!-- Arrow: contracts → design-system -->
+    <path id="arrow-1b" d="M150,38 L180,38 L180,140 L210,140" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#flow-arrow)"/>
 
-  <div class="flow-arrow">↓</div>
+    <!-- Step 2: hl-platform -->
+    <g class="pipe-node" id="pipe-2">
+      <rect x="215" y="10" width="175" height="56" rx="8" fill="#1A1A2E" stroke="#00B894" stroke-width="1.5"/>
+      <text x="227" y="32" font-size="11" fill="#55EFC4" font-weight="600">❷ hl-platform</text>
+      <text x="227" y="50" font-size="10" fill="#9999B0">后端实现业务逻辑</text>
+    </g>
 
-  <div class="flow-step" id="step-3">
-    <div class="number">3</div>
-    <div class="content">
-      <div class="label">hl-design-system + hl-app</div>
-      <div class="desc">前端工程师结合设计系统实现租户端应用</div>
-    </div>
-  </div>
+    <!-- Step 2b: hl-design-system -->
+    <g class="pipe-node" id="pipe-2b">
+      <rect x="215" y="112" width="175" height="56" rx="8" fill="#1A1A2E" stroke="#DFE6E9" stroke-width="1.5"/>
+      <text x="227" y="134" font-size="11" fill="#DFE6E9" font-weight="600">❷ hl-design-system</text>
+      <text x="227" y="152" font-size="10" fill="#9999B0">设计令牌 + 组件库</text>
+    </g>
 
-  <div class="flow-arrow">↓</div>
+    <!-- Arrow: platform → app -->
+    <path id="arrow-2a" d="M390,38 L420,38 L420,80 L450,80" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#flow-arrow)"/>
+    <!-- Arrow: design-system → app -->
+    <path id="arrow-2b" d="M390,140 L420,140 L420,80 L450,80" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#flow-arrow)"/>
 
-  <div class="flow-step" id="step-4">
-    <div class="number">4</div>
-    <div class="content">
-      <div class="label">hl-factory</div>
-      <div class="desc">所有 PR 通过 CI 门禁检查</div>
-    </div>
-  </div>
+    <!-- Step 3: hl-app -->
+    <g class="pipe-node" id="pipe-3">
+      <rect x="455" y="52" width="150" height="56" rx="8" fill="#1A1A2E" stroke="#74B9FF" stroke-width="1.5"/>
+      <text x="467" y="74" font-size="11" fill="#74B9FF" font-weight="600">❸ hl-app</text>
+      <text x="467" y="92" font-size="10" fill="#9999B0">前端多端应用集成</text>
+    </g>
 
-  <div class="flow-arrow">↓</div>
+    <!-- Arrow: app → factory -->
+    <path id="arrow-3" d="M605,80 L640,80" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#flow-arrow)"/>
 
-  <div class="flow-step" id="step-5">
-    <div class="number">5</div>
-    <div class="content">
-      <div class="label">合并 & 部署</div>
-      <div class="desc">通过审批，能力上线</div>
-    </div>
-  </div>
+    <!-- Step 4: hl-factory -->
+    <g class="pipe-node" id="pipe-4">
+      <rect x="645" y="52" width="115" height="56" rx="8" fill="#1A1A2E" stroke="#FDCB6E" stroke-width="1.5"/>
+      <text x="657" y="74" font-size="11" fill="#FDCB6E" font-weight="600">❹ hl-factory</text>
+      <text x="657" y="92" font-size="10" fill="#9999B0">CI 门禁检查</text>
+    </g>
+
+    <!-- Arrow: factory → deploy -->
+    <path id="arrow-4" d="M760,80 L790,80" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#flow-arrow)"/>
+
+    <!-- Step 5: Deploy -->
+    <g class="pipe-node" id="pipe-5">
+      <circle cx="820" cy="80" r="28" fill="#1A1A2E" stroke="#00B894" stroke-width="2"/>
+      <text x="820" y="76" text-anchor="middle" font-size="11" fill="#00B894" font-weight="700">❺</text>
+      <text x="820" y="90" text-anchor="middle" font-size="9" fill="#55EFC4">上线</text>
+    </g>
+  </svg>
 </div>
 
 <hr />
@@ -586,24 +606,55 @@ document.getElementById('repoModal').addEventListener('click', function(e) {
   }
 });
 
-function startFlowAnimation() {
-  const steps = document.querySelectorAll('.flow-step');
-  steps.forEach(step => step.classList.remove('active'));
+// Flow pipeline animation
+document.getElementById('playFlowBtn').addEventListener('click', startFlowAnimation);
 
-  let currentStep = 0;
-  const interval = setInterval(() => {
-    if (currentStep < steps.length) {
-      const activeStep = steps[currentStep];
-      activeStep.classList.add('active');
-      activeStep.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      currentStep++;
+function startFlowAnimation() {
+  const btn = document.getElementById('playFlowBtn');
+  const status = document.getElementById('flowStatus');
+  btn.disabled = true;
+
+  // Reset all
+  document.querySelectorAll('.pipe-node').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('[id^="arrow-"]').forEach(a => {
+    a.setAttribute('stroke', '#4A4A6A');
+    a.setAttribute('marker-end', 'url(#flow-arrow)');
+  });
+
+  const steps = [
+    { nodes: ['pipe-1'], arrows: [], label: '❶ PM 在 hl-contracts 中定义 Cap-Spec…' },
+    { nodes: ['pipe-2', 'pipe-2b'], arrows: ['arrow-1a', 'arrow-1b'], label: '❷ 后端 + 设计系统并行开发…' },
+    { nodes: ['pipe-3'], arrows: ['arrow-2a', 'arrow-2b'], label: '❸ hl-app 集成后端 API + 设计组件…' },
+    { nodes: ['pipe-4'], arrows: ['arrow-3'], label: '❹ hl-factory 执行四层门禁检查…' },
+    { nodes: ['pipe-5'], arrows: ['arrow-4'], label: '❺ 审批通过，能力上线！' },
+  ];
+
+  let i = 0;
+  const timer = setInterval(() => {
+    if (i < steps.length) {
+      const s = steps[i];
+      s.nodes.forEach(id => document.getElementById(id).classList.add('active'));
+      s.arrows.forEach(id => {
+        const el = document.getElementById(id);
+        el.setAttribute('stroke', '#FDCB6E');
+        el.setAttribute('marker-end', 'url(#flow-arrow-active)');
+      });
+      status.textContent = s.label;
+      i++;
     } else {
-      clearInterval(interval);
+      clearInterval(timer);
+      status.textContent = '✅ 流动完成';
       setTimeout(() => {
-        steps.forEach(step => step.classList.remove('active'));
-      }, 1500);
+        document.querySelectorAll('.pipe-node').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('[id^="arrow-"]').forEach(a => {
+          a.setAttribute('stroke', '#4A4A6A');
+          a.setAttribute('marker-end', 'url(#flow-arrow)');
+        });
+        status.textContent = '';
+        btn.disabled = false;
+      }, 2000);
     }
-  }, 600);
+  }, 900);
 }
 </script>
 

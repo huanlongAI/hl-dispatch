@@ -86,36 +86,33 @@
 
 .check-tag.advisory { background: var(--accent); color: var(--bg); }
 
-/* Gate Flow Animation — compact vertical timeline */
-.gate-flow-animation {
-  position: relative; margin: 20px 0; max-width: 700px;
-}
+/* Gate Flow Animation — horizontal SVG pipeline */
+.gate-pipeline { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; position: relative; overflow: hidden; margin: 20px 0; }
+.gate-pipeline::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent),var(--eng),var(--pm),var(--founder)); background-size:300% 100%; animation:gateShimmer 4s linear infinite; }
+@keyframes gateShimmer { 0%{background-position:300% 0} 100%{background-position:0 0} }
+.gate-pipeline svg { width:100%; }
+.gate-pipeline .gp-node rect { transition: all 0.4s; }
+.gate-pipeline .gp-node.active rect { filter: brightness(1.4) drop-shadow(0 0 8px currentColor); }
+.gate-pipeline .gp-node text { pointer-events: none; }
+.gate-pipeline .gp-arrow { transition: stroke 0.4s, opacity 0.4s; }
+.gate-pipeline .gp-arrow.lit { stroke: var(--accent) !important; opacity: 1 !important; }
+.gate-pipeline .gp-time { font-size: 9px; fill: var(--text-muted); }
 
-.gate-flow-step {
-  display: flex; align-items: center; gap: 10px; margin: 4px 0;
-  padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 6px; opacity: 0.55; transition: all 0.3s;
-}
+/* Gate step detail below pipeline */
+.gate-step-detail { margin-top: 16px; padding: 16px 20px; background: rgba(253,203,110,0.06); border: 1px solid rgba(253,203,110,0.2); border-radius: 10px; display: none; animation: fadeSlide 0.3s ease; }
+.gate-step-detail.show { display: block; }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+.gate-step-detail h4 { margin: 0 0 8px; font-size: 1em; }
+.gate-step-detail .gsd-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.gate-step-detail .gsd-cell { padding: 10px; background: rgba(15,15,26,0.5); border-radius: 8px; }
+.gate-step-detail .gsd-label { font-size: 0.7em; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 4px; }
+.gate-step-detail .gsd-value { font-size: 0.85em; color: var(--text); line-height: 1.6; }
 
-.gate-flow-step.active {
-  opacity: 1; border-color: var(--accent); box-shadow: 0 0 8px rgba(253,203,110,0.25);
-}
-
-.gate-flow-step .time {
-  flex-shrink: 0; font-size: 0.75em; color: var(--text-muted); width: 56px; text-align: right;
-}
-
-.gate-flow-step .badge {
-  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 700; font-size: 0.75em;
-}
-
-.gate-flow-step .content { flex: 1; }
-.gate-flow-step .stage { font-size: 0.8em; color: var(--text-muted); }
-.gate-flow-step .desc { font-weight: 600; color: var(--text); margin-top: 1px; font-size: 0.88em; }
-
-.gate-flow-connector { text-align: center; color: var(--primary); font-size: 0.85em; margin: 1px 0; line-height: 1.2; }
+/* Progress indicators */
+.gate-progress { display: flex; gap: 3px; margin-top: 12px; border-radius: 6px; overflow: hidden; }
+.gate-progress .gp-seg { flex: 1; height: 5px; background: #2D2D4A; transition: background 0.4s; }
+.gate-progress .gp-seg.done { background: var(--secondary); }
+.gate-progress .gp-seg.active { background: var(--accent); box-shadow: 0 0 6px rgba(253,203,110,0.4); }
 
 .play-btn {
   display: inline-block; padding: 10px 24px; background: var(--accent);
@@ -574,97 +571,133 @@ document.getElementById('L1-details').style.display = 'block';
 
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
   <h2 id="section5">🎬 Section 5: 门禁流程动画</h2>
-  <button class="play-btn" onclick="startGateFlowAnimation()">▶ 播放门禁流程演示</button>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <button class="play-btn" id="gatePlayBtn" onclick="startGateFlowAnimation()">▶ 播放流程演示</button>
+    <span id="gateFlowStatus" style="font-size:0.85em; color:var(--text-muted);"></span>
+  </div>
 </div>
 
-<p>以下展示一个 PR 从提交到合并的全流程，包含所有门禁检查的顺序和耗时。</p>
+<p>展示一个 PR 从提交到合并的端到端门禁流程。点击 <strong>播放</strong> 观看各层门禁如何逐级检查，或点击任意节点查看详情。</p>
 
-<div class="gate-flow-animation" id="gateFlowAnimation">
-  <div class="gate-flow-step" id="gate-step-1">
-    <div class="time">0 秒</div>
-    <div class="badge" style="background: var(--accent); color: var(--bg);">1</div>
-    <div class="content">
-      <div class="stage">L1 格式门禁</div>
-      <div class="desc">ktlint · dart format · yamllint 运行中...</div>
-    </div>
+<div class="gate-pipeline" id="gatePipeline">
+  <svg viewBox="0 0 900 280" width="900" height="280">
+    <defs>
+      <marker id="gp-arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4A4A6A"/></marker>
+      <marker id="gp-arr-lit" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#FDCB6E"/></marker>
+    </defs>
+
+    <!-- Row 1: L1 → L2 → L3 → L4 (CI automated) -->
+    <!-- L1 -->
+    <g class="gp-node" id="gn-0" style="cursor:pointer;" onclick="showGateDetail(0)">
+      <rect x="0" y="20" width="150" height="64" rx="10" fill="#1A1A2E" stroke="#FDCB6E" stroke-width="1.5"/>
+      <text x="14" y="42" font-size="12" fill="#FDCB6E" font-weight="700">❶ L1 格式门禁</text>
+      <text x="14" y="60" font-size="10" fill="#9999B0">ktlint · dart format · yamllint</text>
+      <text x="14" y="76" font-size="9" fill="#FDCB6E" opacity="0.6">BLOCKING · ~10s</text>
+    </g>
+
+    <!-- Arrow L1→L2 -->
+    <path class="gp-arrow" id="ga-01" d="M150,52 L180,52" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#gp-arr)"/>
+    <text class="gp-time" x="155" y="44">~10s</text>
+
+    <!-- L2 -->
+    <g class="gp-node" id="gn-1" style="cursor:pointer;" onclick="showGateDetail(1)">
+      <rect x="185" y="20" width="155" height="64" rx="10" fill="#1A1A2E" stroke="#FFEAA7" stroke-width="1.5"/>
+      <text x="199" y="42" font-size="12" fill="#FFEAA7" font-weight="700">❷ L2 确定性门禁</text>
+      <text x="199" y="60" font-size="10" fill="#9999B0">Schema · reason_code · 覆盖率</text>
+      <text x="199" y="76" font-size="9" fill="#FFEAA7" opacity="0.6">BLOCKING · ~2-3min</text>
+    </g>
+
+    <!-- Arrow L2→L3 -->
+    <path class="gp-arrow" id="ga-12" d="M340,52 L370,52" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#gp-arr)"/>
+    <text class="gp-time" x="343" y="44">~3min</text>
+
+    <!-- L3 -->
+    <g class="gp-node" id="gn-2" style="cursor:pointer;" onclick="showGateDetail(2)">
+      <rect x="375" y="20" width="155" height="64" rx="10" fill="#1A1A2E" stroke="#55EFC4" stroke-width="1.5"/>
+      <text x="389" y="42" font-size="12" fill="#55EFC4" font-weight="700">❸ L3 行为门禁</text>
+      <text x="389" y="60" font-size="10" fill="#9999B0">单元 · 集成 · 验收测试</text>
+      <text x="389" y="76" font-size="9" fill="#55EFC4" opacity="0.6">BLOCKING · ~5-10min</text>
+    </g>
+
+    <!-- Arrow L3→L4 -->
+    <path class="gp-arrow" id="ga-23" d="M530,52 L560,52" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#gp-arr)"/>
+    <text class="gp-time" x="533" y="44">~10min</text>
+
+    <!-- L4 -->
+    <g class="gp-node" id="gn-3" style="cursor:pointer;" onclick="showGateDetail(3)">
+      <rect x="565" y="20" width="165" height="64" rx="10" fill="#1A1A2E" stroke="#6C5CE7" stroke-width="1.5"/>
+      <text x="579" y="42" font-size="12" fill="#A29BFE" font-weight="700">❹ L4 语义 + 🛡️</text>
+      <text x="579" y="60" font-size="10" fill="#9999B0">AI 审查 · 安全扫描 · 架构守护</text>
+      <text x="579" y="76" font-size="9" fill="#A29BFE" opacity="0.6">ADVISORY · 并行</text>
+    </g>
+
+    <!-- Vertical connector down to row 2 -->
+    <path class="gp-arrow" id="ga-34" d="M647,84 L647,120 L647,130" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#gp-arr)"/>
+
+    <!-- Row 2: Human review chain (right to left) -->
+    <!-- CODEOWNERS + QA -->
+    <g class="gp-node" id="gn-4" style="cursor:pointer;" onclick="showGateDetail(4)">
+      <rect x="565" y="135" width="165" height="64" rx="10" fill="#1A1A2E" stroke="#55EFC4" stroke-width="1.5"/>
+      <text x="579" y="157" font-size="12" fill="#55EFC4" font-weight="700">❺ 人工审阅</text>
+      <text x="579" y="175" font-size="10" fill="#9999B0">CODEOWNERS review</text>
+      <text x="579" y="191" font-size="10" fill="#FFEAA7">qa-verdict ✓</text>
+    </g>
+
+    <!-- Arrow review → PM -->
+    <path class="gp-arrow" id="ga-45" d="M565,167 L535,167" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#gp-arr)"/>
+
+    <!-- PM Acceptance -->
+    <g class="gp-node" id="gn-5" style="cursor:pointer;" onclick="showGateDetail(5)">
+      <rect x="375" y="135" width="155" height="64" rx="10" fill="#1A1A2E" stroke="#74B9FF" stroke-width="1.5"/>
+      <text x="389" y="157" font-size="12" fill="#74B9FF" font-weight="700">❻ PM 验收</text>
+      <text x="389" y="175" font-size="10" fill="#9999B0">Cap-Spec 一致性检查</text>
+      <text x="389" y="191" font-size="10" fill="#74B9FF">pm-acceptance ✓</text>
+    </g>
+
+    <!-- Arrow PM → Founder -->
+    <path class="gp-arrow" id="ga-56" d="M375,167 L345,167" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#gp-arr)"/>
+
+    <!-- Founder (optional) -->
+    <g class="gp-node" id="gn-6" style="cursor:pointer;" onclick="showGateDetail(6)">
+      <rect x="185" y="135" width="155" height="64" rx="10" fill="#1A1A2E" stroke="#A29BFE" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <text x="199" y="157" font-size="12" fill="#A29BFE" font-weight="700">❼ 创始人审批</text>
+      <text x="199" y="175" font-size="10" fill="#9999B0">🤖 技术合伙人智能体</text>
+      <text x="199" y="191" font-size="9" fill="#A29BFE" opacity="0.6">可选 · founder_required</text>
+    </g>
+
+    <!-- Arrow Founder → Merge -->
+    <path class="gp-arrow" id="ga-67" d="M185,167 L155,167" stroke="#4A4A6A" stroke-width="2" fill="none" marker-end="url(#gp-arr)"/>
+
+    <!-- Merge & Deploy -->
+    <g class="gp-node" id="gn-7" style="cursor:pointer;" onclick="showGateDetail(7)">
+      <circle cx="75" cy="167" r="34" fill="#1A1A2E" stroke="#00B894" stroke-width="2.5"/>
+      <text x="75" y="162" text-anchor="middle" font-size="14" fill="#00B894" font-weight="800">✓</text>
+      <text x="75" y="178" text-anchor="middle" font-size="10" fill="#55EFC4">合并</text>
+    </g>
+
+    <!-- Label rows -->
+    <text x="375" y="10" text-anchor="middle" font-size="10" fill="#9999B0" font-weight="600">── CI 自动化层 ──</text>
+    <text x="375" y="128" text-anchor="middle" font-size="10" fill="#9999B0" font-weight="600">── 人工审阅层 ──</text>
+
+    <!-- Failure return arrow (dashed red) -->
+    <path d="M400,200 L400,240 L75,240 L75,84 L185,84 L185,50 L185,20" stroke="#E17055" stroke-width="1.5" fill="none" stroke-dasharray="5,4" opacity="0.5" marker-end="url(#gp-arr)"/>
+    <text x="240" y="255" font-size="9" fill="#E17055" opacity="0.7">任一 BLOCKING 门禁失败 → 回退修复</text>
+  </svg>
+
+  <!-- Progress bar -->
+  <div class="gate-progress" id="gateProgress">
+    <div class="gp-seg" data-idx="0"></div>
+    <div class="gp-seg" data-idx="1"></div>
+    <div class="gp-seg" data-idx="2"></div>
+    <div class="gp-seg" data-idx="3"></div>
+    <div class="gp-seg" data-idx="4"></div>
+    <div class="gp-seg" data-idx="5"></div>
+    <div class="gp-seg" data-idx="6"></div>
+    <div class="gp-seg" data-idx="7"></div>
   </div>
 
-  <div class="gate-flow-connector">⏱️ ~10 秒</div>
-
-  <div class="gate-flow-step" id="gate-step-2">
-    <div class="time">10 秒</div>
-    <div class="badge" style="background: var(--pm);">2</div>
-    <div class="content">
-      <div class="stage">L2 确定性门禁</div>
-      <div class="desc">Contract schema · reason_code 检查 · 设计覆盖验证...</div>
-    </div>
-  </div>
-
-  <div class="gate-flow-connector">⏱️ ~2-3 分钟</div>
-
-  <div class="gate-flow-step" id="gate-step-3">
-    <div class="time">2 分钟</div>
-    <div class="badge" style="background: var(--eng);">3</div>
-    <div class="content">
-      <div class="stage">L3 行为门禁</div>
-      <div class="desc">单元测试 · 集成测试 · 验收测试运行中...</div>
-    </div>
-  </div>
-
-  <div class="gate-flow-connector">⏱️ ~5-10 分钟</div>
-
-  <div class="gate-flow-step" id="gate-step-4">
-    <div class="time">5-10 分钟</div>
-    <div class="badge" style="background: var(--founder);">4</div>
-    <div class="content">
-      <div class="stage">L4 语义门禁 + 哨兵（🛡️）</div>
-      <div class="desc">AI 代码审查、安全扫描、架构守护、复杂度分析（并行运行）</div>
-    </div>
-  </div>
-
-  <div class="gate-flow-connector">↓</div>
-
-  <div class="gate-flow-step" id="gate-step-5">
-    <div class="time">10+ 分钟</div>
-    <div class="badge" style="background: #55EFC4; color: var(--bg);">5</div>
-    <div class="content">
-      <div class="stage">人工审阅（按顺序）</div>
-      <div class="desc">① 代码所有者（CODEOWNERS）review · ② QA 批准（qa-verdict）</div>
-    </div>
-  </div>
-
-  <div class="gate-flow-connector">↓</div>
-
-  <div class="gate-flow-step" id="gate-step-6">
-    <div class="time">10+ 分钟</div>
-    <div class="badge" style="background: var(--pm);">6</div>
-    <div class="content">
-      <div class="stage">PM 批准</div>
-      <div class="desc">PM 检查能力实现与 Cap-Spec 一致（pm-acceptance ✓）</div>
-    </div>
-  </div>
-
-  <div class="gate-flow-connector">↓</div>
-
-  <div class="gate-flow-step" id="gate-step-7">
-    <div class="time">可选</div>
-    <div class="badge" style="background: var(--founder); color: #fff;">7</div>
-    <div class="content">
-      <div class="stage">创始人审批（如果标记 founder_required）</div>
-      <div class="desc">🤖 技术合伙人智能体协助分析 · 创始人做最终决策</div>
-    </div>
-  </div>
-
-  <div class="gate-flow-connector">✨</div>
-
-  <div class="gate-flow-step" id="gate-step-8">
-    <div class="time">完成</div>
-    <div class="badge" style="background: var(--secondary); color: var(--bg);">✓</div>
-    <div class="content">
-      <div class="stage">合并 & 部署</div>
-      <div class="desc">所有审批通过，PR 自动合并到 main 分支，CI/CD 自动部署</div>
-    </div>
-  </div>
+  <!-- Detail panel -->
+  <div class="gate-step-detail" id="gateStepDetail"></div>
 </div>
 
 <hr />
@@ -694,27 +727,86 @@ document.getElementById('L1-details').style.display = 'block';
 </footer>
 
 <script>
-function startGateFlowAnimation() {
-  const steps = document.querySelectorAll('.gate-flow-step');
-  steps.forEach(step => step.classList.remove('active'));
+/* Gate pipeline data */
+const GATE_STEPS = [
+  { name:'L1 格式门禁', time:'~10 秒', items:['ktlint','dart format','yamllint','markdown-lint'], type:'BLOCKING', color:'#FDCB6E', desc:'静态分析，无需运行代码，秒级反馈。违反即阻断合并。' },
+  { name:'L2 确定性门禁', time:'~2-3 分钟', items:['Contract Schema','reason_code','验收场景覆盖 ≥60%','token-sync'], type:'BLOCKING', color:'#FFEAA7', desc:'规则驱动，结果唯一确定。检查契约一致性和设计覆盖率。' },
+  { name:'L3 行为门禁', time:'~5-10 分钟', items:['单元测试','集成测试','golden 视觉回归','验收测试'], type:'BLOCKING', color:'#55EFC4', desc:'需运行代码的验证，提供客观证据。覆盖率 ≥80%。' },
+  { name:'L4 语义 + 哨兵', time:'并行', items:['AI 代码审查','安全扫描','架构守护','复杂度分析'], type:'ADVISORY', color:'#A29BFE', desc:'AI 驱动的智能审计，为审阅者提供参考，不直接阻断。' },
+  { name:'人工审阅', time:'10+ 分钟', items:['CODEOWNERS review','qa-verdict 批准'], type:'BLOCKING', color:'#55EFC4', desc:'代码所有者审查 + QA 团队独立出具 Verdict。' },
+  { name:'PM 验收', time:'10+ 分钟', items:['pm-acceptance 批准','Cap-Spec 一致性确认'], type:'BLOCKING', color:'#74B9FF', desc:'PM 检查能力实现与 Cap-Spec 是否一致。' },
+  { name:'创始人审批', time:'可选', items:['技术合伙人 AI 分析','影响范围评估','最终决策'], type:'可选', color:'#A29BFE', desc:'仅 founder_required 标记的 PR 需要，智能体辅助分析。' },
+  { name:'合并 & 部署', time:'完成', items:['自动合并到 main','CI/CD 自动部署'], type:'✓', color:'#00B894', desc:'所有审批通过，PR 合并，自动触发部署。' }
+];
 
-  const timings = [0, 1000, 3500, 8000, 10500, 13000, 15500, 18000];
-  let currentIndex = 0;
+function showGateDetail(idx) {
+  const s = GATE_STEPS[idx];
+  const itemsHtml = s.items.map(i => `<li style="list-style:none;padding-left:12px;position:relative;"><span style="position:absolute;left:0;color:${s.color};">▸</span>${i}</li>`).join('');
+  document.getElementById('gateStepDetail').innerHTML = `
+    <h4 style="color:${s.color};">${s.name} <span style="font-size:0.7em;font-weight:400;color:var(--text-muted);margin-left:8px;">${s.type} · ${s.time}</span></h4>
+    <div class="gsd-grid">
+      <div class="gsd-cell"><div class="gsd-label">说明</div><div class="gsd-value">${s.desc}</div></div>
+      <div class="gsd-cell"><div class="gsd-label">检查项</div><div class="gsd-value"><ul style="margin:0;padding:0;">${itemsHtml}</ul></div></div>
+      <div class="gsd-cell"><div class="gsd-label">耗时</div><div class="gsd-value" style="font-size:1.1em;font-weight:700;color:${s.color};">${s.time}</div></div>
+    </div>`;
+  document.getElementById('gateStepDetail').className = 'gate-step-detail show';
 
-  const animate = () => {
-    if (currentIndex < steps.length) {
-      steps[currentIndex].classList.add('active');
-      currentIndex++;
-      setTimeout(animate, timings[currentIndex] - (currentIndex > 0 ? timings[currentIndex - 1] : 0));
-    } else {
-      setTimeout(() => {
-        steps.forEach(step => step.classList.remove('active'));
-      }, 2000);
-    }
-  };
+  // Highlight node
+  document.querySelectorAll('.gp-node').forEach(n => n.classList.remove('active'));
+  const node = document.getElementById('gn-'+idx);
+  if(node) node.classList.add('active');
 
-  animate();
+  // Progress
+  document.querySelectorAll('.gp-seg').forEach((seg,i) => {
+    seg.className = 'gp-seg' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  });
 }
+
+let gateAnimTimer = null;
+function startGateFlowAnimation() {
+  const btn = document.getElementById('gatePlayBtn');
+  const status = document.getElementById('gateFlowStatus');
+  if(gateAnimTimer) { clearTimeout(gateAnimTimer); gateAnimTimer=null; }
+
+  // Reset
+  document.querySelectorAll('.gp-node').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.gp-arrow').forEach(a => { a.classList.remove('lit'); a.setAttribute('marker-end','url(#gp-arr)'); });
+  document.querySelectorAll('.gp-seg').forEach(s => s.className='gp-seg');
+
+  btn.textContent = '⏸ 播放中...';
+  btn.classList.add('playing');
+
+  const delays = [0, 1200, 2400, 3600, 5000, 6400, 7800, 9200];
+  let step = 0;
+
+  function tick() {
+    if(step >= 8) {
+      btn.textContent = '▶ 播放流程演示';
+      btn.classList.remove('playing');
+      status.textContent = '✓ 全流程完成';
+      setTimeout(() => { status.textContent = ''; }, 3000);
+      return;
+    }
+
+    showGateDetail(step);
+
+    // Light arrow leading to this step
+    const arrowIds = ['','ga-01','ga-12','ga-23','ga-34','ga-45','ga-56','ga-67'];
+    if(arrowIds[step]) {
+      const arr = document.getElementById(arrowIds[step]);
+      if(arr) { arr.classList.add('lit'); arr.setAttribute('marker-end','url(#gp-arr-lit)'); }
+    }
+
+    status.textContent = `${step+1}/8 ${GATE_STEPS[step].name}`;
+    step++;
+    gateAnimTimer = setTimeout(tick, step < 8 ? (delays[step] - delays[step-1]) : 0);
+  }
+
+  tick();
+}
+
+// Show L1 detail by default
+showGateDetail(0);
 
 function closeGateModal() {
   document.getElementById('gateModal').classList.remove('open');

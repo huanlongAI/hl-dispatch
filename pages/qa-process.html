@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试团队流程与分工详解 - 唤龙平台</title>
+    <style>
+        :root {
+            --bg: #0F0F1A;
+            --bg-card: #1A1A2E;
+            --text: #E8E8F0;
+            --primary: #6C5CE7;
+            --secondary: #00B894;
+            --accent: #FDCB6E;
+            --danger: #E17055;
+            --pm: #74B9FF;
+            --eng: #55EFC4;
+            --qa: #FFEAA7;
+            --ops: #FAB1A0;
+            --design: #DFE6E9;
+            --founder: #A29BFE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--primary);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-logo:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* Guide Layer Warning */
+        .guide-warning {
+            background: linear-gradient(135deg, #E17055 20%, #D63031 100%);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .page-subtitle {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        p {
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* Team Structure Cards */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .member-card {
+            background: var(--bg-card);
+            border: 2px solid var(--qa);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .member-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(255, 234, 167, 0.2);
+        }
+
+        .member-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--qa);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            font-size: 0.95rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .responsibility-list {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .responsibility-list li {
+            color: var(--text);
+            margin: 0.75rem 0;
+            border-left: 3px solid var(--qa);
+            padding-left: 0.75rem;
+        }
+
+        /* Workflow Steps */
+        .workflow-container {
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .step-indicator {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: var(--bg);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .workflow-step {
+            background: var(--bg);
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .workflow-step:hover {
+            background: var(--bg-card);
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .workflow-step h4 {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-content {
+            margin-left: 3rem;
+            color: var(--text);
+        }
+
+        .step-item {
+            background: rgba(108, 92, 231, 0.1);
+            border-left: 3px solid var(--secondary);
+            padding: 0.75rem 1rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+        }
+
+        /* Code Block / Schema Display */
+        .code-block {
+            background: var(--bg);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .code-comment {
+            color: var(--accent);
+        }
+
+        .code-key {
+            color: var(--secondary);
+        }
+
+        .code-string {
+            color: #FF6B9D;
+        }
+
+        .code-value {
+            color: var(--eng);
+        }
+
+        /* Decision Matrix */
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .matrix-table thead {
+            background: var(--qa);
+        }
+
+        .matrix-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            color: var(--bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .matrix-table td {
+            padding: 1rem;
+            border-right: 1px solid var(--primary);
+            border-bottom: 1px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .matrix-table tbody tr:hover {
+            background: rgba(255, 234, 167, 0.1);
+        }
+
+        .matrix-table td:hover {
+            background: var(--qa);
+            color: var(--bg);
+        }
+
+        .change-class-name {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Gap Analysis */
+        .gap-checklist {
+            background: var(--bg-card);
+            border: 2px solid var(--danger);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .gap-item {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--bg);
+            border-left: 4px solid var(--danger);
+            border-radius: 4px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .gap-item:hover {
+            background: rgba(225, 112, 85, 0.1);
+        }
+
+        .gap-icon {
+            font-size: 1.5rem;
+            min-width: 2rem;
+        }
+
+        .gap-content {
+            flex: 1;
+        }
+
+        .gap-question {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .gap-answer {
+            color: var(--text);
+            font-size: 0.9rem;
+            display: none;
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(0, 184, 148, 0.1);
+            border-radius: 4px;
+        }
+
+        .gap-answer.show {
+            display: block;
+        }
+
+        .gap-status {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(108, 92, 231, 0.1);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-box strong {
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--qa);
+            color: var(--bg);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.25rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--primary);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text);
+            margin-top: 4rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            main {
+                padding: 1.5rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .matrix-table {
+                font-size: 0.85rem;
+            }
+
+            .matrix-table th,
+            .matrix-table td {
+                padding: 0.75rem;
+            }
+
+            .workflow-step {
+                padding: 1rem;
+            }
+
+            .step-content {
+                margin-left: 1.5rem;
+            }
+
+            .code-block {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../index.html" class="nav-logo">唤龙平台</a>
+        <div class="nav-links">
+            <a href="../index.html">首页</a>
+            <a href="global.html">全局工作流</a>
+            <a href="pm-guide.html">PM 指南</a>
+            <a href="frontend-guide.html">前端指南</a>
+            <a href="backend-guide.html">后端指南</a>
+            <a href="qa-process.html">QA 流程</a>
+            <a href="ops-guide.html">运维指南</a>
+        </div>
+    </nav>
+
+    <div class="guide-warning">
+        ⚠️ Guide Layer — 内部指南，非规范性文件。具体规范请查阅 DD-TEST v1.1 和相关文档
+    </div>
+
+    <main>
+        <h1>测试团队流程与分工详解</h1>
+        <p class="page-subtitle">理解 QA 团队的职责、工作流程和验收标准</p>
+
+        <!-- Section 1: QA Team Structure -->
+        <section>
+            <h2>第一部分：QA 团队结构</h2>
+            <p>唤龙平台的 QA 团队共 2 人，各自独立但紧密协作：</p>
+
+            <div class="team-grid">
+                <div class="member-card">
+                    <div class="member-title">QA 架构师</div>
+                    <div class="member-role">1 人 · 战略与规范制定者</div>
+                    <ul class="responsibility-list">
+                        <li>制定验收标准框架</li>
+                        <li>设计测试流程和体系</li>
+                        <li>维护测试基线（Golden Tests）</li>
+                        <li>审阅和优化 acceptance-manifest</li>
+                        <li>参与5步流各个阶段的质量把控</li>
+                        <li>培养和指导 QA 工程师</li>
+                    </ul>
+                </div>
+
+                <div class="member-card">
+                    <div class="member-title">QA 工程师</div>
+                    <div class="member-role">1 人 · 执行与验证者</div>
+                    <ul class="responsibility-list">
+                        <li>执行验收测试</li>
+                        <li>运行回归测试</li>
+                        <li>维护自动化测试脚本</li>
+                        <li>出具 qa-verdict（质量判定）</li>
+                        <li>参与 Widgetbook 评审</li>
+                        <li>跟进测试缺陷和补救</li>
+                    </ul>
+                </div>
+
+                <div class="member-card" style="grid-column: 1 / -1;">
+                    <div class="member-title">👑 共同职责：质量守门人</div>
+                    <div class="member-role">独立质量判定 · 不受其他团队影响</div>
+                    <ul class="responsibility-list">
+                        <li><strong style="color: var(--danger);">qa-verdict 独立签署</strong> — QA 出具的质量判定不受 PM 需求或工程师进度影响</li>
+                        <li><strong style="color: var(--secondary);">验收权独立</strong> — 定义什么是"完成"，完全由 QA 判定</li>
+                        <li><strong style="color: var(--secondary);">缺陷判定权</strong> — 是否为 Bug、是否打回、缺陷优先级由 QA 决定</li>
+                        <li><strong style="color: var(--secondary);">变更影响评估</strong> — 评估代码变更对测试覆盖的影响</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 核心原则</strong>
+                <p>QA 是独立的质量守门人。在 5 步流中，QA 的 <span class="role-badge">验收权</span> 与 PM 的 <span class="role-badge">需求定义权</span> 分离，QA 和 PM 的验收判定独立进行且都是 Required Status Check。</p>
+            </div>
+        </section>
+
+        <!-- Section 2: QA Workflow -->
+        <section>
+            <h2>第二部分：QA 工作流 - 5 步交付全景</h2>
+            <p>QA 在能力包交付的 5 个步骤中的参与点和关键活动</p>
+
+            <div class="workflow-container">
+                <div class="workflow-step">
+                    <h4>
+                        <span class="step-indicator">1️⃣</span>
+                        <span>Cap-Spec Freeze — 需求冻结</span>
+                    </h4>
+                    <div class="step-content">
+                        <div class="step-item">
+                            <strong>QA 的活动：</strong>
+                            <p style="margin-top: 0.5rem;">阅读 Cap-Spec，理解需求范围、验收范围、业务规则</p>
+                        </div>
+                        <div class="step-item">
+                            <strong>关键输出：</strong>
+                            <p style="margin-top: 0.5rem;">验收范围清单、初步测试场景草案</p>
+                        </div>
+                        <div class="step-item" style="background: rgba(225, 112, 85, 0.1); border-left-color: var(--danger);">
+                            <strong style="color: var(--danger);">❗ 常见遗漏：</strong>
+                            <p style="margin-top: 0.5rem;">QA 应该在这一步就开始思考验收测试的设计，但很多团队忽略了 QA 在此步的参与</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <h4>
+                        <span class="step-indicator">2️⃣</span>
+                        <span>Design + HPRD — 设计与需求详化</span>
+                    </h4>
+                    <div class="step-content">
+                        <div class="step-item">
+                            <strong>QA 的核心活动：</strong>
+                            <p style="margin-top: 0.5rem;">编写 <code style="color: var(--accent);">acceptance-manifest.yaml</code>（与 HPRD 同步进行）</p>
+                        </div>
+                        <div class="step-item">
+                            <strong>关键产出：</strong>
+                            <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                                <li>acceptance-manifest.yaml — 所有测试场景定义</li>
+                                <li>G-026 覆盖率检查 ≥ 60%（Pilot 阈值）</li>
+                                <li>Widgetbook 审核（UI 组件库评审）</li>
+                            </ul>
+                        </div>
+                        <div class="step-item" style="background: rgba(255, 234, 167, 0.1); border-left-color: var(--qa);">
+                            <strong style="color: var(--qa);">⏱️ 时间同步：</strong>
+                            <p style="margin-top: 0.5rem;">acceptance-manifest 应与 HPRD 并行编写，不能等 HPRD 完成后再写</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <h4>
+                        <span class="step-indicator">3️⃣</span>
+                        <span>Implementation — 实现阶段</span>
+                    </h4>
+                    <div class="step-content">
+                        <div class="step-item">
+                            <strong>QA 的活动：</strong>
+                            <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                                <li>准备自动化验收测试脚本</li>
+                                <li>维护 Golden Test 基线（参考实现）</li>
+                                <li>可进行 Early Review（PR 非 blocking 阶段）</li>
+                                <li>与设计师、前后端同步进度</li>
+                            </ul>
+                        </div>
+                        <div class="step-item">
+                            <strong>关键输出：</strong>
+                            <p style="margin-top: 0.5rem;">自动化测试脚本、Golden 测试基线数据</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <h4>
+                        <span class="step-indicator">4️⃣</span>
+                        <span>Gates + Acceptance — 门禁与验收</span>
+                    </h4>
+                    <div class="step-content">
+                        <div class="step-item">
+                            <strong>自动化门禁（L2/L3）：</strong>
+                            <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                                <li>L2：acceptance-manifest 覆盖率检查（G-026）</li>
+                                <li>L3：自动运行验收测试，所有 status=covered 的场景必须 PASS</li>
+                            </ul>
+                        </div>
+                        <div class="step-item">
+                            <strong>QA 人工验收：</strong>
+                            <p style="margin-top: 0.5rem;">出具 <strong>qa-verdict</strong>（Required Status Check），condition：所有 acceptance-manifest 中标记为 covered 的场景测试通过</p>
+                        </div>
+                        <div class="step-item" style="background: rgba(0, 184, 148, 0.1); border-left-color: var(--secondary);">
+                            <strong style="color: var(--secondary);">✅ 关键规则：</strong>
+                            <p style="margin-top: 0.5rem;">qa-verdict = PASS 的充要条件是 acceptance-manifest 中所有 covered 场景的测试通过，与 PM 需求是否满意无关</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="workflow-step">
+                    <h4>
+                        <span class="step-indicator">5️⃣</span>
+                        <span>PM Acceptance + Merge — PM 验收与合并</span>
+                    </h4>
+                    <div class="step-content">
+                        <div class="step-item">
+                            <strong>QA 的角色：</strong>
+                            <p style="margin-top: 0.5rem;">不直接参与此步（保持独立性：QA verdict ≠ PM acceptance）</p>
+                        </div>
+                        <div class="step-item">
+                            <strong>但若 PM 打回：</strong>
+                            <p style="margin-top: 0.5rem;">PM 发现问题并打回时，QA 需要重新验收确认修复是否影响已测试的场景</p>
+                        </div>
+                        <div class="step-item" style="background: rgba(108, 92, 231, 0.1); border-left-color: var(--primary);">
+                            <strong style="color: var(--primary);">ℹ️ 分离原则：</strong>
+                            <p style="margin-top: 0.5rem;">QA 的验收权和 PM 的需求验收权是独立的两道门禁，互不影响</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: acceptance-manifest Schema -->
+        <section>
+            <h2>第三部分：acceptance-manifest.yaml 规范</h2>
+            <p>QA 定义验收场景的标准格式和各字段含义</p>
+
+            <div class="code-block">
+<span class="code-key">capability_id:</span> <span class="code-string">biz.flow.sales</span>
+<span class="code-key">version:</span> <span class="code-string">"1.0"</span>
+<span class="code-key">scenarios:</span>
+  - <span class="code-key">id:</span> <span class="code-string">SC-001</span>
+    <span class="code-key">title:</span> <span class="code-string">正常下单流程</span>
+    <span class="code-key">steps:</span> [打开商品页, 点击购买, 确认支付]
+    <span class="code-key">expected:</span> <span class="code-string">订单创建成功，状态为 PENDING</span>
+    <span class="code-key">test_class:</span> <span class="code-string">integration</span>
+    <span class="code-key">status:</span> <span class="code-string">covered</span>    <span class="code-comment"># covered | deferred | not-applicable</span>
+
+  - <span class="code-key">id:</span> <span class="code-string">SC-002</span>
+    <span class="code-key">title:</span> <span class="code-string">库存不足场景</span>
+    <span class="code-key">steps:</span> [打开商品页, 商品已售罄, 点击购买]
+    <span class="code-key">expected:</span> <span class="code-string">系统提示"库存不足"，订单创建失败</span>
+    <span class="code-key">test_class:</span> <span class="code-string">integration</span>
+    <span class="code-key">status:</span> <span class="code-string">deferred</span>  <span class="code-comment"># Pilot 后续迭代处理</span>
+            </div>
+
+            <h3>字段说明</h3>
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>字段</th>
+                        <th>含义</th>
+                        <th>示例</th>
+                        <th>规则</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>id</strong></td>
+                        <td>场景唯一标识</td>
+                        <td>SC-001</td>
+                        <td>格式：SC-{3位数字}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>title</strong></td>
+                        <td>场景的人类可读标题</td>
+                        <td>正常下单流程</td>
+                        <td>简洁明了，体现核心行为</td>
+                    </tr>
+                    <tr>
+                        <td><strong>steps</strong></td>
+                        <td>操作步骤序列</td>
+                        <td>[打开页面, 点击按钮, 确认]</td>
+                        <td>按执行顺序列出</td>
+                    </tr>
+                    <tr>
+                        <td><strong>expected</strong></td>
+                        <td>期望结果</td>
+                        <td>订单创建成功</td>
+                        <td>必须可断言</td>
+                    </tr>
+                    <tr>
+                        <td><strong>test_class</strong></td>
+                        <td>测试分类</td>
+                        <td>integration / unit / e2e</td>
+                        <td>影响自动化框架选择</td>
+                    </tr>
+                    <tr>
+                        <td><strong>status</strong></td>
+                        <td>场景覆盖状态</td>
+                        <td>covered | deferred | not-applicable</td>
+                        <td>见下方详解</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Status 字段详解</h3>
+            <div class="info-box">
+                <strong>covered</strong>
+                <p style="margin-top: 0.5rem;">此场景在本能力包中实现且需要自动化测试覆盖。CI 运行时必须 PASS，qa-verdict 的前提条件。</p>
+
+                <strong style="margin-top: 1rem;">deferred</strong>
+                <p style="margin-top: 0.5rem;">此场景在本能力包中实现，但由于复杂性、依赖问题等原因，暂不做自动化覆盖，后续迭代处理。QA 人工验证过即可。</p>
+
+                <strong style="margin-top: 1rem;">not-applicable</strong>
+                <p style="margin-top: 0.5rem;">该场景不适用于本能力包（例如：边界条件、特殊场景、前置条件不满足等），可以在 manifest 中标记但不参与覆盖率计算。</p>
+            </div>
+
+            <div class="info-box" style="background: rgba(255, 234, 167, 0.1); border-color: var(--qa);">
+                <strong>📊 覆盖率计算（G-026）</strong>
+                <p style="margin-top: 0.5rem;">覆盖率 = covered 场景数 / (covered + deferred) 场景数。Pilot 阶段需要 ≥ 60%，后续版本可根据项目成熟度提升。</p>
+            </div>
+        </section>
+
+        <!-- Section 4: QA CODEOWNERS -->
+        <section>
+            <h2>第四部分：QA 的代码所有权足迹</h2>
+            <p>QA 在不同仓库中的代码审阅权和责任范围</p>
+
+            <div class="info-box">
+                <strong>hl-design-system 仓库</strong>
+                <ul style="list-style: none; padding: 0; margin-top: 0.5rem;">
+                    <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
+                        <code style="color: var(--accent);">/widgetbook/**</code> — UI 组件库的可视化文档和交互演示
+                    </li>
+                    <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
+                        <code style="color: var(--accent);">/test/golden/**</code> — Golden Test 基线数据
+                    </li>
+                    <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
+                        <code style="color: var(--accent);">/test/a11y/**</code> — 无障碍（Accessibility）测试
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>hl-app 仓库</strong>
+                <ul style="list-style: none; padding: 0; margin-top: 0.5rem;">
+                    <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
+                        <code style="color: var(--accent);">/test/acceptance/**</code> — 验收测试脚本
+                    </li>
+                    <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
+                        <code style="color: var(--accent);">/test/golden/**</code> — Golden Test 基线
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <strong>hl-platform 仓库（后端）</strong>
+                <ul style="list-style: none; padding: 0; margin-top: 0.5rem;">
+                    <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
+                        <code style="color: var(--accent);">/acceptance/**</code> — API 验收测试
+                    </li>
+                    <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
+                        <code style="color: var(--accent);">/tests/**</code> — 集成测试
+                    </li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(225, 112, 85, 0.1); border: 1px solid var(--danger); border-radius: 8px; padding: 1.5rem; margin-top: 2rem;">
+                <strong style="color: var(--danger);">⚠️ CODEOWNERS 权限</strong>
+                <p style="margin-top: 0.5rem;">所有 CODEOWNERS 定义的路径变更都需要 QA 代码审核（Required Status Check），以确保测试基础设施的完整性和可靠性。</p>
+            </div>
+        </section>
+
+        <!-- Section 5: Decision Matrix -->
+        <section>
+            <h2>第五部分：QA 决策矩阵</h2>
+            <p>根据变更类型（change_class），QA 采取不同的行动</p>
+
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>change_class</th>
+                        <th>场景说明</th>
+                        <th>QA 的行动</th>
+                        <th>qa-verdict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="change-class-name">capability</span></td>
+                        <td>新增或修改功能，需求在 Cap-Spec 中</td>
+                        <td>执行完整验收流程（5 步全参与），编写 acceptance-manifest，自动化测试</td>
+                        <td style="color: var(--secondary);">✅ 必需</td>
+                    </tr>
+                    <tr>
+                        <td><span class="change-class-name">bugfix</span></td>
+                        <td>修复 bug，不涉及需求变更</td>
+                        <td>回归测试 + 相关 manifest 场景更新。如果 bug 影响已有场景，补充测试确认</td>
+                        <td style="color: var(--secondary);">✅ 必需</td>
+                    </tr>
+                    <tr>
+                        <td><span class="change-class-name">tech-improvement</span></td>
+                        <td>技术改进，性能优化，重构（不涉及 UI 变更）</td>
+                        <td>代码审阅，可选的集成测试。除非涉及 UI 变更，否则不强制 qa-verdict</td>
+                        <td style="color: var(--accent);">⚠️ 可选</td>
+                    </tr>
+                    <tr>
+                        <td><span class="change-class-name">governance</span></td>
+                        <td>治理文档、流程变更</td>
+                        <td>QA 可参与评审，无需验收测试</td>
+                        <td style="color: var(--text);">❌ 不需</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 6: Gap Analysis & Checklist -->
+        <section>
+            <h2>第六部分：流程完整性检查与常见遗漏</h2>
+            <p>创始人关注的 QA 流程可能存在的缺口，以及团队应该确认的关键问题</p>
+
+            <div class="gap-checklist">
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">QA 是否在 Step 1（Cap-Spec Freeze）就开始参与？</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--secondary);">✅ 应该这样做：</strong>
+                            <p style="margin-top: 0.5rem;">QA 应在 Cap-Spec 评审时参与，理解需求范围和验收边界。不能等需求完全冻结后再看。</p>
+                            <p style="margin-top: 0.5rem;">检查点：QA 是否在 Cap-Spec PR 中有评论或 approval？</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">acceptance-manifest 是否与 HPRD 同步编写（而非之后补充）？</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--secondary);">✅ 应该这样做：</strong>
+                            <p style="margin-top: 0.5rem;">manifest 应该与 HPRD 并行编写，而不是在 HPRD 完成后再补。这样可以尽早发现验收标准的歧义。</p>
+                            <p style="margin-top: 0.5rem;">检查点：manifest 和 HPRD 是否在同一个 commit 或相邻 commit 中提交？</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">前端 UI 的验收测试谁写？如何分工？</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--secondary);">✅ 应该这样做：</strong>
+                            <p style="margin-top: 0.5rem;">QA 编写 acceptance-manifest 定义场景，前端或 QA 共同编写自动化测试脚本（取决于团队能力）。Golden Test 由 QA 架构师维护基线。</p>
+                            <p style="margin-top: 0.5rem;">检查点：/test/acceptance/ 目录中谁有提交权？QA 是否在 PR review 中？</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">多端测试策略是什么？（iOS / Android / Web 的覆盖优先级）</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--danger);">⚠️ 当前状态：</strong>
+                            <p style="margin-top: 0.5rem;">多端测试策略尚未在 DD-TEST 中明确定义。建议定义：</p>
+                            <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                                <li>优先级（Pilot 阶段 Web 优先）</li>
+                                <li>覆盖率差异（Web: 100%, Mobile: 70% 等）</li>
+                                <li>跨端共享测试用例的策略</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">性能测试（Performance Testing）归谁负责？</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--danger);">⚠️ 当前状态：PROPOSED</strong>
+                            <p style="margin-top: 0.5rem;">性能测试的所有权暂未明确：</p>
+                            <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                                <li>是否归 QA（作为验收的一部分）？</li>
+                                <li>还是由后端或运维负责基准测试？</li>
+                                <li>如何定义性能验收标准（响应时间、吞吐量等）？</li>
+                            </ul>
+                            <p style="margin-top: 0.5rem;">建议：待 T1 能力包试运行后明确此分工。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">安全测试（Security Testing）谁负责？</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--secondary);">✅ 当前分工：</strong>
+                            <p style="margin-top: 0.5rem;">自动化安全扫描由哨兵 CI 层执行（SAST, Dependency Check），创始人负责人工安全审阅。QA 的责任是验证安全修复是否影响已测试功能。</p>
+                            <p style="margin-top: 0.5rem;">检查点：CI 中是否配置了自动化安全扫描？创始人是否在 PR review 中确认安全问题？</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">QA 和前端的 Golden Test 协作模式是什么？</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--secondary);">✅ 应该这样做：</strong>
+                            <p style="margin-top: 0.5rem;">QA 架构师定义 Golden Test 的基线和更新策略，前端实现 UI 变更时需更新相应的 snapshot。QA 审核 snapshot 变更是否合理。</p>
+                            <p style="margin-top: 0.5rem;">检查点：/test/golden/ 目录的 PR 是否有 QA 的 approval？</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gap-item" onclick="toggleGap(this)">
+                    <div class="gap-icon">❓</div>
+                    <div class="gap-content">
+                        <div class="gap-question">如何处理跨越多个能力包的测试场景？</div>
+                        <div class="gap-answer">
+                            <strong style="color: var(--danger);">⚠️ 当前状态：PROPOSED</strong>
+                            <p style="margin-top: 0.5rem;">跨能力包的集成验收测试（如：用户注册 + 下单流程）还未有明确的所有权定义。</p>
+                            <p style="margin-top: 0.5rem;">建议方案：</p>
+                            <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                                <li>各能力包的单独验收仍按各自 manifest 进行</li>
+                                <li>跨包集成测试作为 E2E 测试，由 QA 架构师在 Pilot 后规划</li>
+                                <li>暂不强制覆盖率要求</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Checklist -->
+            <section style="background: var(--bg-card); border: 2px solid var(--secondary); border-radius: 8px; padding: 2rem; margin-top: 3rem;">
+                <h3 style="color: var(--secondary); margin-bottom: 1.5rem;">✅ QA 流程就绪检查清单</h3>
+                <p style="margin-bottom: 1.5rem;">在 T1 能力包试运行前，团队应确认以下项目已准备：</p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check1" style="margin-right: 0.5rem;">
+                        <label for="check1" style="cursor: pointer;">QA 团队（架构师 + 工程师）已就位</label>
+                    </div>
+
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check2" style="margin-right: 0.5rem;">
+                        <label for="check2" style="cursor: pointer;">acceptance-manifest.yaml 格式定义完成</label>
+                    </div>
+
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check3" style="margin-right: 0.5rem;">
+                        <label for="check3" style="cursor: pointer;">自动化测试框架搭建完成（单元 + 集成）</label>
+                    </div>
+
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check4" style="margin-right: 0.5rem;">
+                        <label for="check4" style="cursor: pointer;">Golden Test 基线管理流程定义</label>
+                    </div>
+
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check5" style="margin-right: 0.5rem;">
+                        <label for="check5" style="cursor: pointer;">CI/CD 门禁规则配置（L2: 覆盖率，L3: 自动化测试）</label>
+                    </div>
+
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check6" style="margin-right: 0.5rem;">
+                        <label for="check6" style="cursor: pointer;">CODEOWNERS 文件更新（QA 权限）</label>
+                    </div>
+
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check7" style="margin-right: 0.5rem;">
+                        <label for="check7" style="cursor: pointer;">QA 独立性保护机制确认（qa-verdict ≠ PM acceptance）</label>
+                    </div>
+
+                    <div style="background: var(--bg); border-left: 4px solid var(--secondary); padding: 1rem;">
+                        <input type="checkbox" id="check8" style="margin-right: 0.5rem;">
+                        <label for="check8" style="cursor: pointer;">多端测试策略（Web/Mobile 优先级）确认</label>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Bottom Resources -->
+        <section style="background: var(--bg-card); border: 1px solid var(--primary); border-radius: 8px; padding: 2rem; margin-top: 3rem;">
+            <h3>更多资源</h3>
+            <ul class="responsibility-list">
+                <li><strong>DD-TEST v1.1</strong> — 完整的测试工程推导文档</li>
+                <li><strong>TEAM-COLLABORATION-SPEC v2.1</strong> — 四权分离和协作规范</li>
+                <li><strong>5步流工作指南</strong> — 每个步骤的详细检查清单</li>
+                <li><strong>CI/CD 门禁配置</strong> — GitHub Actions 和 PR status check 设置</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        Internal Guide · 2026-04-13
+    </footer>
+
+    <script>
+        function toggleGap(element) {
+            const answer = element.querySelector('.gap-answer');
+            answer.classList.toggle('show');
+            const icon = element.querySelector('.gap-icon');
+            icon.textContent = answer.classList.contains('show') ? '✅' : '❓';
+        }
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Make checkboxes persistent
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                localStorage.setItem(`qa-checklist-${this.id}`, this.checked);
+            });
+            this.checked = localStorage.getItem(`qa-checklist-${checkbox.id}`) === 'true';
+        });
+    </script>
+</body>
+</html>

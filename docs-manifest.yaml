@@ -1,0 +1,181 @@
+# 唤龙平台 · 团队协作指南站点 — 文档清单
+# 用途：统一控制每页的源文档、版本、状态、最后校验日期
+# CI 检查脚本会读取此文件做版本漂移检测
+# 更新时间：2026-04-13
+
+site:
+  name: 唤龙平台团队协作指南
+  layer: guide          # guide | normative — 本站只是 guide layer
+  deploy: internal      # internal | public
+  last_verified: "2026-04-13"
+
+pages:
+  - page: index.html
+    title: 首页（角色导航 + 目录）
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT               # 锁版前置：T1 能力包全链路试运行通过
+      - doc: UI-DELIVERY-SPEC
+        version: "1.0"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/global.html
+    title: 全局团队分工与工作流
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: UI-DELIVERY-SPEC
+        version: "1.0"
+        status: DRAFT
+      - doc: FRONTEND-REPO-SPEC
+        version: "1.0"
+        status: DRAFT
+    sections:
+      - id: overview
+        title: 全景总览
+        spec_status: DRAFT           # v2.1 §1-§2
+      - id: org
+        title: 组织架构
+        spec_status: DRAFT           # v2.1 §3
+      - id: flow
+        title: 能力包流程
+        spec_status: DRAFT           # v2.1 §4，状态机细节为 v2.2 候选
+      - id: otherflows
+        title: 其他流程
+        spec_status: PROPOSED        # Bugfix/技术改动/治理为 WORKFLOW-GUIDE 候选，尚未进入 v2.1
+      - id: gates
+        title: 门禁体系
+        spec_status: DRAFT           # v2.1 §5
+      - id: repos
+        title: 仓库与权限
+        spec_status: DRAFT           # v2.1 §6 + FRONTEND-REPO-SPEC v1.0
+      - id: artifacts
+        title: 产物矩阵
+        spec_status: DRAFT           # v2.1 §7
+      - id: links
+        title: 团队指南链接
+        spec_status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/product.html
+    title: 产品团队指南
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/frontend-design.html
+    title: 前端与设计团队指南
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: UI-DELIVERY-SPEC
+        version: "1.0"
+        status: DRAFT
+      - doc: FRONTEND-REPO-SPEC
+        version: "1.0"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/engineering.html
+    title: 工程师团队指南
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: FRONTEND-REPO-SPEC
+        version: "1.0"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/qa.html
+    title: 测试团队指南
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: DD-TEST
+        version: "1.1"
+        status: LOCKED
+    last_verified: "2026-04-13"
+
+  - page: pages/ops.html
+    title: 运维人员指南
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: TOOLCHAIN-GUIDE
+        version: "1"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  # ── 深入专题二级页面 ──
+
+  - page: pages/power-separation.html
+    title: 四权分离详解
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/delivery-steps.html
+    title: 五步交付流详解
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+    sections:
+      - id: status-machine
+        spec_status: PROPOSED
+    last_verified: "2026-04-13"
+
+  - page: pages/repo-directory.html
+    title: 六仓库架构详解
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: FRONTEND-REPO-SPEC
+        version: "1.0"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/gate-levels.html
+    title: 门禁体系详解
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/governance-docs.html
+    title: 治理文档体系详解
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+    last_verified: "2026-04-13"
+
+  - page: pages/qa-process.html
+    title: 测试流程与分工详解
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: DD-TEST
+        version: "1.1"
+        status: LOCKED
+    last_verified: "2026-04-13"
+
+# 规范状态定义
+status_definitions:
+  LOCKED: 已锁定，变更需走治理审批
+  DRAFT: 草案，待 T1 试运行后锁版
+  PROPOSED: 候选内容，尚未进入正式规范正文

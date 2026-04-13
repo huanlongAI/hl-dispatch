@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试团队指南 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+.toc-toggle { position:fixed; right:20px; bottom:20px; width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer; font-size:1.3em; z-index:200; box-shadow:0 4px 16px rgba(108,92,231,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.3s; }
+.toc-toggle:hover { transform:scale(1.1); }
+.toc-sidebar { position:fixed; right:0; top:0; bottom:0; width:320px; max-width:85vw; background:var(--bg-card); border-left:1px solid var(--border); z-index:199; transform:translateX(100%); transition:transform 0.3s; overflow-y:auto; padding:60px 20px 40px; }
+.toc-sidebar.open { transform:translateX(0); }
+.toc-sidebar h3 { font-size:0.95em; color:var(--primary-light); margin-bottom:16px; }
+.toc-sidebar .toc-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:1.4em; cursor:pointer; }
+.toc-sidebar a { display:block; padding:5px 0; color:var(--text-muted); text-decoration:none; font-size:0.85em; border-left:2px solid transparent; transition:all 0.2s; }
+.toc-sidebar a:hover { color:var(--text); border-left-color:var(--primary); padding-left:8px; }
+.toc-sidebar a.h2 { font-weight:600; color:var(--text); margin-top:8px; }
+.toc-sidebar a.h3 { padding-left:16px; font-size:0.82em; }
+.toc-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:198; display:none; }
+.toc-overlay.open { display:block; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+  </div>
+</nav>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。
+</div>
+
+<div class="page-header">
+  <h1>🧪 <span>测试团队指南</span></h1>
+  <div class="meta">唤龙平台 AI 驱动协作模型</div>
+  <div class="badge">QA 架构师 1 + 工程师 3</div>
+</div>
+
+<div class="content">
+<blockquote>
+<p><strong>适用角色</strong>：QA 架构师（1 人）+ QA 工程师（3 人）
+<strong>关联文档</strong>：<a href="global.html">全局工作流</a> · <a href="engineering.html">工程师团队指南</a>
+<strong>治理来源</strong>：TEAM-COLLABORATION-SPEC v2.1 §2.4 / §3.3 · DD-TEST v1.1 · TOOLCHAIN-GUIDE v1</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、你在新模型中的角色定位</h2>
+<h3 id="qa-owneracceptance-owner">QA — 质量 Owner（Acceptance Owner）</h3>
+<p>你不再是"手动测试执行者"。你是<strong>验收自动化 owner + 质量判定者</strong>。</p>
+<p>你拥有的独立权力：</p>
+<ul>
+<li><strong>独立质量验证权</strong>——工程师不能放行自己的代码，你说不过就不过</li>
+<li><strong>验收自动化权</strong>——acceptance-manifest 和验收测试套件是你的产物</li>
+<li><strong>回归基线权</strong>——回归测试集的维护和更新</li>
+<li><strong>发布质量 verdict</strong>——qa-verdict 是 GitHub Required Status Check，不是口头确认</li>
+</ul>
+<p><strong>铁律</strong>：执行（工程师）与审计（QA）分家。同一条变更的实现者和质量放行者不能是同一个人。</p>
+<p>你不做的：</p>
+<ul>
+<li>不写功能代码</li>
+<li>不定义业务需求（Cap-Spec-2 的 owner 是 PM，你是 collaborator/reviewer）</li>
+<li>不设计技术方案</li>
+</ul>
+<hr />
+<h2 id="_2">二、团队内部分工</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>角色</th>
+<th>人数</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>QA 架构师</strong></td>
+<td>1</td>
+<td>acceptance-manifest 标准制定、测试基础设施搭建、验收框架设计、质量度量体系、CI 报告体系</td>
+</tr>
+<tr>
+<td><strong>QA 工程师</strong></td>
+<td>3</td>
+<td>验收测试编写与执行、回归测试维护、测试证据收集、qa-verdict 出具</td>
+</tr>
+</tbody>
+</table></div>
+<p>QA 团队横向覆盖所有能力包，不按能力包固定分配。</p>
+<hr />
+<h2 id="_3">三、你的核心产出</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>产物</th>
+<th>谁做</th>
+<th>作用</th>
+<th>存放位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>acceptance-manifest.yaml</strong></td>
+<td>QA</td>
+<td>验收映射清单（每个能力包一份）</td>
+<td><code>hl-platform/app/biz-*/acceptance/</code></td>
+</tr>
+<tr>
+<td><strong>验收测试套件</strong></td>
+<td>QA</td>
+<td>可执行的验收测试</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><strong>回归基线</strong></td>
+<td>QA</td>
+<td>回归测试集</td>
+<td><code>hl-platform/app/biz-*/acceptance/</code></td>
+</tr>
+<tr>
+<td><strong>Quality Verdict</strong></td>
+<td>QA</td>
+<td>qa-verdict Required Status Check</td>
+<td>PR Status Check</td>
+</tr>
+<tr>
+<td><strong>测试证据</strong></td>
+<td>QA + 工程师</td>
+<td>Evidence Pack（合并前验收包）</td>
+<td>PR 附件</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="acceptance-manifestyaml">四、acceptance-manifest.yaml 详解</h2>
+<p>这是你最重要的产物。它是一份 YAML 文件，把 PM 的验收场景（Cap-Spec-2）映射到可执行的测试类。</p>
+<h3 id="_4">结构</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># acceptance-manifest.yaml</span><span class="w"></span>
+<span class="nt">capability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biz.flow.sales</span><span class="w"></span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0&quot;</span><span class="w"></span>
+
+<span class="nt">scenarios</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CASE-001</span><span class="w"></span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;正常销售流程完成&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">covered</span><span class="w">          </span><span class="c1"># covered | pending | not_applicable</span><span class="w"></span>
+<span class="w">    </span><span class="nt">test_class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SalesFlowAcceptanceTest&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">cap_spec_ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CAP-SALES-001/Case-001&quot;</span><span class="w"></span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CASE-002</span><span class="w"></span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;库存不足时拒绝下单&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">covered</span><span class="w"></span>
+<span class="w">    </span><span class="nt">test_class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SalesFlowEdgeCaseTest&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">cap_spec_ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CAP-SALES-001/Case-002&quot;</span><span class="w"></span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CASE-003</span><span class="w"></span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;跨租户隔离验证&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pending</span><span class="w"></span>
+<span class="w">    </span><span class="nt">test_class</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">            </span><span class="c1"># 待编写</span><span class="w"></span>
+<span class="w">    </span><span class="nt">cap_spec_ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CAP-SALES-001/Case-003&quot;</span><span class="w"></span>
+</code></pre></div>
+
+<h3 id="_5">字段规则</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必填</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>是</td>
+<td>场景唯一标识</td>
+</tr>
+<tr>
+<td>description</td>
+<td>是</td>
+<td>场景描述</td>
+</tr>
+<tr>
+<td>status</td>
+<td>是</td>
+<td><code>covered</code>（已覆盖）/ <code>pending</code>（待编写）/ <code>not_applicable</code>（不适用）</td>
+</tr>
+<tr>
+<td>test_class</td>
+<td>covered 时必填</td>
+<td>对应的测试类名</td>
+</tr>
+<tr>
+<td>cap_spec_ref</td>
+<td>是</td>
+<td>对应 PM 的哪个 Cap-Spec 的哪个 Case</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="g-026">G-026 门禁会检查什么</h3>
+<p>G-026 是 L2 确定性门禁，对你的 manifest 做以下检查：</p>
+<ol>
+<li><strong>R1</strong>：每个 app/biz-* 目录必须有 acceptance-manifest.yaml</li>
+<li><strong>R2</strong>：status=covered 的场景必须有非空的 test_class</li>
+<li><strong>R3</strong>：status 只允许 covered / pending / not_applicable</li>
+<li><strong>R4</strong>：covered 占比必须达到 60%（Pilot 阈值，后续可能升至 80%）</li>
+</ol>
+<p><strong>not_applicable 不计入分母</strong>：如果一个场景确实不适用当前阶段，标 not_applicable 不影响覆盖率。</p>
+<hr />
+<h2 id="_6">五、你在能力包流中的时间线</h2>
+<div class="codehilite"><pre><span></span><code>Step 1: PM freeze Cap-Spec
+  └── 你收到 Cap-Spec-2（验收场景集）
+      你是 collaborator/reviewer，可以提建议但 PM 是 owner
+    ↓
+Step 2: 你开始同步编写 acceptance-manifest.yaml
+  ├── 把 Cap-Spec-2 的每个 Case 映射为 manifest 条目
+  ├── 初始状态大部分为 pending
+  └── 和工程师同步：了解技术方案，确认验收测试的切入点
+    ↓
+Step 3: 工程师实现时，你同步编写验收测试套件
+  ├── JUnit 5 参数化测试（AcceptanceMode ≠ UI_MANUAL）
+  ├── 基于 acceptance-manifest 逐个覆盖
+  └── pending → covered（更新 manifest）
+    ↓
+Step 4: 门禁 + 验收（你是关键角色）
+  ├── CI 自动跑 L1-L3（含 G-026 manifest 检查 + G-023 验收回放）
+  ├── 你独立执行验收测试套件
+  ├── 验证通过 → 在 PR 上 approve → qa-verdict = PASS
+  └── 验证失败 → 写明失败原因 → 打回
+    ↓
+Step 5: PM 产品验收（你的 verdict 已经 PASS，等 PM）
+    ↓
+Post-Merge: staging 环境回归验证
+  └── 你确认回归测试全过 → 运维推 prod
+</code></pre></div>
+
+<hr />
+<h2 id="qa-verdict">六、qa-verdict 怎么出</h2>
+<p>qa-verdict 是 GitHub Required Status Check。你的操作方式：</p>
+<ol>
+<li>在 PR 的 Review 中选择 <strong>Approve</strong></li>
+<li>GitHub Actions 自动检测到 QA 团队成员 approve → qa-verdict = PASS</li>
+<li>如果你发现问题 → 选择 <strong>Request Changes</strong> → qa-verdict 保持 FAIL</li>
+</ol>
+<p><strong>出具标准</strong>：</p>
+<ul>
+<li>acceptance-manifest 中所有 covered 场景的测试全部 PASS</li>
+<li>没有 P0/P1 级别的缺陷遗留</li>
+<li>回归测试无新增失败</li>
+<li>如果是 UI 相关：golden/visual diff + a11y 也要通过</li>
+</ul>
+<p><strong>铁律</strong>：qa-verdict 是你的独立判断。PM 不能要求你"先过"，工程师不能催你"赶紧通过"。质量不过关就不过关。</p>
+<hr />
+<h2 id="_7">七、与工程师的测试分工</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>测试类型</th>
+<th>谁写</th>
+<th>谁跑</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单元测试</td>
+<td>工程师</td>
+<td>CI 自动</td>
+<td>governedAction 五条必过 + domain 逻辑</td>
+</tr>
+<tr>
+<td>集成测试</td>
+<td>工程师</td>
+<td>CI 自动（Testcontainers）</td>
+<td>端到端</td>
+</tr>
+<tr>
+<td>验收测试</td>
+<td><strong>你</strong></td>
+<td>CI 自动 + 你手动确认</td>
+<td>基于 Cap-Spec-2 验收场景</td>
+</tr>
+<tr>
+<td>回归测试</td>
+<td><strong>你</strong></td>
+<td>CI 自动</td>
+<td>你维护回归基线</td>
+</tr>
+<tr>
+<td>属性测试（kernel）</td>
+<td>工程师</td>
+<td>CI 自动</td>
+<td>kernel 级别</td>
+</tr>
+<tr>
+<td>属性测试（能力包边界）</td>
+<td><strong>你</strong></td>
+<td>CI 自动</td>
+<td>能力包边界属性测试</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>边界清晰</strong>：工程师不写验收测试，你不写单元测试。各司其职。</p>
+<hr />
+<h2 id="qa">八、QA 架构师的额外职责</h2>
+<p>如果你是 QA 架构师（1 人），你还负责：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>职责</th>
+<th>具体内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>acceptance-manifest 标准</td>
+<td>定义 manifest 的字段规范、命名规范、版本管理规则</td>
+</tr>
+<tr>
+<td>测试基础设施搭建</td>
+<td>JUnit 5 验收框架、Testcontainers 配置、CI 集成</td>
+</tr>
+<tr>
+<td>验收框架设计</td>
+<td>统一的验收测试模板、参数化测试模式、数据驱动方案</td>
+</tr>
+<tr>
+<td>质量度量体系</td>
+<td>覆盖率追踪、缺陷逃逸率、回归通过率等指标</td>
+</tr>
+<tr>
+<td>CI 报告体系</td>
+<td>测试报告格式、失败通知、趋势看板</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="ui">九、UI 相关的验收（与前端协作）</h2>
+<p>当能力包涉及 UI 变更时，你需要额外验收：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>Check</th>
+<th>你做什么</th>
+<th>什么时候</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ui-regression-pass</td>
+<td>确认 golden/visual diff 无异常回归</td>
+<td>UI-R1+ 的 PR</td>
+</tr>
+<tr>
+<td>ui-a11y-pass</td>
+<td>确认 contrast/labels/target size 通过</td>
+<td>触碰交互/布局</td>
+</tr>
+<tr>
+<td>widget-catalog-pass</td>
+<td>确认组件隔离工作台状态齐全</td>
+<td>新增公共组件（UI-R2+）</td>
+</tr>
+</tbody>
+</table></div>
+<p>你在前端仓库的 CODEOWNERS（涉及两个仓库）：</p>
+<p><strong>hl-design-system</strong>（设计系统）：</p>
+<ul>
+<li><code>/widgetbook/**</code> → @hl-frontend-engineers + @hl-qa-team（你共审）</li>
+<li><code>/test/golden/**</code> → @hl-frontend-engineers + @hl-qa-team（你共审）</li>
+<li><code>/test/a11y/**</code> → @hl-qa-team（你独审）</li>
+</ul>
+<p><strong>hl-app</strong>（租户端应用）：</p>
+<ul>
+<li><code>/test/acceptance/**</code> → @hl-qa-team（你独审）</li>
+<li><code>/test/golden/**</code> → @hl-frontend-engineers + @hl-qa-team（你共审）</li>
+</ul>
+<hr />
+<h2 id="_8">十、各类变更中你的角色</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>change_class</th>
+<th>你需要做什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>capability</strong></td>
+<td>完整验收流程：manifest + 验收测试 + qa-verdict</td>
+</tr>
+<tr>
+<td><strong>bugfix</strong></td>
+<td>qa-verdict <strong>必须</strong>（不可免除），P0 紧急也要过</td>
+</tr>
+<tr>
+<td><strong>tech-improvement</strong></td>
+<td>仅当改动影响用户可见行为时需要 qa-verdict</td>
+</tr>
+<tr>
+<td><strong>governance</strong></td>
+<td>仅当内核变更影响行为性测试时需要</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_9">十一、需要掌握的技能</h2>
+<p>转型目标：从"手动测试执行者"转为"验收自动化 owner + 质量判定者"。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>技能</th>
+<th>优先级</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JUnit 5 验收测试编写</td>
+<td>高</td>
+<td>参数化测试、@Tag 标记、断言模式</td>
+</tr>
+<tr>
+<td>acceptance-manifest.yaml 管理</td>
+<td>高</td>
+<td>YAML 语法、manifest 字段规范、G-026 规则</td>
+</tr>
+<tr>
+<td>CI 报告解读</td>
+<td>高</td>
+<td>看懂 GitHub Actions 日志、门禁失败原因定位</td>
+</tr>
+<tr>
+<td>Testcontainers</td>
+<td>中</td>
+<td>了解集成测试的环境搭建（主要由工程师负责，你需要理解）</td>
+</tr>
+<tr>
+<td>Flutter 测试（前端 QA）</td>
+<td>中</td>
+<td>Widget Test、Golden Test、a11y 测试</td>
+</tr>
+<tr>
+<td>Kotest Property Test</td>
+<td>中</td>
+<td>能力包边界属性测试</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_10">十二、常见问题</h2>
+<p><strong>Q：PM 的 Cap-Spec-2 写得不够清楚，我怎么写 manifest？</strong>
+A：你是 Cap-Spec-2 的 collaborator/reviewer。在 Step 1 阶段就参与 review，提出"这个场景的预期结果不明确"之类的反馈。PM 有义务在 freeze 前解决。</p>
+<p><strong>Q：工程师催我"赶紧过 qa-verdict"怎么办？</strong>
+A：你的 verdict 是独立权力。如果测试没全过、有遗留 Bug、覆盖率不达标，不要妥协。这就是四权分离的意义。</p>
+<p><strong>Q：pending 的场景什么时候要变成 covered？</strong>
+A：在 Step 3 期间逐步覆盖。PR 提交时 G-026 检查覆盖率，Pilot 阶段阈值是 60%。100% 不现实，但核心场景必须 covered。</p>
+<p><strong>Q：staging 回归验证发现问题怎么办？</strong>
+A：通知工程师 + PM。如果是 P0，启动紧急修复流程（bugfix P0）。运维暂停 prod 推送直到修复合入。</p>
+<p><strong>Q：AI 审计（L4）和我的验收有什么区别？</strong>
+A：AI 审计是 Advisory（建议性），看代码质量和安全。你的验收是 Required（必须），看功能是否按规格工作。两者互补，不互相替代。</p>
+</div>
+
+<footer class="site-footer">
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + UI-DELIVERY-SPEC v1.0 · Internal Guide · 2026-04-13<br>
+  <a href="../index.html" style="color:var(--primary-light);text-decoration:none;">← 返回首页</a>
+</footer>
+
+<script src="../js/main.js"></script>
+
+<button class="toc-toggle" title="目录">☰</button>
+<div class="toc-overlay"></div>
+<div class="toc-sidebar">
+  <button class="toc-close">✕</button>
+  <h3>🧪 目录</h3>
+    <a href="#_1" class="h2">一、你在新模型中的角色定位</a>
+    <a href="#qa-owneracceptance-owner" class="h3">QA — 质量 Owner（Acceptance Owner）</a>
+    <a href="#_2" class="h2">二、团队内部分工</a>
+    <a href="#_3" class="h2">三、你的核心产出</a>
+    <a href="#acceptance-manifestyaml" class="h2">四、acceptance-manifest.yaml 详解</a>
+    <a href="#_4" class="h3">结构</a>
+    <a href="#_5" class="h3">字段规则</a>
+    <a href="#g-026" class="h3">G-026 门禁会检查什么</a>
+    <a href="#_6" class="h2">五、你在能力包流中的时间线</a>
+    <a href="#qa-verdict" class="h2">六、qa-verdict 怎么出</a>
+    <a href="#_7" class="h2">七、与工程师的测试分工</a>
+    <a href="#qa" class="h2">八、QA 架构师的额外职责</a>
+    <a href="#ui" class="h2">九、UI 相关的验收（与前端协作）</a>
+    <a href="#_8" class="h2">十、各类变更中你的角色</a>
+    <a href="#_9" class="h2">十一、需要掌握的技能</a>
+    <a href="#_10" class="h2">十二、常见问题</a>
+
+</div>
+
+<script>
+const tocBtn = document.querySelector('.toc-toggle');
+const tocBar = document.querySelector('.toc-sidebar');
+const tocOverlay = document.querySelector('.toc-overlay');
+const tocClose = document.querySelector('.toc-close');
+function openToc() { tocBar.classList.add('open'); tocOverlay.classList.add('open'); }
+function closeToc() { tocBar.classList.remove('open'); tocOverlay.classList.remove('open'); }
+tocBtn.addEventListener('click', openToc);
+tocClose.addEventListener('click', closeToc);
+tocOverlay.addEventListener('click', closeToc);
+tocBar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setTimeout(closeToc, 200)));
+</script>
+</body>
+</html>

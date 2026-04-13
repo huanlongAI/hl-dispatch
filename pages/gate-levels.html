@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>门禁体系详解 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+/* Pyramid SVG */
+.pyramid-container {
+  display: flex; justify-content: center; align-items: center;
+  margin: 32px 0; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; overflow: auto; min-height: 450px;
+}
+
+.pyramid-container svg { max-width: 100%; height: auto; }
+
+.pyramid-layer { cursor: pointer; transition: all 0.3s; }
+.pyramid-layer rect { transition: fill 0.3s, stroke 0.3s; }
+.pyramid-layer:hover rect { opacity: 0.8; stroke-width: 3; }
+.pyramid-layer text { pointer-events: none; font-weight: 600; }
+
+/* Gate Details Panel */
+.gate-details { margin: 20px 0; padding: 20px; background: var(--bg-card); border: 2px solid var(--primary); border-radius: 8px; }
+.gate-details h3 { color: var(--primary-light); margin: 0 0 12px; }
+.gate-details .gate-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+.gate-item { padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; font-size: 0.85em; }
+.gate-item .check-name { color: var(--primary-light); font-weight: 600; }
+.gate-item .check-desc { color: var(--text-muted); font-size: 0.8em; margin-top: 4px; }
+
+/* Sentinel & AI Sections */
+.special-section {
+  margin: 32px 0; padding: 24px; border-radius: 12px; position: relative;
+  border-left: 4px solid var(--accent);
+}
+
+.special-section.sentinel {
+  background: linear-gradient(135deg, rgba(170, 155, 254, 0.1), rgba(170, 155, 254, 0.05));
+  border-left-color: var(--founder);
+}
+
+.special-section.ai-agent {
+  background: linear-gradient(135deg, rgba(116, 185, 255, 0.1), rgba(116, 185, 255, 0.05));
+  border-left-color: var(--pm);
+}
+
+.special-section .icon { font-size: 2em; margin-bottom: 8px; }
+.special-section h3 { color: var(--primary-light); margin: 12px 0; }
+.special-section p { color: var(--text); margin: 8px 0; line-height: 1.8; }
+
+.role-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 0.8em; font-weight: 600; margin: 2px;
+}
+
+.role-badge.pm { background: rgba(116, 185, 255, 0.2); color: var(--pm); }
+.role-badge.eng { background: rgba(85, 239, 196, 0.2); color: var(--eng); }
+.role-badge.qa { background: rgba(255, 234, 167, 0.2); color: var(--qa); }
+.role-badge.founder { background: rgba(162, 155, 254, 0.2); color: var(--founder); }
+
+/* Required Status Checks Table */
+.status-checks-table {
+  width: 100%; border-collapse: collapse; font-size: 0.9em;
+  margin: 20px 0;
+}
+
+.status-checks-table th {
+  background: var(--bg-card); color: var(--primary-light); padding: 12px;
+  border-bottom: 2px solid var(--primary); text-align: left; font-weight: 600;
+}
+
+.status-checks-table td {
+  padding: 12px; border-bottom: 1px solid var(--border); color: var(--text);
+}
+
+.status-checks-table tr:hover { background: rgba(108, 92, 231, 0.05); }
+
+.check-tag {
+  display: inline-block; padding: 2px 8px; background: var(--primary); color: #fff;
+  border-radius: 4px; font-size: 0.75em; font-weight: 600;
+}
+
+.check-tag.advisory { background: var(--accent); color: var(--bg); }
+
+/* Gate Flow Animation */
+.gate-flow-animation {
+  position: relative; margin: 32px 0;
+}
+
+.gate-flow-step {
+  display: flex; align-items: center; gap: 16px; margin: 16px 0;
+  padding: 16px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; opacity: 0.6; transition: all 0.3s;
+}
+
+.gate-flow-step.active {
+  opacity: 1; border-color: var(--accent); box-shadow: 0 0 12px rgba(253, 203, 110, 0.3);
+}
+
+.gate-flow-step .time {
+  flex-shrink: 0; font-size: 0.75em; color: var(--text-muted); width: 50px; text-align: center;
+}
+
+.gate-flow-step .badge {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 700; font-size: 0.85em;
+}
+
+.gate-flow-step .content { flex: 1; }
+.gate-flow-step .stage { font-size: 0.85em; color: var(--text-muted); }
+.gate-flow-step .desc { font-weight: 600; color: var(--text); margin-top: 2px; }
+
+.gate-flow-connector { text-align: center; color: var(--primary); font-size: 1.2em; margin: 4px 0; }
+
+.play-btn {
+  display: inline-block; padding: 10px 24px; background: var(--accent);
+  color: var(--bg); border: none; border-radius: 20px; font-weight: 600;
+  cursor: pointer; margin: 16px 0; transition: all 0.3s;
+}
+
+.play-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(253, 203, 110, 0.4); }
+.play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Table wrapper */
+.table-wrapper {
+  overflow-x: auto; margin: 16px 0;
+}
+
+.table-wrapper table {
+  width: 100%; border-collapse: collapse; font-size: 0.9em;
+}
+
+.table-wrapper th {
+  background: var(--bg-card); color: var(--primary-light); padding: 12px;
+  border-bottom: 2px solid var(--primary); text-align: left; font-weight: 600;
+}
+
+.table-wrapper td {
+  padding: 12px; border-bottom: 1px solid var(--border); color: var(--text);
+}
+
+.table-wrapper tr:hover { background: var(--bg-card); }
+
+/* Modal */
+.gate-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+.gate-modal.open { display: flex; }
+.gate-modal-content { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 12px; padding: 32px; max-width: 700px; width: 90vw; max-height: 70vh; overflow-y: auto; position: relative; }
+.gate-modal-content .close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.6em; cursor: pointer; }
+.gate-modal-content .close:hover { color: var(--text); }
+.gate-modal-content h2 { margin: 0 0 16px; color: var(--primary-light); }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .pyramid-container { min-height: 300px; padding: 16px; }
+  .special-section { padding: 16px; }
+  .gate-flow-step { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+  </div>
+</nav>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。
+</div>
+
+<div class="page-header">
+  <h1>🚪 <span>门禁体系详解</span></h1>
+  <div class="meta">四层质量把控体系 · AI 驱动审计 · 治理流程</div>
+  <div class="badge">全仓库 · CI/CD · 创始人审批</div>
+</div>
+
+<div class="content">
+
+<blockquote>
+<p><strong>本指南覆盖</strong>：四层门禁机制、Sentinel 哨兵、技术合伙人智能体、Required Status Checks、PR 流程
+<br><strong>适用读者</strong>：全组织 · 工程师 · QA · PM · 创始人
+<br><strong>治理来源</strong>：GATE-SYSTEM-SPEC v3.0 · QUALITY-ASSURANCE-SPEC v2.1 · AI-REVIEW-SPEC v1.0</p>
+</blockquote>
+
+<hr />
+
+<h2 id="section1">🔺 Section 1: 四层门禁金字塔</h2>
+
+<p>唤龙平台采用<strong>从下往上递进式</strong>的质量把控体系。每一层的失败都会阻止 PR 合并。点击任何层级查看具体检查项。</p>
+
+<div class="pyramid-container">
+  <svg viewBox="0 0 800 600" width="100%" height="500">
+    <!-- L4 语义门禁 (top) -->
+    <g class="pyramid-layer" data-gate="L4">
+      <polygon points="400,80 600,180 200,180" fill="rgba(108,92,231,0.3)" stroke="#6C5CE7" stroke-width="2"/>
+      <text x="400" y="140" text-anchor="middle" font-size="16" fill="#E8E8F0">L4 语义门禁</text>
+      <text x="400" y="160" text-anchor="middle" font-size="12" fill="#9999B0">ADVISORY</text>
+    </g>
+
+    <!-- L3 行为门禁 -->
+    <g class="pyramid-layer" data-gate="L3">
+      <polygon points="600,180 750,300 50,300" fill="rgba(85,239,196,0.3)" stroke="#55EFC4" stroke-width="2"/>
+      <text x="400" y="250" text-anchor="middle" font-size="16" fill="#E8E8F0">L3 行为门禁</text>
+      <text x="400" y="270" text-anchor="middle" font-size="12" fill="#9999B0">BLOCKING</text>
+    </g>
+
+    <!-- L2 确定性门禁 -->
+    <g class="pyramid-layer" data-gate="L2">
+      <polygon points="750,300 800,450 0,450" fill="rgba(255,234,167,0.3)" stroke="#FFEAA7" stroke-width="2"/>
+      <text x="400" y="380" text-anchor="middle" font-size="16" fill="#E8E8F0">L2 确定性门禁</text>
+      <text x="400" y="400" text-anchor="middle" font-size="12" fill="#9999B0">BLOCKING</text>
+    </g>
+
+    <!-- L1 格式门禁 (bottom) -->
+    <g class="pyramid-layer" data-gate="L1">
+      <polygon points="800,450 800,520 0,520" fill="rgba(253,203,110,0.3)" stroke="#FDCB6E" stroke-width="2"/>
+      <text x="400" y="485" text-anchor="middle" font-size="16" fill="#E8E8F0">L1 格式门禁</text>
+      <text x="400" y="505" text-anchor="middle" font-size="12" fill="#9999B0">BLOCKING</text>
+    </g>
+  </svg>
+</div>
+
+<h2 id="section1-details">📋 各层详细说明</h2>
+
+<!-- L1 -->
+<div class="gate-details" id="L1-details" style="display:none;">
+  <h3>🟨 L1 格式门禁 — 最快、最廉价的检查</h3>
+  <p style="color: var(--text-muted); margin-bottom: 12px;"><strong>特征</strong>：静态分析，无需运行代码，秒级反馈 · <strong>判定</strong>：违反 = BLOCKING，不能合并</p>
+  <div class="gate-items">
+    <div class="gate-item">
+      <div class="check-name">ktlint</div>
+      <div class="check-desc">Kotlin 代码风格检查（hl-platform）</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">dart format</div>
+      <div class="check-desc">Dart 代码格式检查（hl-app · hl-design-system）</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">yamllint</div>
+      <div class="check-desc">YAML 配置文件验证（hl-contracts · hl-factory）</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">markdown-lint</div>
+      <div class="check-desc">Markdown 文档规范（所有仓库）</div>
+    </div>
+  </div>
+</div>
+
+<!-- L2 -->
+<div class="gate-details" id="L2-details" style="display:none;">
+  <h3>🟨 L2 确定性门禁 — 规则明确、无歧义</h3>
+  <p style="color: var(--text-muted); margin-bottom: 12px;"><strong>特征</strong>：规则驱动，结果唯一确定，分钟级反馈 · <strong>判定</strong>：违反 = BLOCKING，不能合并</p>
+  <div class="gate-items">
+    <div class="gate-item">
+      <div class="check-name">Contract Schema</div>
+      <div class="check-desc">Cap-Spec 与 API 规范必须符合 JSON Schema</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">reason_code 检查</div>
+      <div class="check-desc">所有 error_reason 必须在 hl-contracts/reasoncodes/ 中定义</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">验收场景覆盖</div>
+      <div class="check-desc">capability_id 的验收场景覆盖率 ≥ 60%（G-026 规则）</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">token-sync</div>
+      <div class="check-desc">hl-app 中使用的设计令牌版本必须与 hl-design-system 一致</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">design-ready</div>
+      <div class="check-desc">UI 相关 PR 必须包含对应的 Design Packet（hl-app 专用）</div>
+    </div>
+  </div>
+</div>
+
+<!-- L3 -->
+<div class="gate-details" id="L3-details" style="display:none;">
+  <h3>🟢 L3 行为门禁 — 代码执行验证</h3>
+  <p style="color: var(--text-muted); margin-bottom: 12px;"><strong>特征</strong>：需运行代码的验证，分钟~小时级，提供客观证据 · <strong>判定</strong>：失败 = BLOCKING，不能合并</p>
+  <div class="gate-items">
+    <div class="gate-item">
+      <div class="check-name">unit test</div>
+      <div class="check-desc">单元测试 100% 通过。覆盖率 ≥ 80%（对关键路径要求 100%）</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">integration test</div>
+      <div class="check-desc">集成测试覆盖模块间接口。hl-platform 必须测试 API contract</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">golden test</div>
+      <div class="check-desc">hl-app 的 widget tree 变更需要 golden 测试（视觉回归检查）</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">a11y test</div>
+      <div class="check-desc">无障碍测试（屏幕阅读器、键盘导航）· hl-app 必须 WCAG 2.1 Level AA</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">acceptance test</div>
+      <div class="check-desc">QA 驱动的验收测试。必须覆盖 Cap-Spec 中定义的所有验收场景</div>
+    </div>
+  </div>
+</div>
+
+<!-- L4 -->
+<div class="gate-details" id="L4-details" style="display:none;">
+  <h3>🟣 L4 语义门禁 — AI 驱动的智能审计</h3>
+  <p style="color: var(--text-muted); margin-bottom: 12px;"><strong>特征</strong>：非阻断性（ADVISORY），为创始人和审阅者提供参考 · <strong>判定</strong>：建议参考，不强制</p>
+  <div class="gate-items">
+    <div class="gate-item">
+      <div class="check-name">AI 代码审查</div>
+      <div class="check-desc">哨兵自动扫描代码质量、安全风险、架构一致性</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">复杂度分析</div>
+      <div class="check-desc">检查 cyclomatic complexity、认知复杂度，建议重构</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">安全扫描</div>
+      <div class="check-desc">依赖漏洞、敏感信息泄露（API key、密码等）</div>
+    </div>
+    <div class="gate-item">
+      <div class="check-name">架构守护</div>
+      <div class="check-desc">检查是否违反模块边界、是否引入不允许的跨层依赖</div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.pyramid-layer').forEach(layer => {
+  layer.addEventListener('click', function() {
+    const gate = this.getAttribute('data-gate');
+    // Hide all
+    document.querySelectorAll('[id$="-details"]').forEach(el => el.style.display = 'none');
+    // Show selected
+    document.getElementById(gate + '-details').style.display = 'block';
+    // Scroll to it
+    setTimeout(() => {
+      document.getElementById(gate + '-details').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  });
+});
+
+// Show L1 by default
+document.getElementById('L1-details').style.display = 'block';
+</script>
+
+<hr />
+
+<h2 id="section2">🛡️ Section 2: 哨兵（Sentinel）— CI 中的 AI 审查节点</h2>
+
+<div class="special-section sentinel">
+  <div class="icon">🛡️</div>
+  <h3>哨兵（Sentinel）是什么？</h3>
+  <p>
+    <strong>定位</strong>：CI 管线中的智能审查节点，运行在每个 PR 上，自动进行 AI 驱动的代码审计。
+  </p>
+  <p>
+    <strong>职责</strong>：
+    <ul style="margin-left: 20px; color: var(--text);">
+      <li><strong>契约一致性检查</strong> — PR 的代码变更是否与 Cap-Spec 对齐，是否引入了超出设计范围的改动</li>
+      <li><strong>安全扫描</strong> — 依赖漏洞、敏感信息泄露（如数据库密码、API key 暴露）、SQL 注入风险</li>
+      <li><strong>架构守护</strong> — 是否违反了模块间的边界、是否引入了不允许的跨层依赖、是否破坏了分层隔离</li>
+      <li><strong>代码质量</strong> — 圈复杂度、重复率、AI 生成代码的可维护性、代码异味检测</li>
+    </ul>
+  </p>
+
+  <h3 style="margin-top: 20px;">与门禁体系的关系</h3>
+  <p>
+    哨兵的检查结果<strong>注入到 L4 语义门禁层（ADVISORY）</strong>，不直接阻断 PR，但为创始人和审阅者提供<strong>重要的决策参考</strong>。
+    <br>
+    创始人或工程师在看到哨兵的建议后，可以选择：
+    <ul style="margin-left: 20px; color: var(--text);">
+      <li>接受建议，优化代码</li>
+      <li>理解后明智地忽略（若有充分理由）</li>
+    </ul>
+  </p>
+
+  <h3 style="margin-top: 20px;">典型检查项</h3>
+  <table class="status-checks-table">
+    <tr style="background: var(--bg-card);">
+      <th>检查项</th>
+      <th>触发条件</th>
+      <th>建议行动</th>
+    </tr>
+    <tr>
+      <td><strong>契约漂移</strong></td>
+      <td>Cap-Spec 版本与代码不一致，或发现未授权的 API 签名变更</td>
+      <td>调整代码以符合 Cap-Spec，或更新 Cap-Spec 后获批</td>
+    </tr>
+    <tr>
+      <td><strong>SQL 注入风险</strong></td>
+      <td>检测到动态拼接 SQL 而非参数化查询</td>
+      <td>立即修复，使用 ORM 或参数化查询</td>
+    </tr>
+    <tr>
+      <td><strong>秘钥泄露</strong></td>
+      <td>检测到硬编码的 API key、密码、token</td>
+      <td>立即从代码中移除，使用环境变量或密钥管理服务</td>
+    </tr>
+    <tr>
+      <td><strong>模块越界</strong></td>
+      <td>hl-app 直接导入内部 API 而非通过 service layer</td>
+      <td>遵循分层架构，通过 service layer 中介</td>
+    </tr>
+    <tr>
+      <td><strong>复杂度过高</strong></td>
+      <td>圈复杂度 > 10 或认知复杂度 > 15</td>
+      <td>考虑重构成更小的函数或使用策略模式</td>
+    </tr>
+  </table>
+
+  <h3 style="margin-top: 20px;">实际工作流</h3>
+  <ol style="color: var(--text); margin-left: 20px;">
+    <li>工程师推送 PR</li>
+    <li>CI 管线开始运行（L1 → L2 → L3）</li>
+    <li>L4 并行运行哨兵检查，生成审查报告</li>
+    <li>哨兵报告作为<strong>评论</strong>出现在 PR 中（不阻断，仅供参考）</li>
+    <li>工程师查看报告，可选择优化代码</li>
+    <li>人工审阅（代码所有者 → QA → PM → 创始人）</li>
+    <li>通过审批后可合并</li>
+  </ol>
+</div>
+
+<hr />
+
+<h2 id="section3">🤖 Section 3: 技术合伙人智能体（Technical Co-founder AI）</h2>
+
+<div class="special-section ai-agent">
+  <div class="icon">🤖</div>
+  <h3>技术合伙人智能体是什么？</h3>
+  <p>
+    <strong>定位</strong>：创始人的 AI 决策辅助工具，<strong>不在 CI 管线中</strong>，而是在治理决策链中。
+  </p>
+  <p>
+    <strong>工作场景</strong>：创始人需要审阅涉及以下内容的 PR 时：
+    <ul style="margin-left: 20px; color: var(--text);">
+      <li><code>contract_touch</code> — 涉及契约变更的 PR（新增/修改 reason_code、API 规范等）</li>
+      <li><code>founder_required</code> — 架构决策、技术方案变更、治理规范调整</li>
+    </ul>
+  </p>
+
+  <h3 style="margin-top: 20px;">核心职责</h3>
+  <p style="color: var(--text);">
+    <ul style="margin-left: 20px;">
+      <li><strong>影响分析</strong> — 此变更会影响哪些系统、哪些团队、哪些已上线的能力</li>
+      <li><strong>一致性检查</strong> — 治理规范变更是否与现有的四权分离模型一致</li>
+      <li><strong>向后兼容性评估</strong> — 契约变更是否会破坏现有的客户端实现</li>
+      <li><strong>风险识别</strong> — 标出可能的风险点和需要特别关注的地方</li>
+      <li><strong>建议方案</strong> — 如果存在问题，提出替代方案或改进建议</li>
+    </ul>
+  </p>
+
+  <h3 style="margin-top: 20px;">与门禁的区别</h3>
+  <p>
+    <strong>哨兵（Sentinel）</strong>：自动运行，给所有 PR 反馈，是 L4 层的一部分
+    <br>
+    <strong>技术合伙人智能体</strong>：手动触发，只在创始人审批时生成建议，是创始人的私密顾问
+  </p>
+
+  <h3 style="margin-top: 20px;">工作模式</h3>
+  <ol style="color: var(--text); margin-left: 20px;">
+    <li>创始人打开需要审批的 PR（通常标记了 <code>founder_required</code> 标签）</li>
+    <li>创始人点击"请求智能体分析"按钮</li>
+    <li>技术合伙人智能体快速生成：
+      <ul style="margin-top: 8px; margin-left: 20px;">
+        <li>核心变更摘要</li>
+        <li>影响范围分析</li>
+        <li>风险评估</li>
+        <li>建议的审批清单</li>
+      </ul>
+    </li>
+    <li>创始人采纳或忽略建议，做出最终决策</li>
+    <li>PR 审批完成</li>
+  </ol>
+
+  <h3 style="margin-top: 20px;">示例场景</h3>
+  <div style="background: var(--bg); padding: 12px; border-radius: 6px; margin-top: 12px; color: var(--text); font-size: 0.9em;">
+    <strong>场景</strong>：PM 提交 PR，在 hl-contracts/reasoncodes/ 中新增了 3 个 reason_code，涉及订单退货流程。
+    <br><br>
+    <strong>技术合伙人智能体的分析</strong>：
+    <ul style="margin-left: 20px; margin-top: 8px;">
+      <li>新增的 3 个 reason_code 会被以下系统使用：hl-platform (订单服务) · hl-app (租户端) · hl-console-native (创始人后台)</li>
+      <li>这是一个<strong>后向兼容</strong>的变更，不会破坏现有客户端</li>
+      <li>建议：创建对应的验收场景文档，PM 需补充测试用例</li>
+      <li>审批清单：PM 自己检查清单 ✓ · 工程师 review ✓ · QA 生成验收场景 ✓ · 可以审批</li>
+    </ul>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="section4">✅ Section 4: Required Status Checks — 组织级规则</h2>
+
+<p>以下三个 Required Checks 是 GitHub 组织级别的强制规则，出现在所有 PR 的"Merge button"旁边。必须全部通过才能合并。</p>
+
+<table class="status-checks-table">
+  <thead>
+    <tr>
+      <th>Check Name</th>
+      <th>触发仓库</th>
+      <th>含义</th>
+      <th>审批权限</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>qa-verdict</strong>
+        <span class="check-tag">BLOCKING</span>
+      </td>
+      <td>hl-platform, hl-app</td>
+      <td>QA 团队必须在 PR 中显式批准（Approve review），验证功能符合验收场景</td>
+      <td><span class="role-badge qa">@hl-qa-team</span></td>
+    </tr>
+    <tr>
+      <td>
+        <strong>pm-acceptance</strong>
+        <span class="check-tag">BLOCKING</span>
+      </td>
+      <td>hl-platform, hl-app</td>
+      <td>PM 必须在 PR 中显式批准，确认代码实现与 Cap-Spec 一致</td>
+      <td><span class="role-badge pm">@hl-pm-team</span></td>
+    </tr>
+    <tr>
+      <td>
+        <strong>pm-hprd-pass</strong>
+        <span class="check-tag advisory">ADVISORY</span>
+      </td>
+      <td>所有</td>
+      <td>流程内检查：验证 HPRD（工程师理解确认文档）是否已创建。非组织级 Ruleset，仅供参考</td>
+      <td><span class="role-badge pm">@hl-pm-team</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="background: rgba(253,203,110,0.1); border-left: 4px solid var(--accent); padding: 16px; border-radius: 8px; margin: 16px 0;">
+  <p style="margin: 0; color: var(--text); font-size: 0.9em;">
+    <strong>⚠️ 重要区别</strong>：
+    <br>
+    <code>qa-verdict</code> 和 <code>pm-acceptance</code> 是 GitHub 组织级 Ruleset，强制所有 PR 通过。
+    <br>
+    <code>pm-hprd-pass</code> 是流程内检查（在 hl-factory 中定义），不是组织级，仅提示信息。
+  </p>
+</div>
+
+<hr />
+
+<h2 id="section5">🎬 Section 5: 门禁流程动画</h2>
+
+<p>以下展示一个 PR 从提交到合并的全流程，包含所有门禁检查的顺序和耗时。点击<strong>播放</strong>按钮开始。</p>
+
+<button class="play-btn" onclick="startGateFlowAnimation()">▶ 播放门禁流程演示</button>
+
+<div class="gate-flow-animation" id="gateFlowAnimation">
+  <div class="gate-flow-step" id="gate-step-1">
+    <div class="time">0 秒</div>
+    <div class="badge" style="background: var(--accent); color: var(--bg);">1</div>
+    <div class="content">
+      <div class="stage">L1 格式门禁</div>
+      <div class="desc">ktlint · dart format · yamllint 运行中...</div>
+    </div>
+  </div>
+
+  <div class="gate-flow-connector">⏱️ ~10 秒</div>
+
+  <div class="gate-flow-step" id="gate-step-2">
+    <div class="time">10 秒</div>
+    <div class="badge" style="background: var(--pm);">2</div>
+    <div class="content">
+      <div class="stage">L2 确定性门禁</div>
+      <div class="desc">Contract schema · reason_code 检查 · 设计覆盖验证...</div>
+    </div>
+  </div>
+
+  <div class="gate-flow-connector">⏱️ ~2-3 分钟</div>
+
+  <div class="gate-flow-step" id="gate-step-3">
+    <div class="time">2 分钟</div>
+    <div class="badge" style="background: var(--eng);">3</div>
+    <div class="content">
+      <div class="stage">L3 行为门禁</div>
+      <div class="desc">单元测试 · 集成测试 · 验收测试运行中...</div>
+    </div>
+  </div>
+
+  <div class="gate-flow-connector">⏱️ ~5-10 分钟</div>
+
+  <div class="gate-flow-step" id="gate-step-4">
+    <div class="time">5-10 分钟</div>
+    <div class="badge" style="background: var(--founder);">4</div>
+    <div class="content">
+      <div class="stage">L4 语义门禁 + 哨兵（🛡️）</div>
+      <div class="desc">AI 代码审查、安全扫描、架构守护、复杂度分析（并行运行）</div>
+    </div>
+  </div>
+
+  <div class="gate-flow-connector">↓</div>
+
+  <div class="gate-flow-step" id="gate-step-5">
+    <div class="time">10+ 分钟</div>
+    <div class="badge" style="background: #55EFC4; color: var(--bg);">5</div>
+    <div class="content">
+      <div class="stage">人工审阅（按顺序）</div>
+      <div class="desc">① 代码所有者（CODEOWNERS）review · ② QA 批准（qa-verdict）</div>
+    </div>
+  </div>
+
+  <div class="gate-flow-connector">↓</div>
+
+  <div class="gate-flow-step" id="gate-step-6">
+    <div class="time">10+ 分钟</div>
+    <div class="badge" style="background: var(--pm);">6</div>
+    <div class="content">
+      <div class="stage">PM 批准</div>
+      <div class="desc">PM 检查能力实现与 Cap-Spec 一致（pm-acceptance ✓）</div>
+    </div>
+  </div>
+
+  <div class="gate-flow-connector">↓</div>
+
+  <div class="gate-flow-step" id="gate-step-7">
+    <div class="time">可选</div>
+    <div class="badge" style="background: var(--founder); color: #fff;">7</div>
+    <div class="content">
+      <div class="stage">创始人审批（如果标记 founder_required）</div>
+      <div class="desc">🤖 技术合伙人智能体协助分析 · 创始人做最终决策</div>
+    </div>
+  </div>
+
+  <div class="gate-flow-connector">✨</div>
+
+  <div class="gate-flow-step" id="gate-step-8">
+    <div class="time">完成</div>
+    <div class="badge" style="background: var(--secondary); color: var(--bg);">✓</div>
+    <div class="content">
+      <div class="stage">合并 & 部署</div>
+      <div class="desc">所有审批通过，PR 自动合并到 main 分支，CI/CD 自动部署</div>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="summary">📌 核心要点</h2>
+
+<ul>
+  <li><strong>四层递进</strong>：L1（快速）→ L2（规则）→ L3（实现）→ L4（智能），从廉价到昂贵，从机械到智能</li>
+  <li><strong>哨兵驱动</strong>：🛡️ Sentinel 在 L4 层自动运行，为所有 PR 提供 AI 审计反馈</li>
+  <li><strong>治理决策</strong>：🤖 技术合伙人智能体不在 CI 中，而是在创始人审批时作为决策助手</li>
+  <li><strong>Required Checks</strong>：qa-verdict · pm-acceptance 是强制检查点，任何 PR 都不能绕过</li>
+  <li><strong>人机协作</strong>：自动化做好 L1~L4，人类做好人工审阅和最终决策</li>
+</ul>
+
+</div>
+
+<!-- Gate Modal -->
+<div class="gate-modal" id="gateModal">
+  <div class="gate-modal-content">
+    <button class="close" onclick="closeGateModal()">✕</button>
+    <div id="gateModalContent"></div>
+  </div>
+</div>
+
+<footer style="max-width:900px;margin:60px auto 0;padding:40px 24px 20px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:0.82em;">
+  Internal Guide · 2026-04-13
+</footer>
+
+<script>
+function startGateFlowAnimation() {
+  const steps = document.querySelectorAll('.gate-flow-step');
+  steps.forEach(step => step.classList.remove('active'));
+
+  const timings = [0, 1000, 3500, 8000, 10500, 13000, 15500, 18000];
+  let currentIndex = 0;
+
+  const animate = () => {
+    if (currentIndex < steps.length) {
+      steps[currentIndex].classList.add('active');
+      currentIndex++;
+      setTimeout(animate, timings[currentIndex] - (currentIndex > 0 ? timings[currentIndex - 1] : 0));
+    } else {
+      setTimeout(() => {
+        steps.forEach(step => step.classList.remove('active'));
+      }, 2000);
+    }
+  };
+
+  animate();
+}
+
+function closeGateModal() {
+  document.getElementById('gateModal').classList.remove('open');
+}
+
+document.getElementById('gateModal')?.addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeGateModal();
+  }
+});
+</script>
+
+</body>
+</html>

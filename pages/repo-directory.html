@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>六仓库架构详解 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+/* Interactive SVG Diagram */
+.svg-container {
+  display: flex; justify-content: center; align-items: center;
+  margin: 32px 0; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; overflow: auto; min-height: 400px;
+}
+
+svg { max-width: 100%; height: auto; }
+
+.repo-node { cursor: pointer; transition: all 0.3s; }
+.repo-node rect { fill: var(--bg-card); stroke: var(--primary); stroke-width: 2; }
+.repo-node:hover rect { fill: var(--primary); stroke: var(--primary-light); stroke-width: 3; }
+.repo-node:hover text { fill: #fff; font-weight: 700; }
+.repo-node text { fill: var(--text); font-size: 14px; font-weight: 600; pointer-events: none; }
+
+.dependency-arrow { stroke: var(--primary); stroke-width: 2; fill: none; marker-end: url(#arrowhead); opacity: 0.6; }
+.dependency-arrow.active { stroke: var(--accent); stroke-width: 3; opacity: 1; }
+
+#arrowhead { fill: var(--primary); }
+
+/* Detail Cards */
+.repo-details-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; }
+.repo-details-modal.open { display: flex; }
+.repo-details-card { background: var(--bg-card); border: 2px solid var(--primary); border-radius: 12px; padding: 32px; max-width: 600px; width: 90vw; max-height: 70vh; overflow-y: auto; position: relative; }
+.repo-details-card .close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.6em; cursor: pointer; transition: color 0.2s; }
+.repo-details-card .close:hover { color: var(--text); }
+.repo-details-card h2 { margin: 0 0 16px; color: var(--primary-light); }
+.repo-details-card .detail-row { margin: 12px 0; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.repo-details-card .detail-row:last-child { border-bottom: none; }
+.repo-details-card .label { color: var(--text-muted); font-size: 0.85em; }
+.repo-details-card .value { color: var(--text); margin-top: 4px; font-weight: 500; }
+
+/* Code Owner Tree */
+.codeowner-tree { margin: 24px 0; }
+.tree-item { margin: 8px 0; padding: 8px 12px; background: var(--bg); border-left: 3px solid var(--border); border-radius: 4px; cursor: pointer; transition: all 0.2s; font-family: 'Monaco', 'Courier New', monospace; font-size: 0.85em; }
+.tree-item:hover { background: var(--bg-card); border-left-color: var(--primary); }
+.tree-item .path { color: var(--text-muted); }
+.tree-item .owner { color: var(--primary-light); font-weight: 600; margin-left: 8px; }
+.tree-item.founder .owner { color: var(--founder); }
+.tree-item.pm .owner { color: var(--pm); }
+.tree-item.eng .owner { color: var(--eng); }
+.tree-item.qa .owner { color: var(--qa); }
+.tree-item.design .owner { color: var(--design); }
+
+/* Flow Animation */
+.flow-animation { position: relative; margin: 32px 0; }
+.flow-step { display: flex; align-items: center; gap: 16px; margin: 20px 0; padding: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; opacity: 0.6; transition: all 0.3s; }
+.flow-step.active { opacity: 1; background: var(--bg-card); border-color: var(--accent); box-shadow: 0 0 12px rgba(253,203,110,0.3); }
+.flow-step .number { min-width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.flow-step.active .number { background: var(--accent); color: var(--bg); }
+.flow-step .content { flex: 1; }
+.flow-step .label { font-size: 0.85em; color: var(--text-muted); }
+.flow-step .desc { font-weight: 600; color: var(--text); margin-top: 4px; }
+.flow-arrow { text-align: center; color: var(--primary); font-size: 1.4em; margin: 8px 0; }
+
+.play-btn { display: inline-block; padding: 8px 20px; background: var(--accent); color: var(--bg); border: none; border-radius: 20px; font-weight: 600; cursor: pointer; margin: 16px 0; transition: all 0.3s; }
+.play-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(253,203,110,0.4); }
+.play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Table styling */
+.table-wrapper { overflow-x: auto; margin: 16px 0; }
+.table-wrapper table {
+  width: 100%; border-collapse: collapse; font-size: 0.9em;
+}
+.table-wrapper th {
+  background: var(--bg-card); color: var(--primary-light); padding: 12px;
+  border-bottom: 2px solid var(--primary); text-align: left; font-weight: 600;
+}
+.table-wrapper td {
+  padding: 12px; border-bottom: 1px solid var(--border); color: var(--text);
+}
+.table-wrapper tr:hover { background: var(--bg-card); }
+
+/* Repo colors */
+.repo-contracts { --repo-color: #6C5CE7; }
+.repo-platform { --repo-color: #00B894; }
+.repo-factory { --repo-color: #FDCB6E; }
+.repo-console { --repo-color: #A29BFE; }
+.repo-design { --repo-color: #DFE6E9; }
+.repo-app { --repo-color: #74B9FF; }
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .svg-container { min-height: 300px; padding: 16px; }
+  .repo-details-card { padding: 20px; }
+  .flow-step { flex-direction: column; gap: 12px; }
+  .flow-step .number { flex-shrink: 0; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+  </div>
+</nav>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。
+</div>
+
+<div class="page-header">
+  <h1>🏗️ <span>六仓库架构详解</span></h1>
+  <div class="meta">唤龙平台系统架构总览</div>
+  <div class="badge">全组织 · 治理 + 工程 + 产品</div>
+</div>
+
+<div class="content">
+
+<blockquote>
+<p><strong>本指南覆盖</strong>：六个核心仓库的架构关系、职责划分、CODEOWNERS 规则、依赖流动
+<br><strong>适用读者</strong>：架构师 · 工程师 · PM · 设计师 · 运维
+<br><strong>治理来源</strong>：REPOSITORY-ARCHITECTURE-SPEC v1.0 · CODEOWNER-RULES v2.0</p>
+</blockquote>
+
+<hr />
+
+<h2 id="section1">📍 Section 1: 交互式仓库地图</h2>
+
+<p>以下是唤龙平台的六个核心仓库及其依赖关系。<strong>点击任何仓库节点可查看详细信息</strong>。</p>
+
+<div class="svg-container">
+  <svg viewBox="0 0 1000 500" width="100%" height="500">
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+        <polygon points="0 0, 10 3, 0 6" fill="#6C5CE7"/>
+      </marker>
+    </defs>
+
+    <!-- Layer Labels -->
+    <text x="80" y="30" font-size="14" fill="#9999B0" font-weight="600">治理层</text>
+    <text x="380" y="30" font-size="14" fill="#9999B0" font-weight="600">后端层</text>
+    <text x="680" y="30" font-size="14" fill="#9999B0" font-weight="600">前端+设计层</text>
+
+    <!-- hl-contracts (治理层) -->
+    <g class="repo-node" data-repo="hl-contracts">
+      <rect x="20" y="60" width="140" height="80" rx="8"/>
+      <text x="90" y="110" text-anchor="middle" dominant-baseline="middle">hl-contracts</text>
+      <text x="90" y="130" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#A29BFE" font-weight="400">治理核心</text>
+    </g>
+
+    <!-- hl-platform (后端) -->
+    <g class="repo-node" data-repo="hl-platform">
+      <rect x="320" y="60" width="140" height="80" rx="8"/>
+      <text x="390" y="110" text-anchor="middle" dominant-baseline="middle">hl-platform</text>
+      <text x="390" y="130" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#00B894" font-weight="400">后端业务</text>
+    </g>
+
+    <!-- hl-design-system (设计系统) -->
+    <g class="repo-node" data-repo="hl-design-system">
+      <rect x="620" y="60" width="140" height="80" rx="8"/>
+      <text x="690" y="110" text-anchor="middle" dominant-baseline="middle">hl-design-system</text>
+      <text x="690" y="130" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#DFE6E9" font-weight="400">设计系统</text>
+    </g>
+
+    <!-- hl-app (前端) -->
+    <g class="repo-node" data-repo="hl-app">
+      <rect x="620" y="260" width="140" height="80" rx="8"/>
+      <text x="690" y="310" text-anchor="middle" dominant-baseline="middle">hl-app</text>
+      <text x="690" y="330" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#74B9FF" font-weight="400">租户端应用</text>
+    </g>
+
+    <!-- hl-factory (CI 门禁) -->
+    <g class="repo-node" data-repo="hl-factory">
+      <rect x="20" y="260" width="140" height="80" rx="8"/>
+      <text x="90" y="310" text-anchor="middle" dominant-baseline="middle">hl-factory</text>
+      <text x="90" y="330" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#FDCB6E" font-weight="400">CI 门禁</text>
+    </g>
+
+    <!-- hl-console-native (macOS) -->
+    <g class="repo-node" data-repo="hl-console-native">
+      <rect x="20" y="380" width="160" height="80" rx="8"/>
+      <text x="100" y="430" text-anchor="middle" dominant-baseline="middle">hl-console-native</text>
+      <text x="100" y="450" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="#A29BFE" font-weight="400">macOS 控制台</text>
+    </g>
+
+    <!-- Dependencies -->
+    <line class="dependency-arrow" x1="160" y1="100" x2="320" y2="100"/>
+    <line class="dependency-arrow" x1="460" y1="100" x2="620" y2="100"/>
+    <line class="dependency-arrow" x1="690" y1="140" x2="690" y2="260"/>
+    <line class="dependency-arrow" x1="160" y1="180" x2="100" y2="260"/>
+
+  </svg>
+</div>
+
+<h2 id="section2">📋 Section 2: 仓库详情与技术栈</h2>
+
+<div class="table-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>仓库</th>
+        <th>技术栈</th>
+        <th>核心职责</th>
+        <th>所有者</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="repo-contracts">
+        <td><strong>hl-contracts</strong></td>
+        <td>YAML · Markdown</td>
+        <td>契约定义、Cap-Spec、业务码、API 规范</td>
+        <td><span style="color: var(--founder);">创始人</span> · <span style="color: var(--pm);">PM</span></td>
+      </tr>
+      <tr class="repo-platform">
+        <td><strong>hl-platform</strong></td>
+        <td>Kotlin · Spring Boot · PostgreSQL</td>
+        <td>后端业务实现、API 网关、核心引擎、数据模型</td>
+        <td><span style="color: var(--eng);">工程师</span> (8人) · <span style="color: var(--founder);">创始人</span></td>
+      </tr>
+      <tr class="repo-factory">
+        <td><strong>hl-factory</strong></td>
+        <td>YAML · Shell · GitHub Actions</td>
+        <td>CI/CD 门禁规格、质量检查规则、部署流程</td>
+        <td><span style="color: var(--founder);">创始人</span></td>
+      </tr>
+      <tr class="repo-console">
+        <td><strong>hl-console-native</strong></td>
+        <td>Swift · AppKit</td>
+        <td>macOS 平台控制台、内部监控、快捷操作</td>
+        <td><span style="color: var(--founder);">创始人</span></td>
+      </tr>
+      <tr class="repo-design">
+        <td><strong>hl-design-system</strong></td>
+        <td>Dart · Flutter · Design Token</td>
+        <td>设计令牌定义、基础组件库、主题管理、设计文档</td>
+        <td><span style="color: var(--design);">设计师</span> · <span style="color: var(--eng);">前端负责人</span></td>
+      </tr>
+      <tr class="repo-app">
+        <td><strong>hl-app</strong></td>
+        <td>Dart · Flutter · Riverpod</td>
+        <td>租户端多端应用（iOS · Android · Web · macOS）</td>
+        <td><span style="color: var(--eng);">前端工程师</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 id="section3">👥 Section 3: CODEOWNERS 可视化</h2>
+
+<p>点击下方路径查看该模块的代码所有者。悬停可高亮对应的所有者角色。</p>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin: 24px 0;">
+
+  <!-- hl-contracts CODEOWNERS -->
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+    <h3 style="color: var(--primary-light); margin: 0 0 16px;">hl-contracts</h3>
+    <div class="codeowner-tree">
+      <div class="tree-item founder">
+        <span class="path">/prd/core/</span>
+        <span class="owner">@tongzhenghui (创始人)</span>
+      </div>
+      <div class="tree-item pm">
+        <span class="path">/prd/cap-specs/</span>
+        <span class="owner">@hl-pm-team (PM)</span>
+      </div>
+      <div class="tree-item founder">
+        <span class="path">/reasoncodes/</span>
+        <span class="owner">@tongzhenghui (创始人)</span>
+      </div>
+      <div class="tree-item eng">
+        <span class="path">/api-spec/</span>
+        <span class="owner">@hl-engineering (工程师)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- hl-platform CODEOWNERS -->
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+    <h3 style="color: var(--primary-light); margin: 0 0 16px;">hl-platform</h3>
+    <div class="codeowner-tree">
+      <div class="tree-item eng">
+        <span class="path">/src/main/</span>
+        <span class="owner">@hl-engineering</span>
+      </div>
+      <div class="tree-item eng">
+        <span class="path">/src/test/</span>
+        <span class="owner">@hl-engineering</span>
+      </div>
+      <div class="tree-item qa">
+        <span class="path">/tests/acceptance/</span>
+        <span class="owner">@hl-qa-team (QA)</span>
+      </div>
+      <div class="tree-item founder">
+        <span class="path">/docs/architecture/</span>
+        <span class="owner">@tongzhenghui (创始人)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- hl-app CODEOWNERS -->
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+    <h3 style="color: var(--primary-light); margin: 0 0 16px;">hl-app</h3>
+    <div class="codeowner-tree">
+      <div class="tree-item eng">
+        <span class="path">/lib/screens/</span>
+        <span class="owner">@hl-frontend-engineers</span>
+      </div>
+      <div class="tree-item design">
+        <span class="path">/docs/design-packets/</span>
+        <span class="owner">@hl-design-lead (设计师)</span>
+      </div>
+      <div class="tree-item eng">
+        <span class="path">/lib/widgets/</span>
+        <span class="owner">@hl-frontend-engineers</span>
+      </div>
+      <div class="tree-item qa">
+        <span class="path">/test/</span>
+        <span class="owner">@hl-qa-team (QA)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- hl-design-system CODEOWNERS -->
+  <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
+    <h3 style="color: var(--primary-light); margin: 0 0 16px;">hl-design-system</h3>
+    <div class="codeowner-tree">
+      <div class="tree-item design">
+        <span class="path">/tokens/</span>
+        <span class="owner">@hl-design-lead</span>
+      </div>
+      <div class="tree-item eng">
+        <span class="path">/lib/components/</span>
+        <span class="owner">@hl-frontend-engineers</span>
+      </div>
+      <div class="tree-item design">
+        <span class="path">/docs/guidelines/</span>
+        <span class="owner">@hl-design-lead</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<h2 id="section4">🔄 Section 4: 依赖流动动画</h2>
+
+<p>以下展示一个能力的端到端流动：从契约定义到最终交付。点击 <strong>播放</strong> 按钮开始动画。</p>
+
+<button class="play-btn" onclick="startFlowAnimation()">▶ 播放流动演示</button>
+
+<div class="flow-animation" id="flowAnimation">
+  <div class="flow-step" id="step-1">
+    <div class="number">1</div>
+    <div class="content">
+      <div class="label">hl-contracts</div>
+      <div class="desc">PM 创建 Cap-Spec（能力规格书）</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="flow-step" id="step-2">
+    <div class="number">2</div>
+    <div class="content">
+      <div class="label">hl-platform</div>
+      <div class="desc">工程师实现后端业务逻辑</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="flow-step" id="step-3">
+    <div class="number">3</div>
+    <div class="content">
+      <div class="label">hl-design-system + hl-app</div>
+      <div class="desc">前端工程师结合设计系统实现租户端应用</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="flow-step" id="step-4">
+    <div class="number">4</div>
+    <div class="content">
+      <div class="label">hl-factory</div>
+      <div class="desc">所有 PR 通过 CI 门禁检查</div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">↓</div>
+
+  <div class="flow-step" id="step-5">
+    <div class="number">5</div>
+    <div class="content">
+      <div class="label">合并 & 部署</div>
+      <div class="desc">通过审批，能力上线</div>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<h2 id="summary">📌 核心要点</h2>
+
+<ul>
+  <li><strong>治理层隔离</strong>：hl-contracts 作为单一信源（SSOT），所有其他仓库都在其约束内工作</li>
+  <li><strong>分层所有权</strong>：每一层有明确的 CODEOWNERS，权力不交叉</li>
+  <li><strong>CI/CD 一体化</strong>：hl-factory 定义了所有仓库的质量标准（四层门禁）</li>
+  <li><strong>设计系统驱动</strong>：hl-design-system 保证视觉一致性，hl-app 消费其组件</li>
+  <li><strong>依赖单向流动</strong>：后流依赖前流，禁止反向依赖</li>
+</ul>
+
+</div>
+
+<!-- 仓库详情模态框 -->
+<div class="repo-details-modal" id="repoModal">
+  <div class="repo-details-card">
+    <button class="close" onclick="closeRepoModal()">✕</button>
+    <div id="repoModalContent"></div>
+  </div>
+</div>
+
+<footer style="max-width:900px;margin:60px auto 0;padding:40px 24px 20px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:0.82em;">
+  Internal Guide · 2026-04-13
+</footer>
+
+<script>
+const repoData = {
+  'hl-contracts': {
+    title: 'hl-contracts — 治理核心',
+    stack: 'YAML · Markdown · JSON Schema',
+    owner: '创始人 (@tongzhenghui) · PM (@hl-pm-team)',
+    purpose: '存放全组织治理规范、API 契约、业务码定义、Cap-Spec 模板',
+    keyDirs: [
+      { path: '/prd/core/', desc: '核心治理规范、四权分离、门禁规则' },
+      { path: '/prd/cap-specs/', desc: 'PM 能力包规格书模板与实例' },
+      { path: '/reasoncodes/', desc: '业务码总表（系统认可的 reason_code）' },
+      { path: '/api-spec/', desc: 'OpenAPI/gRPC 契约定义' }
+    ],
+    relations: '所有其他仓库都依赖此仓库的规范。变更治理规则需创始人+PM 联签。'
+  },
+  'hl-platform': {
+    title: 'hl-platform — 后端业务',
+    stack: 'Kotlin 100% · Spring Boot · PostgreSQL · Redis',
+    owner: '工程师 8人（含 2名 PHP 转 Kotlin）· 创始人',
+    purpose: '实现核心业务逻辑、API 网关、数据模型、内核引擎',
+    keyDirs: [
+      { path: '/src/main/', desc: '业务实现、service · controller · repository' },
+      { path: '/src/test/', desc: '单元测试、集成测试' },
+      { path: '/tests/acceptance/', desc: 'QA 验收用例（可执行的业务规则）' },
+      { path: '/docs/architecture/', desc: '架构决策记录（ADR）' }
+    ],
+    relations: '消费 hl-contracts 的 API 规范。为 hl-app 提供后端 API。由 hl-factory 进行 CI/CD 检查。'
+  },
+  'hl-app': {
+    title: 'hl-app — 租户端应用',
+    stack: 'Dart · Flutter · Riverpod · BLoC 模式',
+    owner: '前端工程师 (@hl-frontend-engineers)',
+    purpose: '多端应用（iOS · Android · Web · macOS），消费 hl-platform API、hl-design-system 组件',
+    keyDirs: [
+      { path: '/lib/screens/', desc: '页面级UI组件与路由' },
+      { path: '/lib/widgets/', desc: '业务特定的小组件' },
+      { path: '/lib/models/', desc: '数据模型与状态管理（Riverpod）' },
+      { path: '/docs/design-packets/', desc: 'Design Packet（设计师产出的机读规范）' },
+      { path: '/test/', desc: '单元测试、widget 测试、集成测试' }
+    ],
+    relations: '依赖 hl-platform (API) 和 hl-design-system (components)。由 hl-factory 检查，由 QA 验收。'
+  },
+  'hl-design-system': {
+    title: 'hl-design-system — 设计系统',
+    stack: 'Dart · Flutter · Design Token YAML',
+    owner: '设计师 (@hl-design-lead) · 前端负责人',
+    purpose: '定义设计令牌、基础组件库、主题管理、设计规范文档',
+    keyDirs: [
+      { path: '/tokens/', desc: '设计令牌定义（颜色、字体、间距、圆角等）' },
+      { path: '/lib/components/', desc: '基础组件库（Button · Card · Form 等）' },
+      { path: '/docs/guidelines/', desc: '设计规范、组件使用指南、无障碍规范' }
+    ],
+    relations: 'hl-app 的视觉基础。与 hl-contracts 中的设计规范同步。'
+  },
+  'hl-factory': {
+    title: 'hl-factory — CI/CD 门禁',
+    stack: 'GitHub Actions · YAML · Bash · Python',
+    owner: '创始人 (@tongzhenghui)',
+    purpose: '定义 CI/CD 流程、门禁规则、自动化检查脚本、部署配置',
+    keyDirs: [
+      { path: '/.github/workflows/', desc: 'GitHub Actions 工作流定义' },
+      { path: '/gates/', desc: '四层门禁规则（L1~L4）' },
+      { path: '/scripts/', desc: '自动化检查脚本' },
+      { path: '/deploy/', desc: '部署配置与蓝绿发布策略' }
+    ],
+    relations: '所有仓库的 PR 都需通过 hl-factory 定义的门禁。决定了什么样的代码可以合并上线。'
+  },
+  'hl-console-native': {
+    title: 'hl-console-native — macOS 控制台',
+    stack: 'Swift · AppKit · Cocoa · async/await',
+    owner: '创始人 (@tongzhenghui)',
+    purpose: '创始人专用内部工具：系统监控、快捷操作、数据审阅、紧急处置',
+    keyDirs: [
+      { path: '/Sources/Views/', desc: 'UI 组件与窗口管理' },
+      { path: '/Sources/Models/', desc: '数据模型与业务逻辑' },
+      { path: '/Sources/Services/', desc: '与 hl-platform API 交互的服务' }
+    ],
+    relations: '内部工具，独立部署。可在创始人审批流程中辅助决策（与技术合伙人智能体协作）。'
+  }
+};
+
+document.querySelectorAll('.repo-node').forEach(node => {
+  node.addEventListener('click', function() {
+    const repoName = this.getAttribute('data-repo');
+    showRepoModal(repoName);
+  });
+});
+
+function showRepoModal(repoName) {
+  const data = repoData[repoName];
+  const modal = document.getElementById('repoModal');
+  const content = document.getElementById('repoModalContent');
+
+  let html = `
+    <h2>${data.title}</h2>
+    <div class="detail-row">
+      <div class="label">技术栈</div>
+      <div class="value">${data.stack}</div>
+    </div>
+    <div class="detail-row">
+      <div class="label">所有者</div>
+      <div class="value">${data.owner}</div>
+    </div>
+    <div class="detail-row">
+      <div class="label">核心职责</div>
+      <div class="value">${data.purpose}</div>
+    </div>
+    <div class="detail-row">
+      <div class="label">关键目录</div>
+      <div class="value" style="margin-top: 8px;">
+        <ul style="margin: 0; padding-left: 20px;">
+  `;
+
+  data.keyDirs.forEach(dir => {
+    html += `<li><strong>${dir.path}</strong> — ${dir.desc}</li>`;
+  });
+
+  html += `
+        </ul>
+      </div>
+    </div>
+    <div class="detail-row">
+      <div class="label">关联关系</div>
+      <div class="value">${data.relations}</div>
+    </div>
+  `;
+
+  content.innerHTML = html;
+  modal.classList.add('open');
+}
+
+function closeRepoModal() {
+  document.getElementById('repoModal').classList.remove('open');
+}
+
+document.getElementById('repoModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeRepoModal();
+  }
+});
+
+function startFlowAnimation() {
+  const steps = document.querySelectorAll('.flow-step');
+  steps.forEach(step => step.classList.remove('active'));
+
+  let currentStep = 0;
+  const interval = setInterval(() => {
+    if (currentStep < steps.length) {
+      steps[currentStep].classList.add('active');
+      currentStep++;
+    } else {
+      clearInterval(interval);
+      setTimeout(() => {
+        steps.forEach(step => step.classList.remove('active'));
+      }, 1500);
+    }
+  }, 600);
+}
+</script>
+
+</body>
+</html>

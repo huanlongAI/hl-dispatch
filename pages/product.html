@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品团队指南 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+.toc-toggle { position:fixed; right:20px; bottom:20px; width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer; font-size:1.3em; z-index:200; box-shadow:0 4px 16px rgba(108,92,231,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.3s; }
+.toc-toggle:hover { transform:scale(1.1); }
+.toc-sidebar { position:fixed; right:0; top:0; bottom:0; width:320px; max-width:85vw; background:var(--bg-card); border-left:1px solid var(--border); z-index:199; transform:translateX(100%); transition:transform 0.3s; overflow-y:auto; padding:60px 20px 40px; }
+.toc-sidebar.open { transform:translateX(0); }
+.toc-sidebar h3 { font-size:0.95em; color:var(--primary-light); margin-bottom:16px; }
+.toc-sidebar .toc-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:1.4em; cursor:pointer; }
+.toc-sidebar a { display:block; padding:5px 0; color:var(--text-muted); text-decoration:none; font-size:0.85em; border-left:2px solid transparent; transition:all 0.2s; }
+.toc-sidebar a:hover { color:var(--text); border-left-color:var(--primary); padding-left:8px; }
+.toc-sidebar a.h2 { font-weight:600; color:var(--text); margin-top:8px; }
+.toc-sidebar a.h3 { padding-left:16px; font-size:0.82em; }
+.toc-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:198; display:none; }
+.toc-overlay.open { display:block; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+  </div>
+</nav>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。
+</div>
+
+<div class="page-header">
+  <h1>📘 <span>产品团队指南</span></h1>
+  <div class="meta">唤龙平台 AI 驱动协作模型</div>
+  <div class="badge">PM + UI 设计师</div>
+</div>
+
+<div class="content">
+<blockquote>
+<p><strong>适用角色</strong>：PM（3 人）+ UI 设计师（2 人）
+<strong>关联文档</strong>：<a href="global.html">全局工作流</a> · <a href="frontend-design.html">前端与设计指南</a>
+<strong>治理来源</strong>：TEAM-COLLABORATION-SPEC v2.1 §2.2 / §2.5 / §5.2 · UI-DELIVERY-SPEC v1.0</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、你在新模型中的角色定位</h2>
+<h3 id="pm-owner">PM — 能力包语义 Owner</h3>
+<p>你是能力包业务语义的 SSOT（Single Source of Truth）。简单说：<strong>你定义"做什么"，不定义"怎么做"</strong>。</p>
+<p>你拥有的权力：</p>
+<ul>
+<li>能力包业务语义的最终解释权（在创始人的契约包络内）</li>
+<li>验收场景定义权</li>
+<li>产品验收权（pm-acceptance，是 GitHub Required Status Check，不是口头确认）</li>
+<li>HPRD 审批权（审的是"工程师有没有理解对"，不是审技术方案）</li>
+</ul>
+<p>你不再做的事：</p>
+<ul>
+<li>不审 design.md（技术方案太深，不如不审）</li>
+<li>不审代码（交工程师互审 + AI 审计 + CI 门禁）</li>
+<li>不催工程师"你理解了吗"（HPRD 机制替代了口头确认）</li>
+<li>不管 AI 编码细节（交工程师）</li>
+</ul>
+<h3 id="ui-owner">UI 设计师 — 视觉/交互规范 Owner</h3>
+<p>你归属 PM 能力环，定义"长什么样"。在新模型中你的产出升级为仓库内的机读文件（Design Packet），不再是"群里发个链接"。</p>
+<p>你同时参与两条线：</p>
+<ul>
+<li><strong>能力包线</strong>：为每个能力包产出 Design Packet</li>
+<li><strong>Foundation 线</strong>：参与设计系统的 Token 定义、组件规范</li>
+</ul>
+<hr />
+<h2 id="_2">二、你的核心产出</h2>
+<h3 id="21-pm-cap-spec">2.1 PM 的三份 Cap-Spec</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>产物</th>
+<th>你做什么</th>
+<th>放在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cap-Spec-1</strong>（能力包规格书）</td>
+<td>定义目标、非目标、业务规则意图、能力边界</td>
+<td><code>hl-contracts/prd/core/{能力包}/</code></td>
+</tr>
+<tr>
+<td><strong>Cap-Spec-2</strong>（验收场景集）</td>
+<td>Case-ID + 输入 / 预期 / 验收方式（你是 owner，QA 是 collaborator）</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><strong>Cap-Spec-3</strong>（业务码提案）</td>
+<td>新增/变更 reason_code 的建议。⚠️ 如涉及 reason_code 变更，<strong>必须创始人先批</strong></td>
+<td><code>hl-contracts/reasoncodes/</code>（合入后）</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>关键规则</strong>：你的 Cap-Spec 必须在创始人定义的契约框架内。如果需要变更契约（新增 reason_code、修改 API 规范），先走创始人审批的治理前置门。</p>
+<h3 id="22-design-packet">2.2 设计师的 Design Packet</h3>
+<p>Design Packet 是前端的真输入，取代了"群里说设计好了"。它是一份 YAML 文件，存在仓库里，有版本、可追溯。</p>
+<p>存放位置：<code>hl-app/docs/design-packets/{能力包}/design-packet.yaml</code></p>
+<p>必填字段（12 个）：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>capability_id</td>
+<td>对应哪个能力包</td>
+</tr>
+<tr>
+<td>figma_refs</td>
+<td>设计来源 URL 列表</td>
+</tr>
+<tr>
+<td>screen_ids</td>
+<td>屏幕/页面集合</td>
+</tr>
+<tr>
+<td>state_matrix</td>
+<td>每个页面要覆盖的状态</td>
+</tr>
+<tr>
+<td>token_version</td>
+<td>绑定哪一版 token</td>
+</tr>
+<tr>
+<td>component_refs</td>
+<td>引用哪些基础组件</td>
+</tr>
+<tr>
+<td>breakpoints</td>
+<td>响应式/尺寸规则</td>
+</tr>
+<tr>
+<td>a11y_notes</td>
+<td>无障碍约束</td>
+</tr>
+<tr>
+<td>api_contract_ref</td>
+<td>依赖的 API/mock 版本</td>
+</tr>
+<tr>
+<td>foundation_version_ref</td>
+<td>依赖哪一版设计系统</td>
+</tr>
+<tr>
+<td>foundation_change_required</td>
+<td>是否需要先改设计系统</td>
+</tr>
+<tr>
+<td>frozen_at + owner</td>
+<td>冻结时间 + 责任人</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>版本钉死</strong>：Design Packet 一旦冻结，前端就按这个版本实现。如果设计要改，必须解冻 → 修改 → 重新冻结，不能一边改一边让前端追。</p>
+<hr />
+<h2 id="_3">三、你的工作流程（能力包流五步中的角色）</h2>
+<h3 id="step-1cap-spec-freeze">Step 1：Cap-Spec Freeze — 你是主角</h3>
+<div class="codehilite"><pre><span></span><code>PM 编写 Cap-Spec-1（规格书）+ Cap-Spec-2（验收场景集）
+    ↓
+UI 设计师 补充视觉/交互设计
+    ↓
+判断：Cap-Spec-3 是否涉及 reason_code 变更？
+  ├── 是 → 创始人先批准（治理前置门）→ 批准后你才能宣布 freeze
+  └── 否 → 你直接宣布 Cap-Spec freeze
+</code></pre></div>
+
+<p><strong>要点</strong>：</p>
+<ul>
+<li>Cap-Spec freeze 前确保 UI 设计师已完成视觉/交互设计</li>
+<li>不要 freeze 后再改需求——改了就要解冻，工程师的 HPRD 和 design.md 全部作废</li>
+</ul>
+<h3 id="step-2hprd">Step 2：HPRD 审批 — 你审"理解对不对"</h3>
+<p>工程师读完你的 Cap-Spec 后，会产出一份 HPRD（理解确认件）。你的审批内容只有一个：</p>
+<p><strong>"工程师的业务语义理解是否忠于你的 Cap-Spec？"</strong></p>
+<p>你不审：</p>
+<ul>
+<li>技术方案（那是 design.md，工程师互审）</li>
+<li>代码实现细节</li>
+<li>数据库设计、接口内部结构</li>
+</ul>
+<p>HPRD 的最小模板（工程师填写，你审批）：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>你审什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User-visible Changes</td>
+<td>用户会看到什么变化——和你的 Cap-Spec 一致吗？</td>
+</tr>
+<tr>
+<td>Unchanged Behavior</td>
+<td>不变的行为——工程师有没有漏掉不该改的？</td>
+</tr>
+<tr>
+<td>Out of Scope</td>
+<td>明确不做什么——和你的非目标一致吗？</td>
+</tr>
+<tr>
+<td>Acceptance Walkthrough</td>
+<td>验收步骤——对应你的 Case-ID 吗？</td>
+</tr>
+</tbody>
+</table></div>
+<p>审批通过 → pm-hprd-pass（流程内检查，非组织级 Ruleset）Required Status Check = PASS → 工程师可以开始实现</p>
+<p><strong>流程规则：pm-hprd-pass 未通过前，工程师不得开始 Step 3 实现。</strong></p>
+<h3 id="step-5pm">Step 5：PM 产品验收 — 你是终审</h3>
+<p>工程师完成实现后，你在可交互演示版本上执行产品验收：</p>
+<ul>
+<li>对照 Cap-Spec-2 的验收场景逐一走一遍</li>
+<li>确认用户可见行为符合预期</li>
+<li>UI 设计师协同参与视觉/交互维度验收</li>
+</ul>
+<p>验收通过 → 你在 PR 上 approve → pm-acceptance Required Status Check = PASS → 进入 merge queue</p>
+<hr />
+<h2 id="_4">四、你和其他团队的协作边界</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>你和谁</th>
+<th>你做什么</th>
+<th>对方做什么</th>
+<th>边界在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>工程师</strong></td>
+<td>提供 Cap-Spec，审批 HPRD，产品验收</td>
+<td>HPRD + design.md + 代码</td>
+<td>你不审技术方案，对方不定义业务需求</td>
+</tr>
+<tr>
+<td><strong>QA</strong></td>
+<td>提供 Cap-Spec-2（验收场景集），QA 是 collaborator</td>
+<td>QA 编写 acceptance-manifest 和验收测试</td>
+<td>QA 独立出具 qa-verdict，你不干预</td>
+</tr>
+<tr>
+<td><strong>设计师</strong></td>
+<td>你定义"做什么"，确认 Design Packet 的业务边界</td>
+<td>设计师定义"长什么样"，产出 Design Packet</td>
+<td>视觉/交互细节交设计师，你不画图</td>
+</tr>
+<tr>
+<td><strong>前端</strong></td>
+<td>你通过 pm-acceptance 验收最终产品</td>
+<td>前端按 Design Packet 实现 UI</td>
+<td>前端技术方案你不审</td>
+</tr>
+<tr>
+<td><strong>创始人</strong></td>
+<td>Cap-Spec-3 涉及契约变更时请创始人审批</td>
+<td>创始人定义契约包络和规则</td>
+<td>你在包络内自由定义能力包语义</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_5">五、常见问题</h2>
+<p><strong>Q：Cap-Spec freeze 后发现需求变了怎么办？</strong>
+A：正式解冻 Cap-Spec（状态回退到 Cap-Spec Frozen），通知工程师和 QA，已有的 HPRD 标记为 INVALIDATED。修改后重新 freeze。不能偷偷改——改了门禁追溯不到。</p>
+<p><strong>Q：我能直接 merge Cap-Spec 的 PR 吗？</strong>
+A：可以。prd/core/ 路径的 CODEOWNERS 是 @hl-pm-team，PM 可以直接 merge Cap-Spec PR。创始人可选 review 但不 block。</p>
+<p><strong>Q：设计师的产出在哪里冻结？</strong>
+A：在 hl-app/docs/design-packets/ 下提交 design-packet.yaml。这是机读文件，有 frozen_at 字段标记冻结时间。</p>
+<p><strong>Q：HPRD 和 Cap-Spec 冲突怎么办？</strong>
+A：以 Cap-Spec 为准。工程师修正 HPRD，你重新审批。Cap-Spec 是上游 SSOT，HPRD 只是工程师的理解确认。</p>
+<p><strong>Q：产品验收发现问题，但 QA 已经通过了？</strong>
+A：你有独立的 pm-acceptance 权力。QA 验收的是"功能是否按规格工作"，你验收的是"产品是否满足用户需求"。两者可能有差异——你打回就是打回。</p>
+<hr />
+<h2 id="_6">六、你的能力包分配</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>PM</th>
+<th>负责能力包</th>
+<th>分级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PM-A</td>
+<td>销售流程、客户资产、售后服务</td>
+<td>T1, T1, T3</td>
+</tr>
+<tr>
+<td>PM-B</td>
+<td>支付结账、营销、商品中心</td>
+<td>T1, T2, T2</td>
+</tr>
+<tr>
+<td>PM-C</td>
+<td>供应仓储、数据看板、硬件POS、流程引擎</td>
+<td>T2, T2, T3, T3</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>T1 先行</strong>：PM-A 和 PM-B 在 T1 阶段压力最大，各负责 1-2 个 T1 能力包。T2/T3 在 T1 完成后滚动推进。</p>
+<p>UI 设计师 2 人横向支持所有有 UI 界面的能力包，不按能力包固定分配。</p>
+</div>
+
+<footer class="site-footer">
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + UI-DELIVERY-SPEC v1.0 · Internal Guide · 2026-04-13<br>
+  <a href="../index.html" style="color:var(--primary-light);text-decoration:none;">← 返回首页</a>
+</footer>
+
+<script src="../js/main.js"></script>
+
+<button class="toc-toggle" title="目录">☰</button>
+<div class="toc-overlay"></div>
+<div class="toc-sidebar">
+  <button class="toc-close">✕</button>
+  <h3>📘 目录</h3>
+    <a href="#_1" class="h2">一、你在新模型中的角色定位</a>
+    <a href="#pm-owner" class="h3">PM — 能力包语义 Owner</a>
+    <a href="#ui-owner" class="h3">UI 设计师 — 视觉/交互规范 Owner</a>
+    <a href="#_2" class="h2">二、你的核心产出</a>
+    <a href="#21-pm-cap-spec" class="h3">2.1 PM 的三份 Cap-Spec</a>
+    <a href="#22-design-packet" class="h3">2.2 设计师的 Design Packet</a>
+    <a href="#_3" class="h2">三、你的工作流程（能力包流五步中的角色）</a>
+    <a href="#step-1cap-spec-freeze" class="h3">Step 1：Cap-Spec Freeze — 你是主角</a>
+    <a href="#step-2hprd" class="h3">Step 2：HPRD 审批 — 你审"理解对不对"</a>
+    <a href="#step-5pm" class="h3">Step 5：PM 产品验收 — 你是终审</a>
+    <a href="#_4" class="h2">四、你和其他团队的协作边界</a>
+    <a href="#_5" class="h2">五、常见问题</a>
+    <a href="#_6" class="h2">六、你的能力包分配</a>
+
+</div>
+
+<script>
+const tocBtn = document.querySelector('.toc-toggle');
+const tocBar = document.querySelector('.toc-sidebar');
+const tocOverlay = document.querySelector('.toc-overlay');
+const tocClose = document.querySelector('.toc-close');
+function openToc() { tocBar.classList.add('open'); tocOverlay.classList.add('open'); }
+function closeToc() { tocBar.classList.remove('open'); tocOverlay.classList.remove('open'); }
+tocBtn.addEventListener('click', openToc);
+tocClose.addEventListener('click', closeToc);
+tocOverlay.addEventListener('click', closeToc);
+tocBar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setTimeout(closeToc, 200)));
+</script>
+</body>
+</html>

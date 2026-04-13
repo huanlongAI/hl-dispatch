@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工程师团队指南 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+.toc-toggle { position:fixed; right:20px; bottom:20px; width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer; font-size:1.3em; z-index:200; box-shadow:0 4px 16px rgba(108,92,231,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.3s; }
+.toc-toggle:hover { transform:scale(1.1); }
+.toc-sidebar { position:fixed; right:0; top:0; bottom:0; width:320px; max-width:85vw; background:var(--bg-card); border-left:1px solid var(--border); z-index:199; transform:translateX(100%); transition:transform 0.3s; overflow-y:auto; padding:60px 20px 40px; }
+.toc-sidebar.open { transform:translateX(0); }
+.toc-sidebar h3 { font-size:0.95em; color:var(--primary-light); margin-bottom:16px; }
+.toc-sidebar .toc-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:1.4em; cursor:pointer; }
+.toc-sidebar a { display:block; padding:5px 0; color:var(--text-muted); text-decoration:none; font-size:0.85em; border-left:2px solid transparent; transition:all 0.2s; }
+.toc-sidebar a:hover { color:var(--text); border-left-color:var(--primary); padding-left:8px; }
+.toc-sidebar a.h2 { font-weight:600; color:var(--text); margin-top:8px; }
+.toc-sidebar a.h3 { padding-left:16px; font-size:0.82em; }
+.toc-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:198; display:none; }
+.toc-overlay.open { display:block; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+  </div>
+</nav>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。
+</div>
+
+<div class="page-header">
+  <h1>💻 <span>工程师团队指南</span></h1>
+  <div class="meta">唤龙平台 AI 驱动协作模型</div>
+  <div class="badge">后端 8 人 + 前端 5 人</div>
+</div>
+
+<div class="content">
+<blockquote>
+<p><strong>适用角色</strong>：后端工程师（8 人，含 2 名 PHP）+ 前端工程师（5 人）
+<strong>关联文档</strong>：<a href="global.html">全局工作流</a> · <a href="frontend-design.html">前端与设计指南</a> · <a href="qa.html">测试团队指南</a>
+<strong>治理来源</strong>：TEAM-COLLABORATION-SPEC v2.1 §2.3 / §5.2 / §7 · TOOLCHAIN-GUIDE v1 · UI-DELIVERY-SPEC v1.0</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、你在新模型中的角色定位</h2>
+<h3 id="ownersolution-owner">工程师 — 方案 Owner（Solution Owner）</h3>
+<p>你拥有技术方案设计权和实现权。在 AI-first 模式下，AI 生成代码为主，你负责：</p>
+<ul>
+<li><strong>意图定义</strong>：定义类型、接口、组件 API、状态结构</li>
+<li><strong>审查裁决</strong>：Review AI 产出，判断方案是否正确</li>
+<li><strong>必要补充</strong>：在 AI 覆盖不到的地方手动编码</li>
+<li><strong>统一过 gate</strong>：不论代码来源（AI 生成或手写），所有 diff 统一经过 CI 门禁</li>
+</ul>
+<p>你拥有的：</p>
+<ul>
+<li>技术方案设计权（design.md）</li>
+<li>AI-first 编码实现权</li>
+<li>单元测试、集成测试编写权</li>
+<li>HPRD 编写权（Cap-Spec 的理解确认件）</li>
+<li>代码互审权（Code Review）</li>
+</ul>
+<p>你不做的：</p>
+<ul>
+<li>不定义业务需求（Cap-Spec 是 PM 的 SSOT）</li>
+<li>不做最终质量放行（qa-verdict 是 QA 的独立权力）</li>
+<li>不修改治理规则（交创始人）</li>
+</ul>
+<hr />
+<h2 id="_2">二、你的核心产出</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>产物</th>
+<th>你做什么</th>
+<th>谁审批</th>
+<th>放在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HPRD</strong></td>
+<td>阅读 Cap-Spec，写下你的业务理解</td>
+<td>PM（仅审业务理解）</td>
+<td><code>hl-platform/docs/hprd/{能力包}/</code></td>
+</tr>
+<tr>
+<td><strong>design.md</strong></td>
+<td>技术方案设计</td>
+<td>工程师互审 + AI reviewer</td>
+<td><code>hl-platform/docs/design/{能力包}/</code></td>
+</tr>
+<tr>
+<td><strong>代码</strong></td>
+<td>AI-first 编码 + 人工补充</td>
+<td>CI 门禁 + 互审</td>
+<td><code>hl-platform/app/biz-*/</code></td>
+</tr>
+<tr>
+<td><strong>单元测试</strong></td>
+<td>governedAction 五条必过 + domain 逻辑</td>
+<td>CI 门禁</td>
+<td><code>hl-platform/app/biz-*/src/test/</code></td>
+</tr>
+<tr>
+<td><strong>集成测试</strong></td>
+<td>Testcontainers 端到端</td>
+<td>CI 门禁</td>
+<td>同上</td>
+</tr>
+<tr>
+<td><strong>可运行 demo</strong></td>
+<td>交 PM 产品验收</td>
+<td>PM</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Evidence draft</strong></td>
+<td>测试证据初稿</td>
+<td>QA</td>
+<td>PR 附件</td>
+</tr>
+</tbody>
+</table></div>
+<p>前端工程师额外产出：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>产物</th>
+<th>说明</th>
+<th>放在哪</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>frontend-design.md</strong></td>
+<td>前端技术方案（页面结构、状态管理、路由、组件复用、API 依赖）</td>
+<td><code>hl-app/docs/frontend-design/</code></td>
+</tr>
+<tr>
+<td><strong>ui-evidence-pack</strong></td>
+<td>golden diff + a11y + design conformance + 状态覆盖</td>
+<td>PR 附件</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="hprd">三、HPRD 怎么写</h2>
+<p>HPRD = Human-readable Product Design，是你对 PM 的 Cap-Spec 的理解确认件。它证明"你理解对了"。</p>
+<h3 id="_3">最小模板</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必填</th>
+<th>你写什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capability ID</td>
+<td>是</td>
+<td>对应哪个能力包</td>
+</tr>
+<tr>
+<td>User-visible Changes</td>
+<td>是</td>
+<td>用户会看到什么变化（用非技术语言描述）</td>
+</tr>
+<tr>
+<td>Unchanged Behavior</td>
+<td>是</td>
+<td>哪些行为必须保持不变</td>
+</tr>
+<tr>
+<td>Out of Scope</td>
+<td>是</td>
+<td>这次明确不做什么</td>
+</tr>
+<tr>
+<td>Acceptance Walkthrough</td>
+<td>是</td>
+<td>PM 将如何验收（对应 Cap-Spec-2 的 Case-ID）</td>
+</tr>
+<tr>
+<td>Semantic Questions</td>
+<td>否</td>
+<td>你理解中仍未决的问题</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_4">注意事项</h3>
+<ul>
+<li>HPRD 不是上游规格——上游 SSOT 是 PM 的 Cap-Spec</li>
+<li>如果 HPRD 和 Cap-Spec 冲突，以 Cap-Spec 为准，你修正 HPRD</li>
+<li>HPRD 不包含技术实现细节（数据库设计、API 内部结构、类层次等）——那是 design.md 的事</li>
+<li>PM 审批 HPRD 只看一件事："业务语义理解对不对"</li>
+<li>pm-hprd-pass（流程内检查）未通过前，你不得开始 Step 3 实现</li>
+</ul>
+<hr />
+<h2 id="_5">四、能力包流中你的完整时间线</h2>
+<div class="codehilite"><pre><span></span><code><span class="nv">Step</span> <span class="mi">1</span>: <span class="nv">PM</span> <span class="nv">freeze</span> <span class="nv">Cap</span><span class="o">-</span><span class="nv">Spec</span> → 你等待
+    ↓
+<span class="nv">Step</span> <span class="mi">2</span>: 你开始
+  ├── 阅读 <span class="nv">Cap</span><span class="o">-</span><span class="nv">Spec</span>
+  ├── 写 <span class="nv">HPRD</span> → 交 <span class="nv">PM</span> 审批
+  ├── 写 <span class="nv">design</span>.<span class="nv">md</span> → 交工程师互审 <span class="o">+</span> <span class="nv">AI</span> <span class="nv">reviewer</span>
+  └── （<span class="nv">QA</span> 同步编写 <span class="nv">acceptance</span><span class="o">-</span><span class="nv">manifest</span>）
+    ↓
+  ⛔ <span class="nv">pm</span><span class="o">-</span><span class="nv">hprd</span><span class="o">-</span><span class="nv">pass</span> 必须通过
+  ⛔ <span class="nv">design</span>.<span class="nv">md</span> 互审必须通过
+    ↓
+<span class="nv">Step</span> <span class="mi">3</span>: 你开始实现
+  ├── <span class="nv">AI</span><span class="o">-</span><span class="nv">first</span> 编码：功能代码
+  ├── 单元测试（<span class="nv">governedAction</span> 五条必过 <span class="o">+</span> <span class="nv">domain</span>）
+  ├── 集成测试（<span class="nv">Testcontainers</span>）
+  └── 可运行 <span class="nv">demo</span>
+  → 提交 <span class="nv">Draft</span> <span class="nv">PR</span>
+    ↓
+<span class="nv">Step</span> <span class="mi">4</span>: 门禁 <span class="o">+</span> 验收（并行）
+  ├── <span class="nv">CI</span> 门禁 <span class="nv">L1</span><span class="o">-</span><span class="nv">L3</span> 自动执行（你需要确保全绿）
+  ├── <span class="nv">L4</span> <span class="nv">AI</span> 审计（<span class="nv">Advisory</span>，参考但不阻塞）
+  ├── <span class="nv">QA</span> 独立验收 → <span class="nv">qa</span><span class="o">-</span><span class="nv">verdict</span>
+  └── 工程师互审 <span class="nv">Code</span> <span class="nv">Review</span>
+  → <span class="nv">Draft</span> <span class="nv">PR</span> 转 <span class="nv">Ready</span> <span class="k">for</span> <span class="nv">Review</span>
+    ↓
+<span class="nv">Step</span> <span class="mi">5</span>: <span class="nv">PM</span> 产品验收 → <span class="nv">pm</span><span class="o">-</span><span class="nv">acceptance</span> → <span class="nv">Merge</span>
+</code></pre></div>
+
+<hr />
+<h2 id="pr">五、PR 提交规范</h2>
+<p>每个 PR 必须在 body 中声明分类字段：</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">change_class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">capability</span><span class="w">    </span><span class="c1"># capability | bugfix | tech-improvement | governance</span><span class="w"></span>
+<span class="nt">contract_touch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">       </span><span class="c1"># true | false</span><span class="w"></span>
+<span class="nt">founder_required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">     </span><span class="c1"># true | false</span><span class="w"></span>
+</code></pre></div>
+
+<p><strong>自动升级规则</strong>：</p>
+<ul>
+<li><code>contract_touch = true</code> → <code>founder_required</code> 必须 <code>true</code></li>
+<li><code>change_class = governance</code> → <code>founder_required</code> 必须 <code>true</code></li>
+<li><code>change_class = capability</code> 且 <code>contract_touch = false</code> → CI 自动放行，不需要创始人审批</li>
+</ul>
+<p><strong>Contract Touch Checklist</strong>（当 <code>contract_touch = true</code> 时）：</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">contract_touch_detail</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">reason_code_change</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">  </span><span class="nt">iron_rule_impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">  </span><span class="nt">api_contract_change</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">  </span><span class="nt">event_schema_change</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">  </span><span class="nt">cross_tenant_impact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+</code></pre></div>
+
+<hr />
+<h2 id="ci">六、CI 门禁——你需要过哪些关</h2>
+<h3 id="l1-blocking">L1 格式性（BLOCKING）</h3>
+<p>编译通过、类型检查、代码格式（ktfmt/dart format）、License Header、YAML 语法</p>
+<h3 id="l2-blocking">L2 确定性（BLOCKING）</h3>
+<p>契约一致性、模块边界、ReasonCode 对齐、循环依赖检测、API 路径规范、G-026 验收覆盖率（YAML 解析）、Spec 漂移检测</p>
+<h3 id="l3-blocking">L3 行为性（BLOCKING）</h3>
+<p>单元测试全过、集成测试全过（Testcontainers）、G-023 验收场景回放、DoD 静态验证、回归集</p>
+<h3 id="l4-advisory">L4 语义性审计（ADVISORY）</h3>
+<p>双模型交叉审计（GPT + Claude）、意图一致性、代码可读性、安全审计（P0 安全问题会升级为 BLOCK）</p>
+<p><strong>铁律：L1-L3 全绿是 merge 的硬前提。没有例外。</strong></p>
+<hr />
+<h2 id="java-kotlin">七、后端工程师：Java → Kotlin 适配</h2>
+<p>技术栈：Kotlin 2.1.10 / Spring Boot 3.5.11 / Spring Modulith 1.3.4</p>
+<p>在 AI-first 模式下的适配路径：</p>
+<ul>
+<li>AI 生成 Kotlin 代码，你需要读懂它（sealed class、value class、coroutines）</li>
+<li>你对 JVM 生态的理解（Spring Boot / JPA / Gradle）可以直接复用</li>
+<li>通过实际能力包开发在 AI 编码过程中自然习得 Kotlin 特性</li>
+<li>你的核心价值在于：<strong>定义正确的类型和接口</strong> → <strong>让 AI 在约束内编码</strong> → <strong>Review AI 产出</strong></li>
+</ul>
+<hr />
+<h2 id="_6">八、前端工程师的额外说明</h2>
+<p>前端工程师除了遵循本指南外，还需要阅读 <a href="frontend-design.html">前端与设计团队指南</a>，特别关注：</p>
+<ul>
+<li>双线交付模型（Foundation Lane + Capability UI Delivery Lane）</li>
+<li><strong>硬规则：No UI Input Ready, No Frontend Coding</strong>——等 design-ready AND api-mock-ready 双就位</li>
+<li>UI 风险分层（UI-R0 ~ R3）和对应门禁</li>
+<li>frontend-design.md 的编写</li>
+<li>Design Packet 的消费方式</li>
+</ul>
+<hr />
+<h2 id="_7">九、测试分工——你负责哪些测试</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>测试类型</th>
+<th>你负责？</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单元测试</td>
+<td>✅ 你负责</td>
+<td>governedAction 五条必过 + domain 逻辑</td>
+</tr>
+<tr>
+<td>集成测试</td>
+<td>✅ 你负责</td>
+<td>Testcontainers 端到端</td>
+</tr>
+<tr>
+<td>属性测试（kernel）</td>
+<td>✅ 你负责</td>
+<td>kernel 级别的属性测试</td>
+</tr>
+<tr>
+<td>验收测试</td>
+<td>❌ QA 负责</td>
+<td>基于 Cap-Spec-2，QA 独立编写和执行</td>
+</tr>
+<tr>
+<td>回归测试</td>
+<td>❌ QA 负责</td>
+<td>QA 维护回归基线</td>
+</tr>
+<tr>
+<td>属性测试（能力包边界）</td>
+<td>协作</td>
+<td>QA 写能力包边界属性测试</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="codeowners">十、仓库路径与你的 CODEOWNERS</h2>
+<h3 id="hl-platform">hl-platform（后端）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>你的角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code>（默认）</td>
+<td>工程师互审</td>
+</tr>
+<tr>
+<td><code>/app/biz-*/**</code></td>
+<td>你负责——能力包业务代码</td>
+</tr>
+<tr>
+<td><code>/docs/hprd/**</code></td>
+<td>你写——PM 审批</td>
+</tr>
+<tr>
+<td><code>/docs/design/**</code></td>
+<td>你写——工程师互审</td>
+</tr>
+<tr>
+<td><code>/kernel/**</code> <code>/gateway/**</code> <code>/framework/**</code></td>
+<td>创始人强制审批，你改完要等创始人 approve</td>
+</tr>
+<tr>
+<td><code>/app/**/acceptance/**</code></td>
+<td>QA 负责——你不动</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="hl-console-native">hl-console-native（平台控制台 — macOS 原生）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>你的角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code>（默认）</td>
+<td>创始人审批</td>
+</tr>
+<tr>
+<td>CODEOWNERS</td>
+<td><code>* @tongzhenghui</code></td>
+</tr>
+</tbody>
+</table></div>
+
+<h3 id="hl-design-system">hl-design-system（设计系统 — Flutter 设计令牌 + 组件库）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>你的角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code>（默认）</td>
+<td>前端工程师互审</td>
+</tr>
+<tr>
+<td><code>/tokens/**</code></td>
+<td>设计师 + 前端负责人共同维护</td>
+</tr>
+<tr>
+<td><code>/components/**</code></td>
+<td>前端负责人审</td>
+</tr>
+<tr>
+<td><code>/docs/component-design/**</code></td>
+<td>你写</td>
+</tr>
+</tbody>
+</table></div>
+
+<h3 id="hl-app">hl-app（租户应用 — 多平台 Flutter）</h3>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>路径</th>
+<th>你的角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code>（默认）</td>
+<td>前端工程师互审</td>
+</tr>
+<tr>
+<td><code>/lib/biz-*/**</code></td>
+<td>你负责——能力包业务代码</td>
+</tr>
+<tr>
+<td><code>/docs/frontend-design/**</code></td>
+<td>你写</td>
+</tr>
+<tr>
+<td><code>/test/acceptance/**</code></td>
+<td>QA 负责——你不动</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_8">十一、各类变更你怎么走</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>你要做什么</th>
+<th>change_class</th>
+<th>要 Cap-Spec?</th>
+<th>要 HPRD?</th>
+<th>要 QA verdict?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新功能 / 用户可见能力</td>
+<td>capability</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>修 Bug</td>
+<td>bugfix</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅（不可免除）</td>
+</tr>
+<tr>
+<td>重构 / 性能优化</td>
+<td>tech-improvement</td>
+<td>❌</td>
+<td>❌</td>
+<td>仅影响用户行为时</td>
+</tr>
+<tr>
+<td>改 kernel / gateway</td>
+<td>governance</td>
+<td>❌</td>
+<td>❌</td>
+<td>创始人必须审批</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Bugfix 防滥用</strong>：不得引入新 API / reason_code，单个 PR 不超过 500 行。</p>
+<p><strong>技术改动防滥用</strong>：不得包含业务逻辑变更；涉及 TECH-STACK-SPEC 锁定项则升级为 governance。</p>
+<hr />
+<h2 id="_9">十二、常见问题</h2>
+<p><strong>Q：AI 生成的代码，我需要 100% 理解吗？</strong>
+A：你需要理解它做了什么、为什么这么做、是否符合设计意图。你不需要逐行背诵，但你需要能判断"这段代码是对的"。你是裁决者，不是打字员。</p>
+<p><strong>Q：pm-hprd-pass 一直不过怎么办？</strong>
+A：找 PM 确认你的理解哪里偏了。HPRD 是双向沟通工具——如果连续不过，可能是 Cap-Spec 本身不够清晰，可以要求 PM 补充。</p>
+<p><strong>Q：我能直接 merge 自己的 PR 吗？</strong>
+A：不能。所有 PR 需要 code owner review + CI 门禁 + qa-verdict + pm-acceptance（能力包流）。四权分离意味着你不能放行自己的代码。</p>
+<p><strong>Q：L4 AI 审计给了 warning 但不是 BLOCK，我需要处理吗？</strong>
+A：L4 是 ADVISORY。P0 安全问题会升级为 BLOCK，其他的参考处理。建议认真看——AI 审计经常能发现人类遗漏的问题。</p>
+<p><strong>Q：后端和前端 PR 在同一个能力包里能一起提吗？</strong>
+A：分开提。后端 PR 在 hl-platform，前端 PR 在 hl-app，各自走各自的门禁和 CODEOWNERS。但它们共享同一个 Cap-Spec 和 pm-acceptance。</p>
+</div>
+
+<footer class="site-footer">
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + UI-DELIVERY-SPEC v1.0 · Internal Guide · 2026-04-13<br>
+  <a href="../index.html" style="color:var(--primary-light);text-decoration:none;">← 返回首页</a>
+</footer>
+
+<script src="../js/main.js"></script>
+
+<button class="toc-toggle" title="目录">☰</button>
+<div class="toc-overlay"></div>
+<div class="toc-sidebar">
+  <button class="toc-close">✕</button>
+  <h3>💻 目录</h3>
+    <a href="#_1" class="h2">一、你在新模型中的角色定位</a>
+    <a href="#ownersolution-owner" class="h3">工程师 — 方案 Owner（Solution Owner）</a>
+    <a href="#_2" class="h2">二、你的核心产出</a>
+    <a href="#hprd" class="h2">三、HPRD 怎么写</a>
+    <a href="#_3" class="h3">最小模板</a>
+    <a href="#_4" class="h3">注意事项</a>
+    <a href="#_5" class="h2">四、能力包流中你的完整时间线</a>
+    <a href="#pr" class="h2">五、PR 提交规范</a>
+    <a href="#ci" class="h2">六、CI 门禁——你需要过哪些关</a>
+    <a href="#l1-blocking" class="h3">L1 格式性（BLOCKING）</a>
+    <a href="#l2-blocking" class="h3">L2 确定性（BLOCKING）</a>
+    <a href="#l3-blocking" class="h3">L3 行为性（BLOCKING）</a>
+    <a href="#l4-advisory" class="h3">L4 语义性审计（ADVISORY）</a>
+    <a href="#java-kotlin" class="h2">七、后端工程师：Java → Kotlin 适配</a>
+    <a href="#_6" class="h2">八、前端工程师的额外说明</a>
+    <a href="#_7" class="h2">九、测试分工——你负责哪些测试</a>
+    <a href="#codeowners" class="h2">十、仓库路径与你的 CODEOWNERS</a>
+    <a href="#hl-platform" class="h3">hl-platform（后端）</a>
+    <a href="#hl-console-native" class="h3">hl-console-native（平台控制台）</a>
+    <a href="#hl-design-system" class="h3">hl-design-system（设计系统）</a>
+    <a href="#hl-app" class="h3">hl-app（租户应用）</a>
+    <a href="#_8" class="h2">十一、各类变更你怎么走</a>
+    <a href="#_9" class="h2">十二、常见问题</a>
+
+</div>
+
+<script>
+const tocBtn = document.querySelector('.toc-toggle');
+const tocBar = document.querySelector('.toc-sidebar');
+const tocOverlay = document.querySelector('.toc-overlay');
+const tocClose = document.querySelector('.toc-close');
+function openToc() { tocBar.classList.add('open'); tocOverlay.classList.add('open'); }
+function closeToc() { tocBar.classList.remove('open'); tocOverlay.classList.remove('open'); }
+tocBtn.addEventListener('click', openToc);
+tocClose.addEventListener('click', closeToc);
+tocOverlay.addEventListener('click', closeToc);
+tocBar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setTimeout(closeToc, 200)));
+</script>
+</body>
+</html>

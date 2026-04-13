@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>治理文档体系详解 - 唤龙平台</title>
+    <style>
+        :root {
+            --bg: #0F0F1A;
+            --bg-card: #1A1A2E;
+            --text: #E8E8F0;
+            --primary: #6C5CE7;
+            --secondary: #00B894;
+            --accent: #FDCB6E;
+            --danger: #E17055;
+            --pm: #74B9FF;
+            --eng: #55EFC4;
+            --qa: #FFEAA7;
+            --ops: #FAB1A0;
+            --design: #DFE6E9;
+            --founder: #A29BFE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK SC', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--primary);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-logo:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* Guide Layer Warning */
+        .guide-warning {
+            background: linear-gradient(135deg, #E17055 20%, #D63031 100%);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .page-subtitle {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        /* Document Hierarchy Diagram */
+        .hierarchy-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 2rem;
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+
+        .doc-tree {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 2;
+        }
+
+        .doc-node {
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            background: var(--bg);
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .doc-node:hover {
+            background: var(--bg-card);
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .doc-node.locked {
+            border-color: var(--secondary);
+        }
+
+        .doc-node.draft {
+            border-color: var(--accent);
+        }
+
+        .doc-node.proposed {
+            border-color: var(--danger);
+        }
+
+        .doc-title {
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .doc-code {
+            color: var(--accent);
+            font-size: 0.85rem;
+        }
+
+        .doc-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .doc-status.locked {
+            background: var(--secondary);
+            color: var(--bg);
+        }
+
+        .doc-status.draft {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .doc-status.proposed {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Expandable Details */
+        .doc-details {
+            display: none;
+            background: var(--bg);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .doc-details.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section strong {
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .detail-list li {
+            color: var(--text);
+            margin: 0.5rem 0;
+            border-left: 3px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+
+        /* Status Legend */
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .legend-item {
+            background: var(--bg-card);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .legend-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.3);
+        }
+
+        .legend-item strong {
+            color: var(--accent);
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .flow-step {
+            background: var(--bg);
+            border: 2px solid var(--primary);
+            border-radius: 6px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .flow-step:hover {
+            background: var(--bg-card);
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .flow-step::after {
+            content: '↓';
+            position: absolute;
+            bottom: -2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: var(--secondary);
+            display: none;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-step:not(:last-child)::after {
+            display: block;
+        }
+
+        .flow-title {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .flow-content {
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Matrix Table */
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .matrix-table thead {
+            background: var(--primary);
+        }
+
+        .matrix-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+            color: var(--bg);
+            border-right: 1px solid var(--bg);
+        }
+
+        .matrix-table td {
+            padding: 1rem;
+            border-right: 1px solid var(--primary);
+            border-bottom: 1px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .matrix-table tbody tr:hover {
+            background: rgba(108, 92, 231, 0.1);
+        }
+
+        .matrix-table td:hover {
+            background: var(--primary);
+            color: var(--bg);
+        }
+
+        .role-cell {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--primary);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text);
+            margin-top: 4rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            main {
+                padding: 1.5rem;
+            }
+
+            .hierarchy-diagram {
+                overflow-x: auto;
+            }
+
+            .doc-node {
+                font-size: 0.8rem;
+                padding: 0.75rem 1rem;
+                margin: 0.25rem;
+            }
+
+            .legend {
+                grid-template-columns: 1fr;
+            }
+
+            .matrix-table {
+                font-size: 0.85rem;
+            }
+
+            .matrix-table th,
+            .matrix-table td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../index.html" class="nav-logo">唤龙平台</a>
+        <div class="nav-links">
+            <a href="../index.html">首页</a>
+            <a href="global.html">全局工作流</a>
+            <a href="pm-guide.html">PM 指南</a>
+            <a href="frontend-guide.html">前端指南</a>
+            <a href="backend-guide.html">后端指南</a>
+            <a href="qa-process.html">QA 流程</a>
+            <a href="ops-guide.html">运维指南</a>
+        </div>
+    </nav>
+
+    <div class="guide-warning">
+        ⚠️ Guide Layer — 内部指南，非规范性文件。具体规范请查阅 hl-contracts 仓库
+    </div>
+
+    <main>
+        <h1>治理文档体系详解</h1>
+        <p class="page-subtitle">理解唤龙平台的文档层级、依赖关系和变更流程</p>
+
+        <!-- Section 1: Document Hierarchy -->
+        <section>
+            <h2>第一部分：文档层级图</h2>
+            <p>点击任何文档节点查看详细信息、依赖关系和核心内容</p>
+
+            <div class="hierarchy-diagram">
+                <div style="margin-bottom: 3rem;">
+                    <div class="doc-node locked" onclick="toggleDetails('saac-hl-001')">
+                        <div class="doc-code">SAAC-HL-001 v1.1</div>
+                        <div class="doc-title">战略架构</div>
+                        <span class="doc-status locked">LOCKED</span>
+                    </div>
+                    <div id="saac-hl-001" class="doc-details">
+                        <div class="detail-section">
+                            <strong>文档编号 & 版本</strong>
+                            <p>SAAC-HL-001 v1.1</p>
+                        </div>
+                        <div class="detail-section">
+                            <strong>状态</strong>
+                            <p>🟢 LOCKED — 已锁定，变更走治理审批</p>
+                        </div>
+                        <div class="detail-section">
+                            <strong>核心内容</strong>
+                            <ul class="detail-list">
+                                <li>唤龙平台的战略愿景和目标</li>
+                                <li>组织结构和团队分工的基础</li>
+                                <li>所有下游文档的治理源头</li>
+                                <li>创始人裁决的最上层规范</li>
+                            </ul>
+                        </div>
+                        <div class="detail-section">
+                            <strong>关键章节</strong>
+                            <p>1. 战略愿景 | 2. 治理原则 | 3. 团队编制</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-left: 2rem; border-left: 3px solid var(--primary); padding-left: 2rem; margin-bottom: 3rem;">
+                    <div class="doc-node draft" onclick="toggleDetails('bridge-derivation')">
+                        <div class="doc-code">BRIDGE-DERIVATION v1</div>
+                        <div class="doc-title">桥接推导</div>
+                        <span class="doc-status draft">DRAFT</span>
+                    </div>
+                    <div id="bridge-derivation" class="doc-details">
+                        <div class="detail-section">
+                            <strong>用途</strong>
+                            <p>从战略架构推导出具体的工作流和规范体系</p>
+                        </div>
+                        <div class="detail-section">
+                            <strong>核心内容</strong>
+                            <ul class="detail-list">
+                                <li>战略 → 执行 的逻辑映射</li>
+                                <li>5步交付流的设计依据</li>
+                                <li>四权分离的实现机制</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem; margin-left: 2rem; border-left: 3px solid var(--primary); padding-left: 2rem; margin-bottom: 3rem;">
+                        <div class="doc-node draft" onclick="toggleDetails('prd-redefinition')">
+                            <div class="doc-code">PRD-REDEFINITION-SPEC v2.0</div>
+                            <div class="doc-title">需求定义规范改造</div>
+                            <span class="doc-status draft">DRAFT</span>
+                        </div>
+                        <div id="prd-redefinition" class="doc-details">
+                            <div class="detail-section">
+                                <strong>核心内容</strong>
+                                <ul class="detail-list">
+                                    <li>HPRD（High-Precision PRD）定义</li>
+                                    <li>Cap-Spec 和 Capability 模型</li>
+                                    <li>验收标准的精确化</li>
+                                </ul>
+                            </div>
+                            <div class="detail-section">
+                                <strong>下游文档</strong>
+                                <p>TEAM-COLLABORATION-SPEC, UI-DELIVERY-SPEC, FRONTEND-REPO-SPEC</p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2rem; margin-left: 2rem; border-left: 3px solid var(--secondary); padding-left: 2rem; margin-bottom: 3rem;">
+                            <div class="doc-node draft" onclick="toggleDetails('team-collaboration')">
+                                <div class="doc-code">TEAM-COLLABORATION-SPEC v2.1</div>
+                                <div class="doc-title">核心协作规格</div>
+                                <span class="doc-status draft">DRAFT</span>
+                            </div>
+                            <div id="team-collaboration" class="doc-details">
+                                <div class="detail-section">
+                                    <strong>核心内容</strong>
+                                    <ul class="detail-list">
+                                        <li>四权分离（定义权、设计权、实现权、验收权）</li>
+                                        <li>组织编制（23人团队结构）</li>
+                                        <li>能力包五步流（5个交付阶段）</li>
+                                        <li>门禁体系（CI 行为门禁）</li>
+                                        <li>仓库治理（CODEOWNERS、角色权限）</li>
+                                    </ul>
+                                </div>
+                                <div class="detail-section">
+                                    <strong>锁版条件</strong>
+                                    <p>至少 1 个 T1 能力包全链路试运行通过</p>
+                                </div>
+                                <div class="detail-section">
+                                    <strong>关键章节</strong>
+                                    <p>1. 四权分离 | 2. 23人编制 | 3. 5步流 | 4. 门禁定义</p>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 2rem; margin-left: 2rem; border-left: 3px solid var(--secondary); padding-left: 2rem; margin-bottom: 2rem;">
+                                <div class="doc-node draft" onclick="toggleDetails('ui-delivery')">
+                                    <div class="doc-code">UI-DELIVERY-SPEC v1.0</div>
+                                    <div class="doc-title">前端/设计双线交付</div>
+                                    <span class="doc-status draft">DRAFT</span>
+                                </div>
+                                <div id="ui-delivery" class="doc-details">
+                                    <div class="detail-section">
+                                        <strong>核心内容</strong>
+                                        <ul class="detail-list">
+                                            <li>Foundation Lane（设计系统）+ Capability UI Lane（功能UI）</li>
+                                            <li>Design Packet 12字段规范</li>
+                                            <li>UI 门禁 9项检查清单</li>
+                                            <li>UI 风险分级（R0-R3）</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 2rem; margin-left: 2rem; border-left: 3px solid var(--secondary); padding-left: 2rem; margin-bottom: 2rem;">
+                                <div class="doc-node draft" onclick="toggleDetails('frontend-repo')">
+                                    <div class="doc-code">FRONTEND-REPO-SPEC v1.0</div>
+                                    <div class="doc-title">前端仓库架构</div>
+                                    <span class="doc-status draft">DRAFT</span>
+                                </div>
+                                <div id="frontend-repo" class="doc-details">
+                                    <div class="detail-section">
+                                        <strong>核心内容</strong>
+                                        <ul class="detail-list">
+                                            <li>hl-design-system 仓库（共享组件库）</li>
+                                            <li>hl-app 仓库（应用代码）</li>
+                                            <li>CODEOWNERS 文件定义（团队权限）</li>
+                                            <li>门禁规则定义</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 2rem; margin-left: 2rem; border-left: 3px solid var(--primary); padding-left: 2rem; margin-bottom: 2rem;">
+                                <div class="doc-node proposed" onclick="toggleDetails('workflow-guide')">
+                                    <div class="doc-code">WORKFLOW-GUIDE v1</div>
+                                    <div class="doc-title">非能力包流程</div>
+                                    <span class="doc-status proposed">PROPOSED</span>
+                                </div>
+                                <div id="workflow-guide" class="doc-details">
+                                    <div class="detail-section">
+                                        <strong>核心内容</strong>
+                                        <ul class="detail-list">
+                                            <li>Bugfix 流程（修复 bug 的工作流）</li>
+                                            <li>技术改动流程（不涉及需求变更的改进）</li>
+                                            <li>治理内核变更流程（文档更新的审批）</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 2rem; margin-left: 2rem; border-left: 3px solid var(--primary); padding-left: 2rem;">
+                                <div class="doc-node proposed" onclick="toggleDetails('toolchain-guide')">
+                                    <div class="doc-code">TOOLCHAIN-GUIDE v1</div>
+                                    <div class="doc-title">工具链选型</div>
+                                    <span class="doc-status proposed">PROPOSED</span>
+                                </div>
+                                <div id="toolchain-guide" class="doc-details">
+                                    <div class="detail-section">
+                                        <strong>核心内容</strong>
+                                        <ul class="detail-list">
+                                            <li>GitHub Actions（CI/CD 工具）</li>
+                                            <li>Kotlin/Spring Boot（后端栈）</li>
+                                            <li>Flutter（跨端框架）</li>
+                                            <li>前端框架选型（React/Vue 等）</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; border-left: 3px solid var(--secondary); padding-left: 2rem; margin-bottom: 2rem;">
+                    <div class="doc-node locked" onclick="toggleDetails('dd-test')">
+                        <div class="doc-code">DD-TEST v1.1</div>
+                        <div class="doc-title">测试工程推导</div>
+                        <span class="doc-status locked">LOCKED</span>
+                    </div>
+                    <div id="dd-test" class="doc-details">
+                        <div class="detail-section">
+                            <strong>用途</strong>
+                            <p>指导测试工程体系的设计和实现</p>
+                        </div>
+                        <div class="detail-section">
+                            <strong>核心内容</strong>
+                            <ul class="detail-list">
+                                <li>测试分类和覆盖率标准</li>
+                                <li>QA 团队的职责界定</li>
+                                <li>自动化测试基础设施</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; border-left: 3px solid var(--secondary); padding-left: 2rem;">
+                    <div class="doc-node locked" onclick="toggleDetails('tech-stack')">
+                        <div class="doc-code">TECH-STACK-SPEC v3</div>
+                        <div class="doc-title">技术栈锁定</div>
+                        <span class="doc-status locked">LOCKED</span>
+                    </div>
+                    <div id="tech-stack" class="doc-details">
+                        <div class="detail-section">
+                            <strong>用途</strong>
+                            <p>确定所有技术选型的最终决策</p>
+                        </div>
+                        <div class="detail-section">
+                            <strong>核心内容</strong>
+                            <ul class="detail-list">
+                                <li>前端技术栈（React + TypeScript）</li>
+                                <li>后端技术栈（Spring Boot + Kotlin）</li>
+                                <li>数据库和中间件选型</li>
+                                <li>基础设施工具链</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Status Legend -->
+        <section>
+            <h2>第二部分：文档状态说明</h2>
+            <p>理解三种文档状态及其含义</p>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <strong>🟢 LOCKED — 已锁定</strong>
+                    <p style="margin-bottom: 1rem;">文档内容已定板，任何变更需走治理审批流程，由创始人最终裁决。</p>
+                    <p style="color: var(--accent); font-size: 0.9rem;">示例：SAAC-HL-001, DD-TEST v1.1, TECH-STACK-SPEC v3</p>
+                </div>
+
+                <div class="legend-item">
+                    <strong>🟡 DRAFT — 草案</strong>
+                    <p style="margin-bottom: 1rem;">内容基本稳定，正在等待实践验证。待至少 1 个 T1 能力包完整试运行后将锁版。</p>
+                    <p style="color: var(--accent); font-size: 0.9rem;">示例：TEAM-COLLABORATION-SPEC, UI-DELIVERY-SPEC, FRONTEND-REPO-SPEC</p>
+                </div>
+
+                <div class="legend-item">
+                    <strong>🟠 PROPOSED — 候选方案</strong>
+                    <p style="margin-bottom: 1rem;">尚在讨论和完善阶段，内容可能较大变更，不可作为团队执行依据。</p>
+                    <p style="color: var(--accent); font-size: 0.9rem;">示例：WORKFLOW-GUIDE v1, TOOLCHAIN-GUIDE v1</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Document Change Process -->
+        <section>
+            <h2>第三部分：文档变更流程</h2>
+            <p>变更治理文档需要遵循的审批步骤</p>
+
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-title">1️⃣ 提出变更请求</div>
+                    <div class="flow-content">在 hl-contracts 仓库创建 PR，详细说明变更原因、影响范围和建议方案</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-title">2️⃣ 创始人初审</div>
+                    <div class="flow-content">创始人评审变更提案，可能会要求补充信息或澄清</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-title">3️⃣ 影响分析</div>
+                    <div class="flow-content">识别哪些下游文档、团队和流程会受到此变更的影响</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-title">4️⃣ 技术合伙人审查</div>
+                    <div class="flow-content">智能体辅助审查变更的技术可行性和与其他文档的一致性</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-title">5️⃣ 创始人裁决</div>
+                    <div class="flow-content">创始人做出最终决策：批准、修改或拒绝</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-title">6️⃣ 级联更新</div>
+                    <div class="flow-content">根据决策更新本文档及所有下游文档，发布变更公告</div>
+                </div>
+            </div>
+
+            <div style="background: rgba(108, 92, 231, 0.1); border: 1px solid var(--primary); border-radius: 8px; padding: 1.5rem; margin-top: 2rem;">
+                <strong style="color: var(--secondary);">💡 提示</strong>
+                <p style="margin-top: 0.5rem;">对于 DRAFT 文档的变更，需要等待该文档进入 LOCKED 状态前完成。对于 LOCKED 文档的变更，审批流程相对严格，需要充分的证据和创始人认可。</p>
+            </div>
+        </section>
+
+        <!-- Section 4: Cross-Reference Matrix -->
+        <section>
+            <h2>第四部分：文档与团队权责矩阵</h2>
+            <p>点击任意单元格查看该文档对该团队的具体约束</p>
+
+            <table class="matrix-table">
+                <thead>
+                    <tr>
+                        <th>团队 / 角色</th>
+                        <th>TEAM-COLLABORATION</th>
+                        <th>UI-DELIVERY-SPEC</th>
+                        <th>FRONTEND-REPO</th>
+                        <th>WORKFLOW-GUIDE</th>
+                        <th>DD-TEST v1.1</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="role-cell">👨‍💼 PM 团队</td>
+                        <td onclick="showCellDetail(this)">定义权约束 | 5步流参与</td>
+                        <td onclick="showCellDetail(this)">Design Packet 审核</td>
+                        <td onclick="showCellDetail(this)">需求确认权</td>
+                        <td onclick="showCellDetail(this)">Bugfix 优先级决策</td>
+                        <td onclick="showCellDetail(this)">验收标准制定</td>
+                    </tr>
+                    <tr>
+                        <td class="role-cell">🎨 前端团队</td>
+                        <td onclick="showCellDetail(this)">实现权 | 协作规范</td>
+                        <td onclick="showCellDetail(this)">UI 门禁执行 | R0-R3 分级</td>
+                        <td onclick="showCellDetail(this)">CODEOWNERS | PR 审批</td>
+                        <td onclick="showCellDetail(this)">技术改动流程</td>
+                        <td onclick="showCellDetail(this)">Golden 测试维护</td>
+                    </tr>
+                    <tr>
+                        <td class="role-cell">⚙️ 后端团队</td>
+                        <td onclick="showCellDetail(this)">实现权 | 协作规范</td>
+                        <td onclick="showCellDetail(this)">API 设计同步</td>
+                        <td onclick="showCellDetail(this)">仓库权限（hl-platform）</td>
+                        <td onclick="showCellDetail(this)">技术改动 | Hotfix 流程</td>
+                        <td onclick="showCellDetail(this)">集成测试配合</td>
+                    </tr>
+                    <tr>
+                        <td class="role-cell">✅ QA 团队</td>
+                        <td onclick="showCellDetail(this)">验收权 | 独立性保护</td>
+                        <td onclick="showCellDetail(this)">UI 验收检查</td>
+                        <td onclick="showCellDetail(this)">测试代码 CODEOWNERS</td>
+                        <td onclick="showCellDetail(this)">回归测试流程定义</td>
+                        <td onclick="showCellDetail(this)">核心规范 | 验收标准</td>
+                    </tr>
+                    <tr>
+                        <td class="role-cell">🚀 运维团队</td>
+                        <td onclick="showCellDetail(this)">部署权约束</td>
+                        <td onclick="showCellDetail(this)">性能指标监控</td>
+                        <td onclick="showCellDetail(this)">构建和发布脚本</td>
+                        <td onclick="showCellDetail(this)">灰度发布 | 回滚流程</td>
+                        <td onclick="showCellDetail(this)">E2E 测试基础设施</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Bottom Info -->
+        <section style="background: var(--bg-card); border: 1px solid var(--primary); border-radius: 8px; padding: 2rem; margin-top: 3rem;">
+            <h3>更多资源</h3>
+            <ul class="detail-list">
+                <li><strong>完整文档仓库</strong>：<code style="color: var(--accent);">hl-contracts</code> GitHub 仓库</li>
+                <li><strong>文档版本历史</strong>：每个文档都有详细的变更日志和决策记录</li>
+                <li><strong>治理咨询</strong>：联系技术合伙人或创始人讨论治理相关问题</li>
+                <li><strong>流程问题</strong>：查看 WORKFLOW-GUIDE 了解非能力包流程的具体步骤</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        Internal Guide · 2026-04-13
+    </footer>
+
+    <script>
+        function toggleDetails(docId) {
+            const element = document.getElementById(docId);
+            element.classList.toggle('active');
+        }
+
+        function showCellDetail(cell) {
+            const text = cell.textContent;
+            alert('该单元格约束详情：\n\n' + text + '\n\n(完整说明请查阅相应文档)');
+        }
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>唤龙平台 · 团队协作指南</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .hero { text-align:center; padding:80px 24px 60px; background:linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%); position:relative; }
+  .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 50%,rgba(108,92,231,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(0,184,148,0.1) 0%,transparent 50%); }
+  .hero h1 { font-size:2.8em; font-weight:900; position:relative; z-index:1; line-height:1.3; }
+  .hero h1 span { background:linear-gradient(135deg,var(--primary-light),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { font-size:1.15em; color:var(--text-muted); margin-top:16px; position:relative; z-index:1; }
+  .hero .badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:20px; position:relative; z-index:1; }
+  .hero .badge { padding:5px 16px; background:rgba(108,92,231,0.15); border:1px solid var(--primary); border-radius:20px; font-size:0.82em; color:var(--primary-light); }
+
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; max-width:900px; margin:-30px auto 0; padding:0 24px; position:relative; z-index:10; }
+  .stat { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; text-align:center; }
+  .stat .val { font-size:2.2em; font-weight:800; background:linear-gradient(135deg,var(--primary-light),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat .lbl { font-size:0.8em; color:var(--text-muted); margin-top:4px; }
+
+  .guides { max-width:900px; margin:48px auto; padding:0 24px; }
+  .guides h2 { font-size:1.6em; font-weight:700; margin-bottom:24px; text-align:center; }
+
+  .guide-card {
+    display:flex; gap:20px; align-items:center; padding:24px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:12px;
+    margin-bottom:12px; text-decoration:none; color:var(--text);
+    transition:all 0.3s; cursor:pointer;
+  }
+  .guide-card:hover { border-color:var(--primary); transform:translateX(4px); box-shadow:0 4px 24px rgba(108,92,231,0.15); }
+  .guide-icon { font-size:2em; flex-shrink:0; width:56px; height:56px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+  .guide-info { flex:1; }
+  .guide-info h3 { font-size:1.1em; margin-bottom:4px; }
+  .guide-info p { font-size:0.88em; color:var(--text-muted); margin:0; }
+  .guide-info .for { font-size:0.78em; margin-top:6px; padding:2px 10px; border-radius:10px; display:inline-block; }
+  .guide-arrow { color:var(--text-muted); font-size:1.4em; transition:transform 0.3s; }
+  .guide-card:hover .guide-arrow { transform:translateX(4px); color:var(--primary-light); }
+
+  .doc-section { max-width:900px; margin:48px auto; padding:0 24px; }
+  .doc-section h2 { font-size:1.3em; margin-bottom:16px; color:var(--text-muted); }
+
+  /* ── Detailed TOC ── */
+  .toc-section { max-width:900px; margin:48px auto 0; padding:0 24px; }
+  .toc-section > h2 { font-size:1.6em; font-weight:700; margin-bottom:8px; text-align:center; }
+  .toc-section > p { text-align:center; color:#9999B0; margin-bottom:28px; font-size:0.95em; }
+  .toc-group { margin-bottom:16px; border:1px solid #2D2D4A; border-radius:12px; overflow:hidden; background:#1A1A2E; }
+  .toc-group-header {
+    display:flex; align-items:center; gap:12px; padding:16px 20px; cursor:pointer;
+    transition:background 0.2s; user-select:none;
+  }
+  .toc-group-header:hover { background:#222240; }
+  .toc-group-header .toc-icon { font-size:1.3em; flex-shrink:0; }
+  .toc-group-header .toc-title { flex:1; font-weight:700; font-size:1.05em; }
+  .toc-group-header .toc-badge { padding:3px 10px; border-radius:12px; font-size:0.75em; font-weight:600; }
+  .toc-group-header .toc-arrow { transition:transform 0.3s; font-size:0.9em; color:#9999B0; }
+  .toc-group-header .toc-arrow.open { transform:rotate(180deg); }
+  .toc-group-body { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
+  .toc-group-body.open { max-height:2000px; }
+  .toc-group-body .toc-list { padding:0 20px 16px; }
+  .toc-group-body .toc-item {
+    display:flex; align-items:center; gap:8px; padding:6px 0;
+    border-bottom:1px solid rgba(45,45,74,0.5);
+  }
+  .toc-group-body .toc-item:last-child { border-bottom:none; }
+  .toc-group-body .toc-item a {
+    color:#9999B0; text-decoration:none; font-size:0.88em; transition:color 0.2s;
+  }
+  .toc-group-body .toc-item a:hover { color:#E8E8F0; }
+  .toc-group-body .toc-item .num {
+    flex-shrink:0; width:24px; height:24px; border-radius:6px; font-size:0.7em;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .toc-group-body .toc-sub { padding-left:32px; }
+  .toc-group-body .toc-sub a { font-size:0.82em; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="index.html" class="active">首页</a>
+    <a href="pages/global.html">全局工作流</a>
+    <a href="pages/product.html">产品团队</a>
+    <a href="pages/frontend-design.html">前端与设计</a>
+    <a href="pages/engineering.html">工程师</a>
+    <a href="pages/qa.html">测试团队</a>
+    <a href="pages/ops.html">运维</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1><span>唤龙平台</span><br>团队协作指南</h1>
+  <p>23 人全组织 AI 驱动协作模型 · 四权分离 · 五步交付</p>
+  <div class="badges">
+    <span class="badge">TEAM-COLLAB-SPEC v2.1</span>
+    <span class="badge">UI-DELIVERY-SPEC v1.0</span>
+    <span class="badge" style="background:rgba(253,203,110,0.15);border-color:#FDCB6E;color:#FDCB6E;">Internal Guide · DRAFT</span>
+  </div>
+</div>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本站为<strong>理解导览层</strong>（Guide Layer），不是制度真源层。权威依据以 hl-contracts 仓库中的正式规范文档为准。网页内容可能超前于已锁定的规范版本。
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="val">23</div><div class="lbl">团队成员</div></div>
+  <div class="stat"><div class="val">4</div><div class="lbl">权力分离</div></div>
+  <div class="stat"><div class="val">5</div><div class="lbl">交付步骤</div></div>
+  <div class="stat"><div class="val">6</div><div class="lbl">代码仓库</div></div>
+  <div class="stat"><div class="val">4</div><div class="lbl">门禁层级</div></div>
+  <div class="stat"><div class="val">10</div><div class="lbl">能力包</div></div>
+</div>
+
+<div class="guides">
+  <h2>选择你的角色指南</h2>
+
+  <a class="guide-card" href="pages/global.html">
+    <div class="guide-icon" style="background:linear-gradient(135deg,rgba(108,92,231,0.2),rgba(0,184,148,0.2));">🌐</div>
+    <div class="guide-info">
+      <h3>全局团队分工与工作流</h3>
+      <p>交互式全景——组织架构、四权分离、五步流程、门禁体系、仓库权限、产物矩阵</p>
+      <span class="for" style="background:rgba(108,92,231,0.15);color:var(--primary-light);">全员必读</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/product.html">
+    <div class="guide-icon" style="background:rgba(116,185,255,0.15);">📘</div>
+    <div class="guide-info">
+      <h3>产品团队指南</h3>
+      <p>Cap-Spec 编写、HPRD 审批、Design Packet 冻结、产品验收 pm-acceptance</p>
+      <span class="for" style="background:rgba(116,185,255,0.15);color:var(--pm);">PM 3 人 + UI 设计师 2 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/frontend-design.html">
+    <div class="guide-icon" style="background:rgba(223,230,233,0.15);">🎨</div>
+    <div class="guide-info">
+      <h3>前端与设计团队指南</h3>
+      <p>双线交付模型、Design Packet 12 字段、UI 风险分层 R0-R3、Token 体系、Flutter 转型</p>
+      <span class="for" style="background:rgba(223,230,233,0.15);color:var(--design);">前端 5 人 + UI 设计师 2 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/engineering.html">
+    <div class="guide-icon" style="background:rgba(85,239,196,0.15);">💻</div>
+    <div class="guide-info">
+      <h3>工程师团队指南</h3>
+      <p>HPRD 编写、design.md 互审、PR 分类、CI 四层门禁、AI-first 编码、Kotlin 适配</p>
+      <span class="for" style="background:rgba(85,239,196,0.15);color:var(--eng);">后端 8 人 + 前端 5 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/qa.html">
+    <div class="guide-icon" style="background:rgba(255,234,167,0.15);">🧪</div>
+    <div class="guide-info">
+      <h3>测试团队指南</h3>
+      <p>acceptance-manifest 编写、G-026 门禁、qa-verdict 出具、验收自动化、回归基线</p>
+      <span class="for" style="background:rgba(255,234,167,0.15);color:var(--qa);">QA 架构师 1 人 + QA 工程师 3 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/ops.html">
+    <div class="guide-icon" style="background:rgba(250,177,160,0.15);">🚀</div>
+    <div class="guide-info">
+      <h3>运维人员指南</h3>
+      <p>CI/CD 流水线、staging/prod 发布、环境管理、监控告警、回滚策略、P0 紧急流程</p>
+      <span class="for" style="background:rgba(250,177,160,0.15);color:var(--ops);">运维工程师 1 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+</div>
+
+<!-- ══════════ Deep Dive Sub-Pages ══════════ -->
+<div class="guides" style="margin-top:24px;">
+  <h2>深入专题</h2>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:16px;">
+    <a class="guide-card" href="pages/power-separation.html" style="padding:16px;">
+      <div class="guide-icon" style="background:rgba(162,155,254,0.15);font-size:1.5em;width:44px;height:44px;">⚖️</div>
+      <div class="guide-info">
+        <h3 style="font-size:1em;">四权分离详解</h3>
+        <p style="font-size:0.8em;">语义主权 · 技术实现权 · 独立质量权 · 组织治理权 — 制衡矩阵 · 反模式</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/delivery-steps.html" style="padding:16px;">
+      <div class="guide-icon" style="background:rgba(0,184,148,0.15);font-size:1.5em;width:44px;height:44px;">🔄</div>
+      <div class="guide-info">
+        <h3 style="font-size:1em;">五步交付流详解</h3>
+        <p style="font-size:0.8em;">Cap-Spec → Design+HPRD → 实现 → 门禁验收 → PM 验收 — 状态机 · 并行轨道</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/repo-directory.html" style="padding:16px;">
+      <div class="guide-icon" style="background:rgba(85,239,196,0.15);font-size:1.5em;width:44px;height:44px;">📂</div>
+      <div class="guide-info">
+        <h3 style="font-size:1em;">六仓库架构详解</h3>
+        <p style="font-size:0.8em;">仓库依赖图 · CODEOWNERS 可视化 · 能力包流转动画</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/gate-levels.html" style="padding:16px;">
+      <div class="guide-icon" style="background:rgba(253,203,110,0.15);font-size:1.5em;width:44px;height:44px;">🛡️</div>
+      <div class="guide-info">
+        <h3 style="font-size:1em;">门禁体系详解</h3>
+        <p style="font-size:0.8em;">L1-L4 四层金字塔 · 哨兵 · 技术合伙人智能体 · PR 全流程动画</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/governance-docs.html" style="padding:16px;">
+      <div class="guide-icon" style="background:rgba(162,155,254,0.15);font-size:1.5em;width:44px;height:44px;">📜</div>
+      <div class="guide-info">
+        <h3 style="font-size:1em;">治理文档体系详解</h3>
+        <p style="font-size:0.8em;">文档层级树 · 状态定义 · 变更流程 · 团队×文档交叉矩阵</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/qa-process.html" style="padding:16px;">
+      <div class="guide-icon" style="background:rgba(255,234,167,0.15);font-size:1.5em;width:44px;height:44px;">🔍</div>
+      <div class="guide-info">
+        <h3 style="font-size:1em;">测试流程与分工详解</h3>
+        <p style="font-size:0.8em;">QA 全流程 · acceptance-manifest · CODEOWNERS 足迹 · Gap 分析</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+  </div>
+</div>
+
+<!-- ══════════ Detailed TOC ══════════ -->
+<div class="toc-section">
+  <h2>详细目录</h2>
+  <p>点击展开各指南的完整章节，可直接跳转到具体内容</p>
+
+  <!-- Global -->
+  <div class="toc-group">
+    <div class="toc-group-header" onclick="toggleTocGroup(this)">
+      <span class="toc-icon">🌐</span>
+      <span class="toc-title">全局团队分工与工作流</span>
+      <span class="toc-badge" style="background:rgba(108,92,231,0.15);color:#A29BFE;">全员必读 · 交互式</span>
+      <span class="toc-arrow">▼</span>
+    </div>
+    <div class="toc-group-body">
+      <div class="toc-list">
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">1</span><a href="pages/global.html">全景总览 — 核心理念 · 四权分离详解</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">2</span><a href="pages/global.html">组织架构 — 23 人编制 · 能力包分配表</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">3</span><a href="pages/global.html">能力包流程 — 五步交付流 · 12 状态机</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">4</span><a href="pages/global.html">其他流程 — Bugfix / 技术改动 / 治理内核</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">5</span><a href="pages/global.html">门禁体系 — L1-L4 四层 + Required Status Checks + UI 门禁</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">6</span><a href="pages/global.html">仓库与权限 — 六仓库 · CODEOWNERS · PR 分类</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(108,92,231,0.15);color:#A29BFE;">7</span><a href="pages/global.html">产物矩阵 — 谁产出什么 · 谁审批什么</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product -->
+  <div class="toc-group">
+    <div class="toc-group-header" onclick="toggleTocGroup(this)">
+      <span class="toc-icon">📘</span>
+      <span class="toc-title">产品团队指南</span>
+      <span class="toc-badge" style="background:rgba(116,185,255,0.15);color:#74B9FF;">PM + UI 设计师</span>
+      <span class="toc-arrow">▼</span>
+    </div>
+    <div class="toc-group-body">
+      <div class="toc-list">
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">一</span><a href="pages/product.html#_1">角色定位 — PM 能力包语义 Owner · 设计师视觉/交互 Owner</a></div>
+        <div class="toc-item toc-sub"><a href="pages/product.html#pm-owner">→ PM 的权力与不再做的事</a></div>
+        <div class="toc-item toc-sub"><a href="pages/product.html#ui-owner">→ UI 设计师参与的两条线</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">二</span><a href="pages/product.html#_2">核心产出 — Cap-Spec 三件套 · Design Packet 12 字段</a></div>
+        <div class="toc-item toc-sub"><a href="pages/product.html#21-pm-cap-spec">→ PM 的三份 Cap-Spec</a></div>
+        <div class="toc-item toc-sub"><a href="pages/product.html#22-design-packet">→ 设计师的 Design Packet</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">三</span><a href="pages/product.html#_3">工作流程 — Step 1 冻结 · Step 2 审 HPRD · Step 5 验收</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">四</span><a href="pages/product.html#_4">协作边界 — 与工程师/QA/设计师/前端/创始人</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">五</span><a href="pages/product.html#_5">常见问题 — Cap-Spec 变更 · HPRD 冲突 · 设计冻结</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(116,185,255,0.15);color:#74B9FF;">六</span><a href="pages/product.html#_6">能力包分配 — PM-A/B/C 分工表</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Frontend & Design -->
+  <div class="toc-group">
+    <div class="toc-group-header" onclick="toggleTocGroup(this)">
+      <span class="toc-icon">🎨</span>
+      <span class="toc-title">前端与设计团队指南</span>
+      <span class="toc-badge" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">前端 + 设计师</span>
+      <span class="toc-arrow">▼</span>
+    </div>
+    <div class="toc-group-body">
+      <div class="toc-list">
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">一</span><a href="pages/frontend-design.html#_1">你们是谁 — 前端 Lead 胡杰威 · AI-first Flutter</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">二</span><a href="pages/frontend-design.html#_2">双线交付模型 — Foundation Lane + Capability UI Lane</a></div>
+        <div class="toc-item toc-sub"><a href="pages/frontend-design.html#1ui-foundation-lane">→ 线 1：UI Foundation（6 阶段）</a></div>
+        <div class="toc-item toc-sub"><a href="pages/frontend-design.html#2capability-ui-delivery-lane-ui">→ 线 2：Capability UI Delivery（10 阶段）</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">三</span><a href="pages/frontend-design.html#foundation-capability">Foundation ↔ Capability 依赖握手</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">四</span><a href="pages/frontend-design.html#design-packet">Design Packet 详解 — 12 个必填字段</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">五</span><a href="pages/frontend-design.html#ui">UI 变更风险分层 — R0/R1/R2/R3</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">六</span><a href="pages/frontend-design.html#ui_1">UI 门禁体系 — 9 项门禁 × 风险级别矩阵</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">七</span><a href="pages/frontend-design.html#_3">仓库路径与权限 — CODEOWNERS 规则表</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">八</span><a href="pages/frontend-design.html#web-flutter">Web → Flutter 转型 · Figma 约束</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">九</span><a href="pages/frontend-design.html#_4">四种最大失败模式</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(223,230,233,0.15);color:#DFE6E9;">十</span><a href="pages/frontend-design.html#_5">常见问题</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Engineering -->
+  <div class="toc-group">
+    <div class="toc-group-header" onclick="toggleTocGroup(this)">
+      <span class="toc-icon">💻</span>
+      <span class="toc-title">工程师团队指南</span>
+      <span class="toc-badge" style="background:rgba(85,239,196,0.15);color:#55EFC4;">后端 + 前端</span>
+      <span class="toc-arrow">▼</span>
+    </div>
+    <div class="toc-group-body">
+      <div class="toc-list">
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">一</span><a href="pages/engineering.html#_1">角色定位 — 方案 Owner · AI-first 编码</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">二</span><a href="pages/engineering.html#_2">核心产出 — HPRD · design.md · 代码 · 测试 · demo</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">三</span><a href="pages/engineering.html#hprd">HPRD 怎么写 — 6 字段最小模板</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">四</span><a href="pages/engineering.html#_3">能力包流中的完整时间线</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">五</span><a href="pages/engineering.html#pr">PR 提交规范 — YAML 分类块 · 自动升级规则</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">六</span><a href="pages/engineering.html#ci">CI 门禁 — L1 格式 / L2 确定性 / L3 行为 / L4 审计</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">七</span><a href="pages/engineering.html#java-kotlin">后端 Java → Kotlin 适配</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">八</span><a href="pages/engineering.html#_4">前端额外说明 — 双线 · UI-R · frontend-design.md</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">九</span><a href="pages/engineering.html#_5">测试分工 — 你负责 vs QA 负责</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">十</span><a href="pages/engineering.html#_6">仓库路径与 CODEOWNERS</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">⑪</span><a href="pages/engineering.html#_7">各类变更怎么走</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(85,239,196,0.15);color:#55EFC4;">⑫</span><a href="pages/engineering.html#_8">常见问题</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QA -->
+  <div class="toc-group">
+    <div class="toc-group-header" onclick="toggleTocGroup(this)">
+      <span class="toc-icon">🧪</span>
+      <span class="toc-title">测试团队指南</span>
+      <span class="toc-badge" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">QA 架构师 + 工程师</span>
+      <span class="toc-arrow">▼</span>
+    </div>
+    <div class="toc-group-body">
+      <div class="toc-list">
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">一</span><a href="pages/qa.html#_1">角色定位 — 质量 Owner · 独立验证权</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">二</span><a href="pages/qa.html#_2">团队内部分工 — 架构师 vs 工程师</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">三</span><a href="pages/qa.html#_3">核心产出 — manifest · 测试套件 · verdict</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">四</span><a href="pages/qa.html#acceptance-manifestyaml">acceptance-manifest.yaml 详解 · G-026 规则</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">五</span><a href="pages/qa.html#_4">能力包流中的时间线</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">六</span><a href="pages/qa.html#qa-verdict">qa-verdict 怎么出 · 出具标准</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">七</span><a href="pages/qa.html#_5">与工程师的测试分工表</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">八</span><a href="pages/qa.html#qa">QA 架构师额外职责</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">九</span><a href="pages/qa.html#ui">UI 相关验收 — golden / a11y / catalog</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">十</span><a href="pages/qa.html#_6">各类变更中你的角色</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">⑪</span><a href="pages/qa.html#_7">需要掌握的技能</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(255,234,167,0.15);color:#FFEAA7;">⑫</span><a href="pages/qa.html#_8">常见问题</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ops -->
+  <div class="toc-group">
+    <div class="toc-group-header" onclick="toggleTocGroup(this)">
+      <span class="toc-icon">🚀</span>
+      <span class="toc-title">运维人员指南</span>
+      <span class="toc-badge" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">运维工程师</span>
+      <span class="toc-arrow">▼</span>
+    </div>
+    <div class="toc-group-body">
+      <div class="toc-list">
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">一</span><a href="pages/ops.html#_1">角色定位 — Release & Infra Owner</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">二</span><a href="pages/ops.html#_2">核心产出 — 部署脚本 · 发布记录 · 监控配置</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">三</span><a href="pages/ops.html#_3">能力包流中的角色 — staging → QA 回归 → prod</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">四</span><a href="pages/ops.html#_4">发布策略 — 常规 / 紧急 / 治理 · 回滚</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">五</span><a href="pages/ops.html#_5">团队协作 — 与工程师/QA/PM/创始人</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">六</span><a href="pages/ops.html#cicd">CI/CD 基础设施维护 — workflow 清单</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">七</span><a href="pages/ops.html#_6">基础设施管理 — 环境矩阵 · 数据库 · 监控</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">八</span><a href="pages/ops.html#ai">AI 驱动模型中的你</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">九</span><a href="pages/ops.html#bugfix-p0">Bugfix P0 紧急流程</a></div>
+        <div class="toc-item"><span class="num" style="background:rgba(250,177,160,0.15);color:#FAB1A0;">十</span><a href="pages/ops.html#_7">常见问题</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="doc-section">
+  <h2>治理文档体系</h2>
+  <div class="card-grid">
+    <div class="card"><h3 style="color:var(--accent)">TEAM-COLLAB-SPEC v2.1</h3><p>核心协作规格 · DRAFT（锁版前置：T1 试运行通过）</p></div>
+    <div class="card"><h3 style="color:var(--accent)">UI-DELIVERY-SPEC v1.0</h3><p>前端/设计双线交付模型 · DRAFT</p></div>
+    <div class="card"><h3 style="color:var(--accent)">WORKFLOW-GUIDE v1</h3><p>Bugfix/技术改动/治理流程</p></div>
+    <div class="card"><h3 style="color:var(--accent)">TOOLCHAIN-GUIDE v1</h3><p>工具链选型与流程映射</p></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + UI-DELIVERY-SPEC v1.0 · Internal Guide<br>
+  2026-04-13 生成 · 治理来源：SAAC-HL-001 v1.1 → BRIDGE-DERIVATION → PRD-REDEFINITION-SPEC v2.0 → 创始人裁决
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+function toggleTocGroup(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.toc-arrow');
+  body.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('open');
+}
+</script>
+</body>
+</html>

@@ -421,11 +421,11 @@
         <div class="nav-links">
             <a href="../index.html">首页</a>
             <a href="global.html">全局工作流</a>
-            <a href="pm-guide.html">PM 指南</a>
-            <a href="frontend-guide.html">前端指南</a>
-            <a href="backend-guide.html">后端指南</a>
-            <a href="qa-process.html">QA 流程</a>
-            <a href="ops-guide.html">运维指南</a>
+            <a href="product.html">产品团队</a>
+            <a href="frontend-design.html">前端与设计</a>
+            <a href="engineering.html">工程师</a>
+            <a href="qa.html">测试团队</a>
+            <a href="ops.html">运维</a>
         </div>
     </nav>
 
@@ -831,7 +831,15 @@
 
         function showCellDetail(cell) {
             const text = cell.textContent;
-            alert('该单元格约束详情：\n\n' + text + '\n\n(完整说明请查阅相应文档)');
+            const tip = cell.querySelector('.cell-tip');
+            if (tip) { tip.remove(); return; }
+            const el = document.createElement('div');
+            el.className = 'cell-tip';
+            el.style.cssText = 'position:absolute;left:0;top:100%;z-index:10;background:#1A1A2E;border:1px solid #6C5CE7;border-radius:8px;padding:10px 14px;font-size:0.82em;color:#E8E8F0;max-width:280px;box-shadow:0 4px 16px rgba(0,0,0,0.4);';
+            el.textContent = text;
+            cell.style.position = 'relative';
+            cell.appendChild(el);
+            setTimeout(() => el.remove(), 4000);
         }
 
         // Add smooth scroll behavior

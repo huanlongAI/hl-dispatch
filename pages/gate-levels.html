@@ -156,17 +156,8 @@
 .gate-modal-content .close:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .gate-modal-content h2 { margin: 0 0 16px; color: var(--primary-light); }
 
-/* Tablet */
-@media (max-width: 1024px) {
-  .gate-details .gate-items { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-  .gate-flow-step { gap: 12px; }
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .pyramid-container { min-height: 300px; padding: 16px; }
-  .special-section { padding: 16px; }
-  .gate-flow-step { flex-wrap: wrap; }
+body {
+  min-width: 1200px;
 }
 </style>
 </head>
@@ -184,6 +175,10 @@
     <a href="ops.html">运维</a>
   </div>
 </nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
 
 <div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
   ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。

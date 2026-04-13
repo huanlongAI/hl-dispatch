@@ -6,6 +6,7 @@
 <title>唤龙平台 · 团队协作指南</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
+  body { min-width: 1200px; }
   .hero { text-align:center; padding:80px 24px 60px; background:linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%); position:relative; }
   .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 50%,rgba(108,92,231,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(0,184,148,0.1) 0%,transparent 50%); }
   .hero h1 { font-size:2.8em; font-weight:900; position:relative; z-index:1; line-height:1.3; }
@@ -84,41 +85,6 @@
   .nav-links a:hover { text-decoration:underline; }
   .nav-links a:focus-visible { outline:2px solid var(--primary); outline-offset:4px; }
 
-  /* ── Tablet Breakpoint (max-width: 1024px) ── */
-  @media (max-width:1024px) {
-    .hero { padding:60px 20px 40px; }
-    .hero h1 { font-size:2.2em; }
-    .hero p { font-size:1em; }
-
-    .stats { grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; padding:0 20px; }
-    .stat { padding:16px 12px; }
-    .stat .val { font-size:1.8em; }
-    .stat .lbl { font-size:0.8rem; }
-
-    .guides { padding:0 20px; }
-    .guides h2 { font-size:1.4em; }
-
-    .guide-card { gap:16px; padding:20px; margin-bottom:10px; }
-    .guide-icon { width:48px; height:48px; font-size:1.6em; }
-    .guide-info h3 { font-size:1em; }
-    .guide-info p { font-size:0.85rem; }
-    .guide-arrow { font-size:1.2em; }
-
-    .doc-section { padding:0 20px; }
-    .toc-section { padding:0 20px; }
-    .toc-section > h2 { font-size:1.4em; }
-    .toc-group-header { padding:14px 16px; }
-    .toc-group-header .toc-title { font-size:1em; }
-    .toc-group-body .toc-item { padding:5px 0; }
-    .toc-group-body .toc-list { padding:0 16px 12px; }
-  }
-
-  /* ── Small devices (max-width: 640px) ── */
-  @media (max-width:640px) {
-    .hero { padding:40px 16px 30px; }
-    .hero h1 { font-size:1.8em; }
-    .nav-links { flex-wrap:wrap; gap:8px; }
-  }
 </style>
 </head>
 <body>
@@ -135,6 +101,10 @@
     <a href="pages/ops.html">运维</a>
   </div>
 </nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
 
 <div class="hero">
   <h1><span>唤龙平台</span><br>团队协作指南</h1>

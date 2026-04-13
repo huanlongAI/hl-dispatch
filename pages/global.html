@@ -33,6 +33,7 @@
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
+    min-width: 1200px;
   }
 
   /* ── Header ── */
@@ -268,25 +269,6 @@
   .footer { text-align: center; padding: 40px 24px; color: var(--text-muted); font-size: 0.85em; border-top: 1px solid var(--border); }
 
   /* ── Responsive ── */
-
-  /* ── Tablet Breakpoint ── */
-  @media (max-width: 1024px) {
-    .nav-tabs { flex-wrap: wrap; gap: 6px; padding: 16px 12px; }
-    .nav-tab { padding: 6px 16px; font-size: 0.85em; }
-    .section { padding: 32px 16px; }
-    .powers-grid { grid-template-columns: repeat(2, 1fr); }
-    .repo-grid { grid-template-columns: 1fr; }
-    .metric-grid { grid-template-columns: repeat(2, 1fr); }
-    .gate-levels { gap: 10px; }
-    .flow-step { gap: 16px; }
-  }
-  @media (max-width: 768px) {
-    .hero h1 { font-size: 1.6em; }
-    .nav-tab { padding: 6px 14px; font-size: 0.8em; }
-    .powers-grid { grid-template-columns: 1fr; }
-    .org-level { flex-direction: column; align-items: center; }
-    .org-hline { display: none; }
-  }
 </style>
 </head>
 <body>
@@ -303,6 +285,10 @@
     <a href="ops.html" style="padding:5px 14px;border-radius:20px;font-size:0.82em;color:#9999B0;text-decoration:none;">运维</a>
   </div>
 </nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
 
 <!-- ══════════ Hero ══════════ -->
 <div class="hero">

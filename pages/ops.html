@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../css/style.css">
 
 <style>
+body { min-width: 1200px; }
 .toc-toggle { position:fixed; right:20px; bottom:20px; width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer; font-size:1.3em; z-index:200; box-shadow:0 4px 16px rgba(108,92,231,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.3s; }
 .toc-toggle:hover { transform:scale(1.1); }
 .toc-toggle:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
@@ -23,9 +24,6 @@
 .toc-sidebar a.h3 { padding-left:16px; font-size:0.88rem; }
 .toc-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:198; display:none; }
 .toc-overlay.open { display:block; }
-@media (max-width:1024px) {
-  .toc-sidebar { width:280px; }
-}
 </style>
 </head>
 <body>
@@ -42,6 +40,10 @@
     <a href="ops.html">运维</a>
   </div>
 </nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
 
 <div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
   ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。

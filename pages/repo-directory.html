@@ -93,18 +93,8 @@ svg { max-width: 100%; height: auto; }
 .repo-design { --repo-color: #DFE6E9; }
 .repo-app { --repo-color: #74B9FF; }
 
-/* Tablet responsive */
-@media (max-width: 1024px) {
-  .svg-container { overflow-x: auto; }
-  .flow-animation { margin: 24px 0; }
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .svg-container { min-height: 300px; padding: 16px; }
-  .repo-details-card { padding: 20px; }
-  .flow-step { flex-direction: column; gap: 12px; }
-  .flow-step .number { flex-shrink: 0; }
+body {
+  min-width: 1200px;
 }
 </style>
 </head>
@@ -125,6 +115,10 @@ svg { max-width: 100%; height: auto; }
 
 <div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
   ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。权威依据以 hl-contracts 仓库中的正式规范文档为准。
+</div>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
 </div>
 
 <div class="page-header">

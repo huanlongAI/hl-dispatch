@@ -198,6 +198,17 @@
             padding: 2rem; text-align: center; color: rgba(232,232,240,0.7); font-size: 0.9rem;
         }
 
+        /* Breadcrumb */
+        .breadcrumb {
+          max-width: 900px; margin: 0 auto; padding: 10px 24px 0;
+          font-size: 0.82em; color: rgba(153,153,176,1);
+          display: flex; align-items: center; gap: 6px;
+        }
+        .breadcrumb a { color: rgba(153,153,176,1); text-decoration: none; transition: color 0.2s; }
+        .breadcrumb a:hover { color: #A29BFE; }
+        .breadcrumb .sep { color: rgba(45,45,74,1); }
+        .breadcrumb .current { color: #E8E8F0; font-weight: 500; }
+
     </style>
 </head>
 <body>
@@ -223,6 +234,8 @@
     <div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
         本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
     </div>
+
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span><a href="global.html">全局工作流</a><span class="sep">/</span><span class="current">五步交付流详解</span></div>
 
     <main>
         <h1>五步交付流详解</h1>

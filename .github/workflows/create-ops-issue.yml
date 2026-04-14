@@ -22,7 +22,7 @@ jobs:
               assignees: ['ZDragon.Meta'],
               labels: ['ops', 'task-assign', 'priority-p0'],
               body: `## 执行角色
-            运维工程师（曾正龙）
+            运维工程师（Gate-R）
 
             ## 优先级
             P0 - 紧急（当天确认进展）

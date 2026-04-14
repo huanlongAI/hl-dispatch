@@ -9,7 +9,7 @@
 **日期**：2026-03-30
 **状态**：RULED（创始人已裁决 D-1~D-5，2026-03-30）
 **派生链**：TEAM-COLLABORATION-SPEC v1.2 → R-056/R-057/R-058 → GPT 范式讨论 → PRD-REDEFINITION-SPEC v2.0 → 创始人 2026-03-30 纠正 → 本文档
-**适用对象**：邹骢、朱阳（PM 角色，产线责任人）
+**适用对象**：PM-A、PM-B（PM 角色，产线责任人）
 
 ---
 
@@ -22,7 +22,7 @@
 | I-3 | GPT 范式讨论（2026-03-30） | 两套治理宇宙、四层质量保障 |
 | I-4 | MULTI-NODE-COWORK-SPEC v0.3 | Write-Owner 模型、跨域写入协议 |
 | I-5 | PRD-REDEFINITION-SPEC v2.0 | PM = 产线责任人，Cap-Spec 工件集，工具/平台不限定 |
-| I-6 | PM 交互先例（R-061/R-062） | 邹骢已有效参与架构讨论 |
+| I-6 | PM 交互先例（R-061/R-062） | PM-A已有效参与架构讨论 |
 | I-7 | 创始人 2026-03-30 纠正 | PM 是产线责任人，驱动规格→AI 编码→测试→验收完整闭环 |
 
 **推导逻辑**：
@@ -122,10 +122,10 @@ PM 在所负责的能力包/产品线范围内，是**完整的产线责任人**
 
 | # | 动作 | 验证 |
 |---|------|------|
-| 1.1 | 确认 PM GitHub 账号：邹骢 @zoucong121、朱阳 @{TBD} | 账号可访问 |
+| 1.1 | 确认 PM GitHub 账号：PM-A @pm-a、PM-B @{TBD} | 账号可访问 |
 | 1.2 | 邀请加入 huanlongAI GitHub Organization | org 成员列表可见 |
 | 1.3 | 配置仓库权限（见 §3.1 权限表） | PM 可 clone 指定仓库 |
-| 1.4 | 更新 TEAM.yml 录入朱阳信息 | TEAM.yml 含两名 PM |
+| 1.4 | 更新 TEAM.yml 录入PM-B信息 | TEAM.yml 含两名 PM |
 
 #### 3.1 GitHub 仓库权限表
 
@@ -142,16 +142,16 @@ PM 在所负责的能力包/产品线范围内，是**完整的产线责任人**
 
 | # | 动作 | 验证 |
 |---|------|------|
-| 1.5.1 | 邀请 PM 加入 #唤龙-任务协同 群 | PM 可在飞书群中接收消息 |
-| 1.5.2 | 邀请 PM 加入 #唤龙-PM工作台 群 | PM 可在飞书群中接收消息 |
+| 1.5.1 | 邀请 PM 加入 任务协同通道 群 | PM 可在飞书群中接收消息 |
+| 1.5.2 | 邀请 PM 加入 PM 工作台通道 群 | PM 可在飞书群中接收消息 |
 | 1.5.3 | 指导 PM 学习飞书×GitHub 协作规范 | PM 能复述关键行为规范 |
 
 #### 1.5.1 飞书群邀请清单
 
 | 群组 | 用途 | PM 权限 | 说明 |
 |------|------|:------:|------|
-| **#唤龙-任务协同** | 日常沟通主阵地 | Member | 能力包启动、里程碑推进、跨域协调讨论 |
-| **#唤龙-PM工作台** | PM 规格讨论专用 | Member | Cap-Spec 评审、方案讨论、能力包边界定义 |
+| **任务协同通道** | 日常沟通主阵地 | Member | 能力包启动、里程碑推进、跨域协调讨论 |
+| **PM 工作台通道** | PM 规格讨论专用 | Member | Cap-Spec 评审、方案讨论、能力包边界定义 |
 
 #### 1.5.2 飞书×GitHub 协作规范
 
@@ -233,7 +233,7 @@ git clone git@github.com:huanlongAI/hl-factory.git
 | 5.7 | PM 能说出 Cap-Spec 三件套名称和用途 | 口头/文字确认 | 能力规格 + 验收场景 + 业务码 PR |
 | 5.8 | PM 能说出 reason_code 命名规则 | 口头/文字确认 | `biz.{module}.{action}.{outcome}` |
 | 5.9 | PM 能说出"产线责任人"的权责边界 | 口头/文字确认 | 驱动闭环但不可改上游、不可跳过技术验收 |
-| 5.10 | TEAM.yml 两名 PM 均已录入 | 文件内容 | 邹骢 + 朱阳 |
+| 5.10 | TEAM.yml 两名 PM 均已录入 | 文件内容 | PM-A + PM-B |
 
 ---
 
@@ -289,13 +289,13 @@ PM 的规格驱动工作涉及多个仓库：
 
 ---
 
-## 5. 邹骢当前状态与行动项
+## 5. PM-A当前状态与行动项
 
 ### 5.1 已完成
 
 | 项目 | 状态 | 证据 |
 |------|:----:|------|
-| GitHub 账号注册（@zoucong121） | ✅ | TEAM.yml |
+| GitHub 账号注册（@pm-a） | ✅ | TEAM.yml |
 | TEAM.yml 录入 | ✅ | hl-dispatch/TEAM.yml |
 | biz.product 能力包分配 | ✅ | LAUNCH-PRODUCT-CENTER v1.2 |
 | 架构反馈交互（R-061） | ✅ | REPLY-PM-ZOUCONG-R061.md |
@@ -309,19 +309,19 @@ PM 的规格驱动工作涉及多个仓库：
 | P0 | 编写 Cap-Spec-Biz.Product 验收场景集 | Cap-Spec-Biz.Product.Acceptance.v1.0.md | 与创始人协作 |
 | P1 | 提交 19 条 reason_codes PR | reasoncodes.csv PR | Cap-Spec 完成后 |
 | P1 | 驱动 AI 编码实现 biz.product | hl-platform 代码 PR | Cap-Spec merge 后 |
-| P2 | 与朱阳沟通后续能力包边界 | 能力包清单讨论 | S2 中期启动 |
+| P2 | 与PM-B沟通后续能力包边界 | 能力包清单讨论 | S2 中期启动 |
 
 ---
 
-## 6. 朱阳接入行动项
+## 6. PM-B接入行动项
 
 | 优先级 | 动作 | 负责人 | 依赖 |
 |:-----:|------|--------|------|
-| P0 | 确认 GitHub 用户名 | **朱阳** | — |
-| P0 | 邀请加入 huanlongAI org | **创始人** | 朱阳 GitHub 账号 |
-| P0 | 更新 TEAM.yml 录入朱阳信息 | **NODE-A** | org 邀请完成 |
-| P1 | 执行 Phase 2-3（本地环境 + AI 平台 + 知识学习） | **朱阳** | GitHub 权限到位 |
-| P1 | 执行 Phase 4（首次任务演练，含 AI 编码验证） | **朱阳 + 创始人** | 知识学习完成 |
+| P0 | 确认 GitHub 用户名 | **PM-B** | — |
+| P0 | 邀请加入 huanlongAI org | **创始人** | PM-B GitHub 账号 |
+| P0 | 更新 TEAM.yml 录入PM-B信息 | **NODE-A** | org 邀请完成 |
+| P1 | 执行 Phase 2-3（本地环境 + AI 平台 + 知识学习） | **PM-B** | GitHub 权限到位 |
+| P1 | 执行 Phase 4（首次任务演练，含 AI 编码验证） | **PM-B + 创始人** | 知识学习完成 |
 | P2 | 分配能力包（S2 中期讨论后） | **创始人** | S2 启动 |
 
 ---
@@ -348,8 +348,8 @@ PM 的规格驱动工作涉及多个仓库：
 | D-1 | PM 产线责任人模式 | **✅ A) 确认** | 2026-03-30 |
 | D-2 | PM 代码 PR 审批人 | **✅ C) 创始人 + 技术验收官两者均需** | 2026-03-30 |
 | D-3 | PM hl-platform Write 权限 | **✅ A) 开放** | 2026-03-30 |
-| D-4 | 朱阳 GitHub 用户名 | **待朱阳提供** | — |
-| D-5 | 朱阳能力包分配时机 | **✅ B) S2 中期讨论后** | 2026-03-30 |
+| D-4 | PM-B GitHub 用户名 | **待PM-B提供** | — |
+| D-5 | PM-B能力包分配时机 | **✅ B) S2 中期讨论后** | 2026-03-30 |
 
 ---
 
@@ -357,7 +357,7 @@ PM 的规格驱动工作涉及多个仓库：
 
 | 文档 | 修订内容 | 优先级 |
 |------|---------|:-----:|
-| hl-dispatch/TEAM.yml | 录入朱阳 GitHub 信息 | P0 |
+| hl-dispatch/TEAM.yml | 录入PM-B GitHub 信息 | P0 |
 | hl-contracts/prd/README.md | 追加 "Cap-Spec 规范（2026-03 起适用）" | P0 |
 | hl-dispatch/README.md | 补充 PM 产线责任人接入说明 | P1 |
 | TEAM-COLLABORATION-SPEC v1.2 | 附录追加 PM 产线责任人权限矩阵 | P1 |
@@ -371,5 +371,5 @@ PM 的规格驱动工作涉及多个仓库：
 | 2026-03-30 | v1.0 | DRAFT — PM 定位为规格整理者，CIS 三件套 |
 | 2026-03-30 | v1.1 | 同步 CIS 术语到各章节 |
 | 2026-03-30 | v2.0 | **重大修订** — 创始人纠正 PM 定位为产线责任人；PM 驱动 AI 编码完整闭环；废弃 CIS 改用 Cap-Spec；hl-platform 权限从 Read 升为 Write；工具/AI 平台不限定；新增 Phase 4 AI 编码验证步骤 |
-| 2026-03-30 | v2.0 RULED | 创始人裁决 D-1~D-5：产线责任人模式✅、代码 PR 双审批✅、hl-platform Write✅、朱阳待提供 GitHub、S2 中期分配能力包✅ |
-| 2026-04-01 | v2.1 | **修订** — Phase 1 中追加 Phase 1.5 飞书群邀请与协作规范；PM 必须加入 #唤龙-任务协同 + #唤龙-PM工作台；引用 FEISHU-GITHUB-COLLABORATION-SPEC v1.0，规范飞书讨论结论 24h 内同步到 GitHub |
+| 2026-03-30 | v2.0 RULED | 创始人裁决 D-1~D-5：产线责任人模式✅、代码 PR 双审批✅、hl-platform Write✅、PM-B待提供 GitHub、S2 中期分配能力包✅ |
+| 2026-04-01 | v2.1 | **修订** — Phase 1 中追加 Phase 1.5 飞书群邀请与协作规范；PM 必须加入 任务协同通道 + PM 工作台通道；引用 FEISHU-GITHUB-COLLABORATION-SPEC v1.0，规范飞书讨论结论 24h 内同步到 GitHub |

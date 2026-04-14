@@ -8,7 +8,7 @@
 **版本**：v1.0
 **日期**：2026-03-17
 **适用阶段**：Phase 1 S3/S4（R-053 LOCKED）
-**创建者**：童正辉
+**创建者**：L0-Founder
 **治理根**：SAAC-HL-001 v1.1 → R-053 → R-055 → HK-NAMING-SPEC-KOTLIN-v1
 
 ---
@@ -45,7 +45,7 @@ SAAC-HL-001 v1.1（架构宪法）
 | **PM 负责人** | 姓名 |
 | **后端 Owner** | 姓名 |
 | **前端 Owner** | 姓名 |
-| **验收人** | Gate H（许久明）+ Gate R（曾正龙） |
+| **验收人** | Gate H（Gate-H）+ Gate R（Gate-R） |
 
 ---
 

@@ -5,7 +5,7 @@
 > **审计范围**：DECISION-2026-03-13-GREENFIELD-TECH-OPS-AUDIT v1.0
 > **审计对照**：SAAC-HL-001 v1.1 + TECH-STACK-SPEC v3 + RULINGS.md（截至 2026-03-17）
 > **审计人**：架构 AI 助理（创始人督导）
-> **裁决人**：童正辉（创始人）
+> **裁决人**：L0-Founder（创始人）
 
 ---
 

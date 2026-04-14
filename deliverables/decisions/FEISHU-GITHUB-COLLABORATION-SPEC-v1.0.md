@@ -46,38 +46,38 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 
 | # | 群名 | 成员 | 职责 | 对应 GitHub 事件源 |
 |---|------|------|------|-------------------|
-| 1 | **#唤龙-工程通知** | 核心组全员 | PR / Issue / CI 事件自动推送 | hl-platform / hl-framework / hl-contracts 的 Webhook |
-| 2 | **#唤龙-任务协同** | 核心组全员 | 任务讨论、进度同步、即时沟通 | hl-dispatch Issue 变更 |
-| 3 | **#唤龙-PM工作台** | 创始人 + 邹骢 + 朱阳 + 技术验收官 | PM 规格讨论、Cap-Spec 审查、业务问题 | hl-contracts PR |
-| 4 | **#唤龙-创始人指挥台** | 仅创始人 | 全局状态汇总、审批提醒、关键指标 | 跨仓库汇总 |
+| 1 | **工程通知通道** | 核心组全员 | PR / Issue / CI 事件自动推送 | hl-platform / hl-framework / hl-contracts 的 Webhook |
+| 2 | **任务协同通道** | 核心组全员 | 任务讨论、进度同步、即时沟通 | hl-dispatch Issue 变更 |
+| 3 | **PM 工作台通道** | 创始人 + PM-A + PM-B + 技术验收官 | PM 规格讨论、Cap-Spec 审查、业务问题 | hl-contracts PR |
+| 4 | **指挥台通道** | 仅创始人 | 全局状态汇总、审批提醒、关键指标 | 跨仓库汇总 |
 
 **与 super-founder 的差异**：
 
 | super-founder 群 | 唤龙适配 | 变更原因 |
 |-----------------|---------|--------|
-| #工程通知 | #唤龙-工程通知 | 加前缀区分产品线 |
-| #任务中枢 | #唤龙-任务协同 | 唤龙团队更强调多人协同而非单向派发 |
-| #文档动态 | 合并入 #唤龙-PM工作台 | 唤龙文档变更主要由 PM 驱动，合并减少群数 |
-| #创始人指挥台 | #唤龙-创始人指挥台 | 保持 |
+| #工程通知 | 工程通知通道 | 加前缀区分产品线 |
+| #任务中枢 | 任务协同通道 | 唤龙团队更强调多人协同而非单向派发 |
+| #文档动态 | 合并入 PM 工作台通道 | 唤龙文档变更主要由 PM 驱动，合并减少群数 |
+| #创始人指挥台 | 指挥台通道 | 保持 |
 
 ### 1.2 群行为规范
 
-**#唤龙-工程通知**（只读为主）
+**工程通知通道**（只读为主）
 - Bot 自动推送 GitHub 事件，人类一般不在此群讨论
 - 如需讨论某个 PR/Issue，发飞书消息时附上 GitHub 链接，讨论在 GitHub 上完成
 - 每周一创始人在此群发布周报/本周目标
 
-**#唤龙-任务协同**（日常沟通主阵地）
+**任务协同通道**（日常沟通主阵地）
 - 任务相关即时讨论在此进行
 - 讨论产出结论后，责任人将结论写入 GitHub Issue comment
 - 禁止仅在飞书达成共识而不更新 GitHub（违反 SSOT 原则）
 
-**#唤龙-PM工作台**（PM 专属）
+**PM 工作台通道**（PM 专属）
 - PM 规格方向讨论、Cap-Spec 初稿讨论
 - 创始人对 PM decision-request 的快速预沟通（正式裁决仍走 GitHub）
 - 技术验收官对 PM 代码 PR 的即时反馈
 
-**#唤龙-创始人指挥台**（仅创始人）
+**指挥台通道**（仅创始人）
 - 汇总各群关键事件
 - 待审批 PR/Issue 提醒
 - Bitable 仪表盘快速入口
@@ -92,15 +92,15 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 
 | GitHub 事件 | 仓库范围 | 目标群 | 卡片内容 |
 |------------|---------|--------|--------|
-| PR opened | hl-platform / hl-framework | #唤龙-工程通知 | 标题 + 作者 + 分支 + [查看PR] 按钮 |
-| PR merged | 全部仓库 | #唤龙-工程通知 | 标题 + 合并者 + commit 数 |
-| PR review requested | 全部仓库 | #唤龙-工程通知 + **@被指派人** | "你有一个待审查 PR" |
-| Issue opened | hl-dispatch | #唤龙-任务协同 | 标签 + 标题 + 指派人 + [查看Issue] 按钮 |
-| Issue labeled `decision-request` | hl-dispatch | #唤龙-创始人指挥台 | "有新的裁决请求" |
-| CI workflow failed | hl-platform / hl-framework | #唤龙-工程通知 | 失败步骤 + PR 链接 + 作者 |
-| CI workflow passed | hl-platform | #唤龙-工程通知（静默） | 仅更新 Bitable 状态，不发群消息 |
-| Push to main | hl-contracts | #唤龙-工程通知 | "契约更新" + commit 消息 |
-| Cap-Spec PR opened | hl-contracts（pm/ 分支） | #唤龙-PM工作台 | "新的能力规格待审查" |
+| PR opened | hl-platform / hl-framework | 工程通知通道 | 标题 + 作者 + 分支 + [查看PR] 按钮 |
+| PR merged | 全部仓库 | 工程通知通道 | 标题 + 合并者 + commit 数 |
+| PR review requested | 全部仓库 | 工程通知通道 + **@被指派人** | "你有一个待审查 PR" |
+| Issue opened | hl-dispatch | 任务协同通道 | 标签 + 标题 + 指派人 + [查看Issue] 按钮 |
+| Issue labeled `decision-request` | hl-dispatch | 指挥台通道 | "有新的裁决请求" |
+| CI workflow failed | hl-platform / hl-framework | 工程通知通道 | 失败步骤 + PR 链接 + 作者 |
+| CI workflow passed | hl-platform | 工程通知通道（静默） | 仅更新 Bitable 状态，不发群消息 |
+| Push to main | hl-contracts | 工程通知通道 | "契约更新" + commit 消息 |
+| Cap-Spec PR opened | hl-contracts（pm/ 分支） | PM 工作台通道 | "新的能力规格待审查" |
 
 ### 2.2 @提醒规则
 
@@ -108,12 +108,12 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 
 | 触发条件 | @谁 | 群 |
 |---------|-----|-----|
-| PR reviewer 被指派 | @被指派人 | #唤龙-工程通知 |
-| Issue 被 assign | @被指派人 | #唤龙-任务协同 |
-| decision-request Issue | @创始人 | #唤龙-创始人指挥台 |
-| Gate H 审查完成 | @PR 作者 | #唤龙-工程通知 |
-| PM 的 Cap-Spec PR | @创始人 + @Gate H | #唤龙-PM工作台 |
-| 3 天未回复的 PR review | @被指派人 | #唤龙-任务协同 |
+| PR reviewer 被指派 | @被指派人 | 工程通知通道 |
+| Issue 被 assign | @被指派人 | 任务协同通道 |
+| decision-request Issue | @创始人 | 指挥台通道 |
+| Gate H 审查完成 | @PR 作者 | 工程通知通道 |
+| PM 的 Cap-Spec PR | @创始人 + @Gate H | PM 工作台通道 |
+| 3 天未回复的 PR review | @被指派人 | 任务协同通道 |
 
 ### 2.3 通知静默规则
 
@@ -132,49 +132,49 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 
 ```
 ① 创始人裁决立项
-    ↓  飞书：#唤龙-PM工作台 通知 PM "biz.{module} 已裁决，你可以开始了"
+    ↓  飞书：PM 工作台通道 通知 PM "biz.{module} 已裁决，你可以开始了"
 
 ② PM 编写 Cap-Spec
-    ↓  飞书：#唤龙-PM工作台 即时讨论规格方向
+    ↓  飞书：PM 工作台通道 即时讨论规格方向
     ↓  GitHub：PM 提交 Cap-Spec PR（正式产出）
-    ↓  飞书：#唤龙-PM工作台 自动通知 "Cap-Spec PR 待审查"
+    ↓  飞书：PM 工作台通道 自动通知 "Cap-Spec PR 待审查"
 
 ③ 创始人 + Gate H review
-    ↓  飞书：review comment 自动推送 #唤龙-PM工作台
+    ↓  飞书：review comment 自动推送 PM 工作台通道
     ↓  GitHub：正式 review 和 approval
 
 ④ PM 驱动 AI 编码
-    ↓  飞书：如有技术问题，在 #唤龙-任务协同 即时讨论
+    ↓  飞书：如有技术问题，在 任务协同通道 即时讨论
     ↓  GitHub：PM 提交代码 PR
-    ↓  飞书：#唤龙-工程通知 自动通知 "新代码 PR"
+    ↓  飞书：工程通知通道 自动通知 "新代码 PR"
 
 ⑤ CI 门禁
-    ↓  飞书：CI 失败 → #唤龙-工程通知 @PM "CI 失败，请检查"
+    ↓  飞书：CI 失败 → 工程通知通道 @PM "CI 失败，请检查"
     ↓  飞书：CI 通过 → 静默
 
 ⑥ 技术验收官审计
-    ↓  飞书：PR review 自动通知 #唤龙-工程通知 @技术验收官
-    ↓  飞书：review comment 推送 #唤龙-PM工作台
+    ↓  飞书：PR review 自动通知 工程通知通道 @技术验收官
+    ↓  飞书：review comment 推送 PM 工作台通道
 
 ⑦ 创始人签收
-    ↓  飞书：#唤龙-创始人指挥台 "里程碑待签收"
+    ↓  飞书：指挥台通道 "里程碑待签收"
 ```
 
 ### 3.2 Gate 守护者日常流程中的飞书触点
 
-**Gate H（许久明）日常**：
+**Gate H（Gate-H）日常**：
 ```
 上午                              下午
 ────────────────────────────────────────
-飞书 #唤龙-工程通知               飞书同步审查进度
+飞书 工程通知通道               飞书同步审查进度
 ├ 检查新 PR 通知                  ├ 在 GitHub 提交 review
-├ 筛选需要 Gate H 的 PR           └ 飞书 #唤龙-任务协同 同步状态
+├ 筛选需要 Gate H 的 PR           └ 飞书 任务协同通道 同步状态
 └ 打开 GitHub 开始审查
 ```
 
-**Gate R（曾正龙）日常**：
+**Gate R（Gate-R）日常**：
 ```
-飞书 #唤龙-任务协同              GitHub
+飞书 任务协同通道              GitHub
 ├ 检查 task-assign Issue          ├ 处理运维任务
 ├ 环境问题即时反馈                └ 更新 Issue 状态
 └ 发布前在飞书确认各方就绪
@@ -185,12 +185,12 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 #### 场景 A：PM 提出裁决请求
 
 ```
-1. PM 在飞书 #唤龙-PM工作台 简要说明问题（即时沟通）
+1. PM 在飞书 PM 工作台通道 简要说明问题（即时沟通）
 2. 创始人口头确认"这需要正式裁决"
 3. PM 创建 hl-dispatch Issue（[decision-request] 标签）← SSOT
-4. 飞书自动推送到 #唤龙-创始人指挥台
+4. 飞书自动推送到 指挥台通道
 5. 创始人在 GitHub Issue 中回复裁决（留痕）
-6. 创始人在飞书 #唤龙-PM工作台 简要同步"已裁决，见 Issue #xxx"
+6. 创始人在飞书 PM 工作台通道 简要同步"已裁决，见 Issue #xxx"
 ```
 
 **反模式**：PM 只在飞书群讨论获得口头同意就开始执行，不创建 Issue → 违反 SSOT。
@@ -198,7 +198,7 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 #### 场景 B：CI 失败处理
 
 ```
-1. CI 失败 → 飞书 #唤龙-工程通知 自动 @PM "CI 门禁失败"
+1. CI 失败 → 飞书 工程通知通道 自动 @PM "CI 门禁失败"
 2. PM 点击飞书卡片中的 [查看详情] 按钮 → 跳转 GitHub Actions
 3. PM 修复后 push → CI 重跑
 4. CI 通过 → 静默（不打扰群）
@@ -208,12 +208,12 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 #### 场景 C：发布前多方确认
 
 ```
-1. 创始人在飞书 #唤龙-任务协同 发起："biz.product 准备发布，各方确认"
+1. 创始人在飞书 任务协同通道 发起："biz.product 准备发布，各方确认"
 2. Gate H 飞书回复："代码审计通过 ✅"
 3. Gate 3 飞书回复："E2E 验证通过 ✅"
 4. Gate R 飞书回复："环境就绪 ✅"
 5. PM 飞书回复："UAT 全部通过 ✅"
-6. 创始人在 GitHub 创建 Release → 飞书 #唤龙-工程通知 自动通知
+6. 创始人在 GitHub 创建 Release → 飞书 工程通知通道 自动通知
 ```
 
 对应 GitHub 侧：每人在对应 Issue 中 comment 确认并附上证据链接。
@@ -324,55 +324,55 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 
 ## 6. 角色在飞书中的日常行为
 
-### 6.1 PM（邹骢/朱阳）
+### 6.1 PM（PM-A/PM-B）
 
 | 时段 | 飞书动作 | GitHub 动作 |
 |------|---------|------------|
-| 上午 | 检查 #唤龙-PM工作台 讨论 | 检查 PR review 评论 |
-| | 检查 #唤龙-工程通知 CI 状态 | 修复 CI 失败 |
-| 下午 | 规格方向在 #唤龙-PM工作台 即时讨论 | AI 编码 → 提交 PR |
-| | 技术问题在 #唤龙-任务协同 提问 | 更新 Issue 状态 |
+| 上午 | 检查 PM 工作台通道 讨论 | 检查 PR review 评论 |
+| | 检查 工程通知通道 CI 状态 | 修复 CI 失败 |
+| 下午 | 规格方向在 PM 工作台通道 即时讨论 | AI 编码 → 提交 PR |
+| | 技术问题在 任务协同通道 提问 | 更新 Issue 状态 |
 | 收尾 | — | 将当日飞书讨论结论写入 GitHub |
 
-### 6.2 Gate H 守护者（许久明）
+### 6.2 Gate H 守护者（Gate-H）
 
 | 时段 | 飞书动作 | GitHub 动作 |
 |------|---------|------------|
-| 上午 | #唤龙-工程通知 看新 PR | 开始 PR review |
-| 下午 | #唤龙-任务协同 同步审查进度 | 提交 review comments |
-| | 如有架构疑问，#唤龙-PM工作台 讨论 | — |
+| 上午 | 工程通知通道 看新 PR | 开始 PR review |
+| 下午 | 任务协同通道 同步审查进度 | 提交 review comments |
+| | 如有架构疑问，PM 工作台通道 讨论 | — |
 
-### 6.3 Gate R 守护者（曾正龙）
+### 6.3 Gate R 守护者（Gate-R）
 
 | 时段 | 飞书动作 | GitHub 动作 |
 |------|---------|------------|
-| 上午 | #唤龙-任务协同 看 task-assign Issue | 执行运维任务 |
+| 上午 | 任务协同通道 看 task-assign Issue | 执行运维任务 |
 | 下午 | 环境问题即时反馈 | 更新 Issue 状态 |
-| 发布前 | #唤龙-任务协同 确认发布就绪 | 创建 Release 验证 Issue |
+| 发布前 | 任务协同通道 确认发布就绪 | 创建 Release 验证 Issue |
 
-### 6.4 技术验收官（李旭阳）
-
-| 时段 | 飞书动作 | GitHub 动作 |
-|------|---------|------------|
-| 收到通知 | #唤龙-工程通知 看 PM 代码 PR | Gate 3 审计 |
-| 验收中 | #唤龙-PM工作台 反馈问题 | 提交 review comments |
-| 完成 | #唤龙-任务协同 同步验收结果 | approve PR |
-
-### 6.5 后端基础设施（魏鹏）
+### 6.4 技术验收官（Gate-3）
 
 | 时段 | 飞书动作 | GitHub 动作 |
 |------|---------|------------|
-| 上午 | #唤龙-工程通知 看 hl-framework PR | Starter 开发 / review |
-| 下午 | #唤龙-任务协同 同步进度 | 更新 Issue / 提交 PR |
+| 收到通知 | 工程通知通道 看 PM 代码 PR | Gate 3 审计 |
+| 验收中 | PM 工作台通道 反馈问题 | 提交 review comments |
+| 完成 | 任务协同通道 同步验收结果 | approve PR |
+
+### 6.5 后端基础设施（Infra-A）
+
+| 时段 | 飞书动作 | GitHub 动作 |
+|------|---------|------------|
+| 上午 | 工程通知通道 看 hl-framework PR | Starter 开发 / review |
+| 下午 | 任务协同通道 同步进度 | 更新 Issue / 提交 PR |
 
 ### 6.6 创始人
 
 | 时段 | 飞书动作 | GitHub 动作 |
 |------|---------|------------|
-| 上午 | #唤龙-创始人指挥台 总览 | 审批 PR / 回复裁决 |
-| | #唤龙-PM工作台 回应 PM 讨论 | |
-| 周一 | #唤龙-工程通知 发布周报 | 更新 Sprint 看板 |
-| 周五 | #唤龙-创始人指挥台 检查里程碑 | 里程碑签收 |
+| 上午 | 指挥台通道 总览 | 审批 PR / 回复裁决 |
+| | PM 工作台通道 回应 PM 讨论 | |
+| 周一 | 工程通知通道 发布周报 | 更新 Sprint 看板 |
+| 周五 | 指挥台通道 检查里程碑 | 里程碑签收 |
 
 ---
 
@@ -382,10 +382,10 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 
 | # | 动作 | 验证 |
 |---|------|------|
-| 0.1 | 创建 #唤龙-工程通知 群 | 群可见 |
-| 0.2 | 创建 #唤龙-任务协同 群 | 群可见 |
-| 0.3 | 创建 #唤龙-PM工作台 群 | 群可见 |
-| 0.4 | 创建 #唤龙-创始人指挥台 群 | 群可见 |
+| 0.1 | 创建 工程通知通道 群 | 群可见 |
+| 0.2 | 创建 任务协同通道 群 | 群可见 |
+| 0.3 | 创建 PM 工作台通道 群 | 群可见 |
+| 0.4 | 创建 指挥台通道 群 | 群可见 |
 | 0.5 | 各群邀请对应成员（按 §1.1） | 成员列表正确 |
 | 0.6 | 各群添加 Custom Bot（签名校验模式） | 拿到 4 个 Webhook URL |
 
@@ -393,10 +393,10 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 
 | # | 动作 | 验证 |
 |---|------|------|
-| 1.1 | hl-platform 配置 Webhook → #唤龙-工程通知 Bot | PR 事件推送到群 |
-| 1.2 | hl-contracts 配置 Webhook → #唤龙-工程通知 Bot | 契约更新推送到群 |
-| 1.3 | hl-framework 配置 Webhook → #唤龙-工程通知 Bot | Starter 变更推送 |
-| 1.4 | hl-dispatch 配置 Webhook → #唤龙-任务协同 Bot | Issue 变更推送 |
+| 1.1 | hl-platform 配置 Webhook → 工程通知通道 Bot | PR 事件推送到群 |
+| 1.2 | hl-contracts 配置 Webhook → 工程通知通道 Bot | 契约更新推送到群 |
+| 1.3 | hl-framework 配置 Webhook → 工程通知通道 Bot | Starter 变更推送 |
+| 1.4 | hl-dispatch 配置 Webhook → 任务协同通道 Bot | Issue 变更推送 |
 
 **注意**：Phase F-1 使用 GitHub 原生飞书集成（GitHub App for Feishu）或简单的 Webhook → Custom Bot 脚本。不依赖 super-founder App 的 IM 集成（那是 Phase IM-1 的事）。
 

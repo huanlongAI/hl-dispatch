@@ -2,7 +2,7 @@
 
 > 依据：FEISHU-GITHUB-COLLABORATION-SPEC v1.0 LOCKED (2026-03-30)
 > 生成日期：2026-03-31
-> 执行人：创始人（童正辉）
+> 执行人：创始人（L0-Founder）
 
 ---
 
@@ -10,46 +10,46 @@
 
 ### 0.1 创建飞书群
 
-- [x] 创建群 **#唤龙-工程通知**
+- [x] 创建群 **工程通知通道**
   - 群类型：内部群
   - 群描述：PR / Issue / CI 事件自动推送（只读为主）
-- [x] 创建群 **#唤龙-任务协同**
+- [x] 创建群 **任务协同通道**
   - 群类型：内部群
   - 群描述：任务讨论、进度同步、即时沟通（日常主阵地）
-- [x] 创建群 **#唤龙-PM工作台**
+- [x] 创建群 **PM 工作台通道**
   - 群类型：内部群
   - 群描述：PM 规格讨论、Cap-Spec 审查、业务问题
-- [x] 创建群 **#唤龙-创始人指挥台**
+- [x] 创建群 **指挥台通道**
   - 群类型：内部群
   - 群描述：全局状态汇总、审批提醒、关键指标
 
 ### 0.2 邀请成员
 
-| 群 | 成员 |
-|----|------|
-| #唤龙-工程通知 | 童正辉、许久明、曾正龙、邹骢、朱阳、魏鹏、李旭阳 |
-| #唤龙-任务协同 | 童正辉、许久明、曾正龙、邹骢、朱阳、魏鹏、李旭阳 |
-| #唤龙-PM工作台 | 童正辉、邹骢、朱阳、李旭阳 |
-| #唤龙-创始人指挥台 | 仅童正辉 |
+| 通道 | 成员 |
+|------|------|
+| 工程通知通道 | L0-Founder、Gate-H、Gate-R、PM-A、PM-B、Infra-A、Gate-3 |
+| 任务协同通道 | L0-Founder、Gate-H、Gate-R、PM-A、PM-B、Infra-A、Gate-3 |
+| PM 工作台通道 | L0-Founder、PM-A、PM-B、Gate-3 |
+| 指挥台通道 | 仅 L0-Founder |
 
-- [x] #唤龙-工程通知 — 7 人已邀请
-- [x] #唤龙-任务协同 — 7 人已邀请
-- [x] #唤龙-PM工作台 — 4 人已邀请
-- [x] #唤龙-创始人指挥台 — 仅自己
+- [x] 工程通知通道 — 7 人已邀请
+- [x] 任务协同通道 — 7 人已邀请
+- [x] PM 工作台通道 — 4 人已邀请
+- [x] 指挥台通道 — 仅自己
 
 ### 0.3 添加 Custom Bot
 
 每个群添加一个「自定义机器人」（Custom Bot），用于接收 GitHub Webhook 推送。
 
-- [x] #唤龙-工程通知 → 添加 Bot，命名 `GitHub-工程通知`
+- [x] 工程通知通道 → 添加 Bot，命名 `GitHub-工程通知`
   - 复制 Webhook URL → 记为 `WEBHOOK_URL_ENGINEERING` ✅
   - 安全选项：未配置（待后续启用签名校验）
-- [x] #唤龙-任务协同 → 添加 Bot，命名 `GitHub-任务协同`
+- [x] 任务协同通道 → 添加 Bot，命名 `GitHub-任务协同`
   - 复制 Webhook URL → 记为 `WEBHOOK_URL_TASK`
   - ⚠️ Bot 当前未启用（code 19007），需手动在飞书群设置中启用
-- [x] #唤龙-PM工作台 → 添加 Bot，命名 `GitHub-PM工作台`
+- [x] PM 工作台通道 → 添加 Bot，命名 `GitHub-PM工作台`
   - 复制 Webhook URL → 记为 `WEBHOOK_URL_PM` ✅
-- [x] #唤龙-创始人指挥台 → 添加 Bot，命名 `GitHub-指挥台`
+- [x] 指挥台通道 → 添加 Bot，命名 `GitHub-指挥台`
   - 复制 Webhook URL → 记为 `WEBHOOK_URL_COMMAND` ✅
 
 ### 0.4 验证
@@ -67,31 +67,31 @@
 
 ### 1.1 hl-platform — `.github/workflows/feishu-notify.yml` ✅
 
-- [x] PR opened/reopened/merged → #唤龙-工程通知（交互式卡片）
-- [x] Review submitted → #唤龙-工程通知
-- [x] CI failure → #唤龙-工程通知（红色告警卡片）
+- [x] PR opened/reopened/merged → 工程通知通道（交互式卡片）
+- [x] Review submitted → 工程通知通道
+- [x] CI failure → 工程通知通道（红色告警卡片）
 - [x] Secrets 已配置：`FEISHU_WEBHOOK_ENGINEERING`
 
 ### 1.2 hl-contracts — `.github/workflows/feishu-notify.yml` ✅
 
-- [x] Push to main（契约更新）→ #唤龙-工程通知
-- [x] PR opened → #唤龙-工程通知 + #唤龙-PM工作台
+- [x] Push to main（契约更新）→ 工程通知通道
+- [x] PR opened → 工程通知通道 + PM 工作台通道
 - [x] Secrets 已配置：`FEISHU_WEBHOOK_ENGINEERING`, `FEISHU_WEBHOOK_PM`
 
 ### 1.3 hl-framework — `.github/workflows/feishu-notify.yml` ✅
 
-- [x] PR/Review/CI failure → #唤龙-工程通知
+- [x] PR/Review/CI failure → 工程通知通道
 - [x] Secrets 已配置：`FEISHU_WEBHOOK_ENGINEERING`
 
 ### 1.4 hl-dispatch — `.github/workflows/feishu-notify.yml` ✅
 
-- [x] Issue opened/commented → #唤龙-任务协同
-- [x] decision-request label → #唤龙-创始人指挥台
+- [x] Issue opened/commented → 任务协同通道
+- [x] decision-request label → 指挥台通道
 - [x] Secrets 已配置：`FEISHU_WEBHOOK_TASK`, `FEISHU_WEBHOOK_COMMAND`
 
 ### 1.5 端到端验证
 
-- [x] 飞书群收到 GitHub Actions 发送的交互式卡片通知（已确认截图）
+- [x] 协作通道收到 GitHub Actions 发送的交互式卡片通知（已确认截图）
 
 > 注意：GitHub 原生飞书 App 的消息格式可能较为简单。如需更精细的卡片模板（如 D-3 裁决提到的 [查看PR] 按钮），需要后续在 Phase F-3 通过 super-founder App 处理层升级。Phase F-1 以"能收到通知"为验收标准。
 
@@ -102,8 +102,8 @@
 ### 2.1 创建多维表格
 
 - [x] 通过 `lark-cli api POST /open-apis/bitable/v1/apps` 创建 → **「唤龙项目看板」**
-  - app_token: `AAhkbOo6zagJKGsaGyrcLAJXnig`
-  - URL: https://cxctcv92x85.feishu.cn/base/AAhkbOo6zagJKGsaGyrcLAJXnig
+  - app_token: `<redacted>`
+  - URL: `<redacted>`
 - [ ] 设置权限：核心组 7 人只读，创始人可编辑（待手动配置）
 
 ### 2.2 表 1：能力包看板
@@ -114,7 +114,7 @@
 |--------|------|----------|
 | 能力包 ID | 文本 | 如 `biz.product` |
 | 中文名 | 文本 | 如 `商品中心` |
-| PM 负责人 | 人员 | 邹骢 / 朱阳 |
+| PM 负责人 | 人员 | PM-A / PM-B |
 | 当前阶段 | 单选 | 规格 / 编码 / 审计 / 验收 / 完成 |
 | Cap-Spec PR | 链接 | hl-contracts PR URL |
 | 代码 PR | 链接 | hl-platform PR URL |
@@ -124,7 +124,7 @@
 | 最后更新 | 日期 | 手动更新 |
 
 - [x] 字段创建完成（通过 `setup-bitable-tables.sh` 自动化脚本）
-- [x] 初始数据录入 — biz.product（邹骢负责，当前阶段：规格）
+- [x] 初始数据录入 — biz.product（PM-A 负责，当前阶段：规格）
 
 ### 2.3 表 2：Sprint 进度（table_id: `tbltkDLLIPe1canl`）
 
@@ -160,14 +160,14 @@
 - [ ] 表 1 添加「看板视图」— 按"当前阶段"分组
 - [ ] 表 2 添加「看板视图」— 按"状态"分组
 - [ ] 表 3 添加筛选视图「待审查」— 状态 = Open 或 Reviewing
-- [ ] 在 #唤龙-创始人指挥台 群描述中添加 Bitable 链接
+- [ ] 在指挥台通道描述中添加内部看板链接
 
 ### 2.6 分享与验证
 
 - [ ] 分享给核心组 7 人（只读权限）— 待手动配置
-- [x] 在 #唤龙-工程通知 群发布上线公告（含 Bitable 链接）
-- [x] 在 #唤龙-创始人指挥台 群发布 F-0~F-2 完成状态卡片
-- [ ] ⚠️ #唤龙-任务协同 群 Bot 未启用（code 19007），需手动启用后重发
+- [x] 在工程通知通道发布上线公告（含内部看板链接）
+- [x] 在指挥台通道发布 F-0~F-2 完成状态卡片
+- [ ] ⚠️ 任务协同通道 Bot 未启用（code 19007），需手动启用后重发
 - [ ] 请 1 位成员确认可以打开并查看
 
 ---
@@ -203,7 +203,7 @@
 | Day 1 | F-1 Webhook 配置 + 端到端验证 | 30 分钟 |
 | Day 2 | F-2 Bitable 3 张表 + 初始数据 | 2 小时 |
 | Day 2 | F-2.5 关联文档 3 项 P1 修订（可派发 CLI） | 30 分钟 |
-| Day 2 | 在 #唤龙-任务协同 群发布上线公告 | 10 分钟 |
+| Day 2 | 在任务协同通道发布上线公告 | 10 分钟 |
 
 **总计约 4 小时，可在 1~2 天内完成。**
 
@@ -211,17 +211,17 @@
 
 ## 上线公告模板
 
-完成 F-0 + F-1 + F-2 后，在 #唤龙-任务协同 发布：
+完成 F-0 + F-1 + F-2 后，在任务协同通道发布：
 
 ```
-📢 唤龙飞书×GitHub 协作正式上线
+📢 飞书×GitHub 协作正式上线
 
 各位好，飞书协作体系已配置完成：
 
-🔔 #唤龙-工程通知 — PR/CI/契约变更自动推送
-💬 #唤龙-任务协同 — 日常任务讨论主阵地
-📋 #唤龙-PM工作台 — PM 规格讨论专用
-📊 项目看板 — [Bitable 链接]
+🔔 工程通知通道 — PR/CI/契约变更自动推送
+💬 任务协同通道 — 日常任务讨论主阵地
+📋 PM 工作台通道 — PM 规格讨论专用
+📊 项目看板 — [内部看板链接]
 
 核心铁律：
 ① GitHub 是事实真源，飞书不存储决策

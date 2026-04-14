@@ -569,20 +569,20 @@ contract_touch_detail:
 # v2.1：拆分契约核心路径（创始人强制）与 Cap-Spec 路径（PM 持有）
 
 # —— 默认：创始人 ——
-*                           @tongzhenghui
+*                           @founder
 
 # —— 契约核心：创始人强制审批 ——
-/decisions/                 @tongzhenghui
-/facts/                     @tongzhenghui
-/rules/                     @tongzhenghui
-/reasoncodes/               @tongzhenghui
-/apis/                      @tongzhenghui
-/events/                    @tongzhenghui
-/governance/                @tongzhenghui
-/auth/                      @tongzhenghui
-/.github/                   @tongzhenghui
-CLAUDE.md                   @tongzhenghui
-RULINGS.md                  @tongzhenghui
+/decisions/                 @founder
+/facts/                     @founder
+/rules/                     @founder
+/reasoncodes/               @founder
+/apis/                      @founder
+/events/                    @founder
+/governance/                @founder
+/auth/                      @founder
+/.github/                   @founder
+CLAUDE.md                   @founder
+RULINGS.md                  @founder
 
 # —— Cap-Spec（PM 持有，创始人非强制）——
 /prd/core/**                @hl-pm-team
@@ -604,17 +604,17 @@ RULINGS.md                  @tongzhenghui
 *                                         @hl-engineers
 
 # —— Kernel / Gateway / Framework / CI：创始人强制 ——
-/kernel/**                                @tongzhenghui
-/gateway/**                               @tongzhenghui
-/framework/**                             @tongzhenghui
-/.github/**                               @tongzhenghui
-/governance/**                            @tongzhenghui
-/scripts/**                               @tongzhenghui
-build.gradle.kts                          @tongzhenghui
-settings.gradle.kts                       @tongzhenghui
+/kernel/**                                @founder
+/gateway/**                               @founder
+/framework/**                             @founder
+/.github/**                               @founder
+/governance/**                            @founder
+/scripts/**                               @founder
+build.gradle.kts                          @founder
+settings.gradle.kts                       @founder
 
 # —— Contract 引用同步：创始人 + 工程师 ——
-/contract/**                              @tongzhenghui @hl-engineers
+/contract/**                              @founder @hl-engineers
 
 # —— 能力包业务代码：工程师互审（广规则）——
 /app/biz-*/**                             @hl-engineers
@@ -634,7 +634,7 @@ settings.gradle.kts                       @tongzhenghui
 
 ```
 # hl-factory/CODEOWNERS — 创始人强制审批
-*                                         @tongzhenghui
+*                                         @founder
 ```
 
 ### 6.4 hl-console-native CODEOWNERS
@@ -642,7 +642,7 @@ settings.gradle.kts                       @tongzhenghui
 ```
 # hl-console-native/CODEOWNERS
 *                                         @hl-frontend-engineers
-/.github/**                               @tongzhenghui
+/.github/**                               @founder
 ```
 
 ### 6.5 GitHub 组织级 Rulesets（v2.1 修正 F-4：补 required status checks）

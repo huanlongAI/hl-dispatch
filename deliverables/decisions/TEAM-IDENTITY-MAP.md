@@ -1,47 +1,47 @@
 # 唤龙团队身份映射表
 
 > 版本：v1.2 | 更新日期：2026-04-02
-> 维护人：童正辉（L0）
+> 维护人：L0-Founder
 
 ---
 
 ## 核心组（7 人）
 
-| # | 飞书实名 | GitHub 账号 | GitHub 邮箱 | 团队角色 | 环 | GitHub Team |
-|---|---------|------------|------------|---------|-----|------------|
-| 1 | 童正辉 | `tongzhenghui` | gw.tzh@icloud.com | 创始人 / 架构师 | 裁决层 | `founder-only` |
-| 2 | 许久明 | `xujiuming` | 18120580001@163.com | Gate H 守护者 | 守护者环 | `guardian-team` |
-| 3 | 曾正龙 | `ZDragonMeta` | ZDragon.Share@gmail.com | Gate R 守护者 | 守护者环 | `guardian-team` |
-| 4 | 邹骢 | `zoucong121` | zoucong121@gmail.com | PM（商品） | 领域环 | `pm-team` |
-| 5 | 朱阳 | `zhuyang1204` | 644160417@qq.com | PM（交易） | 领域环 | `pm-team` |
-| 6 | 魏鹏 | `wp159951` | 767510277@qq.com | 后端基础设施 | 基础设施环 | `infra-team` |
-| 7 | 李旭阳 | `LUXBYA` | 790630573@qq.com | 技术验收官（Gate 3） | 基础设施环 | `infra-team` |
+| # | 成员代号 | GitHub 账号 | GitHub 邮箱 | 团队角色 | 环 | GitHub Team |
+|---|----------|------------|------------|---------|-----|------------|
+| 1 | L0-Founder | `internal-managed` | `redacted` | 创始人 / 架构师 | 裁决层 | `founder-only` |
+| 2 | Gate-H | `internal-managed` | `redacted` | Gate H 守护者 | 守护者环 | `guardian-team` |
+| 3 | Gate-R | `internal-managed` | `redacted` | Gate R 守护者 | 守护者环 | `guardian-team` |
+| 4 | PM-A | `internal-managed` | `redacted` | PM（商品） | 领域环 | `pm-team` |
+| 5 | PM-B | `internal-managed` | `redacted` | PM（交易） | 领域环 | `pm-team` |
+| 6 | Infra-A | `internal-managed` | `redacted` | 后端基础设施 | 基础设施环 | `infra-team` |
+| 7 | Gate-3 | `internal-managed` | `redacted` | 技术验收官（Gate 3） | 基础设施环 | `infra-team` |
 
 ## 组织成员（当前）
 
-| GitHub 账号 | 对应飞书实名 | 组织角色 | 状态 |
-|-------------|------------|---------|------|
-| `tongzhenghui` | 童正辉 | owner | ✅ 已加入 |
-| `xujiuming` | 许久明 | member | ✅ 已加入 |
-| `ZDragonMeta` | 曾正龙 | member | ✅ 已加入（guardian-team） |
+| GitHub 账号 | 对应成员代号 | 组织角色 | 状态 |
+|-------------|--------------|---------|------|
+| `internal-managed` | L0-Founder | owner | ✅ 已加入 |
+| `internal-managed` | Gate-H | member | ✅ 已加入 |
+| `internal-managed` | Gate-R | member | ✅ 已加入（guardian-team） |
 
 ## 待接受邀请（4 人）
 
-| GitHub 账号 | 飞书实名 | 邮箱 | Team | 状态 |
-|-------------|---------|------|------|------|
-| `zoucong121` | 邹骢 | zoucong121@gmail.com | `pm-team` | ✉️ 待接受 |
-| `zhuyang1204` | 朱阳 | 644160417@qq.com | `pm-team` | ✉️ 待接受 |
-| `LUXBYA` | 李旭阳 | 790630573@qq.com | `infra-team` | ✉️ 待接受 |
-| `wp159951` | 魏鹏 | 767510277@qq.com | `infra-team` | ✉️ 待接受 |
+| GitHub 账号 | 成员代号 | 邮箱 | Team | 状态 |
+|-------------|----------|------|------|------|
+| `internal-managed` | PM-A | `redacted` | `pm-team` | ✉️ 待接受 |
+| `internal-managed` | PM-B | `redacted` | `pm-team` | ✉️ 待接受 |
+| `internal-managed` | Gate-3 | `redacted` | `infra-team` | ✉️ 待接受 |
+| `internal-managed` | Infra-A | `redacted` | `infra-team` | ✉️ 待接受 |
 
 ## 飞书群成员映射
 
-| 飞书群 | 成员 |
-|--------|------|
-| #唤龙-工程通知 | 童正辉、许久明、曾正龙、邹骢、朱阳、魏鹏、李旭阳 |
-| #唤龙-任务协同 | 童正辉、许久明、曾正龙、邹骢、朱阳、魏鹏、李旭阳 |
-| #唤龙-PM工作台 | 童正辉、邹骢、朱阳、李旭阳 |
-| #唤龙-创始人指挥台 | 童正辉 |
+| 协作通道 | 成员 |
+|----------|------|
+| 工程通知通道 | L0-Founder、Gate-H、Gate-R、PM-A、PM-B、Infra-A、Gate-3 |
+| 任务协同通道 | L0-Founder、Gate-H、Gate-R、PM-A、PM-B、Infra-A、Gate-3 |
+| PM 工作台通道 | L0-Founder、PM-A、PM-B、Gate-3 |
+| 指挥台通道 | L0-Founder |
 
 ## GitHub Team 权限矩阵
 
@@ -54,17 +54,17 @@
 
 ## 操作记录
 
-- [x] LUXBYA 确认为李旭阳（非魏鹏）
-- [x] 收集全部 7 人 GitHub 账号 + 邮箱
+- [x] Gate-3 身份映射已确认
+- [x] 收集全部 7 个协作角色的 GitHub 账号与联系信息（明细已转内控存储）
 - [x] GitHub 组织席位 4 → 7（2026-04-02）
-- [x] 5 人邀请已发送（邹骢、朱阳、李旭阳、曾正龙、魏鹏）
-- [x] 创建 `guardian-team`（id: 16914137）— 许久明已加入，曾正龙待接受邀请后加入
-- [x] 创建 `infra-team`（id: 16914138）— 魏鹏、李旭阳待接受邀请后加入
+- [x] 5 人邀请已发送（PM-A、PM-B、Gate-3、Gate-R、Infra-A）
+- [x] 创建 `guardian-team`（id: redacted）— Gate-H 已加入，Gate-R 待接受邀请后加入
+- [x] 创建 `infra-team`（id: redacted）— Infra-A、Gate-3 待接受邀请后加入
 - [x] 仓库权限已配置：guardian-team → hl-platform/framework write, hl-contracts read
 - [x] 仓库权限已配置：infra-team → hl-platform/framework write
-- [x] 曾正龙（ZDragonMeta）已接受邀请，已加入 guardian-team（2026-04-02）
-- [x] 邹骢 GitHub 账号确认为 `zoucong121`，朱阳确认为 `zhuyang1204`
-- [x] 重新发送邀请：zoucong121 + zhuyang1204 绑定 pm-team，LUXBYA + wp159951 绑定 infra-team
+- [x] Gate-R 已接受邀请，已加入 guardian-team（2026-04-02）
+- [x] PM-A / PM-B GitHub 身份映射已确认
+- [x] 已重新发送邀请：PM-A + PM-B 绑定 pm-team，Gate-3 + Infra-A 绑定 infra-team
 - [ ] 4 人接受邀请后，自动加入对应 Team
 
 ---

@@ -1,13 +1,13 @@
 # SKU 版本化方案裁决回复
 
-**回复对象**：邹骢（PM）
+**回复对象**：PM-A（PM）
 **回复日期**：2026-03-20
 **裁决编号**：R-062（已录入 RULINGS.md，LOCKED）
 **你的提案**：PM-PROPOSAL-SKU-VERSION-001
 
 ---
 
-邹骢，
+PM-A，
 
 你提交的 SKU 版本化方案建议质量很高，三方案对比清晰，A/B 类字段分类准确。四项待裁决事项的结果如下。
 
@@ -25,7 +25,7 @@
 
 price / channel_price / floor_price / total_count / consume_count / total_points / validity_value / validity_unit / validity_start / max_use_count / redemption_mode / card_services
 
-**维护规则**：后续新增 A 类字段时，必须同步更新 sku_version 表 DDL 和版本快照逻辑，Gate H（许久明）审计把关。
+**维护规则**：后续新增 A 类字段时，必须同步更新 sku_version 表 DDL 和版本快照逻辑，Gate H（Gate-H）审计把关。
 
 ### Q3：版本历史查看入口 → Phase 2
 
@@ -70,7 +70,7 @@ MVP 只建数据层（sku_version 表 + 写入逻辑 + 查询 API），不做前
    - B 类字段历史通过 HK.Audit event_id 追溯
    - 订单关联方式：sku_id + version_no
 
-2. **补充验收用例**（与李旭阳协作），新增以下场景：
+2. **补充验收用例**（与Gate-3协作），新增以下场景：
    - 修改 A 类字段（如 price）→ 验证 sku_version 新增一条记录，version_no 递增
    - 修改 B 类字段（如名称）→ 验证 sku_version 不新增记录
    - 同时修改 A+B 类字段 → 验证只生成一个新版本，只快照 A 类字段
@@ -78,10 +78,10 @@ MVP 只建数据层（sku_version 表 + 写入逻辑 + 查询 API），不做前
 
 **后续（biz.order 启动时）**：
 
-3. 与朱阳协作，确认 biz.order 下单流程中调用 `current-version` 接口的时机和事务边界
+3. 与PM-B协作，确认 biz.order 下单流程中调用 `current-version` 接口的时机和事务边界
 
 ---
 
 方案分析做得很扎实，继续保持这个水准。
 
-童正辉
+L0-Founder

@@ -1,12 +1,12 @@
 # 商品中心架构反馈回复
 
-**回复对象**：邹骢（PM）
+**回复对象**：PM-A（PM）
 **回复日期**：2026-03-18
 **裁决编号**：R-061（已录入 RULINGS.md，LOCKED）
 
 ---
 
-邹骢，
+PM-A，
 
 你提出的三项架构冲突已全部裁决完毕，LAUNCH-PRODUCT-CENTER.md 已升级至 v1.1。以下是裁决结果和你接下来需要推进的事项。
 
@@ -67,14 +67,14 @@ LAUNCH-PRODUCT-CENTER.md 已同步更新为 v1.2 团队模型：
 
 **P1（MVP 规格交付后）**：
 
-3. **编写验收用例**：`PRD-Biz.Product.MVP.Core-Acceptance-Cases.v1.0.md`（与李旭阳协作）。必须覆盖的场景：
+3. **编写验收用例**：`PRD-Biz.Product.MVP.Core-Acceptance-Cases.v1.0.md`（与Gate-3协作）。必须覆盖的场景：
    - 单规格商品创建 → 验证自动生成默认 SKU
    - 合作商户设置渠道价 → 验证 floor_price 下限约束
    - 跨租户商品可见性 → Cooperate 关系下只能看到 PUBLISHED 商品
 
 **P2（Sprint 启动前）**：
 
-4. 与朱阳（第二 PM）沟通 biz.product 与后续能力包（biz.inventory / biz.order）的边界确认
+4. 与PM-B（第二 PM）沟通 biz.product 与后续能力包（biz.inventory / biz.order）的边界确认
 
 ---
 
@@ -86,4 +86,4 @@ LAUNCH-PRODUCT-CENTER.md 已同步更新为 v1.2 团队模型：
 
 有问题随时提出。
 
-童正辉
+L0-Founder

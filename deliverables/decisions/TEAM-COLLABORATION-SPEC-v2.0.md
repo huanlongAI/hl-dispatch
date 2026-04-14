@@ -444,7 +444,7 @@ Post-Merge: 发布
 
 ```
 # hl-contracts/CODEOWNERS — 创始人强制审批全部
-*                           @tongzhenghui
+*                           @founder
 ```
 
 ### 6.2 hl-platform CODEOWNERS（新建）
@@ -458,20 +458,20 @@ Post-Merge: 发布
 *                                         @hl-engineers
 
 # —— Kernel：创始人强制 ——
-/kernel/**                                @tongzhenghui
+/kernel/**                                @founder
 
 # —— Gateway：创始人强制 ——
-/gateway/**                               @tongzhenghui
+/gateway/**                               @founder
 
 # —— Framework：创始人强制 ——
-/framework/**                             @tongzhenghui
+/framework/**                             @founder
 
 # —— CI / 构建 / 治理：创始人强制 ——
-/.github/**                               @tongzhenghui
-/governance/**                            @tongzhenghui
-/scripts/**                               @tongzhenghui
-build.gradle.kts                          @tongzhenghui
-settings.gradle.kts                       @tongzhenghui
+/.github/**                               @founder
+/governance/**                            @founder
+/scripts/**                               @founder
+build.gradle.kts                          @founder
+settings.gradle.kts                       @founder
 
 # —— 能力包验收测试：QA 团队 ——
 /app/**/acceptance/**                     @hl-qa-team
@@ -481,14 +481,14 @@ settings.gradle.kts                       @tongzhenghui
 /app/biz-*/**                             @hl-engineers
 
 # —— Contract 引用同步：创始人 + 工程师 ——
-/contract/**                              @tongzhenghui @hl-engineers
+/contract/**                              @founder @hl-engineers
 ```
 
 ### 6.3 hl-factory CODEOWNERS（新建）
 
 ```
 # hl-factory/CODEOWNERS — 创始人强制审批
-*                                         @tongzhenghui
+*                                         @founder
 ```
 
 ### 6.4 hl-console-native CODEOWNERS（新建）
@@ -496,7 +496,7 @@ settings.gradle.kts                       @tongzhenghui
 ```
 # hl-console-native/CODEOWNERS
 *                                         @hl-frontend-engineers
-/.github/**                               @tongzhenghui
+/.github/**                               @founder
 ```
 
 ### 6.5 GitHub 组织级 Rulesets（建议配置）

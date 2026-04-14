@@ -49,8 +49,8 @@ body:
     attributes:
       label: "审查角色"
       options:
-        - 架构审计师（许久明）
-        - 运维工程师（曾正龙）
+        - 架构审计师（Gate-H）
+        - 运维工程师（Gate-R）
         - 全员审查
     validations:
       required: true

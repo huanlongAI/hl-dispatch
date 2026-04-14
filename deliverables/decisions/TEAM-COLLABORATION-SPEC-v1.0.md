@@ -56,7 +56,7 @@ I-5（契约先行）+ I-6（CI 自动化）
 ```
                     ┌─────────────┐
                     │  创始人裁决层  │  意图定义 / 架构裁决 / 最终签字
-                    │   童正辉      │  + AI 协同（Cowork / Claude Code）
+                    │   L0-Founder      │  + AI 协同（Cowork / Claude Code）
                     └──────┬──────┘
                            │
               ┌────────────┼────────────┐
@@ -87,7 +87,7 @@ I-5（契约先行）+ I-6（CI 自动化）
 
 | 角色 | 人员 | 职责 |
 |------|------|------|
-| **创始人 / 架构师** | 童正辉 | 产品决策、架构裁决、HK Kernel + Gateway 开发（AI 协同）、里程碑签字、RULINGS.md 写入 |
+| **创始人 / 架构师** | L0-Founder | 产品决策、架构裁决、HK Kernel + Gateway 开发（AI 协同）、里程碑签字、RULINGS.md 写入 |
 
 **AI 驱动说明**（I-1 + I-2）：创始人通过 Cowork / Claude Code 完成 100% 代码编写（包括 HK Kernel、CI 门禁、能力包骨架）。这不是「创始人一个人写所有代码」，而是「创始人 + AI 组成的生产单元承担代码产出主力」。团队的价值不在于分担代码量，而在于守护代码质量和业务正确性。
 
@@ -95,8 +95,8 @@ I-5（契约先行）+ I-6（CI 自动化）
 
 | 角色 | 人员 | 守护对象 | 核心职责 |
 |------|------|---------|---------|
-| **Gate H 守护者** | 许久明 | 架构合规 + 代码健康 | 所有 PR 的 Gate H 签字（含创始人代码）；hl-framework 5 Starters + BOM 维护；契约变更评审；术语 SSOT 守护 |
-| **Gate R 守护者** | 曾正龙 | 发布安全 + 运行稳定 | 所有发布的 Gate R 签字；PG18 运维；Docker Compose 开发环境；Flyway 流水线；Grafana 监控面板；上线 SOP |
+| **Gate H 守护者** | Gate-H | 架构合规 + 代码健康 | 所有 PR 的 Gate H 签字（含创始人代码）；hl-framework 5 Starters + BOM 维护；契约变更评审；术语 SSOT 守护 |
+| **Gate R 守护者** | Gate-R | 发布安全 + 运行稳定 | 所有发布的 Gate R 签字；PG18 运维；Docker Compose 开发环境；Flyway 流水线；Grafana 监控面板；上线 SOP |
 
 **守护者不写业务代码，但对所有代码有否决权。** 这是 SAAC-HL §1.3 的直接推论：AI 生产 100% 代码→人类的价值在于验证和否决，而非分担产量。
 
@@ -104,8 +104,8 @@ I-5（契约先行）+ I-6（CI 自动化）
 
 | 角色 | 人员 | 守护对象 | 核心职责 |
 |------|------|---------|---------|
-| **PM（产品经理）** | 邹骢 | 用户价值 + 业务语义 | 能力包 MVP 规格、Facts 定义、reason_codes 初稿、验收用例、UAT 签收 |
-| **PM（产品经理）** | 朱阳 | 用户价值 + 业务语义 | 能力包 MVP 规格、Facts 定义、reason_codes 初稿、验收用例、UAT 签收 |
+| **PM（产品经理）** | PM-A | 用户价值 + 业务语义 | 能力包 MVP 规格、Facts 定义、reason_codes 初稿、验收用例、UAT 签收 |
+| **PM（产品经理）** | PM-B | 用户价值 + 业务语义 | 能力包 MVP 规格、Facts 定义、reason_codes 初稿、验收用例、UAT 签收 |
 
 **不设业务开发者岗位**（R-056 修订）。这是 SAAC §1.3 的逻辑终点：
 
@@ -114,15 +114,15 @@ I-5（契约先行）+ I-6（CI 自动化）
 - PM 定义「做什么」，创始人 + AI 实现「怎么做」，守护者审计「做对了吗」
 - **如果 AI 生成 Kotlin 的可靠性前提不成立，则需要重新评估开发语言选型**
 
-2 名 PM 填入 R-053 预留的 2 个名额（邹骢 + 朱阳），核心组仍为 6 人。
+2 名 PM 填入 R-053 预留的 2 个名额（PM-A + PM-B），核心组仍为 6 人。
 
 #### 基础设施环 Infra
 
 | 角色 | 人员 | 守护对象 | 核心职责 |
 |------|------|---------|---------|
-| **后端基础设施** | 魏鹏 | SDK + 安全 + 性能 | starter-security JWT 实现（DD-AUTH）；starter-observability；HK Client SDK 维护；性能基线测试 |
+| **后端基础设施** | Infra-A | SDK + 安全 + 性能 | starter-security JWT 实现（DD-AUTH）；starter-observability；HK Client SDK 维护；性能基线测试 |
 
-**魏鹏 Phase 0 职责重新推导**（I-3 + I-8）：
+**Infra-A Phase 0 职责重新推导**（I-3 + I-8）：
 
 旧职责（Nacos 集成 / Keycloak 集成 / starter-mq / starter-cache）全部因 R-027 SUPERSEDED + DD-AUTH + DD-CACHE + R-054 Q1 而消失。从 TECH-STACK-SPEC v3 锁定的 Phase 0 技术栈重新推导：
 
@@ -138,17 +138,17 @@ I-5（契约先行）+ I-6（CI 自动化）
 
 | 角色 | 人员 | 守护对象 | 核心职责 |
 |------|------|---------|---------|
-| **技术验收官** | 李旭阳 | 端到端业务正确性 | Gate 3（业务合规）签字；能力包集成测试执行；端到端链路验证；回归测试维护 |
+| **技术验收官** | Gate-3 | 端到端业务正确性 | Gate 3（业务合规）签字；能力包集成测试执行；端到端链路验证；回归测试维护 |
 
-**李旭阳定位说明**（R-059）：从「职能支持」升级为正式技术验收官，纳入 R-053 核心组（6→7 人，R-059 净增 1 人）。在 R-058 不设独立 QA 的裁决下，李旭阳承担集成测试和端到端验证的全部责任，是 Gate 3 的唯一签字人。核心职责：审计创始人 + AI 生成的全部 Kotlin 代码的端到端业务正确性。
+**Gate-3定位说明**（R-059）：从「职能支持」升级为正式技术验收官，纳入 R-053 核心组（6→7 人，R-059 净增 1 人）。在 R-058 不设独立 QA 的裁决下，Gate-3承担集成测试和端到端验证的全部责任，是 Gate 3 的唯一签字人。核心职责：审计创始人 + AI 生成的全部 Kotlin 代码的端到端业务正确性。
 
 #### 旧工程协调（不纳入核心组）
 
 | 角色 | 人员 | 职责 |
 |------|------|------|
-| **旧工程交付** | 刘建成 | 旧工程（非唤龙平台）的交付管理；旧工程与唤龙平台数据态打通的协调对接（详设后续定义） |
+| **旧工程交付** | PM-Ops | 旧工程（非唤龙平台）的交付管理；旧工程与唤龙平台数据态打通的协调对接（详设后续定义） |
 
-**刘建成定位说明**（R-059）：不纳入唤龙核心组。旧工程不接入唤龙平台，仅做数据态打通。刘建成继续负责旧工程交付，并在数据打通环节与唤龙团队对接。唤龙平台的 Sprint 看板和 Issue 流转由核心组成员自管理（GitHub Project Board）。
+**PM-Ops定位说明**（R-059）：不纳入唤龙核心组。旧工程不接入唤龙平台，仅做数据态打通。PM-Ops继续负责旧工程交付，并在数据打通环节与唤龙团队对接。唤龙平台的 Sprint 看板和 Issue 流转由核心组成员自管理（GitHub Project Board）。
 
 ---
 
@@ -204,9 +204,9 @@ Phase                 负责人        产出物                          门禁
 
 | 仓库 | Reviewer | 审查重点 |
 |------|----------|---------|
-| hl-contracts | 创始人 + Gate H（许久明） | 契约完整性、reason_code 命名、OpenAPI 格式 |
-| hl-platform contract/ | Gate H（许久明） | Pure Kotlin 合规、命名规范（HK-NAMING-SPEC） |
-| hl-platform kernel/ | Gate H（许久明） | P0-0~P0-6 合规、五必过测试、CI 全绿 |
+| hl-contracts | 创始人 + Gate H（Gate-H） | 契约完整性、reason_code 命名、OpenAPI 格式 |
+| hl-platform contract/ | Gate H（Gate-H） | Pure Kotlin 合规、命名规范（HK-NAMING-SPEC） |
+| hl-platform kernel/ | Gate H（Gate-H） | P0-0~P0-6 合规、五必过测试、CI 全绿 |
 
 ### 2.3 日常协作模式（沿用 hl-dispatch 三模式）
 
@@ -222,10 +222,10 @@ Phase                 负责人        产出物                          门禁
 
 | 群 | 用途 | 成员 | 信息流 |
 |----|----|------|-------|
-| #唤龙-工程通知 | CI 失败、发版通知、系统告警 | 全员 + bot | 被动接收 |
-| #唤龙-任务协同 | 日常工作协调、卡点反馈、时间冲突 | 核心组（7人） | 即时通讯 |
-| #唤龙-PM工作台 | 需求讨论、能力包规划、用户反馈 | PM（邹骢/朱阳）+ 创始人 | 业务决策 |
-| #唤龙-创始人指挥台 | 里程碑决策、架构裁决、应急协调 | 创始人 + Gate H + Gate R | 总体指挥 |
+| 工程通知通道 | CI 失败、发版通知、系统告警 | 全员 + bot | 被动接收 |
+| 任务协同通道 | 日常工作协调、卡点反馈、时间冲突 | 核心组（7人） | 即时通讯 |
+| PM 工作台通道 | 需求讨论、能力包规划、用户反馈 | PM（PM-A/PM-B）+ 创始人 | 业务决策 |
+| 指挥台通道 | 里程碑决策、架构裁决、应急协调 | 创始人 + Gate H + Gate R | 总体指挥 |
 
 **核心原则**（参考 FEISHU-GITHUB-COLLABORATION-SPEC v1.0）：
 
@@ -233,10 +233,10 @@ Phase                 负责人        产出物                          门禁
 2. **飞书是即时通讯层 + 可视化投影层**：实时交互、进展同步、紧急协调在飞书进行，但不替代 GitHub 的正式流程。
 3. **讨论产出 24h 写入规则**（铁律）：飞书讨论形成的结论、决定、需求确认必须在 24 小时内转化为 GitHub Issue / PR / RULINGS.md 条目。超期延迟视为决策失效，需重新启动流程。
 4. **跨群同步**：
-   - #唤龙-工程通知：bot 自动推送 CI 状态、发版结果
-   - #唤龙-任务协同：核心组日常对齐，指向 GitHub Issue 或 Project Board
-   - #唤龙-PM工作台：能力包规划会议记录实时同步，产出 PRD 或 capability.yaml PR
-   - #唤龙-创始人指挥台：里程碑评审、架构决议，产出 RULINGS.md 修订
+   - 工程通知通道：bot 自动推送 CI 状态、发版结果
+   - 任务协同通道：核心组日常对齐，指向 GitHub Issue 或 Project Board
+   - PM 工作台通道：能力包规划会议记录实时同步，产出 PRD 或 capability.yaml PR
+   - 指挥台通道：里程碑评审、架构决议，产出 RULINGS.md 修订
 
 **禁止事项**：
 - ❌ 飞书作为唯一的需求记录（需求必须有 GitHub Issue 对标）
@@ -252,40 +252,40 @@ Phase                 负责人        产出物                          门禁
 | 角色 | 交付物 |
 |------|--------|
 | 创始人 | 就绪报告全部 ✅ + 签字 |
-| Gate H（许久明） | hl-framework 5 Starters + BOM 初始发布验证；术语 SSOT 建立 |
-| Gate R（曾正龙） | PG18 开发实例 + Docker Compose 开发环境 |
-| Infra（魏鹏） | starter-security JWT 方案设计（DD-AUTH 对齐） |
-| 技术验收官（李旭阳） | Gate 3 流程文档化 + 验收检查项模板建立 |
+| Gate H（Gate-H） | hl-framework 5 Starters + BOM 初始发布验证；术语 SSOT 建立 |
+| Gate R（Gate-R） | PG18 开发实例 + Docker Compose 开发环境 |
+| Infra（Infra-A） | starter-security JWT 方案设计（DD-AUTH 对齐） |
+| 技术验收官（Gate-3） | Gate 3 流程文档化 + 验收检查项模板建立 |
 
 **S1 地基（~2-3 周）**
 
 | 角色 | 交付物 |
 |------|--------|
 | 创始人 + AI | HK Kernel Flyway V1 + Gateway ProtocolGate + CI 8 门禁脚本 |
-| Gate H（许久明） | starter-boot + starter-web + starter-data-jpa 交付；Gate H 审查创始人代码 |
-| Gate R（曾正龙） | PG18 生产级部署 + Flyway 流水线 + OTel Agent 配置 |
-| Infra（魏鹏） | starter-security（JWT）+ starter-observability 交付 |
+| Gate H（Gate-H） | starter-boot + starter-web + starter-data-jpa 交付；Gate H 审查创始人代码 |
+| Gate R（Gate-R） | PG18 生产级部署 + Flyway 流水线 + OTel Agent 配置 |
+| Infra（Infra-A） | starter-security（JWT）+ starter-observability 交付 |
 
 **S2 治理层投产（~2-3 周）**
 
 | 角色 | 交付物 |
 |------|--------|
 | 创始人 + AI | HK 6 模块 PG 集成 + 审计链路端到端 + Gateway 投产 |
-| Gate H（许久明） | Gate H 验收治理层全量代码；hl-framework BOM 版本锁定 |
-| Gate R（曾正龙） | Grafana 监控面板 + Outbox 事件表监控 + 上线 SOP |
-| Infra（魏鹏） | HK Client SDK 首版发布 |
-| PM（邹骢 / 朱阳） | S2 中期启动能力包清单讨论；首批 3-5 包推荐（用户价值链推导） |
-| 技术验收官（李旭阳） | Gate 3 验收标准对齐能力包清单；验收环境就绪确认 |
+| Gate H（Gate-H） | Gate H 验收治理层全量代码；hl-framework BOM 版本锁定 |
+| Gate R（Gate-R） | Grafana 监控面板 + Outbox 事件表监控 + 上线 SOP |
+| Infra（Infra-A） | HK Client SDK 首版发布 |
+| PM（PM-A / PM-B） | S2 中期启动能力包清单讨论；首批 3-5 包推荐（用户价值链推导） |
+| 技术验收官（Gate-3） | Gate 3 验收标准对齐能力包清单；验收环境就绪确认 |
 
 **S3 开发框架验证（~2-3 周）**
 
 | 角色 | 交付物 |
 |------|--------|
 | 创始人 + AI | 1 个 demo biz.* 完整实现（contract + domain + adapter + DDL + P0-5 测试） |
-| PM（邹骢 / 朱阳） | demo 包 MVP 规格 + Facts + 验收用例 |
-| Gate H（许久明） | Gate H 审计 demo 包代码 |
-| Gate 3（李旭阳） | demo 包端到端链路验证 + Gate 3 签字 |
-| Gate R（曾正龙） | demo 包部署验证 + 性能基线初测 |
+| PM（PM-A / PM-B） | demo 包 MVP 规格 + Facts + 验收用例 |
+| Gate H（Gate-H） | Gate H 审计 demo 包代码 |
+| Gate 3（Gate-3） | demo 包端到端链路验证 + Gate 3 签字 |
+| Gate R（Gate-R） | demo 包部署验证 + 性能基线初测 |
 
 **S4 首批能力包（~4-6 周）**
 
@@ -294,11 +294,11 @@ Phase                 负责人        产出物                          门禁
 | 角色 | 交付物 |
 |------|--------|
 | 创始人 + AI | 3-5 个核心 biz.* 完整实现（contract + domain + adapter + DDL + P0-5 测试） |
-| PM（邹骢 / 朱阳） | 每个能力包的 LAUNCH-{MODULE}.md + PRD 文档集 + UAT 签收 |
-| Gate H（许久明） | 逐包 Gate H 审计 |
-| Gate 3（李旭阳） | 全部能力包端到端验证 + Gate 3 签字 |
-| Gate R（曾正龙） | 逐包发布验证 + 性能基线（P99 < 200ms） |
-| Infra（魏鹏） | 性能基线测试执行 + Phase 1+ Keycloak 预研 |
+| PM（PM-A / PM-B） | 每个能力包的 LAUNCH-{MODULE}.md + PRD 文档集 + UAT 签收 |
+| Gate H（Gate-H） | 逐包 Gate H 审计 |
+| Gate 3（Gate-3） | 全部能力包端到端验证 + Gate 3 签字 |
+| Gate R（Gate-R） | 逐包发布验证 + 性能基线（P99 < 200ms） |
+| Infra（Infra-A） | 性能基线测试执行 + Phase 1+ Keycloak 预研 |
 
 ### 2.5 前端交付规划（R-060）
 
@@ -330,17 +330,17 @@ Phase                 负责人        产出物                          门禁
 | 7 | `gate-spring-isolation.sh` | Spring 隔离综合检查 | P0-0 | CI 阻断 |
 | 8 | `validate-contracts.sh` | 契约一致性 | P0-3 | CI 阻断 |
 
-**R-044 适用说明**：这 8 道门禁由创始人 + AI 编写和维护。团队成员（主要是许久明）做逻辑正确性 review + 运维部署。Gate H 对 CI 脚本的审查级别为「逻辑正确性 review」而非「架构深审」——因为 R-044 的前提是团队尚未完成 AI-native 转型，CI 脚本的设计意图由创始人把握。
+**R-044 适用说明**：这 8 道门禁由创始人 + AI 编写和维护。团队成员（主要是Gate-H）做逻辑正确性 review + 运维部署。Gate H 对 CI 脚本的审查级别为「逻辑正确性 review」而非「架构深审」——因为 R-044 的前提是团队尚未完成 AI-native 转型，CI 脚本的设计意图由创始人把握。
 
 ### 3.2 人工门禁
 
 | 门禁 | 签字人 | 审查内容 | 触发时机 |
 |------|--------|---------|---------|
-| **Gate H** | 许久明 | 代码质量 + 架构合规 + 测试覆盖 + 命名规范（HK-NAMING-SPEC） | 每个 PR merge 前 |
-| **Gate R** | 曾正龙 | 可构建 + 可观测 + 可回滚 + Staging 健康 | 里程碑发布前 |
-| **Gate 3** | 李旭阳（技术验收官） | 端到端业务合规 + 异常安全 + 回归测试 | 能力包集成验证 |
-| **创始人签字** | 童正辉 | 裁决确认 + 里程碑签收 + 灰度决策 | M0-M4 里程碑 |
-| **PM 签字** | 邹骢 | UAT 验收用例全部通过 | 能力包 UAT 阶段 |
+| **Gate H** | Gate-H | 代码质量 + 架构合规 + 测试覆盖 + 命名规范（HK-NAMING-SPEC） | 每个 PR merge 前 |
+| **Gate R** | Gate-R | 可构建 + 可观测 + 可回滚 + Staging 健康 | 里程碑发布前 |
+| **Gate 3** | Gate-3（技术验收官） | 端到端业务合规 + 异常安全 + 回归测试 | 能力包集成验证 |
+| **创始人签字** | L0-Founder | 裁决确认 + 里程碑签收 + 灰度决策 | M0-M4 里程碑 |
+| **PM 签字** | PM-A | UAT 验收用例全部通过 | 能力包 UAT 阶段 |
 
 ### 3.3 测试分工（R-058：不设独立 QA）
 
@@ -350,10 +350,10 @@ Phase                 负责人        产出物                          门禁
 |---------|--------|---------|---------|
 | 单元测试（P0-5 五必过） | 创始人 + AI 生成，Gate H / Gate 3 审计 | JUnit 5 + Kotlin | 每次 PR 提交，CI 自动执行 |
 | 契约一致性测试 | CI 自动化（validate-contracts.sh） | Shell + JSON Schema | 每次 PR 提交 |
-| 集成测试 | 技术验收官（李旭阳） | TestContainers + PG18 | 能力包 ④→⑤ 阶段 |
-| 端到端链路验证 | 技术验收官（李旭阳） | Gate 3 检查项 | 能力包 ⑤ 集成验证阶段 |
-| 回归测试 | 技术验收官（李旭阳） | 累积测试套件 | 里程碑发布前 |
-| UAT 验收 | PM（邹骢 / 朱阳） | 人工验收用例 | 能力包 ⑥ UAT 阶段 |
+| 集成测试 | 技术验收官（Gate-3） | TestContainers + PG18 | 能力包 ④→⑤ 阶段 |
+| 端到端链路验证 | 技术验收官（Gate-3） | Gate 3 检查项 | 能力包 ⑤ 集成验证阶段 |
+| 回归测试 | 技术验收官（Gate-3） | 累积测试套件 | 里程碑发布前 |
+| UAT 验收 | PM（PM-A / PM-B） | 人工验收用例 | 能力包 ⑥ UAT 阶段 |
 
 **推导逻辑**：AI 驱动模型下（I-1），所有代码（含测试）由创始人 + AI 产出。测试的核心价值 = 验证 AI 产出是否符合业务意图。Gate H 审计测试逻辑正确性，Gate 3 验证端到端覆盖，PM 验证业务意图。无需额外 QA 层或业务开发者。
 
@@ -473,11 +473,11 @@ data class HlResponse<T>(
 
 | 编号 | 事项 | 裁决结果 | Ruling |
 |------|------|---------|--------|
-| D-1 | 预留 2 位填入 | ✅ 邹骢 + 朱阳（2 PM）填入 R-053 预留位，不设业务开发者 | R-056 修订 |
+| D-1 | 预留 2 位填入 | ✅ PM-A + PM-B（2 PM）填入 R-053 预留位，不设业务开发者 | R-056 修订 |
 | D-2 | 能力包生产模型 | ✅ 创始人+AI 全覆盖，审计带宽决定并行度，不设人工开发岗 | R-057 修订 |
-| D-3 | QA 角色定义 | ✅ 不设独立 QA；P0-5 由 AI 生成+Gate H/3 审计 / 集成+E2E 李旭阳 / UAT PM | R-058 修订 |
+| D-3 | QA 角色定义 | ✅ 不设独立 QA；P0-5 由 AI 生成+Gate H/3 审计 / 集成+E2E Gate-3 / UAT PM | R-058 修订 |
 | D-4 | 前端交付规范 | ✅ Swift + Flutter 并行，人力 S1 期间确定 | R-060 |
-| D-5 | 刘建成/李旭阳角色定位 | ✅ 李旭阳升级技术验收官纳入核心组；刘建成不纳入（旧工程交付 + 数据打通） | R-059 |
+| D-5 | PM-Ops/Gate-3角色定位 | ✅ Gate-3升级技术验收官纳入核心组；PM-Ops不纳入（旧工程交付 + 数据打通） | R-059 |
 
 ---
 
@@ -488,7 +488,7 @@ data class HlResponse<T>(
 | 文档 | 修订内容 | 优先级 |
 |------|---------|--------|
 | `_workspace-legacy/outputs/ROLE-RESPONSIBILITIES-PHASE1.md` | 头部追加 SUPERSEDED 标注，指向本文档 | P0 |
-| `hl-dispatch/README.md` | 角色表对齐三环模型；魏鹏职责从 Nacos/MQ 改为 JWT/Observability/SDK | P0 |
+| `hl-dispatch/README.md` | 角色表对齐三环模型；Infra-A职责从 Nacos/MQ 改为 JWT/Observability/SDK | P0 |
 | `hl-contracts/prd/devpack/DEVPACK-biz.TEMPLATE.v1.0.md` | §2.1 `route_to` → `internal`；清除 HlResponseWrapFilter / PM-A01~A03 / blueprint 引用 | P0 |
 | `hl-framework/CLAUDE.md` | Starter 数量从 7 改为 5 + BOM | P1 |
 | `hl-contracts/governance/CLAUDE.md` | 已在 2026-03-17 SAAC 审计中更新，确认无残留 | ✅ 已完成 |
@@ -501,5 +501,5 @@ data class HlResponse<T>(
 |------|------|------|
 | 2026-03-17 | v1.0 | DRAFT — 从 SAAC-HL v1.1 第一性原理推导全新协作模型，替代旧工程 ROLE-RESP |
 | 2026-03-17 | v1.1 | LOCKED — D-1~D-5 全部裁决：R-056 扩编 / R-057 滚动人力 / R-058 无QA / R-059 角色定位 / R-060 前端并行 |
-| 2026-03-17 | v1.2 | LOCKED — R-056/R-057/R-058 修订：预留 2 位 = 邹骢+朱阳（2 PM），不设业务开发者。AI 生成全部 Kotlin 代码，人类负责审计+业务定义+运维。核心组 7 人（4 原始 + 2 PM + 李旭阳）。能力包启动流从 6 步改为 6 步（去「业务填充」→ 加「代码审计」） |
-| 2026-04-01 | v1.3 | LOCKED — 融合 FEISHU-GITHUB-COLLABORATION-SPEC v1.0：§2.3.1 追加飞书四群结构（#唤龙-工程通知/任务协同/PM工作台/创始人指挥台）、协作原则（GitHub 事实真源、飞书即时通讯+可视化投影、讨论 24h 写入 GitHub）、禁止事项。强化 GitHub-飞书边界明确性。 |
+| 2026-03-17 | v1.2 | LOCKED — R-056/R-057/R-058 修订：预留 2 位 = PM-A+PM-B（2 PM），不设业务开发者。AI 生成全部 Kotlin 代码，人类负责审计+业务定义+运维。核心组 7 人（4 原始 + 2 PM + Gate-3）。能力包启动流从 6 步改为 6 步（去「业务填充」→ 加「代码审计」） |
+| 2026-04-01 | v1.3 | LOCKED — 融合 FEISHU-GITHUB-COLLABORATION-SPEC v1.0：§2.3.1 追加飞书四群结构（工程通知通道/任务协同/PM工作台/创始人指挥台）、协作原则（GitHub 事实真源、飞书即时通讯+可视化投影、讨论 24h 写入 GitHub）、禁止事项。强化 GitHub-飞书边界明确性。 |

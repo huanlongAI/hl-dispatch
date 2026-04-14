@@ -33,7 +33,7 @@
 
 ### 流程防护
 4. **Branch Protection** — main 分支要求 PR + Owner 审批，禁止直接 push
-5. **CODEOWNERS** — 所有变更需 @tongzhenghui 审批
+5. **CODEOWNERS** — 所有变更需 @founder 审批
 
 ### 人工防护
 6. **提交前自查** — 提交者必须确认内容不含上表禁止项
@@ -45,9 +45,9 @@
 
 1. **立即** 撤销/轮换泄露的密钥/密码
 2. 使用 `git filter-repo` 从历史中彻底删除
-3. 通知 @tongzhenghui 评估影响范围
+3. 通知 @founder 评估影响范围
 4. 记录事件到 `docs/invariants/`
 
 ## 联系人
 
-安全问题联系仓库 Owner: @tongzhenghui
+安全问题联系仓库 Owner: @founder

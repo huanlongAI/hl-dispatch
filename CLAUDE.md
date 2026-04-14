@@ -28,6 +28,6 @@ doc-review / task-assign / decision-request / architect / ops / pm / priority-p0
 
 ## Cowork 行为约定
 
-- 本仓库由 NODE-A 独占写入（Cowork 通过 GitHub MCP 可直写）
+- 本仓库由 NODE-A 独占写入（变更需通过受控协作链路提交）
 - 其他节点如需修改，须通过 GitHub Issue 提案或创始人授权的 `[CROSS-DOMAIN]` commit
 - 详见 `tzhOS/40-PPR/MULTI-NODE-COWORK-SPEC.md` §3.4

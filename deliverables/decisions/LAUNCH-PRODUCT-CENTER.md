@@ -22,11 +22,11 @@
 | **一句话定义** | 管理商品的完整生命周期（创建、编辑、上下架、定价、分类），为订单/库存/营销等下游能力包提供商品数据 SSOT；不涉及库存扣减、订单履约、支付结算 |
 | **所属 Phase** | Phase 1 — S3 demo 候选（中等复杂度 + 跨租户场景，符合 R-053 S3 选型原则）；或 S4 首批 |
 | **优先级批次** | 建议 S4 首批（商品是订单/库存/营销的前置依赖） |
-| **PM 负责人** | 邹骢 |
+| **PM 负责人** | PM-A |
 | **代码生成** | 创始人 + AI（R-057：全覆盖模型） |
-| **Gate H 审计** | 许久明（代码质量 + 架构合规） |
-| **Gate 3 验收** | 李旭阳（端到端业务正确性） |
-| **Gate R 发布** | 曾正龙（运维 + 发布验证） |
+| **Gate H 审计** | Gate-H（代码质量 + 架构合规） |
+| **Gate 3 验收** | Gate-3（端到端业务正确性） |
+| **Gate R 发布** | Gate-R（运维 + 发布验证） |
 | **前端** | 待指定（hl-console-native + 消费者端） |
 
 ---
@@ -165,11 +165,11 @@
 
 | 文档 | 文件名 | 负责人 | 状态 |
 |------|--------|--------|------|
-| MVP 规格 | `PRD-Biz.Product.MVP.v1.0.md` | PM（邹骢） | 待编写 |
+| MVP 规格 | `PRD-Biz.Product.MVP.v1.0.md` | PM（PM-A） | 待编写 |
 | Facts 定义 | `PRD-Biz.Product.MVP.Facts.v1.0.md` | PM + 创始人 | 待编写 |
 | Decision Trace | `PRD-Biz.Product.MVP.Decision-Trace.v1.0.md` | 创始人+AI | 待编写 |
 | API Return Codes | `PRD-Biz.Product.MVP.API-Return-Codes.v1.0.md` | 创始人+AI | 待编写 |
-| 验收用例 | `PRD-Biz.Product.MVP.Core-Acceptance-Cases.v1.0.md` | PM + Gate 3（李旭阳） | 待编写 |
+| 验收用例 | `PRD-Biz.Product.MVP.Core-Acceptance-Cases.v1.0.md` | PM + Gate 3（Gate-3） | 待编写 |
 | Dev Checklist | `PRD-Biz.Product.MVP.Dev-Checklist.v1.0.md` | 创始人+AI | 待编写 |
 
 ---
@@ -392,7 +392,7 @@ CREATE POLICY tenant_isolation_sku_version ON biz_product.sku_version
 
 > 以 2 周 Sprint 为例（S4 首批，非 S3 demo）。
 
-| 天 | PM（邹骢） | 创始人+AI | Gate H（许久明） | Gate 3（李旭阳） | 运维（曾正龙） | 前端 |
+| 天 | PM（PM-A） | 创始人+AI | Gate H（Gate-H） | Gate 3（Gate-3） | 运维（Gate-R） | 前端 |
 |----|-----------|-----------|------------------|------------------|----------------|------|
 | D1 | MVP 规格交付 | 审读 MVP + 契约设计 | — | — | Schema DDL | 交互线框 |
 | D2 | Facts 定义 + reason_codes PR | contract 层接口 | — | — | RLS + feature_toggle | — |
@@ -465,9 +465,9 @@ CREATE POLICY tenant_isolation_sku_version ON biz_product.sku_version
 
 ### 9.5 团队就绪
 
-- [x] PM 已指定（邹骢）
+- [x] PM 已指定（PM-A）
 - [x] 代码生成模型已确认（创始人+AI，R-057）
-- [x] Gate H / Gate 3 / Gate R 审计人已确认（许久明 / 李旭阳 / 曾正龙）
+- [x] Gate H / Gate 3 / Gate R 审计人已确认（Gate-H / Gate-3 / Gate-R）
 - [ ] 前端 Owner 已指定
 - [ ] Sprint 周期已确定
 - [ ] GitHub Issue 已创建（hl-dispatch task-assign 模板）

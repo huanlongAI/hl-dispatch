@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技术选型图谱 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+body { min-width: 1200px; }
+
+/* 状态徽章 */
+.lock-badge { display:inline-block; padding:2px 10px; border-radius:12px; font-size:0.72em; font-weight:600; letter-spacing:0.3px; vertical-align:middle; white-space:nowrap; }
+.lock-badge.locked    { background:rgba(0,184,148,0.15);  color:#00D9A3;   border:1px solid rgba(0,184,148,0.45); }
+.lock-badge.pending   { background:rgba(253,203,110,0.15);color:#FDCB6E;   border:1px solid rgba(253,203,110,0.45); }
+.lock-badge.deferred  { background:rgba(116,185,255,0.15);color:#74B9FF;   border:1px solid rgba(116,185,255,0.45); }
+.lock-badge.rejected  { background:rgba(225,112,85,0.15); color:#E17055;   border:1px solid rgba(225,112,85,0.45); }
+.lock-badge.draft     { background:rgba(162,155,254,0.12);color:#A29BFE;   border:1px solid rgba(162,155,254,0.45); }
+
+/* 选型表 */
+.tech-table { width:100%; border-collapse:collapse; margin:16px 0 28px; font-size:0.88em; }
+.tech-table th, .tech-table td { padding:10px 12px; border:1px solid var(--border); text-align:left; vertical-align:top; }
+.tech-table th { background:rgba(108,92,231,0.12); color:var(--primary-light); font-weight:600; font-size:0.82em; letter-spacing:0.4px; }
+.tech-table tr:nth-child(even) td { background:rgba(255,255,255,0.015); }
+.tech-table td.tech-name { font-weight:600; color:#fff; white-space:nowrap; }
+.tech-table td.tech-name code { font-weight:600; }
+.tech-table td small { color:var(--text-muted); display:block; margin-top:3px; font-size:0.88em; }
+
+/* 来源链 */
+.source-chain { display:flex; align-items:stretch; gap:0; margin:20px 0; overflow-x:auto; padding:4px 0; }
+.source-chain .node { flex:1; min-width:160px; background:var(--bg-card); border:1px solid var(--border); border-left:4px solid var(--primary); padding:14px 16px; position:relative; }
+.source-chain .node + .node { margin-left:10px; }
+.source-chain .node::after { content:"▶"; position:absolute; right:-16px; top:50%; transform:translateY(-50%); color:var(--primary); font-size:0.9em; z-index:2; }
+.source-chain .node:last-child::after { display:none; }
+.source-chain .node .label { font-size:0.7em; color:var(--text-muted); letter-spacing:0.5px; margin-bottom:4px; }
+.source-chain .node .name  { font-size:0.95em; font-weight:700; color:#fff; }
+.source-chain .node .date  { font-size:0.72em; color:var(--text-muted); margin-top:4px; }
+
+/* 决定性因素卡片 */
+.factor-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:12px; margin:16px 0 24px; }
+.factor-card { background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+.factor-card .title { font-size:0.9em; font-weight:600; color:var(--primary-light); margin-bottom:6px; }
+.factor-card .desc  { font-size:0.82em; color:var(--text-muted); line-height:1.55; }
+
+/* 不预置 / 禁区表 */
+.forbidden-table td.reason { color:var(--text-muted); font-size:0.85em; }
+
+/* 迭代日志 */
+.iter-entry { border-left:3px solid var(--primary); padding:6px 12px 8px 14px; margin:12px 0; background:rgba(108,92,231,0.04); border-radius:0 6px 6px 0; }
+.iter-entry .when { font-size:0.72em; color:var(--text-muted); letter-spacing:0.5px; }
+.iter-entry .title { font-weight:600; color:#fff; margin:2px 0 4px; }
+.iter-entry .body  { font-size:0.85em; color:var(--text); }
+
+/* TOC */
+.toc-toggle { position:fixed; right:20px; bottom:20px; width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer; font-size:1.3em; z-index:200; box-shadow:0 4px 16px rgba(108,92,231,0.4); display:flex; align-items:center; justify-content:center; }
+.toc-toggle:hover { transform:scale(1.08); }
+.toc-sidebar { position:fixed; right:0; top:0; bottom:0; width:300px; max-width:85vw; background:var(--bg-card); border-left:1px solid var(--border); z-index:199; transform:translateX(100%); transition:transform 0.3s; overflow-y:auto; padding:60px 20px 40px; }
+.toc-sidebar.open { transform:translateX(0); }
+.toc-sidebar h3 { font-size:0.92em; color:var(--primary-light); margin-bottom:12px; }
+.toc-sidebar .toc-close { position:absolute; top:14px; right:14px; background:none; border:none; color:var(--text-muted); font-size:1.3em; cursor:pointer; }
+.toc-sidebar a { display:block; padding:4px 0; color:var(--text-muted); text-decoration:none; font-size:0.85rem; border-left:2px solid transparent; }
+.toc-sidebar a:hover { color:var(--text); border-left-color:var(--primary); padding-left:8px; }
+.toc-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:198; display:none; }
+.toc-overlay.open { display:block; }
+
+/* 说明句 */
+.meta-row { display:flex; flex-wrap:wrap; gap:18px; margin:10px 0 18px; font-size:0.82em; color:var(--text-muted); }
+.meta-row span strong { color:var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="tech-selection.html" class="active">技术选型</a>
+    <a href="glossary.html">术语表</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+  本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。锁定依据以 hl-contracts 仓库中的 SAAC / EP / TECH-STACK-SPEC / RULINGS 正式文件为准。
+</div>
+
+<div class="page-header">
+  <h1>🧭 <span>技术选型图谱</span></h1>
+  <div class="meta">Tech Selection Atlas · 决定性因素 × 锁定状态 × 来源议题</div>
+  <div class="badge">持续迭代 · v1.0 · 2026-04-14</div>
+</div>
+
+<div class="content">
+
+<blockquote>
+<p><strong>本页定位</strong>：把每一项唤龙技术栈选型逐一铺开，交代三件事——<strong>决定性因素</strong>（为什么选它）、<strong>锁定状态</strong>（现在能不能改）、<strong>来源议题</strong>（什么时候、由哪一条规范/裁决锁的）。<br/>
+<strong>非目标</strong>：不是白皮书、不是对外文档；不是推荐清单；不允许站点本地新增未经 SAAC 推导的选型。<br/>
+<strong>维护规则</strong>：任何新增或解锁都必须有 Ruling ID，并追溯到 SAAC / EP 条款。变更走第 §10 节的迭代日志。</p>
+</blockquote>
+
+<div class="meta-row">
+  <span><strong>来源顺序</strong>（新覆盖旧）：飞书公告 &gt; TEAM-COLLAB-SPEC v2.1 Pilot-Locked &gt; TECH-STACK-SPEC v3 &gt; RULINGS &gt; SAAC-HL-EP-001 &gt; SAAC-HL-001</span>
+  <span><strong>最近一次 Pilot-Locked</strong>：2026-04-11</span>
+  <span><strong>关联审计报告</strong>：AUDIT-HL-DOCS-TECH-SELECTION-vs-SAAC-2026-04-14</span>
+</div>
+
+<hr/>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s0-legend">0 · 图例与锁定状态</h2>
+
+<p>图谱使用统一的锁定状态标注，严格与 SAAC 推导链对齐：</p>
+
+<table class="tech-table">
+  <thead><tr><th style="width:110px;">状态</th><th>语义</th><th>变更途径</th></tr></thead>
+  <tbody>
+    <tr><td><span class="lock-badge locked">🔒 LOCKED</span></td><td>已由 SAAC / EP / RULINGS / TECH-STACK-SPEC 正式锁定。进入 v3 Lock-in Table，作为契约依据。</td><td>需创始人裁决 + 版本升级 + 更新 TECH-STACK-SPEC / RULINGS；不允许 PR 作者本地修改。</td></tr>
+    <tr><td><span class="lock-badge pending">⏳ PENDING</span></td><td>已有推演草案，待创始人裁决（J-01 / J-02 / J-03 等）。站点当前采用"中性/最小化"默认。</td><td>等待裁决归档后进入 LOCKED 或 REJECTED。</td></tr>
+    <tr><td><span class="lock-badge deferred">⚠️ DEFERRED</span></td><td>Phase 0 明确不预置，但预留未来评估位。不是否定，是节奏管控。</td><td>Phase 1 按真实负载重新评估，重开议题。</td></tr>
+    <tr><td><span class="lock-badge rejected">❌ NOT-IN-P0</span></td><td>Phase 0 范围之外，明确剔除——Phase 0 的极简前提。</td><td>需新立项（业务触发 + 裁决）才可重新进入。</td></tr>
+    <tr><td><span class="lock-badge draft">📝 DRAFT</span></td><td>已有明确倾向但 Lock-in Table 未写入，或证据链来自未定稿文档。</td><td>走 DD（Design Decision）补锁流程。</td></tr>
+  </tbody>
+</table>
+
+<div class="callout info">
+<strong>如何读这张表</strong>
+每一行都回答三问：这一项是什么（版本+用途） · 为什么选它（决定性因素） · 由什么议题锁的（Ruling / Spec 条款 + 锁定日期）。任何在图谱中查不到来源的"选型"都不成立，必须先走 SAAC 推演。
+</div>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s1-source-chain">1 · 来源优先序与推导链</h2>
+
+<p>唤龙技术选型不是本地决策，而是自顶向下从 SAAC 推出。出现冲突时，<strong>新覆盖旧</strong>，且越靠上越不可违反：</p>
+
+<div class="source-chain">
+  <div class="node"><div class="label">飞书公告</div><div class="name">团队编制 · 2026-04-11</div><div class="date">Pilot-Locked 23 人</div></div>
+  <div class="node"><div class="label">TEAM-COLLAB-SPEC</div><div class="name">v2.1</div><div class="date">Pilot-Locked 2026-04-11</div></div>
+  <div class="node"><div class="label">TECH-STACK-SPEC</div><div class="name">v3 Lock-in</div><div class="date">版本锁表真源</div></div>
+  <div class="node"><div class="label">RULINGS</div><div class="name">创始人裁决集</div><div class="date">H-002 / R-016 等</div></div>
+  <div class="node"><div class="label">SAAC-HL-EP-001</div><div class="name">v1.1 执行层</div><div class="date">Phase 0 边界</div></div>
+  <div class="node"><div class="label">SAAC-HL-001</div><div class="name">v1.1 宪法层</div><div class="date">战略根</div></div>
+</div>
+
+<div class="callout warn">
+<strong>被废弃的旧源头</strong>
+2026-03 期的过渡性裁决（R-034 / R-056 / R-058 / R-059 / R-060 等，含 "WS-C 旧工程" / "核心组 7 人" / "不设 QA" / "不设设计"）已被 2026-04-11 TEAM-COLLAB-SPEC v2.1 <strong>Pilot-Locked</strong> 整体取代。站点不得再引用此类旧源。
+</div>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s2-decisive-factors">2 · 决定性因素模型</h2>
+
+<p>选型评估走这六因子；任何技术决定必须在下列因子上可追溯：</p>
+
+<div class="factor-grid">
+  <div class="factor-card">
+    <div class="title">① 业务阶段</div>
+    <div class="desc">Phase 0 最小可行（单 VM + 单库 + 单前端栈对齐），任何"向未来过度工程化"的选型一律剔除。</div>
+  </div>
+  <div class="factor-card">
+    <div class="title">② 团队规模与能力</div>
+    <div class="desc">23 人（内部 21 + 2 PHP 补漏 + 创始人在外），后端 6 人 + 前端 5 人上限。不选择需要专职 SRE / 专职 DBA / 专职 Platform 团队才能驾驭的栈。</div>
+  </div>
+  <div class="factor-card">
+    <div class="title">③ 契约驱动</div>
+    <div class="desc">Schema / API / 事件契约先行（Flyway · OpenAPI · Modulith Boundary）。选型必须支持"契约即门禁"。</div>
+  </div>
+  <div class="factor-card">
+    <div class="title">④ AI-First 编码</div>
+    <div class="desc">默认 AI 生成初稿 + 工程师过 Gate。选型偏向有稳定文档、类型系统强、LLM 训练语料充分的主流栈。</div>
+  </div>
+  <div class="factor-card">
+    <div class="title">⑤ 四环三面</div>
+    <div class="desc">四权分离 / 四环 / 12 状态 / L1-L4 门禁的落地约束——选型必须不破坏 Modulith 边界与门禁可验证性。</div>
+  </div>
+  <div class="factor-card">
+    <div class="title">⑥ 版本锁与供应链</div>
+    <div class="desc">TECH-STACK-SPEC v3 锁死次要版本。优先 LTS / 主版本稳定 / 商业支持充分的组件。</div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s3-backend">3 · 后端选型</h2>
+
+<p>后端统一 Kotlin + Spring Boot 3，走 Spring Modulith 单仓多模块。所有版本均已进入 TECH-STACK-SPEC v3 Lock-in Table。</p>
+
+<table class="tech-table">
+  <thead><tr>
+    <th style="width:22%;">技术项</th><th style="width:11%;">版本/形态</th><th style="width:10%;">锁定</th>
+    <th>决定性因素</th><th style="width:24%;">来源议题</th><th style="width:11%;">锁定日期</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="tech-name">JVM</td><td><code>21 LTS</code></td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>长期支持 + virtual threads + 向量 API 稳定；AI 语料充分。</td>
+      <td>TECH-STACK-SPEC v3 §Lock-in<br/><small>SAAC §4.2 后端基座</small></td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Kotlin</td><td><code>2.1.10</code></td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>空安全 + 数据类 + 协程 + 与 Spring Boot 3 官方一等公民；AI 生成质量高。</td>
+      <td>TECH-STACK-SPEC v3 §Lock-in</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Gradle</td><td><code>8.12</code></td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>Kotlin DSL + 增量构建 + 版本目录 TOML，与 Spring Boot 3.5 官方兼容。</td>
+      <td>TECH-STACK-SPEC v3 §Lock-in</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Spring Boot</td><td><code>3.5.11</code></td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>JVM 21 兼容 + Actuator 原生可观测 + 支持 Modulith。</td>
+      <td>TECH-STACK-SPEC v3 §Lock-in<br/><small>SAAC §4.2</small></td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Spring Modulith</td><td><code>1.3.4</code></td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>单仓多模块 · 事件驱动 · Phase 0 不预置 gRPC/外部 MQ 的配套方案，模块边界即契约。</td>
+      <td>TECH-STACK-SPEC v3 §Lock-in<br/><small>SAAC §4.2 四环三面</small></td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Spring Data JPA + Hibernate</td><td><code>Boot 3.5 / Hibernate 6.5</code></td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>团队熟悉度 + Kotlin-jpa 插件 + 契约驱动下"实体即 Schema"清晰；拒绝 JOOQ 的工程复杂度。</td>
+      <td><strong>RULINGS H-002</strong><br/><small>明确驳回 JOOQ</small></td>
+      <td>H-002 裁决时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">PostgreSQL</td><td><code>18.x</code></td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>事务可靠 + JSONB + 全文检索 + 分区表，覆盖 Phase 0 全部持久化需求，无需额外 NoSQL。</td>
+      <td>TECH-STACK-SPEC v3 §Lock-in<br/><small>SAAC-HL-EP-001 P0-3</small></td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Flyway</td><td>最新稳定</td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>Schema 变更走 Migration PR = L2 门禁依据。</td>
+      <td>SAAC §4.3 契约驱动</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">JUnit Jupiter</td><td><code>5.10.2</code></td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>Kotlin 兼容 + 参数化测试 + Spring Boot 测试栈默认。</td>
+      <td>TECH-STACK-SPEC v3 §Lock-in</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Testcontainers</td><td>最新稳定</td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>告别 H2 假数据库——集成测试跑真实 PG 18。</td>
+      <td>QA-SPEC<br/><small>SAAC §4.3 契约驱动</small></td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">OpenAPI</td><td>3.x</td><td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>契约即代码 · 前后端分离的唯一真源，hl-contracts 仓持有。</td>
+      <td>SAAC §4.3 契约驱动</td>
+      <td>v3 发布时</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s4-frontend-c-l1">4 · 前端选型 — C-L1 平台控制台</h2>
+
+<p>SAAC §4.1 明确<strong>前端分治</strong>：C-L1（平台控制台，面向内部运营/管理员）走 Apple 原生栈，不与 C-L2 混用。对应仓库：<code>hl-console-native</code>。</p>
+
+<table class="tech-table">
+  <thead><tr>
+    <th style="width:22%;">技术项</th><th style="width:11%;">版本/形态</th><th style="width:10%;">锁定</th>
+    <th>决定性因素</th><th style="width:24%;">来源议题</th><th style="width:11%;">锁定日期</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="tech-name">SwiftUI</td><td>macOS 26 / iOS 26 SDK</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>原生渲染性能 + async/await + Apple Intelligence 集成入口；平台级控制台定位高端内部工具，原生体验不可替代。</td>
+      <td><strong>RULINGS R-016 Apple 原生化</strong><br/><small>SAAC §4.1 C-L1</small></td>
+      <td>R-016 裁决时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">光合设计系统 · GHKit</td><td>hl-design-system · 光合</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>C-L1 专属设计语言 + SwiftUI 组件库；与 C-L2 DTCG 并列为两条独立设计产线。</td>
+      <td>SAAC §4.1 C-L1<br/><small>TEAM-COLLAB-SPEC v2.1 §UI</small></td>
+      <td>2026-04-11 v2.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Swift Concurrency</td><td><code>async / await</code></td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>结构化并发 + Actor 隔离，契合 C-L1 多会话实时运维场景。</td>
+      <td>SAAC §4.1 C-L1</td>
+      <td>R-016 裁决时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Xcode</td><td>最新稳定（Xcode 16+）</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>Apple 工具链唯一 IDE；内置 SwiftUI Preview + Instruments。</td>
+      <td>SAAC §4.1 C-L1</td>
+      <td>R-016 裁决时</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout info">
+<strong>C-L1 与 C-L2 的硬边界</strong>
+C-L1 仓库（hl-console-native）与 C-L2 仓库（hl-app / hl-design-system）<strong>代码不共享、设计系统不共享、发布节奏独立</strong>。两个团队各自拥有各自的 CODEOWNERS。任何跨栈的"代码复用"提议需走创始人裁决。
+</div>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s5-frontend-c-l2">5 · 前端选型 — C-L2 租户/消费者端</h2>
+
+<p>SAAC §4.1 C-L2 = Flutter + Dart 全平台（Desktop / Mobile / Web），配合 DTCG Design Token 真源。对应仓库：<code>hl-app</code>（应用）+ <code>hl-design-system</code>（Token + 组件库）。</p>
+
+<table class="tech-table">
+  <thead><tr>
+    <th style="width:22%;">技术项</th><th style="width:11%;">版本/形态</th><th style="width:10%;">锁定</th>
+    <th>决定性因素</th><th style="width:24%;">来源议题</th><th style="width:11%;">锁定日期</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="tech-name">Flutter</td><td>stable 渠道最新次要版本</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>单一代码库覆盖 6 端（Android/iOS/Web/macOS/Windows/Linux）；5 人前端团队的规模上限只此一解。</td>
+      <td>SAAC §4.1 C-L2<br/><small>TEAM-COLLAB-SPEC v2.1 §前端</small></td>
+      <td>2026-04-11 v2.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Dart</td><td>随 Flutter 版本</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>与 Flutter 绑定，sound null safety + 热重载。</td>
+      <td>SAAC §4.1 C-L2</td>
+      <td>2026-04-11 v2.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">DTCG Design Tokens</td><td>Design Tokens Community Group 格式</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>Token 真源 = JSON，支持跨端 / 跨工具；注意：<strong>由 Design Tokens Community Group 维护，不是 W3C 标准</strong>。</td>
+      <td>SAAC §4.1 C-L2<br/><small><a href="https://tr.designtokens.org/format/">DTCG Format 规范</a></small></td>
+      <td>2026-04-11 v2.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">go_router</td><td>最新稳定</td>
+      <td><span class="lock-badge draft">📝 DRAFT</span></td>
+      <td>声明式路由 + 深链接友好；为 Flutter 官方推荐路由。</td>
+      <td>DD-FE 待补锁</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Riverpod</td><td>最新稳定</td>
+      <td><span class="lock-badge pending">⏳ PENDING (J-03)</span></td>
+      <td>编译时安全 + 可测试 + 解耦 BuildContext；需创始人裁决是否锁为默认状态方案。</td>
+      <td>J-03 待裁决<br/><small>DD-FE 缺位</small></td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Widgetbook</td><td>最新稳定</td>
+      <td><span class="lock-badge pending">⏳ PENDING (J-03)</span></td>
+      <td>组件目录 + 设计系统可视化回归；与 DTCG 联动。</td>
+      <td>J-03 待裁决</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td class="tech-name">patrol</td><td>最新稳定</td>
+      <td><span class="lock-badge pending">⏳ PENDING (J-03)</span></td>
+      <td>原生权限 + 端到端集成测试 + CI 友好；补 Flutter 官方 integration_test 不足。</td>
+      <td>J-03 待裁决</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s6-ops">6 · Phase 0 编排与运维</h2>
+
+<p>SAAC-HL-EP-001 v1.1 §P0-4 LOCKED：Phase 0 不引入 Kubernetes。最小化编排由单 VM + Docker Compose 承担，观测走 Prometheus 三件套。</p>
+
+<table class="tech-table">
+  <thead><tr>
+    <th style="width:22%;">技术项</th><th style="width:11%;">版本/形态</th><th style="width:10%;">锁定</th>
+    <th>决定性因素</th><th style="width:24%;">来源议题</th><th style="width:11%;">锁定日期</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="tech-name">ECS 4C8G + Docker Compose</td><td>单 VM</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>Phase 0 流量不需要集群；单 VM + Compose 对 1 人运维是 AI-first 最友好的上限。</td>
+      <td><strong>SAAC-HL-EP-001 v1.1 §P0-4 LOCKED</strong></td>
+      <td>EP v1.1 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">GitHub Actions</td><td>GitHub 原生</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>代码托管 + CI 统一；5 人前端 + 6 人后端不维护自建 CI 集群。</td>
+      <td>TECH-STACK-SPEC v3 §CI</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Prometheus</td><td>最新稳定</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>Spring Boot Actuator 原生导出；拉模型适配单 VM。</td>
+      <td>TECH-STACK-SPEC v3 §可观测</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Grafana</td><td>最新稳定</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>与 Prometheus / Loki 原生适配，仪表盘即代码（JSON）。</td>
+      <td>TECH-STACK-SPEC v3 §可观测</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Loki</td><td>最新稳定</td>
+      <td><span class="lock-badge locked">🔒 LOCKED</span></td>
+      <td>日志聚合走同一栈，Phase 0 不引入 ES；成本最小。</td>
+      <td>TECH-STACK-SPEC v3 §可观测</td>
+      <td>v3 发布时</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Kubernetes / K3s</td><td>—</td>
+      <td><span class="lock-badge deferred">⚠️ DEFERRED</span></td>
+      <td>Phase 0 流量与团队规模不足以支撑 K8s 运维成本；节奏管控。</td>
+      <td><strong>SAAC-HL-EP-001 v1.1 §P0-4</strong></td>
+      <td>Phase 1 重评</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Terraform</td><td>—</td>
+      <td><span class="lock-badge pending">⏳ PENDING (J-01)</span></td>
+      <td>Phase 0 基础设施量小、手工 / AI 生成 Compose 即可覆盖；是否入锁需创始人裁决。</td>
+      <td>J-01 待裁决<br/><small>DD-IaC 缺位</small></td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s7-forbidden">7 · Phase 0 不预置清单（禁区表）</h2>
+
+<p>以下组件在 Phase 0 <strong>明确不预置</strong>。出现在代码里即视为 L2 门禁红线：</p>
+
+<table class="tech-table forbidden-table">
+  <thead><tr>
+    <th style="width:20%;">组件</th><th style="width:12%;">状态</th>
+    <th>不预置理由</th><th style="width:26%;">来源议题</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="tech-name">gRPC</td><td><span class="lock-badge rejected">❌ NOT-IN-P0</span></td>
+      <td class="reason">Phase 0 走 Modulith 单仓 + REST / OpenAPI；gRPC 的二进制契约不是 Phase 0 收益项。</td>
+      <td>SAAC-HL-EP-001 v1.1<br/><small>SAAC §4.2</small></td>
+    </tr>
+    <tr>
+      <td class="tech-name">Redis / 外部 Cache</td><td><span class="lock-badge rejected">❌ NOT-IN-P0</span></td>
+      <td class="reason">PG 18 性能覆盖 Phase 0 读路径；多一层 Cache 多一层运维与一致性负担。</td>
+      <td>SAAC-HL-EP-001 v1.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">外部 MQ（Kafka / RabbitMQ / RocketMQ）</td><td><span class="lock-badge rejected">❌ NOT-IN-P0</span></td>
+      <td class="reason">Modulith 内建 Domain Event + Outbox 足够 Phase 0；外部 MQ 等 Phase 1 按真实吞吐评估。</td>
+      <td>SAAC-HL-EP-001 v1.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Nacos / Apollo 等配置中心</td><td><span class="lock-badge rejected">❌ NOT-IN-P0</span></td>
+      <td class="reason">单 VM 下 Spring Boot application.yml + GitHub Actions secrets 足够；配置中心属过度工程化。</td>
+      <td>SAAC-HL-EP-001 v1.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">Keycloak / 独立身份网关</td><td><span class="lock-badge rejected">❌ NOT-IN-P0</span></td>
+      <td class="reason">Phase 0 身份模型由 Modulith 内部 auth 模块覆盖；上独立 IAM 系统要等业务多租户规模出现。</td>
+      <td>SAAC-HL-EP-001 v1.1</td>
+    </tr>
+    <tr>
+      <td class="tech-name">JOOQ</td><td><span class="lock-badge rejected">❌ REJECTED</span></td>
+      <td class="reason">明确被 H-002 驳回：JPA/Hibernate 已满足契约驱动；JOOQ 的生成器链路不值得额外维护成本。</td>
+      <td>RULINGS H-002</td>
+    </tr>
+    <tr>
+      <td class="tech-name">H2 / 内嵌测试数据库</td><td><span class="lock-badge rejected">❌ REJECTED</span></td>
+      <td class="reason">假 SQL 语义制造错觉；Testcontainers 起真实 PG 18 才是契约驱动。</td>
+      <td>QA-SPEC<br/><small>SAAC §4.3</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s8-pending">8 · 待决清单（Pending Rulings）</h2>
+
+<p>以下议题已完成 SAAC 推演但缺 Ruling ID，站点采用"中性/最小化"默认值，待创始人裁决归档：</p>
+
+<table class="tech-table">
+  <thead><tr>
+    <th style="width:11%;">议题 ID</th><th style="width:22%;">选项</th><th style="width:11%;">当前默认</th>
+    <th>推演摘要</th><th style="width:21%;">待补规范</th>
+  </tr></thead>
+  <tbody>
+    <tr>
+      <td class="tech-name">J-01</td>
+      <td>Terraform 是否入锁</td>
+      <td><span class="lock-badge deferred">Phase 0 最小化</span></td>
+      <td>Phase 0 编排只有单 VM + Compose + GHA secrets；Terraform 的 IaC 能力暂无工作量支撑 ROI。若 Phase 1 扩到多 VM / 多环境再重开。</td>
+      <td>DD-IaC</td>
+    </tr>
+    <tr>
+      <td class="tech-name">J-02</td>
+      <td>AI 三件套（Claude Code / Codex / Cursor）强制 vs 推荐</td>
+      <td><span class="lock-badge draft">站点表述为"AI-first"</span></td>
+      <td>"AI-first 编码"写入 SAAC，但具体工具是否强制三选一、是否允许个人偏好切换，尚无明文。</td>
+      <td>TOOLCHAIN-GUIDE v2</td>
+    </tr>
+    <tr>
+      <td class="tech-name">J-03</td>
+      <td>Widgetbook / patrol / Riverpod 是否锁为 C-L2 标配</td>
+      <td><span class="lock-badge draft">DRAFT 推荐</span></td>
+      <td>三者均是 Flutter 社区主流最佳实践，但未进入 TECH-STACK-SPEC v3 Lock-in Table。需 DD-FE 补锁或创始人裁决。</td>
+      <td>DD-FE · TECH-STACK-SPEC v3.x</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout warn">
+<strong>待决项处理约定</strong>
+PENDING 项在站点上以"DRAFT 推荐"呈现，允许工程师在新工程采用，但 L3 门禁不强制。任何把 PENDING 升为 LOCKED 的动作必须同时：<br/>
+(1) 归档 Ruling ID；(2) 更新 TECH-STACK-SPEC v3 Lock-in Table；(3) 在本图谱迭代日志留痕。
+</div>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s9-team-binding">9 · 团队编制与选型绑定</h2>
+
+<p>技术选型不是脱离人的抽象，它与 TEAM-COLLAB-SPEC v2.1 Pilot-Locked 2026-04-11 的 23 人编制强绑定：</p>
+
+<table class="tech-table">
+  <thead><tr><th style="width:22%;">角色</th><th style="width:10%;">人数</th><th>绑定技术栈 / 职责锚点</th></tr></thead>
+  <tbody>
+    <tr><td class="tech-name">产品经理（PM 环）</td><td>2</td><td>HPRD 编写 / Cap-Spec 冻结；管辖 UI 设计师 2 人。</td></tr>
+    <tr><td class="tech-name">架构师</td><td>1</td><td>Modulith 边界守护 / OpenAPI 契约仲裁 / 版本锁持有人。</td></tr>
+    <tr><td class="tech-name">后端工程师</td><td>6（含 2 PHP 补漏）</td><td>Kotlin 2.1.10 / Spring Boot 3.5 / JPA / Testcontainers。2 名 PHP 同学过渡期承接遗留系统对接。</td></tr>
+    <tr><td class="tech-name">前端工程师</td><td>5</td><td>C-L2 栈：Flutter + Dart + DTCG；覆盖 hl-app 与 hl-design-system。<br/><em>C-L1 原生由独立小组承担，不挤压此 5 人编制。</em></td></tr>
+    <tr><td class="tech-name">QA</td><td>4（独立裁决权）</td><td>Testcontainers + patrol（PENDING）+ 契约回归；独立 verdict，不走工程师 PR 合流。</td></tr>
+    <tr><td class="tech-name">UI 设计师</td><td>2（归 PM 环）</td><td>光合 GHKit（C-L1） + DTCG Token（C-L2）两条设计产线的交付。</td></tr>
+    <tr><td class="tech-name">运维</td><td>1</td><td>ECS 4C8G + Compose + Prometheus 三件套 + GitHub Actions；单人可掌控的最小运维栈。</td></tr>
+    <tr><td class="tech-name">创始人（Governance Owner）</td><td>1（在外）</td><td>Ruling 签发 / Lock-in Table 批准权。</td></tr>
+    <tr><td class="tech-name" style="color:var(--accent);">合计</td><td><strong>23</strong></td><td>21 内部 + 2 PHP 补漏 + 创始人 1 在外。</td></tr>
+  </tbody>
+</table>
+
+<div class="callout info">
+<strong>编制即选型约束</strong>
+此表是"为什么不选 K8s、不选 JOOQ、不选 Kafka"的底层理由——<strong>后端 6 人 / 前端 5 人 / 运维 1 人</strong> 的规模不允许专职 Platform / SRE 团队维持复杂基础设施。任何技术选型如果推演出"需要新增招聘以维护"，必须先走创始人裁决。
+</div>
+
+<!-- ═════════════════════════════════════════════════ -->
+<h2 id="s10-iter-log">10 · 迭代规则与变更日志</h2>
+
+<h3>迭代规则</h3>
+<ol>
+  <li><strong>新增选型</strong>：必须先走 SAAC 推演（确认决定性因素映射到六因子）→ 提交创始人裁决 → 拿到 Ruling ID → 更新 TECH-STACK-SPEC v3 Lock-in Table → 回填本图谱。</li>
+  <li><strong>版本升级</strong>：次要版本升级需架构师签署；大版本升级需创始人裁决（涉及 TECH-STACK-SPEC 版本号）。</li>
+  <li><strong>状态变更</strong>（PENDING → LOCKED / DEFERRED → ACTIVE / ACTIVE → REJECTED）：必须留 Ruling ID 与日期，写入本页 §10.2 变更日志。</li>
+  <li><strong>作废旧选型</strong>：禁止直接删除——标 <code>DEPRECATED</code> 并标注替代项与迁移截止日期。</li>
+  <li><strong>冲突仲裁</strong>：站点与 TECH-STACK-SPEC 不一致时以 Spec 为准，站点内容走修正 PR；TECH-STACK-SPEC 与 SAAC 不一致时以 SAAC 为准。</li>
+</ol>
+
+<h3 id="s10-2">变更日志</h3>
+
+<div class="iter-entry">
+  <div class="when">2026-04-14 · v1.0 首次发布</div>
+  <div class="title">建立图谱</div>
+  <div class="body">依据 AUDIT-HL-DOCS-TECH-SELECTION-vs-SAAC-2026-04-14 审计结论建立。F-01 ~ F-10 修正动作完成后生成初版；涵盖后端 / C-L1 / C-L2 / Phase 0 运维 / 禁区清单 / 待决清单 / 团队编制绑定。</div>
+</div>
+
+<div class="iter-entry">
+  <div class="when">2026-04-11 · 上游锁定</div>
+  <div class="title">TEAM-COLLAB-SPEC v2.1 Pilot-Locked</div>
+  <div class="body">23 人编制锁定，取代 2026-03 期所有过渡裁决（WS-C 旧工程 / 核心组 7 人 / 不设 QA / 不设设计 等）。前端分治结构（C-L1 / C-L2）对内确认。</div>
+</div>
+
+<div class="iter-entry">
+  <div class="when">历史锁定 · RULINGS H-002</div>
+  <div class="title">ORM 锁定为 Spring Data JPA + Hibernate 6.5</div>
+  <div class="body">明确驳回 JOOQ 备选；kotlin-jpa 插件启用。</div>
+</div>
+
+<div class="iter-entry">
+  <div class="when">历史锁定 · RULINGS R-016</div>
+  <div class="title">Apple 原生化</div>
+  <div class="body">C-L1 = SwiftUI + 光合设计系统（GHKit）锁定；macOS / iOS 26 原生。</div>
+</div>
+
+<div class="iter-entry">
+  <div class="when">历史锁定 · SAAC-HL-EP-001 v1.1 §P0-4</div>
+  <div class="title">Phase 0 编排 = ECS 4C8G + Docker Compose</div>
+  <div class="body">明确 Phase 0 不引入 Kubernetes；Kubernetes / K3s 标 DEFERRED，待 Phase 1 重评。</div>
+</div>
+
+<hr/>
+
+<h2 id="s11-links">11 · 关联资料</h2>
+<ul>
+  <li><a href="engineering.html">工程师团队指南</a> — 后端日常栈与 AI-first 编码指引</li>
+  <li><a href="frontend-design.html">前端与设计指南</a> — C-L2 Flutter + DTCG 交付流（本页 §5 的延伸）</li>
+  <li><a href="ops.html">运维指南</a> — Phase 0 编排、观测、发布路径（本页 §6 的延伸）</li>
+  <li><a href="qa.html">测试团队指南</a> — Testcontainers + 契约回归（本页 §3 / §7 的延伸）</li>
+  <li><a href="repo-directory.html">代码仓库目录</a> — 六仓库分工 · CODEOWNERS</li>
+  <li><a href="governance-docs.html">治理文档体系详解</a> — SAAC / EP / RULINGS / TECH-STACK-SPEC 的层级关系</li>
+  <li><a href="gate-levels.html">门禁体系 L1-L4</a> — 选型如何通过 L2 契约门禁检验</li>
+  <li><a href="glossary.html">术语表</a> — C-L1 / C-L2 / GHKit / DTCG / Modulith 等术语</li>
+</ul>
+
+</div> <!-- /content -->
+
+<!-- TOC -->
+<button class="toc-toggle" aria-label="目录" onclick="document.querySelector('.toc-sidebar').classList.toggle('open');document.querySelector('.toc-overlay').classList.toggle('open');">≡</button>
+<div class="toc-overlay" onclick="document.querySelector('.toc-sidebar').classList.remove('open');this.classList.remove('open');"></div>
+<aside class="toc-sidebar">
+  <button class="toc-close" onclick="document.querySelector('.toc-sidebar').classList.remove('open');document.querySelector('.toc-overlay').classList.remove('open');">×</button>
+  <h3>技术选型图谱</h3>
+  <a href="#s0-legend">0 · 图例与锁定状态</a>
+  <a href="#s1-source-chain">1 · 来源优先序与推导链</a>
+  <a href="#s2-decisive-factors">2 · 决定性因素模型</a>
+  <a href="#s3-backend">3 · 后端选型</a>
+  <a href="#s4-frontend-c-l1">4 · 前端 C-L1</a>
+  <a href="#s5-frontend-c-l2">5 · 前端 C-L2</a>
+  <a href="#s6-ops">6 · Phase 0 编排与运维</a>
+  <a href="#s7-forbidden">7 · 不预置清单（禁区）</a>
+  <a href="#s8-pending">8 · 待决清单</a>
+  <a href="#s9-team-binding">9 · 团队编制与选型绑定</a>
+  <a href="#s10-iter-log">10 · 迭代规则与变更日志</a>
+  <a href="#s11-links">11 · 关联资料</a>
+</aside>
+
+<footer style="text-align:center; padding:32px 20px; color:var(--text-muted); font-size:0.82em; border-top:1px solid var(--border); margin-top:40px;">
+  唤龙平台 · Tech Selection Atlas v1.0 · 2026-04-14 · 持续迭代
+</footer>
+
+</body>
+</html>

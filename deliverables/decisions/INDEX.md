@@ -57,11 +57,12 @@
 | AUDIT-TEAM-COLLABORATION-SPEC-2026-03-17.md | 🗄️ | v2.0 团队协作规范审计（已被 v2.1 超越） |
 | AUDIT-TECH-SELECTION-SAAC-CONTAMINATION-2026-03-17.md | 🗄️ | 3 月技术选型污染审计（旧） |
 
-## 5 · 交接单 / 清单（Handoff / Checklist）
+## 5 · 交接单 / 清单 / 会话总结（Handoff / Checklist / Session Summary）
 
 | 文件 | 状态 | 说明 |
 |---|---|---|
-| HANDOFF-HL-CONTRACTS-FLYWAY-LOCKIN-2026-04-14.md | ⏳ 待执行 | 把 Flyway 锁回填到 hl-contracts 仓（TECH-STACK-SPEC v3 + RULINGS） |
+| SESSION-SUMMARY-2026-04-14-FLYWAY-PII-BASELINE.md | ✅ CLOSED 2026-04-14 | 2026-04-14 单次会话产出 16 commits 跨 3 仓：Flyway 入锁 / PII 全仓去敏 / 组织 AI 转型 baseline 对齐 / pre-pilot 僵尸裁决段落归档 / 供应链加固。关键决策脉络 · 跨仓真源链路 · 流程观察 for 下次 AI。 |
+| HANDOFF-HL-CONTRACTS-FLYWAY-LOCKIN-2026-04-14.md | ✅ 已完成 2026-04-14 | 把 Flyway 锁回填到 hl-contracts 仓（TECH-STACK-SPEC v3.1 + RULINGS R-017 H-007，commit a5abec0）§5 签名完成 |
 | FEISHU-GITHUB-LAUNCH-CHECKLIST.md | 🧭 | 飞书 / GitHub 联动启动清单 |
 | PHASE-F0-FEISHU-SETUP-CHECKLIST.md | 🧭 | Phase F0 飞书设置清单 |
 | FEISHU-GITHUB-COLLABORATION-SPEC-v1.0.md | 🧭 | 飞书 × GitHub 协作规范 |

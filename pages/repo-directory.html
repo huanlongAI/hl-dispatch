@@ -188,7 +188,7 @@ body {
       <rect x="600" y="36" width="220" height="56" stroke="#A29BFE"/>
       <text x="710" y="56" text-anchor="middle" class="repo-name" fill="#A29BFE">hl-console-native</text>
       <text x="710" y="72" text-anchor="middle" class="repo-desc">创始人 macOS 控制台 · 内部监控</text>
-      <text x="710" y="84" text-anchor="middle" class="repo-tech">Swift · AppKit</text>
+      <text x="710" y="84" text-anchor="middle" class="repo-tech">Swift · SwiftUI · GHKit</text>
     </g>
 
     <!-- hl-platform (后端层, center) -->
@@ -204,7 +204,7 @@ body {
       <rect x="30" y="250" width="220" height="56" stroke="#DFE6E9"/>
       <text x="140" y="270" text-anchor="middle" class="repo-name" fill="#DFE6E9">hl-design-system</text>
       <text x="140" y="286" text-anchor="middle" class="repo-desc">设计令牌 · 基础组件库 · 主题</text>
-      <text x="140" y="298" text-anchor="middle" class="repo-tech">Dart · Flutter · Design Token</text>
+      <text x="140" y="298" text-anchor="middle" class="repo-tech">Dart · Flutter · DTCG Token</text>
     </g>
 
     <!-- hl-app (前端层, right) -->
@@ -296,14 +296,14 @@ body {
       </tr>
       <tr class="repo-console">
         <td><strong>hl-console-native</strong></td>
-        <td>Swift · AppKit</td>
-        <td>macOS 平台控制台、内部监控、快捷操作</td>
+        <td>Swift · SwiftUI · 光合设计系统（GHKit）</td>
+        <td>C-L1 平台控制台（原生 macOS / iOS 26）、内部监控、快捷操作</td>
         <td><span style="color: var(--founder);">创始人</span></td>
       </tr>
       <tr class="repo-design">
         <td><strong>hl-design-system</strong></td>
-        <td>Dart · Flutter · Design Token</td>
-        <td>设计令牌定义、基础组件库、主题管理、设计文档</td>
+        <td>Dart · Flutter · DTCG Design Token</td>
+        <td>C-L2 设计系统：Token 定义、基础组件库、主题管理、设计文档</td>
         <td><span style="color: var(--design);">设计师</span> · <span style="color: var(--eng);">前端负责人</span></td>
       </tr>
       <tr class="repo-app">
@@ -528,13 +528,13 @@ const repoData = {
       { path: '/prd/core/', desc: '核心治理规范、四权分离、门禁规则' },
       { path: '/prd/cap-specs/', desc: 'PM 能力包规格书模板与实例' },
       { path: '/reasoncodes/', desc: '业务码总表（系统认可的 reason_code）' },
-      { path: '/api-spec/', desc: 'OpenAPI/gRPC 契约定义' }
+      { path: '/api-spec/', desc: 'OpenAPI 契约定义（Phase 0 不预置 gRPC）' }
     ],
     relations: '所有其他仓库都依赖此仓库的规范。变更治理规则需创始人+PM 联签。'
   },
   'hl-platform': {
     title: 'hl-platform — 后端业务',
-    stack: 'Kotlin 100% · Spring Boot · PostgreSQL · Redis',
+    stack: 'Kotlin 2.1.10 · Spring Boot 3.5.11 · Spring Modulith 1.3.4 · PostgreSQL 18',
     owner: '工程师 8人（含 2名 PHP 转 Kotlin）· 创始人',
     purpose: '实现核心业务逻辑、API 网关、数据模型、内核引擎',
     keyDirs: [
@@ -560,8 +560,8 @@ const repoData = {
     relations: '依赖 hl-platform (API) 和 hl-design-system (components)。由 hl-factory 检查，由 QA 验收。'
   },
   'hl-design-system': {
-    title: 'hl-design-system — 设计系统',
-    stack: 'Dart · Flutter · Design Token YAML',
+    title: 'hl-design-system — C-L2 设计系统',
+    stack: 'Dart · Flutter · DTCG Design Token',
     owner: '设计师 (@hl-design-lead) · 前端负责人',
     purpose: '定义设计令牌、基础组件库、主题管理、设计规范文档',
     keyDirs: [
@@ -585,8 +585,8 @@ const repoData = {
     relations: '所有仓库的 PR 都需通过 hl-factory 定义的门禁。决定了什么样的代码可以合并上线。'
   },
   'hl-console-native': {
-    title: 'hl-console-native — macOS 控制台',
-    stack: 'Swift · AppKit · Cocoa · async/await',
+    title: 'hl-console-native — C-L1 平台控制台',
+    stack: 'Swift · SwiftUI · 光合设计系统（GHKit）· async/await',
     owner: '创始人 (@tongzhenghui)',
     purpose: '创始人专用内部工具：系统监控、快捷操作、数据审阅、紧急处置',
     keyDirs: [

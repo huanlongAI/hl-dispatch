@@ -102,7 +102,13 @@ body { min-width: 1200px; }
 </div>
 <h2 id="_1">一、你们是谁</h2>
 <h3 id="ui-solution-owner">前端工程师 — UI Solution Owner</h3>
-<p>5 人团队，全部转 Flutter。使用两个仓库：<code>hl-design-system</code>（设计系统）和 <code>hl-app</code>（租户端多端应用）。<code>hl-console-native</code> 为创始人负责的 macOS 原生平台控制台，与前端团队无关。</p>
+<p>5 人团队，全部转 Flutter。使用两个仓库：<code>hl-design-system</code>（C-L2 设计系统，DTCG Token 真源）和 <code>hl-app</code>（租户/消费者端多端应用）。</p>
+<div class="callout info" style="margin:12px 0;">
+<strong>前端分治（SAAC §4.1）</strong>：唤龙前端是双栈并行，不是单一 Flutter 技术栈。<br>
+— <strong>C-L1 平台控制台</strong> = <code>hl-console-native</code>，SwiftUI + <strong>光合设计系统（GHKit）</strong>，原生 macOS / iOS 26（R-016 LOCKED），由创始人负责，与本页前端团队无关。<br>
+— <strong>C-L2 租户/消费者端</strong> = <code>hl-app</code> + <code>hl-design-system</code>，Flutter + Dart + DTCG，覆盖 Desktop / Mobile / Web，即本页所述前端团队的工作范围。<br>
+本页以下章节仅针对 C-L2。
+</div>
 <p><strong>胡杰威</strong>担任前端 Lead——不是因为 Flutter 经验最深，而是因为他在 AI 驱动上积极拥抱和实验，最适合带领团队完成转型。</p>
 <p>在 AI-first 模型下，你的工作方式：</p>
 <ul>
@@ -583,7 +589,7 @@ A：不需要。UI-R0 只需要 design-review-note（Advisory），设计 review
 A：类似 Storybook 的 Flutter 版工具（如 Widgetbook）。你在里面展示每个公共组件的所有状态（default/loading/error/empty/disabled），用于 QA 验收和设计师确认。</p>
 
 <h2 id="tech-stack">🛠 技术选型与学习入口</h2>
-<p>前端统一 <strong>Flutter + Dart</strong> 技术栈（覆盖 Web / Desktop / Mobile 三端）；设计师以 <strong>Figma + Design Tokens</strong> 为交付物。AI 辅助以 Claude 将 Figma 转 Widget 代码。</p>
+<p>本页所述前端（C-L2 租户/消费者端）统一 <strong>Flutter + Dart</strong> 技术栈（覆盖 Web / Desktop / Mobile 三端）；设计师以 <strong>Figma + DTCG Design Tokens</strong> 为交付物。AI 辅助以 Claude 将 Figma 转 Widget 代码。C-L1 平台控制台（hl-console-native）采用 <strong>SwiftUI + 光合设计系统（GHKit）</strong>，不在本表范围。</p>
 <div class="table-wrapper">
 <table>
 <thead><tr><th style="width:24%">工具</th><th style="width:14%">角色</th><th style="width:32%">选型理由</th><th>学习入口</th></tr></thead>
@@ -591,7 +597,7 @@ A：类似 Storybook 的 Flutter 版工具（如 Widgetbook）。你在里面展
 <tr><td><strong>Flutter 3.x</strong></td><td>前端</td><td>一套代码三端复用；Widget 声明式编程与 AI 生成高度契合</td><td><a href="https://docs.flutter.dev/get-started/install" target="_blank" rel="noopener">Flutter 官方入门</a> · <a href="https://flutter.cn/" target="_blank" rel="noopener">中文站</a></td></tr>
 <tr><td><strong>Dart 3</strong></td><td>前端</td><td>Flutter 宿主语言；空安全 + 强类型对 AI 生成稳定性友好</td><td><a href="https://dart.cn/language" target="_blank" rel="noopener">Dart 语言导览</a></td></tr>
 <tr><td><strong>Figma</strong></td><td>设计</td><td>设计稿 SSOT + Design Token 导出；跨人协作成熟</td><td><a href="https://help.figma.com/hc/zh-cn" target="_blank" rel="noopener">Figma 帮助中心</a> · <a href="https://www.figma.com/community" target="_blank" rel="noopener">Community 模板</a></td></tr>
-<tr><td><strong>Design Tokens (W3C)</strong></td><td>设计/前端</td><td>颜色/间距/字号以 JSON 结构化存储；从 Figma 自动同步到 hl-design-system</td><td><a href="https://tr.designtokens.org/format/" target="_blank" rel="noopener">W3C Design Tokens 规范</a></td></tr>
+<tr><td><strong>Design Tokens (DTCG)</strong></td><td>设计/前端</td><td>颜色/间距/字号以 JSON 结构化存储；规范由 Design Tokens Community Group 维护，从 Figma 自动同步到 hl-design-system</td><td><a href="https://tr.designtokens.org/format/" target="_blank" rel="noopener">DTCG Design Tokens 规范</a></td></tr>
 <tr><td><strong>hl-design-system</strong></td><td>前端/设计</td><td>组件库 + Token 的唯一真相源；所有 UI 组件由此引用</td><td><a href="repo-directory.html">本站：仓库目录</a></td></tr>
 <tr><td><strong>Widgetbook</strong></td><td>前端/QA</td><td>Flutter 版 Storybook——展示组件所有状态，供设计与 QA 验收</td><td><a href="https://docs.widgetbook.io/" target="_blank" rel="noopener">Widgetbook 官方文档</a></td></tr>
 <tr><td><strong>Material 3 / Cupertino</strong></td><td>设计</td><td>Flutter 内置组件基线；不重复造轮子，只做主题定制</td><td><a href="https://m3.material.io/" target="_blank" rel="noopener">Material 3 指南</a></td></tr>

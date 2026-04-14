@@ -176,12 +176,12 @@
 
   <div class="term-card">
     <div class="term-head"><span class="term-zh">hl-console-native / hl-app</span><span class="term-en">Console / Mobile App</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">运营后台（Flutter Desktop）+ 用户端 App（Flutter Mobile）。前端统一 Flutter 技术栈。</div>
+    <div class="term-body">前端分治（SAAC §4.1）：<strong>hl-console-native</strong> = 平台控制台 C-L1，SwiftUI + 光合设计系统（GHKit），原生 macOS / iOS 26；<strong>hl-app</strong> = 租户/消费者端 C-L2，Flutter + Dart + DTCG，覆盖 Desktop / Mobile / Web。</div>
   </div>
 
   <div class="term-card">
-    <div class="term-head"><span class="term-zh">hl-design-system</span><span class="term-en">Design System</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">设计系统仓库——Token、组件、规范的单一真相源。前端 UI 组件都从这里引用。</div>
+    <div class="term-head"><span class="term-zh">hl-design-system / 光合 GHKit</span><span class="term-en">Design System</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">前端设计系统双线：<strong>hl-design-system</strong> 服务 C-L2（Flutter + DTCG Token 真源）；<strong>光合设计系统（GHKit）</strong> 服务 C-L1（SwiftUI 组件库，随 hl-console-native 一起演进）。两者各自为本栈的 Token / 组件 / 规范单一真相源。</div>
   </div>
 
 </div>

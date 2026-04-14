@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>唤龙平台 · 术语表</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { min-width: 1200px; }
+  .glossary-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:14px; margin:20px 0 32px; }
+  .term-card {
+    padding: 16px 20px; border-radius: 10px; background: var(--bg-card);
+    border: 1px solid var(--border); transition: all 0.2s;
+  }
+  .term-card:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .term-head { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .term-zh { font-size: 1.02em; font-weight: 700; color: #fff; }
+  .term-en { font-size: 0.78em; color: var(--text-muted); font-family: 'SF Mono', Consolas, monospace; }
+  .term-tag {
+    font-size: 0.68em; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+    margin-left: auto;
+  }
+  .term-tag.core { background: rgba(108,92,231,0.2); color: var(--primary-light); }
+  .term-tag.std  { background: rgba(0,184,148,0.15); color: var(--secondary); }
+  .term-tag.role { background: rgba(116,185,255,0.15); color: var(--pm); }
+  .term-tag.flow { background: rgba(253,203,110,0.15); color: var(--accent); }
+  .term-tag.warn { background: rgba(225,112,85,0.15); color: var(--danger); }
+  .term-body { font-size: 0.88em; color: var(--text); line-height: 1.65; }
+  .term-alias { margin-top:6px; font-size: 0.78em; color: var(--text-muted); }
+  .term-alias code { background: rgba(108,92,231,0.12); padding: 1px 5px; border-radius: 4px; }
+  .category-title {
+    font-size: 0.9em; color: var(--text-muted); margin: 28px 0 10px;
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
+  }
+  .legend-bar {
+    display:flex; gap:16px; flex-wrap:wrap; padding: 12px 16px; margin: 16px 0 0;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+    font-size: 0.82em;
+  }
+  .legend-bar span { display:inline-flex; align-items:center; gap:6px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="glossary.html" class="active">术语表</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
+
+<header class="page-header">
+  <h1>📖 <span>术语表</span></h1>
+  <p class="meta">团队理解补充与定义说明 · 共 24 条 · v2026.04</p>
+  <span class="badge">全员必读｜遇到看不懂的词，先查这里</span>
+</header>
+
+<main class="content">
+
+<div class="legend-bar">
+  <span><span class="legend-dot" style="background:#6C5CE7"></span>本组织核心概念</span>
+  <span><span class="legend-dot" style="background:#00B894"></span>软工/CI 标准术语</span>
+  <span><span class="legend-dot" style="background:#74B9FF"></span>角色/组织</span>
+  <span><span class="legend-dot" style="background:#FDCB6E"></span>流程/工作流</span>
+  <span><span class="legend-dot" style="background:#E17055"></span>反模式/需警惕</span>
+</div>
+
+<h2>🧭 使用说明</h2>
+<p>本表把站里出现的非日常用语做了一次盘点。你不需要死记——读文档遇到陌生词 Ctrl+F 在此页查一下即可。带 <span class="term-tag core" style="position:static">核心概念</span> 的是本组织自造或特定用法，带 <span class="term-tag std" style="position:static">标准</span> 的是软件工程行业通用词汇（可随时搜到）。</p>
+
+<p class="category-title">—— 核心治理概念 ——</p>
+<div class="glossary-grid">
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">契约</span><span class="term-en">Contract / SAAC</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">hl-contracts 仓库里由创始人维护的全局规则集合——包括数据结构、接口、命名、权限、分层约束等。所有能力包都必须在契约允许的范围内实现。契约是"宪法"，能力包是"立法"。</div>
+    <div class="term-alias">别名：SAAC（Semantic Architecture As Contract）｜全局契约</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">契约边界</span><span class="term-en">Contract Boundary</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">契约所圈定的能力包可活动范围。能力包可以在边界内自由定义业务语义，但不能越界（比如私自改表结构、跨过网关）。早期文档中曾叫"契约包络（envelope）"，是同一个意思，已统一为"契约边界"。</div>
+    <div class="term-alias">曾用词：契约包络、SAAC 包络</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">能力包</span><span class="term-en">Capability Package</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">一个可独立交付的最小业务单元——类似"微服务 + 它的前端 + 它的契约片段 + 它的验收场景"的打包。PM 定义能力包"要做什么"，工程师实现"怎么做"。</div>
+    <div class="term-alias">对比：传统项目里的"模块/Feature"</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">语义主权</span><span class="term-en">Semantic Sovereignty</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">"业务到底是什么意思"的最终解释权。创始人对全局契约有语义主权，PM 对单个能力包内部有语义主权。工程师不能私自改变业务含义。</div>
+    <div class="term-alias">通俗说法：谁说了算</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">四权分离</span><span class="term-en">Power Separation</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">语义主权（创始人+PM）、技术实现权（工程师）、独立质量权（QA）、组织治理权（创始人）。四权互相制衡，任何一权都不能单独通过变更。</div>
+    <div class="term-alias">详见：<a href="power-separation.html">四权分离详解</a></div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">技术合伙人智能体</span><span class="term-en">Technical Partner Agent</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">Claude/Codex 等 AI 助手在本组织的定位——不是工具而是"合伙人级"的技术执行者，承担大部分编码、测试、运维脚本工作。人类负责提需求、审语义、把方向。</div>
+    <div class="term-alias">对应角色：AI-First 开发模式</div>
+  </div>
+
+</div>
+
+<p class="category-title">—— 流程与工作流 ——</p>
+<div class="glossary-grid">
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">Cap-Spec</span><span class="term-en">Capability Spec</span><span class="term-tag flow">流程</span></div>
+    <div class="term-body">能力包的规格书（三段：业务目标 / 验收场景 / 契约影响）。由 PM 起草，Cap-Spec-3 阶段涉及契约变更时需创始人审批，然后"冻结"进入实现。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">HPRD</span><span class="term-en">Huanlong PRD</span><span class="term-tag flow">流程</span></div>
+    <div class="term-body">唤龙风格的产品需求文档。在 Cap-Spec 冻结后由 PM + 设计共同完成，比传统 PRD 更强调"验收条件可机器校验"。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">冻结</span><span class="term-en">Freeze / Lock</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">文档或契约通过评审后锁定，不再允许修改。要改必须走新 PR 重新评审。类似 Git 打 tag。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">门禁</span><span class="term-en">Gate / Required Check</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">合并 PR 前必须通过的自动化或人工检查点。本站分四层：L1 格式、L2 确定性、L3 行为、L4 语义。详见 <a href="gate-levels.html">门禁层级详解</a>。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">BLOCKING / ADVISORY</span><span class="term-en">Blocking vs Advisory</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">BLOCKING = 不通过就不能合并；ADVISORY = 只提示不拦截。门禁每一层都明确标注类型。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">pm-acceptance</span><span class="term-en">PM Acceptance Check</span><span class="term-tag flow">流程</span></div>
+    <div class="term-body">GitHub Required Status Check 之一，代表 PM 已在预览环境跑过验收场景。不是口头"我看过了"，是可审计的 CI 标志。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">12 状态机</span><span class="term-en">12-State Workflow</span><span class="term-tag flow">流程</span></div>
+    <div class="term-body">能力包从立项到合并的 12 个显式状态（Proposed → Cap-Spec Draft → … → Merged）。任何时候问"这个包到哪一步了"都能准确回答。详见 <a href="workflow-states.html">12 状态详解</a>。</div>
+  </div>
+
+</div>
+
+<p class="category-title">—— 仓库与组件 ——</p>
+<div class="glossary-grid">
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">hl-contracts</span><span class="term-en">Contracts Repo</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">契约仓库。全局规则、Schema、接口定义都在这里，由创始人守门。所有其他仓库依赖这里。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">hl-platform / hl-factory</span><span class="term-en">Platform / Factory</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">平台后端（Kotlin/Spring）+ 能力包工厂（脚手架与生成器）。详见 <a href="repo-directory.html">仓库目录</a>。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">hl-console-native / hl-app</span><span class="term-en">Console / Mobile App</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">运营后台（Flutter Desktop）+ 用户端 App（Flutter Mobile）。前端统一 Flutter 技术栈。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">hl-design-system</span><span class="term-en">Design System</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">设计系统仓库——Token、组件、规范的单一真相源。前端 UI 组件都从这里引用。</div>
+  </div>
+
+</div>
+
+<p class="category-title">—— 软件工程标准术语 ——</p>
+<div class="glossary-grid">
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">SSOT</span><span class="term-en">Single Source of Truth</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">单一真相源。一条信息只有一个权威来源，别的地方要么引用要么生成——不允许存两份会漂移的副本。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">AI-First</span><span class="term-en">AI-First Development</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-body">流程和工具链都按"AI 写代码"为默认场景来设计，而不是"人写代码 + AI 辅助"。契约先行、测试先行、机器可验证，就是为了让 AI 能稳定跑通。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">镀金</span><span class="term-en">Gold-Plating</span><span class="term-tag warn">反模式</span></div>
+    <div class="term-body">工程师擅自添加"用户没要的、显得厉害的"功能。本组织明令禁止，因为会污染契约和验收场景。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">哨兵</span><span class="term-en">Sentinel</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">CI 里的轻量检查脚本，定期跑一次确认"系统还活着 / 契约没漂移"。不是主测试，是"守夜人"。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">Required Status Check</span><span class="term-en">GitHub 必过检查</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">GitHub 合并保护规则：指定的 CI job 没显示绿勾，PR 就点不了 Merge。本站的四层门禁全部通过这个机制落地。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">可观测性</span><span class="term-en">Observability</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">系统运行时能被看见——日志、指标、链路追踪三板斧。运维团队的核心输出之一。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">蓝绿 / 金丝雀</span><span class="term-en">Blue-Green / Canary</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">发布策略。蓝绿 = 双环境切流；金丝雀 = 先给 1% 用户试，稳定后扩大。目标都是零停机 + 可快速回滚。</div>
+  </div>
+
+</div>
+
+<p class="category-title">—— 组织与会议 ——</p>
+<div class="glossary-grid">
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">创始人</span><span class="term-en">Founder</span><span class="term-tag role">角色</span></div>
+    <div class="term-body">本组织治理权与全局语义主权的最终持有人。不审全部代码，只审契约、架构、能力包范围。</div>
+  </div>
+
+  <div class="term-card">
+    <div class="term-head"><span class="term-zh">PM</span><span class="term-en">Product Manager</span><span class="term-tag role">角色</span></div>
+    <div class="term-body">产品经理。负责能力包内的业务语义、验收场景、PM-Acceptance 签字。不写代码但会写 Cap-Spec。</div>
+  </div>
+
+</div>
+
+<div class="callout info" style="margin-top:32px;">
+  <strong>📌 术语表是活文档</strong>
+  遇到站里没解释清楚的词，或者你觉得某个词还需要补说明，直接在 <code>pages/glossary.html</code> 提 PR。审核人：创始人 + 对应团队负责人。
+</div>
+
+</main>
+
+<footer class="site-footer">唤龙平台 · 内部团队指南 · 2026</footer>
+
+</body>
+</html>

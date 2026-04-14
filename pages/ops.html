@@ -38,6 +38,7 @@ body { min-width: 1200px; }
     <a href="engineering.html">工程师</a>
     <a href="qa.html">测试团队</a>
     <a href="ops.html">运维</a>
+    <a href="glossary.html">术语表</a>
   </div>
 </nav>
 
@@ -430,6 +431,33 @@ A：GitHub Environments + Deployment Protection Rules，具体规则在仓库设
 A：不需要。你的职责是部署和基础设施，不是代码审查。但如果 PR 涉及 CI/CD 配置文件（.github/ 路径），你可能会被 CODEOWNERS 规则自动拉入 review——此时你审的是"部署配置是否正确"，不是"业务逻辑是否正确"。</p>
 <p><strong>Q：我只有 1 个人，够吗？</strong>
 A：在 AI-first 模型下，大量运维工作可以自动化。你的核心价值在于：审核 AI/工程师产出的部署配置、监控异常、紧急回滚。日常部署尽量自动化，你把精力放在非常规情况的处理上。</p>
+
+<h2 id="tech-stack">🛠 技术选型与学习入口</h2>
+<p>运维 1 人支撑全组织，靠的是<strong>"配置即代码 + 全链路可观测 + AI 辅助排障"</strong>。工具链收敛到下表这一套，不接受新增运维工具（每多一个都会指数级增加维护负担）。</p>
+<div class="table-wrapper">
+<table>
+<thead><tr><th style="width:22%">工具</th><th style="width:14%">类型</th><th style="width:34%">选型理由</th><th>官方教程</th></tr></thead>
+<tbody>
+<tr><td><strong>Docker + Compose</strong></td><td>容器</td><td>开发/预发一致性；本地 compose 起全栈</td><td><a href="https://docs.docker.com/get-started/" target="_blank" rel="noopener">Docker Get Started</a> · <a href="https://docs.docker.com/compose/" target="_blank" rel="noopener">Compose Docs</a></td></tr>
+<tr><td><strong>Kubernetes (K3s)</strong></td><td>生产编排</td><td>轻量级 K8s 发行版；1 人维护，但保留 K8s 标准 API</td><td><a href="https://kubernetes.io/zh-cn/docs/tutorials/" target="_blank" rel="noopener">Kubernetes 中文教程</a> · <a href="https://docs.k3s.io/zh/" target="_blank" rel="noopener">K3s 中文文档</a></td></tr>
+<tr><td><strong>GitHub Actions</strong></td><td>CI/CD</td><td>与门禁层级原生集成；Deployment Protection Rules 落地四权分离</td><td><a href="https://docs.github.com/zh/actions" target="_blank" rel="noopener">GitHub Actions 文档</a></td></tr>
+<tr><td><strong>Terraform</strong></td><td>IaC</td><td>基础设施声明式管理；PR Review 落地"基础设施变更走契约"</td><td><a href="https://developer.hashicorp.com/terraform/tutorials" target="_blank" rel="noopener">Terraform 官方教程</a></td></tr>
+<tr><td><strong>Prometheus</strong></td><td>指标</td><td>时序数据库事实标准；与 K8s 深度集成</td><td><a href="https://prometheus.io/docs/prometheus/latest/getting_started/" target="_blank" rel="noopener">Prometheus 入门</a></td></tr>
+<tr><td><strong>Grafana</strong></td><td>可视化</td><td>多数据源仪表板；配置可 Git 管理（Provisioning）</td><td><a href="https://grafana.com/docs/grafana/latest/getting-started/" target="_blank" rel="noopener">Grafana Getting Started</a></td></tr>
+<tr><td><strong>Loki</strong></td><td>日志</td><td>轻量日志聚合；与 Grafana/Prometheus 同家族，运维心智负担低</td><td><a href="https://grafana.com/docs/loki/latest/get-started/" target="_blank" rel="noopener">Loki Get Started</a></td></tr>
+<tr><td><strong>OpenTelemetry</strong></td><td>追踪</td><td>厂商中立的可观测性标准；后端 Spring Boot 原生支持</td><td><a href="https://opentelemetry.io/docs/languages/java/" target="_blank" rel="noopener">OTel Java 文档</a></td></tr>
+<tr><td><strong>Caddy</strong></td><td>反向代理</td><td>自动 HTTPS；Caddyfile 极简，比 Nginx 配置成本低</td><td><a href="https://caddyserver.com/docs/" target="_blank" rel="noopener">Caddy 文档</a></td></tr>
+<tr><td><strong>Claude / Codex</strong></td><td>AI 助手</td><td>根因排查、YAML/HCL 生成、异常日志解读</td><td><a href="https://docs.anthropic.com/en/docs/about-claude/models" target="_blank" rel="noopener">Claude 模型说明</a></td></tr>
+</tbody>
+</table></div>
+<div class="callout info">
+<strong>学习路径建议（1 个月上岗）</strong><br>
+第一周：K3s + Helm 基础；把本地 docker-compose 搬到 K3s。<br>
+第二周：Terraform + GitHub Actions；配一条从 PR 到 staging 的全自动流水线。<br>
+第三周：Prometheus + Grafana + Loki 三件套；配好一套黄金指标仪表板。<br>
+第四周：跟一次完整的发布 + 一次故障演练；学会用 Claude 快速定位根因。
+</div>
+
 </div>
 
 <footer class="site-footer">

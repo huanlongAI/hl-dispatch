@@ -38,6 +38,7 @@ body { min-width: 1200px; }
     <a href="engineering.html">工程师</a>
     <a href="qa.html">测试团队</a>
     <a href="ops.html">运维</a>
+    <a href="glossary.html">术语表</a>
   </div>
 </nav>
 
@@ -120,7 +121,7 @@ body { min-width: 1200px; }
 <p>你是能力包业务语义的 SSOT（Single Source of Truth）。简单说：<strong>你定义"做什么"，不定义"怎么做"</strong>。</p>
 <p>你拥有的权力：</p>
 <ul>
-<li>能力包业务语义的最终解释权（在创始人的契约包络内）</li>
+<li>能力包业务语义的最终解释权（在创始人的契约边界内）</li>
 <li>验收场景定义权</li>
 <li>产品验收权（pm-acceptance，是 GitHub Required Status Check，不是口头确认）</li>
 <li>HPRD 审批权（审的是"工程师有没有理解对"，不是审技术方案）</li>
@@ -334,8 +335,8 @@ UI 设计师 补充视觉/交互设计
 <tr>
 <td><strong>创始人</strong></td>
 <td>Cap-Spec-3 涉及契约变更时请创始人审批</td>
-<td>创始人定义契约包络和规则</td>
-<td>你在包络内自由定义能力包语义</td>
+<td>创始人定义契约边界和规则</td>
+<td>你在边界内自由定义能力包语义</td>
 </tr>
 </tbody>
 </table></div>
@@ -381,6 +382,28 @@ A：你有独立的 pm-acceptance 权力。QA 验收的是"功能是否按规格
 </table></div>
 <p><strong>T1 先行</strong>：PM-A 和 PM-B 在 T1 阶段压力最大，各负责 1-2 个 T1 能力包。T2/T3 在 T1 完成后滚动推进。</p>
 <p>UI 设计师 2 人横向支持所有有 UI 界面的能力包，不按能力包固定分配。</p>
+
+<h2 id="tech-stack">🛠 技术选型与学习入口</h2>
+<p>PM 角色<strong>不需要写代码</strong>，但要读懂 Markdown、YAML、基本 SQL 与 Mermaid 图。工具链围绕"写清楚 Cap-Spec + 用 AI 辅助草拟"设计。</p>
+<div class="table-wrapper">
+<table>
+<thead><tr><th style="width:24%">工具</th><th style="width:14%">类型</th><th style="width:32%">选型理由</th><th>学习入口</th></tr></thead>
+<tbody>
+<tr><td><strong>飞书文档 / Notion</strong></td><td>文档协作</td><td>Cap-Spec、HPRD、验收场景的载体；支持多人评论与版本</td><td><a href="https://www.feishu.cn/hc/zh-CN/category/7018614322595479554" target="_blank" rel="noopener">飞书文档帮助中心</a></td></tr>
+<tr><td><strong>Markdown + YAML</strong></td><td>结构化写作</td><td>Cap-Spec/HPRD 的正式存档格式，提交到 hl-contracts 仓库；AI 可直接解析</td><td><a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener">Markdown Guide</a> · <a href="https://learnxinyminutes.com/docs/zh-cn/yaml-cn/" target="_blank" rel="noopener">YAML 10 分钟入门</a></td></tr>
+<tr><td><strong>Mermaid</strong></td><td>图表 DSL</td><td>流程图/状态机/时序图全部用 Mermaid；在 Markdown 里直接写代码即可渲染</td><td><a href="https://mermaid.js.org/intro/" target="_blank" rel="noopener">Mermaid 官方文档</a> · <a href="https://mermaid.live/" target="_blank" rel="noopener">在线编辑器</a></td></tr>
+<tr><td><strong>GitHub Issues / Projects</strong></td><td>需求追踪</td><td>能力包的生命周期（12 状态机）通过 Issue Label 落地；不再使用 Jira</td><td><a href="https://docs.github.com/zh/issues" target="_blank" rel="noopener">GitHub Issues 文档</a></td></tr>
+<tr><td><strong>Claude / ChatGPT</strong></td><td>AI 助手</td><td>Cap-Spec 初稿、验收场景穷举、用户访谈整理——都可让 AI 先写，再人工校验</td><td><a href="https://docs.anthropic.com/zh-CN/docs/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener">Claude 提示工程指南</a></td></tr>
+<tr><td><strong>基本 SQL（只读）</strong></td><td>数据查询</td><td>自助查业务指标，不依赖工程师；只需要 SELECT / WHERE / GROUP BY</td><td><a href="https://sqlbolt.com/" target="_blank" rel="noopener">SQLBolt 互动教程</a></td></tr>
+<tr><td><strong>Figma（只读协作）</strong></td><td>设计评审</td><td>与 UI 设计师对齐交互；只用评论+查看功能，不需要设计技能</td><td><a href="https://help.figma.com/hc/zh-cn" target="_blank" rel="noopener">Figma 帮助中心</a></td></tr>
+</tbody>
+</table></div>
+<div class="callout info">
+<strong>学习路径建议（新 PM 两周快速上手）</strong>
+第一周：读完本站所有指南 + 《术语表》；在本机跑通 Mermaid 写一张状态机；用 Claude 草拟一份样例 Cap-Spec。<br>
+第二周：跟随一位老 PM 完成一个 T3 能力包的 Cap-Spec 从 Draft 到 Contract Locked 的全流程。
+</div>
+
 </div>
 
 <footer class="site-footer">

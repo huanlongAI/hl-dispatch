@@ -81,6 +81,7 @@ body { min-width:1200px; }
     <a href="engineering.html">工程师</a>
     <a href="qa.html">测试团队</a>
     <a href="ops.html">运维</a>
+    <a href="glossary.html">术语表</a>
   </div>
 </nav>
 
@@ -273,10 +274,10 @@ const STATES = [
   },
   {
     name:'Contract Locked', owner:'创始人', color:'#A29BFE',
-    desc:'创始人确认能力包不违反治理契约（SAAC 包络），锁定契约边界，授权进入正式流程。',
+    desc:'创始人确认能力包不违反治理契约（SAAC 约束范围），锁定契约边界，授权进入正式流程。',
     entry:'创始人审阅 Cap-Spec 与契约的兼容性',
     exit:'契约边界确认无冲突，签字锁定',
-    guard:'能力包范围不得超出 SAAC 契约包络；若涉及 kernel/gateway 变更需额外审批',
+    guard:'能力包范围不得超出 SAAC 契约边界；若涉及 kernel/gateway 变更需额外审批',
     output:'contract-lock 签字记录',
     roles:[{t:'创始人 ⬤签字',bg:'rgba(162,155,254,0.2)',c:'#A29BFE'},{t:'PM 等待',bg:'rgba(116,185,255,0.1)',c:'rgba(116,185,255,0.5)'}],
     fail:'契约冲突 → 返回 PM 修改 Cap-Spec',

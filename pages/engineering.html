@@ -38,6 +38,7 @@ body { min-width: 1200px; }
     <a href="engineering.html">工程师</a>
     <a href="qa.html">测试团队</a>
     <a href="ops.html">运维</a>
+    <a href="glossary.html">术语表</a>
   </div>
 </nav>
 
@@ -565,6 +566,29 @@ A：不能。所有 PR 需要 code owner review + CI 门禁 + qa-verdict + pm-ac
 A：L4 是 ADVISORY。P0 安全问题会升级为 BLOCK，其他的参考处理。建议认真看——AI 审计经常能发现人类遗漏的问题。</p>
 <p><strong>Q：后端和前端 PR 在同一个能力包里能一起提吗？</strong>
 A：分开提。后端 PR 在 hl-platform，前端 PR 在 hl-app，各自走各自的门禁和 CODEOWNERS。但它们共享同一个 Cap-Spec 和 pm-acceptance。</p>
+
+<h2 id="tech-stack">🛠 技术选型与学习入口</h2>
+<p>后端统一 <strong>Kotlin + Spring Boot 3</strong>；前端统一 <strong>Flutter</strong>。两端均强制使用 AI pair-programming 工具（Claude Code / Codex / Cursor），把 70% 常规编码交给 AI，工程师聚焦契约、边界、异常路径。</p>
+<div class="table-wrapper">
+<table>
+<thead><tr><th style="width:24%">工具 / 技术</th><th style="width:14%">类型</th><th style="width:32%">选型理由</th><th>官方教程</th></tr></thead>
+<tbody>
+<tr><td><strong>Kotlin 2.x</strong></td><td>后端语言</td><td>JVM 生态 + 空安全 + 简洁语法；AI 生成错误率显著低于 Java</td><td><a href="https://kotlinlang.org/docs/getting-started.html" target="_blank" rel="noopener">Kotlin 官方入门</a> · <a href="https://book.kotlincn.net/" target="_blank" rel="noopener">《Kotlin 实战》中文</a></td></tr>
+<tr><td><strong>Spring Boot 3</strong></td><td>后端框架</td><td>Java/Kotlin 后端事实标准；生态成熟、与 Kotlin 官方集成良好</td><td><a href="https://spring.io/guides/gs/spring-boot" target="_blank" rel="noopener">Spring Boot Guides</a></td></tr>
+<tr><td><strong>Gradle (Kotlin DSL)</strong></td><td>构建</td><td>Kotlin 项目原生构建工具；DSL 类型安全</td><td><a href="https://docs.gradle.org/current/userguide/userguide.html" target="_blank" rel="noopener">Gradle User Guide</a></td></tr>
+<tr><td><strong>PostgreSQL 16 + JOOQ</strong></td><td>数据层</td><td>契约驱动——Schema 变更走 Migration PR；JOOQ 生成类型安全 DSL</td><td><a href="https://www.postgresql.org/docs/current/tutorial.html" target="_blank" rel="noopener">PostgreSQL 教程</a> · <a href="https://www.jooq.org/learn/" target="_blank" rel="noopener">JOOQ 学习</a></td></tr>
+<tr><td><strong>Flutter 3.x / Dart 3</strong></td><td>前端</td><td>一套代码覆盖 Desktop / Mobile / Web；与后端 Kotlin 都是强类型 JVM 系语言，思路统一</td><td><a href="https://docs.flutter.dev/" target="_blank" rel="noopener">Flutter Docs</a></td></tr>
+<tr><td><strong>GitHub Actions</strong></td><td>CI/CD</td><td>门禁 L1-L4 的载体；Required Status Check 机制原生支持四权分离</td><td><a href="https://docs.github.com/zh/actions/learn-github-actions" target="_blank" rel="noopener">GitHub Actions 教程</a></td></tr>
+<tr><td><strong>Docker</strong></td><td>打包</td><td>环境一致性；开发/CI/生产用同一镜像</td><td><a href="https://docs.docker.com/get-started/" target="_blank" rel="noopener">Docker Get Started</a></td></tr>
+<tr><td><strong>Claude Code / Codex</strong></td><td>AI 协作</td><td>本组织<strong>强制使用</strong>——日常编码的 70% 由 AI 产出，工程师做 review 与边界把控</td><td><a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code 文档</a></td></tr>
+<tr><td><strong>OpenAPI 3.1</strong></td><td>契约</td><td>API 契约书写格式；与 JSON Schema 共用，机器可验证</td><td><a href="https://spec.openapis.org/oas/latest.html" target="_blank" rel="noopener">OpenAPI 规范</a> · <a href="https://learn.openapis.org/" target="_blank" rel="noopener">Learn OpenAPI</a></td></tr>
+</tbody>
+</table></div>
+<div class="callout info">
+<strong>AI-First 工作方式（必读）</strong><br>
+不是"自己写完让 AI 改"，而是"把意图写成 prompt 让 AI 写初稿，自己做 reviewer"。推荐流程：先写 Cap-Spec → 让 Claude Code 生成 API Skeleton → 人工检查契约一致性 → 让 AI 补测试 → 跑 L1-L4 门禁 → 修复红灯。<strong>纯手工写代码的工程师会明显拖慢团队节奏。</strong>
+</div>
+
 </div>
 
 <footer class="site-footer">

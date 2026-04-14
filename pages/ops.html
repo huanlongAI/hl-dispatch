@@ -166,7 +166,8 @@ Post-Merge: 你登场
     ↓
 1. staging 环境部署
   ├── 自动或手动触发部署流水线
-  ├── 确认服务启动正常、健康检查通过
+  ├── GitHub Actions 执行 flyway migrate（DD-DB-MIGRATION-FLYWAY）
+  ├── 确认服务启动正常、健康检查通过（ddl-auto=validate 双保险）
   └── 通知 QA 开始 staging 回归验证
     ↓
 2. QA staging 回归验证
@@ -175,10 +176,10 @@ Post-Merge: 你登场
   └── FAIL → 暂停，等工程师修复
     ↓
 3. prod 环境部署
-  ├── 执行发布流水线
+  ├── 执行发布流水线（GHA 的 flyway migrate job → 应用部署 job）
   ├── 确认服务正常
   ├── 监控告警就位
-  └── 回滚预案确认
+  └── 回滚预案确认（Schema 不倒流原则：前向修复 V{n+1} 或 DB 备份恢复）
     ↓
 4. 发布完成 → 状态转为 Released
 </code></pre></div>

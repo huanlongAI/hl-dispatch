@@ -730,7 +730,7 @@ document.getElementById('L1-details').style.display = 'block';
 /* Gate pipeline data */
 const GATE_STEPS = [
   { name:'L1 格式门禁', time:'~10 秒', items:['ktlint','dart format','yamllint','markdown-lint'], type:'BLOCKING', color:'#FDCB6E', desc:'静态分析，无需运行代码，秒级反馈。违反即阻断合并。' },
-  { name:'L2 确定性门禁', time:'~2-3 分钟', items:['Contract Schema','reason_code','验收场景覆盖 ≥60%','token-sync'], type:'BLOCKING', color:'#FFEAA7', desc:'规则驱动，结果唯一确定。检查契约一致性和设计覆盖率。' },
+  { name:'L2 确定性门禁', time:'~2-3 分钟', items:['Contract Schema','reason_code','验收场景覆盖 ≥60%','token-sync','flyway:validate','Testcontainers 全量回放'], type:'BLOCKING', color:'#FFEAA7', desc:'规则驱动，结果唯一确定。检查契约一致性、设计覆盖率、DB Migration 完整性（DD-DB-MIGRATION-FLYWAY）。' },
   { name:'L3 行为门禁', time:'~5-10 分钟', items:['单元测试','集成测试','golden 视觉回归','验收测试'], type:'BLOCKING', color:'#55EFC4', desc:'需运行代码的验证，提供客观证据。覆盖率 ≥80%。' },
   { name:'L4 语义 + 哨兵', time:'并行', items:['AI 代码审查','安全扫描','架构守护','复杂度分析'], type:'ADVISORY', color:'#A29BFE', desc:'AI 驱动的智能审计，为审阅者提供参考，不直接阻断。' },
   { name:'人工审阅', time:'10+ 分钟', items:['CODEOWNERS review','qa-verdict 批准'], type:'BLOCKING', color:'#55EFC4', desc:'代码所有者审查 + QA 团队独立出具 Verdict。' },

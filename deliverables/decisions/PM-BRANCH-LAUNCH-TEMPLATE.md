@@ -144,18 +144,15 @@ SAAC-HL-001 v1.1（架构宪法）
     - hk.reasondict
 ```
 
-### 3.4 PRD 文档集
+### 3.4 Cap-Spec 文档集
 
-> 遵循 hl-contracts/prd/core/ 已有模式，每个能力包产出以下文档：
+> `biz.*` 能力包统一放在 `hl-contracts/prd/biz/`，不再复用 legacy `prd/core/` 目录。
 
 | 文档 | 文件名 | 负责人 | 说明 |
 |------|--------|--------|------|
-| MVP 规格 | `PRD-Biz.{Module}.MVP.v1.0.md` | PM | 核心需求、目标/非目标、架构定位 |
-| Facts 定义 | `PRD-Biz.{Module}.MVP.Facts.v1.0.md` | PM + 后端 | 输入 Facts 数据类定义 |
-| Decision Trace | `PRD-Biz.{Module}.MVP.Decision-Trace.v1.0.md` | 后端 | 裁决追踪 schema |
-| API Return Codes | `PRD-Biz.{Module}.MVP.API-Return-Codes.v1.0.md` | 后端 | reason_code 完整映射 |
-| 验收用例 | `PRD-Biz.{Module}.MVP.Core-Acceptance-Cases.v1.0.md` | QA + PM | 必过测试场景 |
-| Dev Checklist | `PRD-Biz.{Module}.MVP.Dev-Checklist.v1.0.md` | 后端 | 研发开工清单 |
+| Cap-Spec-1 | `Cap-Spec-Biz.{Module}.v1.0.md` | PM | 目标、非目标、能力边界、业务规则意图 |
+| Cap-Spec-2 | `Cap-Spec-Biz.{Module}.Acceptance.v1.0.md` | PM（QA collaborator） | Case-ID + 输入 / 预期 / 验收方式 |
+| Cap-Spec-3 | `reasoncodes.csv` 提案 PR | PM | reason_code 新增/变更建议；需创始人先批 |
 
 ---
 

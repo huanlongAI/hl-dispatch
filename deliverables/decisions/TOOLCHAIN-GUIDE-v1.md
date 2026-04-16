@@ -45,7 +45,7 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    Spec 舱（规格定义）                    │
-│  Cap-Spec (hl-contracts/prd/core/**)                    │
+│  Cap-Spec (hl-contracts/prd/biz/**)                     │
 │  acceptance-manifest.yaml                                │
 │  HPRD (hl-platform/docs/hprd/**)                        │
 │  design.md (hl-platform/docs/design/**)                  │

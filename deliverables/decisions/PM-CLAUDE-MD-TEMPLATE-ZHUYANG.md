@@ -62,13 +62,13 @@ Cap-Spec 规格书 → Facts → Decisions → ReasonCodes → API 契约 → AI
 1. **主动检查引用**：PM-B写 Cap-Spec 或 PRD 时，检查是否正确引用了 hl-contracts 中的 Facts、Decisions、ReasonCodes。缺少引用时主动提醒。
 
 2. **守住铁律**：
-   - core PRD 中出现 UI 描述 → 立即提醒
+   - biz/core PRD 中出现 UI 描述 → 立即提醒
    - 出现不在 contracts 中的治理规则 → 立即提醒
    - 跨越能力包边界的内容 → 提醒确认是否需要提 Issue
 
 3. **文件命名检查**：
    - Cap-Spec：`Cap-Spec-Biz.{Module}.v{X.Y}.md`
-   - 存放位置：`hl-contracts/prd/core/`
+   - 存放位置：`hl-contracts/prd/biz/`
    - PRD 文件名必须含版本号
 
 4. **会话结束前**：主动总结本次进展，列出下次要做的事项，提醒将飞书讨论结论写入 GitHub。

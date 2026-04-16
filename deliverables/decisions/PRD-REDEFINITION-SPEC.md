@@ -40,7 +40,7 @@ Tier 1 — LOCKED（contracts 一级目录）
   → 创始人主导定义与裁决
 
 Tier 2 — ITERABLE（prd/ 目录）
-  prd/core/ prd/console/ prd/data/
+  prd/core/ prd/biz/ prd/console/ prd/data/
   → CLAUDE.md 标注"参考性质"（非 SSOT）
   → 人工可读、无 CI 门禁、依赖 Tier 1
 
@@ -49,6 +49,8 @@ Tier 3 — RUNTIME（hl-platform / hl-console-native 代码）
 ```
 
 PRD 在 CLAUDE.md 中被标注为"参考性质"，从未被纳入 CI 强制校验链路。
+
+> **v3.0 目录纠偏说明**：`prd/core/` 保留给 HK / Gateway / Engine 等平台内核 PRD；PM owner 的 `biz.*` Cap-Spec-1/2 当前操作路径为 `prd/biz/`。
 
 ### 1.2 PRD 6 卫星文档冗余分析
 
@@ -172,6 +174,7 @@ PM 的核心产出重命名为 **Capability Spec（能力包规格，简称 Cap-
 
 **文件命名**：`Cap-Spec-{Domain}.{Module}.v{X.Y}.md`
 **示例**：`Cap-Spec-Biz.Product.v1.0.md`
+**文件位置**：`hl-contracts/prd/biz/`
 
 #### Cap-Spec-2：验收场景集（Acceptance Scenarios）
 
@@ -193,6 +196,7 @@ PM 最高价值的独特产出，也是 PM 执行业务验收和驱动 AI 编码
 ```
 
 **文件命名**：`Cap-Spec-{Domain}.{Module}.Acceptance.v{X.Y}.md`
+**文件位置**：`hl-contracts/prd/biz/`
 
 #### Cap-Spec-3：业务码提案（Reason Code Proposal）
 
@@ -228,7 +232,7 @@ PM 对所负责能力包的 reason_code 提出业务侧定义，以 PR 形式直
 | 优先级 | 对象 | 处理方式 |
 |:-----:|------|----------|
 | **立即** | 未来新建的能力包 | 按 Cap-Spec 工件集规范创建，不再使用旧 PRD 6 卫星结构 |
-| **立即** | prd/README.md | 追加 "Cap-Spec 规范（2026-03 起适用）" |
+| **立即** | prd/README.md + prd/biz/README.md | 追加 "Cap-Spec 规范（2026-03 起适用）" 与 biz 目录说明 |
 | **逐步** | 已定稿的 HK.* 系列 PRD | 当能力包进入下一版本迭代时，顺带迁移为 Cap-Spec 格式；不主动为迁移而迁移 |
 | **逐步** | PRD 6 卫星中的 SSOT 派生副本 | 标注 DEPRECATED，引导读者直接查阅 Tier 1 SSOT（R-3 裁决） |
 
@@ -335,7 +339,7 @@ PM 对所负责能力包的 reason_code 提出业务侧定义，以 PR 形式直
 | R-1 | 废弃"PRD"术语，改用新术语（Cap-Spec） | **✅ 采纳** | 2026-03-30 |
 | R-2 | 存量 HK.* PRD 迁移策略 | **✅ B) 逐步迁移** | 2026-03-30 |
 | R-3 | PM 不再维护 SSOT 派生副本文档 | **✅ A) 不再维护** | 2026-03-30 |
-| R-4 | Cap-Spec 仍在 prd/core/ 下 | **✅ A) prd/core/** | 2026-03-30 |
+| R-4 | v2.0 中间口径：Cap-Spec 暂沿用 prd/core/ | **✅ A) prd/core/**（后续 `biz.*` 路径纠偏为 `prd/biz/`） | 2026-03-30 |
 | R-5 | PM 退出 AI 编码，编码由工程师（AI-first）承担 | 待裁决 | — |
 | R-6 | 新增 HPRD 作为工程师理解确认件（§3.7），PM 审批 pm-hprd-pass | 待裁决 | — |
 | R-7 | 四角色模型（创始人/PM/工程师/QA）替代三角色（创始人/PM/工程师） | 待裁决 | — |
@@ -348,5 +352,5 @@ PM 对所负责能力包的 reason_code 提出业务侧定义，以 PR 形式直
 |------|------|------|
 | 2026-03-30 | v1.0 | DRAFT — 初版，PM 定位为规格整理者，CIS 三件套 |
 | 2026-03-30 | v2.0 | **重大修订** — 创始人纠正 PM 定位为产线责任人；废弃 CIS 改用 Cap-Spec；明确 PM 驱动 AI 编码的完整闭环；工具与 AI 平台不作强制限定 |
-| 2026-03-30 | v2.0 RULED | 创始人裁决 R-1~R-4：废弃 PRD 术语✅、存量逐步迁移✅、不维护 SSOT 派生副本✅、Cap-Spec 存放 prd/core/✅ |
+| 2026-03-30 | v2.0 RULED | 创始人裁决 R-1~R-4：废弃 PRD 术语✅、存量逐步迁移✅、不维护 SSOT 派生副本✅、Cap-Spec 暂沿用 prd/core/✅（后续 `biz.*` 目录纠偏为 `prd/biz/`） |
 | 2026-04-11 | v3.0 | **重大修订** — 对齐 TEAM-COLLAB-SPEC v2.1 四权分离：PM 退出 AI 编码，改由工程师（AI-first）承担；新增 HPRD 定义（§3.7）；四角色模型替代三角色（§4.1）；PM 权责边界从"产线全闭环驱动者"收敛为"业务语义 SSOT owner"；新增 R-5~R-7 待裁决 |

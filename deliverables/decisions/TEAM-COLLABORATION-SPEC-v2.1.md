@@ -64,7 +64,7 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 
 | # | 修正 | 审计来源 |
 |---|------|---------|
-| F-1 | 拆分 hl-contracts/CODEOWNERS：prd/core/ → PM team；契约核心路径 → 创始人 | 审计 A#1 + B#2 |
+| F-1 | 拆分 hl-contracts/CODEOWNERS：prd/biz/ → PM team；契约核心路径 → 创始人 | 审计 A#1 + B#2 |
 | F-2 | Cap-Spec-3 加治理前置门：涉及 reason_code 变更须创始人先批再 freeze | 审计 A#2 |
 | F-3 | 重排 hl-platform/CODEOWNERS 顺序 + 补 docs/hprd/ docs/design/ 路径 | 审计 A#3 |
 | F-4 | QA verdict / PM acceptance 做成 required status checks | 审计 A#4 + B#3 |
@@ -185,7 +185,7 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 **不再承担**：
 - ~~所有 feature PR 的人工审批~~（改为 path-based CODEOWNERS + CI 门禁）
 - ~~能力包的具体实现~~（交工程师 AI 编码）
-- ~~Cap-Spec 的日常 merge~~（prd/core/ 路径交 PM team 持有）
+- ~~Cap-Spec 的日常 merge~~（prd/biz/ 路径交 PM team 持有）
 
 **治理权行使方式**：
 ```
@@ -422,8 +422,8 @@ merge
 
 | 产物 | Owner | 审批人 | 性质 | 存放位置 |
 |------|-------|--------|------|---------|
-| Cap-Spec-1（能力包规格书） | PM | PM freeze；创始人可选审批 | 能力包业务语义 SSOT | hl-contracts/prd/core/{capability}/ |
-| Cap-Spec-2（验收场景集） | PM | PM（QA 为 collaborator/reviewer） | 验收标准 | hl-contracts/prd/core/{capability}/ |
+| Cap-Spec-1（能力包规格书） | PM | PM freeze；创始人可选审批 | 能力包业务语义 SSOT | hl-contracts/prd/biz/ |
+| Cap-Spec-2（验收场景集） | PM | PM（QA 为 collaborator/reviewer） | 验收标准 | hl-contracts/prd/biz/ |
 | Cap-Spec-3（业务码提案） | PM | **创始人必须先批**（治理前置门） | reason_code 变更 | hl-contracts/reasoncodes/ （合入后） |
 | HPRD（理解确认件） | 工程师 | PM（仅审业务理解正确性） | Cap-Spec 派生解读 | hl-platform/docs/hprd/{capability}/ |
 | design.md（技术设计） | 工程师 | 工程师互审 + AI reviewer | 技术方案 | hl-platform/docs/design/{capability}/ |
@@ -584,13 +584,12 @@ contract_touch_detail:
 CLAUDE.md                   @founder
 RULINGS.md                  @founder
 
-# —— Cap-Spec（PM 持有，创始人非强制）——
-/prd/core/**                @hl-pm-team
-/prd/console/**             @hl-pm-team
-/prd/data/**                @hl-pm-team
+# —— PRD：默认创始人；biz Cap-Spec 单独下放给 PM team ——
+/prd/                       @founder
+/prd/biz/**                 @hl-pm-team
 
-# —— 说明：prd/ 路径最后匹配，覆盖默认的创始人规则 ——
-# PM 可直接 merge Cap-Spec PR；创始人可选 review 但不 block
+# —— 说明：/prd/biz/** 最后匹配，覆盖 /prd/ 默认规则 ——
+# PM team 持有 biz Cap-Spec；core/console/data 仍由创始人默认审查
 ```
 
 ### 6.2 hl-platform CODEOWNERS（v2.1 修正 F-3：重排顺序 + 补路径）

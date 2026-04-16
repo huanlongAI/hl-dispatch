@@ -79,7 +79,7 @@ PM-B 首先推进 **biz.customer.asset**（客户与资产管理）。
 | 3 | `prd/README.md` | PRD 分区规则：core 禁 UI，console 禁自创规则 | 15min |
 | 4 | `rules/GOVERNANCE-PATTERN.v1.0.md` | Can → Action → Audit 三步闭环 | 15min |
 | 5 | `rules/biz-capabilities-blueprint.yaml` | 你负责的能力包 key_action，标记你认为需要调整的点 | 15min |
-| 6 | 选一个已有 core PRD 阅读 | Cap-Spec 的章节结构和引用方式 | 30min |
+| 6 | 选一个已有 PRD / Cap-Spec 示例阅读 | 如暂无 biz Cap-Spec，先读 core 示例理解章节结构和引用方式 | 30min |
 | 7 | `reasoncodes/reasoncodes.csv` 前 50 行 | reason_code 命名规则 | 10min |
 | 8 | `INDEX.md` | 能快速定位仓库中任意文件 | 10min |
 
@@ -122,7 +122,7 @@ PM-B 首先推进 **biz.customer.asset**（客户与资产管理）。
 | 5 | 根据 CI 反馈修改，请求创始人 Review | 1h |
 
 Cap-Spec 文件命名：`Cap-Spec-Biz.{Module}.v1.0.md`
-存放位置：`hl-contracts/prd/core/`
+存放位置：`hl-contracts/prd/biz/`
 
 **完成标志：** PR 提交成功，claude-gate + prd-gate CI 通过，创始人收到 Review 请求。
 

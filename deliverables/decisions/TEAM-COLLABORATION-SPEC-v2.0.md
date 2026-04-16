@@ -11,6 +11,8 @@
 **替代文档**：TEAM-COLLABORATION-SPEC v1.2（SUPERSEDED——v1.2 基于 7 人核心组 + 创始人写全部代码前提，已不适用）
 **派生链**：SAAC-HL-001 v1.1 §1.3 → BRIDGE-DERIVATION v1 → PRD-REDEFINITION-SPEC v2.0 → DD-TEST v1.1 → 创始人 2026-04-11 组织裁决 → 本文档
 
+> 说明：v2.0 为 v2.1 之前的历史基线。涉及 `biz.*` 能力包 Cap-Spec 存放位置时，以当前纠偏后的 `hl-contracts/prd/biz/` 为执行口径，不再沿用文中早期的 `prd/core/{capability}` 中间写法。
+
 ---
 
 ## 0. 推导声明
@@ -370,8 +372,8 @@ merge
 
 | 产物 | Owner | 审批人 | 性质 | 存放位置 |
 |------|-------|--------|------|---------|
-| Cap-Spec-1（能力包规格书） | PM | PM freeze；创始人可选审批 | 业务语义 SSOT | hl-contracts/prd/core/{capability}/ |
-| Cap-Spec-2（验收场景集） | PM + QA | PM | 验收标准 | hl-contracts/prd/core/{capability}/ |
+| Cap-Spec-1（能力包规格书） | PM | PM freeze；创始人可选审批 | 业务语义 SSOT | hl-contracts/prd/biz/ |
+| Cap-Spec-2（验收场景集） | PM + QA | PM | 验收标准 | hl-contracts/prd/biz/ |
 | Cap-Spec-3（业务码提案） | PM | 创始人 | reason_code 变更 | hl-contracts/reasoncodes/ （合入后） |
 | HPRD（人类可读产品设计） | 工程师 | PM | Cap-Spec 派生解读 | hl-platform/docs/hprd/{capability}/ |
 | design.md（技术设计） | 工程师 | 工程师互审 + AI reviewer | 技术方案 | hl-platform/docs/design/{capability}/ |

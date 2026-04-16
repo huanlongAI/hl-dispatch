@@ -21,6 +21,42 @@ pages:
         status: DRAFT
     last_verified: "2026-04-13"
 
+  - page: pages/architecture.html
+    title: 系统架构图（v2.1 叙事图谱）
+    source_docs:
+      - doc: SAAC-HL-001
+        version: "1.1"
+        status: LOCKED
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+      - doc: TECH-STACK-SPEC
+        version: "3"
+        status: LOCKED
+      - doc: DD-TEST
+        version: "1.1"
+        status: LOCKED
+    sections:
+      - id: s1
+        title: 组织 & 四权
+        spec_status: DRAFT
+      - id: s2
+        title: 六仓库拓扑
+        spec_status: DRAFT
+      - id: s3
+        title: 技术栈选型
+        spec_status: LOCKED
+      - id: s4
+        title: 门禁 L1–L4
+        spec_status: DRAFT
+      - id: s5
+        title: 五步交付 + 12 状态
+        spec_status: DRAFT
+      - id: s6
+        title: 文档 & Phase 0 禁区
+        spec_status: DRAFT
+    last_verified: "2026-04-16"
+
   - page: pages/global.html
     title: 全局团队分工与工作流
     source_docs:

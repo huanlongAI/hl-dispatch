@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>唤龙平台 · 系统架构图</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { min-width: 1200px; }
+
+  /* ── Hero ── */
+  .arch-hero {
+    text-align: left; padding: 56px 32px 36px;
+    background: linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%);
+    position: relative; overflow: hidden;
+  }
+  .arch-hero::before {
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 20% 50%,rgba(108,92,231,0.18) 0%,transparent 55%),
+      radial-gradient(circle at 80% 50%,rgba(0,184,148,0.12) 0%,transparent 55%);
+  }
+  .arch-hero .inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+  .arch-hero .eyebrow {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.78rem; color:var(--text-muted); letter-spacing:0.18em; text-transform:uppercase;
+    margin-bottom:16px; font-weight:600;
+  }
+  .arch-hero .eyebrow .dot {
+    width:6px; height:6px; border-radius:50%; background:var(--secondary);
+    box-shadow: 0 0 0 4px rgba(0,184,148,0.18);
+  }
+  .arch-hero h1 {
+    font-size: 2.4em; font-weight: 800; line-height: 1.2; margin:0 0 10px;
+  }
+  .arch-hero h1 em {
+    font-style:normal;
+    background: linear-gradient(135deg,var(--primary-light),var(--secondary),var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .arch-hero .lead {
+    font-size: 0.98em; color: var(--text-muted); max-width: 920px; line-height: 1.75; margin-top: 8px;
+  }
+  .arch-hero .lead b { color: var(--text); font-weight: 600; }
+  .arch-hero .lead .pm { color: var(--pm); }
+  .arch-hero .lead .eng { color: var(--eng); }
+  .arch-hero .lead .qa { color: var(--qa); }
+  .arch-hero .lead .gov { color: var(--founder); }
+
+  .arch-meta {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 22px;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; font-size: 0.78em;
+  }
+  .arch-meta div {
+    padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+  }
+  .arch-meta .k { color: var(--text-muted); text-transform: uppercase; letter-spacing:0.1em; font-size:0.72em; margin-bottom: 4px; }
+  .arch-meta .v { color: var(--text); font-size: 0.92em; }
+  .arch-meta .v b { color: var(--secondary); }
+
+  .arch-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top: 18px; }
+  .arch-chip {
+    font-family: 'JetBrains Mono','SF Mono',Menlo,monospace;
+    font-size: 0.7rem; padding: 4px 9px; border-radius: 3px;
+    border: 1px solid var(--border); color: var(--text-muted); background: rgba(255,255,255,0.02);
+  }
+  .arch-chip.locked { border-color: rgba(253,203,110,0.4); color: var(--accent); }
+  .arch-chip.draft { border-color: rgba(153,153,176,0.4); color: var(--text-muted); }
+  .arch-chip.proposed { border-color: rgba(162,155,254,0.4); color: var(--primary-light); }
+  .arch-chip.danger { border-color: rgba(225,112,85,0.4); color: var(--danger); }
+
+  /* ── Section TOC strip ── */
+  .arch-toc {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(6,1fr);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+  .arch-toc a {
+    display: block; padding: 14px 12px; border-right: 1px solid var(--border);
+    font-family: 'JetBrains Mono','SF Mono',Menlo,monospace; font-size:0.74rem;
+    color: var(--text-muted); text-align: center; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .arch-toc a:last-child { border-right: none; }
+  .arch-toc a:hover { color: var(--text); background: rgba(108,92,231,0.08); }
+  .arch-toc a .n { display:block; font-size:0.62rem; color:#777; margin-bottom:3px; letter-spacing:0.15em; }
+  .arch-toc a .t { font-family: -apple-system, sans-serif; font-size: 0.82rem; color: var(--text); }
+
+  /* ── Sections ── */
+  .arch-page { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+  .arch-section { padding: 56px 0 24px; border-bottom: 1px solid var(--border); }
+  .arch-section:last-of-type { border-bottom: none; }
+  .sec-head { display: grid; grid-template-columns: 80px 1fr; gap: 24px; margin-bottom: 28px; }
+  .sec-num {
+    font-family: 'JetBrains Mono','SF Mono',Menlo,monospace; font-size:0.76rem;
+    color: var(--text-muted); letter-spacing:0.18em; padding-top:10px; text-align:right;
+  }
+  .sec-num strong {
+    display: block; font-size:2.6rem; color: var(--text); font-weight:200; line-height:1; margin-bottom:6px;
+  }
+  .sec-h2 {
+    font-size: 1.7em; font-weight: 700; color: #fff; letter-spacing: -0.3px;
+    margin-bottom: 8px; line-height: 1.3;
+  }
+  .sec-h2 .sbadge {
+    display: inline-block; font-family: 'JetBrains Mono','SF Mono',Menlo,monospace;
+    font-size: 0.62rem; padding: 3px 7px; border-radius: 3px; vertical-align: middle;
+    margin-left: 10px; letter-spacing: 0.1em; border: 1px solid var(--border);
+    color: var(--text-muted); font-weight: 400;
+  }
+  .sec-lead { font-size: 0.92em; color: var(--text-muted); line-height: 1.75; max-width: 920px; }
+  .sec-lead code {
+    font-family: 'JetBrains Mono','SF Mono',Menlo,monospace; font-size: 0.85em;
+    background: rgba(108,92,231,0.12); color: var(--primary-light);
+    padding: 1px 5px; border-radius: 3px;
+  }
+
+  /* ── §1 Org row ── */
+  .org-row {
+    display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr 1fr 1fr; gap: 0;
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 22px;
+  }
+  .org-cell {
+    padding: 14px 14px 16px; border-right: 1px solid var(--border);
+    background: rgba(255,255,255,0.012);
+  }
+  .org-cell:last-child { border-right: none; }
+  .org-cell.founder { background: linear-gradient(180deg,rgba(162,155,254,0.1),rgba(162,155,254,0.02)); }
+  .org-cell .role { font-family: 'JetBrains Mono',monospace; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 4px; }
+  .org-cell .name { font-size: 0.92em; color: var(--text); font-weight: 700; margin-bottom: 2px; }
+  .org-cell .name .pill {
+    display: inline-block; font-family: 'JetBrains Mono',monospace; font-size: 0.6rem;
+    padding: 1px 5px; border-radius: 2px; margin-left: 4px; font-weight: 400; vertical-align: middle;
+  }
+  .org-cell .who { font-size: 0.78rem; color: var(--text-muted); line-height: 1.55; margin-top: 6px; }
+  .org-cell .count { font-family: 'JetBrains Mono',monospace; font-size: 0.78rem; color: var(--secondary); margin-top: 6px; }
+  .org-cell.founder .name { color: var(--founder); }
+
+  /* ── §1 Four-power ── */
+  .four-power {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+    margin-bottom: 18px; position: relative;
+  }
+  .four-power::before {
+    content:"⚖"; position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
+    font-size: 36px; color: rgba(255,255,255,0.06); z-index:1; pointer-events:none;
+  }
+  .quad {
+    padding: 22px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    position: relative; z-index: 2;
+  }
+  .quad:nth-child(2),.quad:nth-child(4) { border-right: none; }
+  .quad:nth-child(3),.quad:nth-child(4) { border-bottom: none; }
+  .quad .qhead { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .quad .qname { font-size: 1.05em; font-weight: 700; color: var(--text); }
+  .quad .qowner { font-family: 'JetBrains Mono',monospace; font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.1em; }
+  .quad ul { list-style: none; font-size: 0.85em; color: var(--text-muted); line-height: 1.85; margin: 0; padding: 0; }
+  .quad ul li { padding-left: 14px; position: relative; }
+  .quad ul li::before {
+    content:""; position:absolute; left:0; top:11px; width:6px; height:1px; background: var(--text-muted);
+  }
+  .quad.q1 { background: linear-gradient(135deg,rgba(116,185,255,0.06),transparent 60%); } .quad.q1 .qname { color: var(--pm); } .quad.q1 .pill { background: rgba(116,185,255,0.18); color: var(--pm); }
+  .quad.q2 { background: linear-gradient(135deg,rgba(85,239,196,0.06),transparent 60%); } .quad.q2 .qname { color: var(--eng); } .quad.q2 .pill { background: rgba(85,239,196,0.18); color: var(--eng); }
+  .quad.q3 { background: linear-gradient(135deg,rgba(255,234,167,0.06),transparent 60%); } .quad.q3 .qname { color: var(--qa); } .quad.q3 .pill { background: rgba(255,234,167,0.18); color: var(--qa); }
+  .quad.q4 { background: linear-gradient(135deg,rgba(162,155,254,0.06),transparent 60%); } .quad.q4 .qname { color: var(--founder); } .quad.q4 .pill { background: rgba(162,155,254,0.18); color: var(--founder); }
+  .org-cell .pill[data-r="pm"]{background:rgba(116,185,255,0.18);color:var(--pm);}
+  .org-cell .pill[data-r="design"]{background:rgba(223,230,233,0.18);color:var(--design);}
+  .org-cell .pill[data-r="eng"]{background:rgba(85,239,196,0.18);color:var(--eng);}
+  .org-cell .pill[data-r="qa"]{background:rgba(255,234,167,0.18);color:var(--qa);}
+  .org-cell .pill[data-r="ops"]{background:rgba(250,177,160,0.18);color:var(--ops);}
+  .org-cell .pill[data-r="founder"]{background:rgba(162,155,254,0.18);color:var(--founder);}
+
+  .anti { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 18px; }
+  .anti div {
+    padding: 12px 14px; border: 1px solid rgba(225,112,85,0.3); border-radius: 8px;
+    background: rgba(225,112,85,0.05); font-size: 0.82em; color: var(--text-muted); line-height: 1.6;
+  }
+  .anti div b { color: var(--danger); font-family: 'JetBrains Mono',monospace; font-size: 0.78rem; display: block; margin-bottom: 4px; letter-spacing: 0.05em; }
+
+  /* ── §2 Repo canvas ── */
+  .repo-canvas {
+    position: relative; height: 520px; border: 1px solid var(--border); border-radius: 12px;
+    background: radial-gradient(circle at 50% 50%,rgba(162,155,254,0.06),transparent 50%), var(--bg-card);
+    overflow: hidden; margin-bottom: 24px;
+  }
+  .repo-canvas svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .repo {
+    position: absolute; width: 178px; padding: 12px 14px; border-radius: 8px;
+    background: var(--bg-card-hover); border: 1.5px solid; backdrop-filter: blur(8px);
+  }
+  .repo .rh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .repo .rname { font-family: 'JetBrains Mono',monospace; font-size: 0.82em; font-weight: 700; color: var(--text); }
+  .repo .rrole { font-family: 'JetBrains Mono',monospace; font-size: 0.62rem; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
+  .repo .rdesc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px; }
+  .repo .rmeta { font-family: 'JetBrains Mono',monospace; font-size: 0.65rem; color: var(--text-muted); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 6px; }
+  .repo.center {
+    width: 230px; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    border-color: var(--founder);
+    background: linear-gradient(180deg,rgba(162,155,254,0.16),var(--bg-card));
+    z-index: 5;
+  }
+  .repo.center .rname { color: var(--founder); font-size: 0.95em; }
+  .repo.center .rrole { background: rgba(162,155,254,0.2); color: var(--founder); }
+
+  .repo.platform { left: 50%; top: 24px; transform: translateX(-50%); border-color: var(--eng); }
+  .repo.platform .rname { color: var(--eng); } .repo.platform .rrole { background: rgba(85,239,196,0.18); color: var(--eng); }
+
+  .repo.factory { right: 24px; top: 24px; border-color: var(--ops); }
+  .repo.factory .rname { color: var(--ops); } .repo.factory .rrole { background: rgba(250,177,160,0.18); color: var(--ops); }
+
+  .repo.console { right: 24px; bottom: 24px; border-color: var(--founder); }
+  .repo.console .rname { color: var(--founder); } .repo.console .rrole { background: rgba(162,155,254,0.18); color: var(--founder); }
+
+  .repo.app { left: 50%; bottom: 24px; transform: translateX(-50%); border-color: var(--pm); }
+  .repo.app .rname { color: var(--pm); } .repo.app .rrole { background: rgba(116,185,255,0.18); color: var(--pm); }
+
+  .repo.design { left: 24px; bottom: 24px; border-color: var(--design); }
+  .repo.design .rname { color: var(--design); } .repo.design .rrole { background: rgba(223,230,233,0.18); color: var(--design); }
+
+  .repo.docs { left: 24px; top: 24px; border-color: var(--qa); }
+  .repo.docs .rname { color: var(--qa); } .repo.docs .rrole { background: rgba(255,234,167,0.18); color: var(--qa); }
+
+  .repo-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+  .repo-table { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-card); }
+  .repo-table h4 {
+    font-family: 'JetBrains Mono',monospace; font-size: 0.74rem; letter-spacing: 0.1em; color: var(--text);
+    padding: 12px 14px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border);
+    text-transform: uppercase; margin: 0; font-weight: 600;
+  }
+  .repo-table table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .repo-table td { padding: 8px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  .repo-table tr:last-child td { border-bottom: none; }
+  .repo-table td.k { color: var(--text-muted); font-family: 'JetBrains Mono',monospace; font-size: 0.74rem; width: 38%; letter-spacing: 0.05em; }
+  .repo-table td b { color: var(--text); }
+
+  .boundary {
+    display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0;
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-card);
+  }
+  .boundary .side { padding: 18px 22px; }
+  .boundary .side h4 { font-size: 1.1em; font-weight: 700; margin-bottom: 4px; }
+  .boundary .side .stack { font-family: 'JetBrains Mono',monospace; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.05em; }
+  .boundary .side ul { list-style: none; font-size: 0.85em; color: var(--text-muted); line-height: 1.85; margin: 0; padding: 0; }
+  .boundary .side ul li { padding-left: 16px; position: relative; }
+  .boundary .side ul li::before { content:"●"; position:absolute; left:0; color: currentColor; font-size: 8px; top: 6px; }
+  .boundary .l1 { background: linear-gradient(180deg,rgba(162,155,254,0.06),transparent); } .boundary .l1 h4 { color: var(--founder); } .boundary .l1 ul li::before { color: var(--founder); }
+  .boundary .l2 { background: linear-gradient(180deg,rgba(116,185,255,0.06),transparent); } .boundary .l2 h4 { color: var(--pm); } .boundary .l2 ul li::before { color: var(--pm); }
+  .boundary .wall {
+    background: repeating-linear-gradient(45deg,rgba(225,112,85,0.18) 0 6px,transparent 6px 12px);
+    border-left: 2px solid rgba(225,112,85,0.5); border-right: 2px solid rgba(225,112,85,0.5);
+    display: flex; align-items: center; justify-content: center; color: var(--danger);
+    font-size: 0.7rem; writing-mode: vertical-rl; letter-spacing: 0.3em;
+    font-family: 'JetBrains Mono',monospace; text-transform: uppercase;
+  }
+
+  /* ── §3 Stack grid ── */
+  .stack-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 18px; }
+  .stack-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-card); }
+  .stack-card .sh {
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255,255,255,0.02);
+  }
+  .stack-card .sh h4 { font-size: 0.95em; font-weight: 700; color: var(--text); margin: 0; }
+  .stack-card .sh .tag { font-family: 'JetBrains Mono',monospace; font-size: 0.62rem; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .stack-card table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono',monospace; font-size: 0.7rem; }
+  .stack-card td { padding: 7px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; line-height: 1.55; }
+  .stack-card tr:last-child td { border-bottom: none; }
+  .stack-card td.t { color: var(--text); width: 60%; font-weight: 500; }
+  .stack-card td.v { color: var(--secondary); text-align: right; font-size: 0.65rem; }
+  .stack-card td .ru { color: var(--accent); font-size: 0.6rem; letter-spacing: 0.05em; }
+  .stack-card.runtime .sh h4 { color: var(--eng); } .stack-card.runtime .sh .tag { background: rgba(85,239,196,0.15); color: var(--eng); }
+  .stack-card.frame .sh h4 { color: var(--pm); } .stack-card.frame .sh .tag { background: rgba(116,185,255,0.15); color: var(--pm); }
+  .stack-card.data .sh h4 { color: var(--primary-light); } .stack-card.data .sh .tag { background: rgba(162,155,254,0.15); color: var(--primary-light); }
+  .stack-card.event .sh h4 { color: var(--ops); } .stack-card.event .sh .tag { background: rgba(250,177,160,0.15); color: var(--ops); }
+  .stack-card.sec .sh h4 { color: var(--founder); } .stack-card.sec .sh .tag { background: rgba(162,155,254,0.15); color: var(--founder); }
+  .stack-card.obs .sh h4 { color: var(--qa); } .stack-card.obs .sh .tag { background: rgba(255,234,167,0.15); color: var(--qa); }
+
+  .frontend-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fe-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; background: var(--bg-card); }
+  .fe-card.l1 { border-left: 3px solid var(--founder); }
+  .fe-card.l2 { border-left: 3px solid var(--pm); }
+  .fe-card h4 { font-size: 1em; font-weight: 700; margin-bottom: 4px; }
+  .fe-card .audience { font-family: 'JetBrains Mono',monospace; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 10px; text-transform: uppercase; }
+  .fe-card .row {
+    display: grid; grid-template-columns: 90px 1fr; gap: 8px; font-size: 0.82em;
+    padding: 5px 0; border-bottom: 1px dashed var(--border); line-height: 1.55;
+  }
+  .fe-card .row:last-child { border-bottom: none; }
+  .fe-card .row .k { color: var(--text-muted); font-family: 'JetBrains Mono',monospace; font-size: 0.7rem; }
+  .fe-card .row .v { color: var(--text); }
+  .fe-card .row .v code { font-family: 'JetBrains Mono',monospace; font-size: 0.72rem; color: var(--secondary); background: rgba(0,184,148,0.1); padding: 0 4px; border-radius: 2px; }
+  .fe-card.l1 h4 { color: var(--founder); }
+  .fe-card.l2 h4 { color: var(--pm); }
+
+  /* ── §4 Gate funnel ── */
+  .gate-funnel { margin-bottom: 20px; }
+  .gate-row {
+    display: grid; grid-template-columns: 120px 1fr 280px; gap: 0;
+    border: 1px solid var(--border); border-top: none; align-items: stretch;
+    background: var(--bg-card);
+  }
+  .gate-row:first-of-type { border-top: 1px solid var(--border); border-radius: 10px 10px 0 0; overflow: hidden; }
+  .gate-row:last-of-type { border-radius: 0 0 10px 10px; overflow: hidden; }
+  .gate-num {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 18px; border-right: 1px solid var(--border); background: rgba(0,0,0,0.25);
+  }
+  .gate-num .lvl { font-size: 2em; font-weight: 700; line-height: 1; }
+  .gate-num .tm { font-family: 'JetBrains Mono',monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+  .gate-body { padding: 16px 20px; border-right: 1px solid var(--border); }
+  .gate-body h4 { font-size: 1em; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+  .gate-body .desc { font-size: 0.85em; color: var(--text-muted); line-height: 1.65; margin-bottom: 8px; }
+  .gate-body .tools { font-family: 'JetBrains Mono',monospace; font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.03em; }
+  .gate-body .tools b { color: var(--secondary); }
+  .gate-side { padding: 16px 18px; background: rgba(0,0,0,0.18); }
+  .gate-side .label { font-family: 'JetBrains Mono',monospace; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .gate-side ul { list-style: none; font-family: 'JetBrains Mono',monospace; font-size: 0.7rem; color: var(--text-muted); line-height: 1.7; margin: 0; padding: 0; }
+  .gate-side ul li { padding-left: 12px; position: relative; }
+  .gate-side ul li::before { content:"›"; position:absolute; left:0; color: var(--text-muted); }
+  .gate-row.l1 .lvl { color: var(--secondary); } .gate-row.l1 .gate-num { box-shadow: inset 4px 0 0 var(--secondary); }
+  .gate-row.l2 .lvl { color: var(--pm); } .gate-row.l2 .gate-num { box-shadow: inset 4px 0 0 var(--pm); }
+  .gate-row.l3 .lvl { color: var(--qa); } .gate-row.l3 .gate-num { box-shadow: inset 4px 0 0 var(--qa); }
+  .gate-row.l4 .lvl { color: var(--primary-light); } .gate-row.l4 .gate-num { box-shadow: inset 4px 0 0 var(--primary-light); }
+
+  .req-checks { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+  .req-checks .rc {
+    display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+    border: 1px solid var(--border); border-radius: 8px; background: var(--bg-card);
+    font-family: 'JetBrains Mono',monospace; font-size: 0.74rem; color: var(--text-muted);
+  }
+  .req-checks .rc::before { content:"✓"; color: var(--secondary); font-weight: 700; font-size: 0.92rem; }
+  .req-checks .rc b { color: var(--text); }
+  .req-checks .rc small { color: var(--text-muted); font-size: 0.62rem; }
+
+  .agent-panel {
+    display: grid; grid-template-columns: auto 1fr; gap: 18px; padding: 18px;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: linear-gradient(135deg,rgba(162,155,254,0.06),transparent 50%); align-items: center;
+  }
+  .agent-panel .icon {
+    font-size: 1.8em; color: var(--primary-light); font-weight: 700;
+    width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid var(--primary-light);
+    display: flex; align-items: center; justify-content: center; background: rgba(162,155,254,0.05);
+  }
+  .agent-panel h4 { font-size: 1em; font-weight: 700; color: var(--primary-light); margin-bottom: 4px; }
+  .agent-panel p { font-size: 0.86em; color: var(--text-muted); line-height: 1.7; margin: 0; }
+  .agent-panel p code { font-family: 'JetBrains Mono',monospace; font-size: 0.78rem; color: var(--primary-light); background: rgba(162,155,254,0.1); padding: 1px 5px; border-radius: 2px; }
+
+  /* ── §5 Pipeline + lanes ── */
+  .pipeline-arch {
+    display: grid; grid-template-columns: repeat(5,1fr); gap: 0; margin-bottom: 24px;
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden; position: relative; background: var(--bg-card);
+  }
+  .step { padding: 16px 16px 18px; border-right: 1px solid var(--border); position: relative; }
+  .step:last-child { border-right: none; }
+  .step .sn { font-family: 'JetBrains Mono',monospace; font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 6px; }
+  .step .st { font-size: 0.95em; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+  .step .so { font-family: 'JetBrains Mono',monospace; font-size: 0.62rem; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.05em; }
+  .step .so b { color: var(--secondary); }
+  .step .sd { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+  .step.s1 { border-top: 3px solid var(--pm); } .step.s1 .st { color: var(--pm); }
+  .step.s2 { border-top: 3px solid var(--design); } .step.s2 .st { color: var(--design); }
+  .step.s3 { border-top: 3px solid var(--eng); } .step.s3 .st { color: var(--eng); }
+  .step.s4 { border-top: 3px solid var(--qa); } .step.s4 .st { color: var(--qa); }
+  .step.s5 { border-top: 3px solid var(--founder); } .step.s5 .st { color: var(--founder); }
+
+  .lanes { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-card); }
+  .lanes .lhead {
+    display: grid; grid-template-columns: 140px repeat(12,1fr);
+    background: rgba(0,0,0,0.25); border-bottom: 1px solid var(--border);
+  }
+  .lanes .lhead div {
+    padding: 8px 4px; font-family: 'JetBrains Mono',monospace; font-size: 0.6rem;
+    color: var(--text-muted); text-align: center; border-right: 1px dashed var(--border);
+    letter-spacing: 0.03em; line-height: 1.3;
+  }
+  .lanes .lhead div:last-child { border-right: none; }
+  .lanes .lhead div.label { text-align: left; padding-left: 14px; color: var(--text); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.62rem; }
+  .lane {
+    display: grid; grid-template-columns: 140px repeat(12,1fr);
+    border-bottom: 1px solid var(--border); min-height: 50px; align-items: stretch;
+  }
+  .lane:last-child { border-bottom: none; }
+  .lane .lname {
+    padding: 14px; font-family: 'JetBrains Mono',monospace; font-size: 0.74rem;
+    color: var(--text); background: rgba(0,0,0,0.2);
+    border-right: 1px solid var(--border); display: flex; align-items: center; letter-spacing: 0.05em;
+  }
+  .lane .lname .clr { width: 4px; height: 24px; border-radius: 2px; margin-right: 10px; }
+  .lane .cell { border-right: 1px dashed var(--border); position: relative; display: flex; align-items: center; justify-content: center; padding: 6px 4px; }
+  .lane .cell:last-child { border-right: none; }
+  .lane .cell .state-tag { font-family: 'JetBrains Mono',monospace; font-size: 0.62rem; text-align: center; line-height: 1.3; padding: 6px 4px; border-radius: 4px; display: block; width: 100%; }
+  .lane.pm .clr { background: var(--pm); } .lane.pm .cell.s .state-tag { background: rgba(116,185,255,0.1); border: 1px solid var(--pm); color: var(--pm); }
+  .lane.eng .clr { background: var(--eng); } .lane.eng .cell.s .state-tag { background: rgba(85,239,196,0.1); border: 1px solid var(--eng); color: var(--eng); }
+  .lane.des .clr { background: var(--design); } .lane.des .cell.s .state-tag { background: rgba(223,230,233,0.1); border: 1px solid var(--design); color: var(--design); }
+  .lane.ci .clr { background: var(--ops); } .lane.ci .cell.s .state-tag { background: rgba(250,177,160,0.1); border: 1px solid var(--ops); color: var(--ops); }
+  .lane.qa .clr { background: var(--qa); } .lane.qa .cell.s .state-tag { background: rgba(255,234,167,0.1); border: 1px solid var(--qa); color: var(--qa); }
+  .lane.gov .clr { background: var(--founder); } .lane.gov .cell.s .state-tag { background: rgba(162,155,254,0.1); border: 1px solid var(--founder); color: var(--founder); }
+
+  .loop-note {
+    margin-top: 12px; padding: 12px 16px;
+    border: 1px dashed rgba(225,112,85,0.4); border-radius: 8px;
+    background: rgba(225,112,85,0.05); font-size: 0.78rem; color: var(--text-muted);
+    font-family: 'JetBrains Mono',monospace; line-height: 1.6;
+  }
+  .loop-note b { color: var(--danger); }
+
+  /* ── §6 Docs tree + forbidden ── */
+  .docs-tree {
+    border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px;
+    background: var(--bg-card); margin-bottom: 22px;
+    font-family: 'JetBrains Mono',monospace; font-size: 0.82rem; line-height: 2;
+  }
+  .docs-tree .root { color: var(--founder); font-weight: 700; }
+  .docs-tree .br { color: var(--text-muted); margin-right: 8px; }
+  .docs-tree .doc { color: var(--text-muted); }
+  .docs-tree .doc b { color: var(--text); }
+  .docs-tree .ver { color: var(--secondary); }
+  .docs-tree .stat { font-size: 0.62rem; padding: 1px 5px; border-radius: 2px; margin-left: 6px; letter-spacing: 0.1em; font-weight: 600; }
+  .docs-tree .stat.locked { background: rgba(253,203,110,0.18); color: var(--accent); }
+  .docs-tree .stat.draft { background: rgba(153,153,176,0.18); color: var(--text-muted); }
+  .docs-tree .stat.proposed { background: rgba(162,155,254,0.18); color: var(--primary-light); }
+  .docs-tree .src { color: var(--text-muted); font-size: 0.7rem; margin-left: 8px; }
+
+  .forbidden { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .fb-card {
+    padding: 14px 16px; border: 1px solid rgba(225,112,85,0.3); border-radius: 10px;
+    background: linear-gradient(180deg,rgba(225,112,85,0.06),transparent 70%);
+  }
+  .fb-card.warn {
+    border-color: rgba(253,203,110,0.3);
+    background: linear-gradient(180deg,rgba(253,203,110,0.06),transparent 70%);
+  }
+  .fb-card .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .fb-card .icon { font-size: 0.95rem; color: var(--danger); }
+  .fb-card.warn .icon { color: var(--accent); }
+  .fb-card .name { font-family: 'JetBrains Mono',monospace; font-size: 0.82rem; color: var(--text); font-weight: 700; }
+  .fb-card .why { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; margin-top: 4px; }
+  .fb-card .unlock { font-family: 'JetBrains Mono',monospace; font-size: 0.66rem; color: var(--text-muted); margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); letter-spacing: 0.03em; }
+  .fb-card .unlock b { color: var(--secondary); }
+
+  /* ── Footer legend ── */
+  .arch-footer {
+    margin-top: 40px; padding: 24px 0; border-top: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end;
+  }
+  .arch-footer .leg { font-family: 'JetBrains Mono',monospace; font-size: 0.7rem; color: var(--text-muted); line-height: 1.9; }
+  .arch-footer .leg b { color: var(--text); }
+  .arch-footer .leg .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .arch-footer .sig { font-family: 'JetBrains Mono',monospace; font-size: 0.7rem; color: var(--text-muted); text-align: right; line-height: 1.8; }
+  .arch-footer .sig b { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="architecture.html" class="active">系统架构图</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="tech-selection.html">技术选型</a>
+    <a href="glossary.html">术语表</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.5rem 1rem; text-align:center; font-size:0.82rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
+
+<!-- ═══════ Hero ═══════ -->
+<header class="arch-hero">
+  <div class="inner">
+    <div class="eyebrow"><span class="dot"></span> SAAC-HL · TEAM-COLLABORATION-SPEC v2.1 · Pilot-Locked 2026-04-11</div>
+    <h1>唤龙平台 <em>Huanlong</em><br>系统架构叙事图谱 · v2.1</h1>
+    <p class="lead">
+      一份按治理要素重新组织的单页架构图：从 <b class="gov">四权分离</b>（语义主权 / 技术实现权 / 独立质量权 / 组织治理权）出发，沿 <b class="eng">六仓库</b>（hl-contracts SSOT × hl-platform × hl-factory × hl-console-native × hl-design-system × hl-app）展开，经 <b class="qa">L1–L4 四层门禁</b> 与 <b class="pm">五步交付流</b>，最终由 <b class="pm">PM 验收</b> + <b class="gov">Founder 合并</b> 关环。
+    </p>
+    <div class="arch-meta">
+      <div><div class="k">SSOT 源</div><div class="v"><b>huanlongai.github.io/hl-dispatch</b></div></div>
+      <div><div class="k">基线审计</div><div class="v">HK-KERNEL-AUDIT 2026-04-07</div></div>
+      <div><div class="k">绘制日期</div><div class="v">2026-04-16</div></div>
+      <div><div class="k">阶段</div><div class="v">Phase 0 · Pilot Locked</div></div>
+    </div>
+    <div class="arch-chips">
+      <span class="arch-chip locked">TECH-STACK v3 🔒 LOCKED</span>
+      <span class="arch-chip locked">SAAC-HL-001 v1.1 🔒 LOCKED</span>
+      <span class="arch-chip locked">DD-TEST v1.1 🔒 LOCKED</span>
+      <span class="arch-chip draft">TEAM-COLLAB v2.1 📝 DRAFT</span>
+      <span class="arch-chip draft">UI-DELIVERY v1.0 📝 DRAFT</span>
+      <span class="arch-chip draft">FRONTEND-REPO v1 📝 DRAFT</span>
+      <span class="arch-chip proposed">SAAC-HL-EP-001 ⚙ PROPOSED</span>
+      <span class="arch-chip danger">RULINGS H-001 / H-002 BLOCKING</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ TOC ═══════ -->
+<nav class="arch-toc">
+  <a href="#s1"><span class="n">CHAPTER · 01</span><span class="t">组织 & 四权</span></a>
+  <a href="#s2"><span class="n">CHAPTER · 02</span><span class="t">六仓库拓扑</span></a>
+  <a href="#s3"><span class="n">CHAPTER · 03</span><span class="t">技术栈选型</span></a>
+  <a href="#s4"><span class="n">CHAPTER · 04</span><span class="t">门禁 L1–L4</span></a>
+  <a href="#s5"><span class="n">CHAPTER · 05</span><span class="t">五步交付 + 12 状态</span></a>
+  <a href="#s6"><span class="n">CHAPTER · 06</span><span class="t">文档 & Phase 0 禁区</span></a>
+</nav>
+
+<div class="arch-page">
+
+  <!-- ═══════ §1 ORG & POWER ═══════ -->
+  <section id="s1" class="arch-section">
+    <div class="sec-head">
+      <div class="sec-num"><strong>01</strong>ORG · POWER</div>
+      <div>
+        <h2 class="sec-h2">组织结构与四权分离<span class="sbadge">23 人 · 6 角色 · 1 创始</span></h2>
+        <p class="sec-lead">唤龙采用「<b>四权分离 (Four-Power Separation)</b>」治理模型：将<code>语义主权</code>、<code>技术实现权</code>、<code>独立质量权</code>、<code>组织治理权</code>分别授予不同角色，任意单一角色均无法独立完成「需求 → 实现 → 验收」闭环。Founder（@tongzhenghui）保留组织治理权与最终合并权，但不直接参与功能编码。</p>
+      </div>
+    </div>
+
+    <div class="org-row">
+      <div class="org-cell founder">
+        <div class="role">CEO · TECH CO-FOUNDER</div>
+        <div class="name">Founder<span class="pill" data-r="founder">组织治理权</span></div>
+        <div class="who">@tongzhenghui · 唯一持仓人 · 战略决策 + 最终合并</div>
+        <div class="count">人数 · 1</div>
+      </div>
+      <div class="org-cell">
+        <div class="role">PRODUCT</div>
+        <div class="name">PM 团队<span class="pill" data-r="pm">语义主权</span></div>
+        <div class="who">需求语义、HPRD、PM 验收（pm-acceptance）</div>
+        <div class="count">人数 · 3</div>
+      </div>
+      <div class="org-cell">
+        <div class="role">DESIGN</div>
+        <div class="name">Designer 团队<span class="pill" data-r="design">设计实现</span></div>
+        <div class="who">DTCG token、Widgetbook、视觉规范、设计评审</div>
+        <div class="count">人数 · 2</div>
+      </div>
+      <div class="org-cell">
+        <div class="role">ENGINEERING</div>
+        <div class="name">Engineer 团队<span class="pill" data-r="eng">技术实现权</span></div>
+        <div class="who">Backend Kotlin × 6 + PHP × 2 + Frontend × 5</div>
+        <div class="count">人数 · 13</div>
+      </div>
+      <div class="org-cell">
+        <div class="role">QUALITY</div>
+        <div class="name">QA 团队<span class="pill" data-r="qa">独立质量权</span></div>
+        <div class="who">QA Architect × 1 + QA Engineer × 3 · qa-verdict</div>
+        <div class="count">人数 · 4</div>
+      </div>
+      <div class="org-cell">
+        <div class="role">OPERATIONS</div>
+        <div class="name">Ops 团队<span class="pill" data-r="ops">运维基础</span></div>
+        <div class="who">Observability、CI 守护、release-train</div>
+        <div class="count">人数 · 1</div>
+      </div>
+    </div>
+
+    <div class="four-power">
+      <div class="quad q1">
+        <div class="qhead"><div class="qname">语义主权 Semantic Sovereignty</div><div class="qowner">PM + Founder</div></div>
+        <ul>
+          <li>定义「这个功能要解决什么问题」（HPRD ≥ Cap-Spec）</li>
+          <li>独占 <code>pm-acceptance</code> 与 <code>pm-hprd-pass</code> Required Status Check</li>
+          <li>禁止：编辑测试代码、绕过 QA、私自合并</li>
+        </ul>
+      </div>
+      <div class="quad q2">
+        <div class="qhead"><div class="qname">技术实现权 Technical Authority</div><div class="qowner">Engineer</div></div>
+        <ul>
+          <li>选型与编码（Cap-Spec → Domain → Adapter → Test）</li>
+          <li>对 <code>L1 + L2</code> 门禁负全责（格式 + 确定性）</li>
+          <li>禁止：定义需求语义、修改 HPRD、签发 QA 结论</li>
+        </ul>
+      </div>
+      <div class="quad q3">
+        <div class="qhead"><div class="qname">独立质量权 Quality Authority</div><div class="qowner">QA Architect + Engineer</div></div>
+        <ul>
+          <li>测试设计 (DD-TEST)、L3 行为门禁、回归矩阵</li>
+          <li>独占 <code>qa-verdict</code> Required Status Check</li>
+          <li>禁止：自行修复缺陷代码、定义需求语义</li>
+        </ul>
+      </div>
+      <div class="quad q4">
+        <div class="qhead"><div class="qname">组织治理权 Governance Authority</div><div class="qowner">Founder</div></div>
+        <ul>
+          <li>合约冻结、版本发布、CODEOWNERS、最终合并</li>
+          <li>触发 Technical Co-founder Agent（决策辅助 · 手动）</li>
+          <li>禁止：日常编码、单方面修改 HPRD/Cap-Spec</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="anti">
+      <div><b>反模式 ① 角色混用</b>同一人同时持有「需求语义」与「合并权」→ 无法形成有效制衡，Cap-Spec 易漂移。</div>
+      <div><b>反模式 ② QA 内部化</b>QA 与 Engineer 同岗 → qa-verdict 失去独立性，L3 沦为格式检查。</div>
+      <div><b>反模式 ③ 跨权改写</b>Engineer 编辑 HPRD 或 PM 直接修改测试 → 触发 hl-factory CODEOWNERS 阻断。</div>
+    </div>
+  </section>
+
+  <!-- ═══════ §2 REPOS ═══════ -->
+  <section id="s2" class="arch-section">
+    <div class="sec-head">
+      <div class="sec-num"><strong>02</strong>REPO · TOPOLOGY</div>
+      <div>
+        <h2 class="sec-h2">六仓库拓扑：以契约为中心的星形架构<span class="sbadge">SSOT 单源 · 单向依赖</span></h2>
+        <p class="sec-lead">所有仓库以 <code>hl-contracts</code>（SSOT 治理仓）为中心，<b>只允许下游 read，禁止上游 write</b>。前端 C-L1 与 C-L2 之间存在<b style="color:var(--danger)">硬边界</b>：代码、设计、依赖、构建产物均不互通。后端单仓 <code>hl-platform</code> 内部按 Spring Modulith 强制模块边界。</p>
+      </div>
+    </div>
+
+    <div class="repo-canvas">
+      <svg viewBox="0 0 1200 520" preserveAspectRatio="none">
+        <g stroke="rgba(153,153,176,0.3)" stroke-width="1" fill="none" stroke-dasharray="4 3">
+          <line x1="600" y1="260" x2="600" y2="92"/>
+          <line x1="600" y1="260" x2="1080" y2="92"/>
+          <line x1="600" y1="260" x2="1080" y2="428"/>
+          <line x1="600" y1="260" x2="600" y2="428"/>
+          <line x1="600" y1="260" x2="120" y2="428"/>
+          <line x1="600" y1="260" x2="120" y2="92"/>
+        </g>
+        <g font-family="'JetBrains Mono',monospace" font-size="9">
+          <text x="610" y="180" fill="#55EFC4">read contracts ↑</text>
+          <text x="850" y="180" fill="#FAB1A0">read contracts ↗</text>
+          <text x="850" y="350" fill="#A29BFE">read contracts ↘</text>
+          <text x="610" y="370" fill="#74B9FF">read contracts ↓</text>
+          <text x="290" y="370" fill="#DFE6E9">read contracts ↙</text>
+          <text x="290" y="180" fill="#FFEAA7">SSOT pages ↖</text>
+        </g>
+      </svg>
+
+      <div class="repo center">
+        <div class="rh"><div class="rname">hl-contracts</div><div class="rrole">SSOT</div></div>
+        <div class="rdesc">所有 Cap-Spec / HPRD / DTCG / OpenAPI / SQL DDL 的唯一权威源</div>
+        <div class="rmeta">CODEOWNERS · Founder + PM<br>tag-driven release · semver</div>
+      </div>
+      <div class="repo platform">
+        <div class="rh"><div class="rname">hl-platform</div><div class="rrole">Backend</div></div>
+        <div class="rdesc">Spring Modulith 单仓后端，按 bounded context 强制隔离</div>
+        <div class="rmeta">JVM 21 · Kotlin 2.1.10<br>Spring Boot 3.5.11</div>
+      </div>
+      <div class="repo factory">
+        <div class="rh"><div class="rname">hl-factory</div><div class="rrole">CI/CD</div></div>
+        <div class="rdesc">门禁脚本、reusable workflow、Required Status Check 编排</div>
+        <div class="rmeta">8 verification scripts<br>L1–L4 gate runner</div>
+      </div>
+      <div class="repo console">
+        <div class="rh"><div class="rname">hl-console-native</div><div class="rrole">C-L1</div></div>
+        <div class="rdesc">Founder 内部控制台，Swift / SwiftUI / GHKit · macOS 26 + iOS 26</div>
+        <div class="rmeta">受众：Founder only<br>不发布 App Store</div>
+      </div>
+      <div class="repo app">
+        <div class="rh"><div class="rname">hl-app</div><div class="rrole">C-L2</div></div>
+        <div class="rdesc">面向客户的 6 平台 App，Flutter / Dart · go_router · Riverpod</div>
+        <div class="rmeta">iOS · Android · Web<br>macOS · Windows · Linux</div>
+      </div>
+      <div class="repo design">
+        <div class="rh"><div class="rname">hl-design-system</div><div class="rrole">C-L2 DS</div></div>
+        <div class="rdesc">DTCG token + Flutter 组件库 + Widgetbook</div>
+        <div class="rmeta">仅服务 hl-app<br>禁止跨向 C-L1</div>
+      </div>
+      <div class="repo docs">
+        <div class="rh"><div class="rname">hl-dispatch</div><div class="rrole">Pages</div></div>
+        <div class="rdesc">SSOT 文档站点（GitHub Pages） · 16 个治理页面</div>
+        <div class="rmeta">huanlongai.github.io<br>last_verified 2026-04-13</div>
+      </div>
+    </div>
+
+    <div class="repo-tables">
+      <div class="repo-table">
+        <h4>CODEOWNERS · 关键路径</h4>
+        <table>
+          <tr><td class="k">/cap-specs/**</td><td><b>Founder</b> + PM (require 2)</td></tr>
+          <tr><td class="k">/hprd/**</td><td><b>PM</b> (require 1) + Founder</td></tr>
+          <tr><td class="k">/dtcg/**</td><td><b>Designer</b> + Founder</td></tr>
+          <tr><td class="k">/.github/workflows/**</td><td><b>Founder</b> only</td></tr>
+          <tr><td class="k">/scripts/gate-*.sh</td><td><b>Founder</b> + QA Architect</td></tr>
+          <tr><td class="k">/openapi/**</td><td><b>Engineer Lead</b> + PM</td></tr>
+        </table>
+      </div>
+      <div class="repo-table">
+        <h4>Required Status Checks · main 分支保护</h4>
+        <table>
+          <tr><td class="k">qa-verdict</td><td>QA · L3 行为通过 + 回归矩阵签发</td></tr>
+          <tr><td class="k">pm-acceptance</td><td>PM · 端到端 HPRD 行为已观察确认</td></tr>
+          <tr><td class="k">pm-hprd-pass</td><td>PM · HPRD 文档完整性、Cap-Spec 一致性</td></tr>
+          <tr><td class="k">l1-format</td><td>CI · 格式 / lint / spotless / detekt</td></tr>
+          <tr><td class="k">l2-deterministic</td><td>CI · JUnit + Kotest 确定性 + Testcontainers</td></tr>
+          <tr><td class="k">linear-history</td><td>禁止 merge commit · 强制 squash</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="boundary">
+      <div class="side l1">
+        <h4>C-L1 · 内部控制台</h4>
+        <div class="stack">SWIFT · SWIFTUI · GHKIT · MACOS 26 / IOS 26</div>
+        <ul>
+          <li>受众：Founder（不公开发行）</li>
+          <li>用途：合约冻结、HPRD 审核、release-train 监控</li>
+          <li>不引用 hl-design-system token / 组件</li>
+          <li>不通过 hl-app 路由</li>
+        </ul>
+      </div>
+      <div class="wall">硬边界 · NO SHARING</div>
+      <div class="side l2">
+        <h4>C-L2 · 客户端 App</h4>
+        <div class="stack">FLUTTER 3 · DART · DTCG · RIVERPOD · GO_ROUTER · WIDGETBOOK · PATROL</div>
+        <ul>
+          <li>受众：终端客户（6 平台分发）</li>
+          <li>仅消费 hl-design-system 的 DTCG token + 组件</li>
+          <li>不引用 GHKit / SwiftUI 组件</li>
+          <li>独立的 release-train 与版本号</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ §3 TECH STACK ═══════ -->
+  <section id="s3" class="arch-section">
+    <div class="sec-head">
+      <div class="sec-num"><strong>03</strong>TECH · STACK</div>
+      <div>
+        <h2 class="sec-h2">技术栈选型：LOCKED 基线<span class="sbadge">TECH-STACK v3 🔒 · RULINGS H-001 H-002 BLOCKING</span></h2>
+        <p class="sec-lead">后端选型一律「<b>JVM + Spring 原生</b>」，禁止外部 MQ / Cache / 配置中心；ORM 唯一允许 <code>JPA + Hibernate</code>（H-002）；事件总线由 Spring Modulith 的 <b>Event Publication Log + Outbox</b> 替代；身份验证使用 Spring Security 内置 JWT（禁 Keycloak）。前端 C-L1 与 C-L2 严格分栈。</p>
+      </div>
+    </div>
+
+    <div class="stack-grid">
+      <div class="stack-card runtime">
+        <div class="sh"><h4>① Runtime</h4><div class="tag">Locked</div></div>
+        <table>
+          <tr><td class="t">JVM</td><td class="v">21 LTS</td></tr>
+          <tr><td class="t">Kotlin</td><td class="v">2.1.10</td></tr>
+          <tr><td class="t">Gradle</td><td class="v">8.12</td></tr>
+          <tr><td class="t">PostgreSQL</td><td class="v">18</td></tr>
+          <tr><td class="t">Flyway</td><td class="v">10.x</td></tr>
+        </table>
+      </div>
+      <div class="stack-card frame">
+        <div class="sh"><h4>② Framework</h4><div class="tag">Locked</div></div>
+        <table>
+          <tr><td class="t">Spring Boot</td><td class="v">3.5.11</td></tr>
+          <tr><td class="t">Spring Modulith</td><td class="v">1.3.4</td></tr>
+          <tr><td class="t">spring-boot-starter-web</td><td class="v">3.5.11</td></tr>
+          <tr><td class="t">spring-boot-starter-actuator</td><td class="v">3.5.11</td></tr>
+          <tr><td class="t">no implicit @ComponentScan <span class="ru">RULING H-001</span></td><td class="v">enforced</td></tr>
+        </table>
+      </div>
+      <div class="stack-card data">
+        <div class="sh"><h4>③ Data Access</h4><div class="tag">Sole ORM</div></div>
+        <table>
+          <tr><td class="t">JPA + Hibernate <span class="ru">RULING H-002</span></td><td class="v">6.5</td></tr>
+          <tr><td class="t">Spring Data JPA</td><td class="v">3.5.x</td></tr>
+          <tr><td class="t">禁止：JOOQ · MyBatis · Exposed</td><td class="v" style="color:var(--danger)">DENY</td></tr>
+          <tr><td class="t">数据迁移</td><td class="v">Flyway only</td></tr>
+        </table>
+      </div>
+      <div class="stack-card event">
+        <div class="sh"><h4>④ Event / Bus</h4><div class="tag">Internal</div></div>
+        <table>
+          <tr><td class="t">Spring Modulith Event Publication Log</td><td class="v">enabled</td></tr>
+          <tr><td class="t">Outbox · @ApplicationModuleListener</td><td class="v">async</td></tr>
+          <tr><td class="t">禁止：Kafka · RabbitMQ · RocketMQ · Pulsar</td><td class="v" style="color:var(--danger)">DENY</td></tr>
+          <tr><td class="t">禁止：Redis Streams · Pub/Sub</td><td class="v" style="color:var(--danger)">DENY</td></tr>
+        </table>
+      </div>
+      <div class="stack-card sec">
+        <div class="sh"><h4>⑤ Security / Auth</h4><div class="tag">Built-in</div></div>
+        <table>
+          <tr><td class="t">Spring Security</td><td class="v">6.4.x</td></tr>
+          <tr><td class="t">JWT (oauth2-resource-server)</td><td class="v">built-in</td></tr>
+          <tr><td class="t">禁止：Keycloak · Auth0 · Casbin</td><td class="v" style="color:var(--danger)">DENY</td></tr>
+          <tr><td class="t">RBAC</td><td class="v">app-level</td></tr>
+        </table>
+      </div>
+      <div class="stack-card obs">
+        <div class="sh"><h4>⑥ Observability</h4><div class="tag">Otel</div></div>
+        <table>
+          <tr><td class="t">Micrometer + OpenTelemetry Java Agent</td><td class="v">2.10</td></tr>
+          <tr><td class="t">Prometheus + Grafana</td><td class="v">scrape</td></tr>
+          <tr><td class="t">Loki (logs) · Tempo (traces)</td><td class="v">collect</td></tr>
+          <tr><td class="t">Alertmanager · webhook</td><td class="v">paged</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="frontend-split">
+      <div class="fe-card l1">
+        <h4>C-L1 · 内部控制台栈</h4>
+        <div class="audience">Founder Only · 不公开发行</div>
+        <div class="row"><div class="k">语言</div><div class="v">Swift 5.10</div></div>
+        <div class="row"><div class="k">UI 框架</div><div class="v">SwiftUI + GHKit (Founder 内部框架)</div></div>
+        <div class="row"><div class="k">最低系统</div><div class="v">macOS 26 · iOS 26</div></div>
+        <div class="row"><div class="k">状态管理</div><div class="v">Observation framework (iOS 17+)</div></div>
+        <div class="row"><div class="k">测试</div><div class="v">Swift Testing + XCUITest</div></div>
+        <div class="row"><div class="k">分发</div><div class="v">TestFlight 内部组（不上架）</div></div>
+      </div>
+      <div class="fe-card l2">
+        <h4>C-L2 · 客户端 App 栈</h4>
+        <div class="audience">End-User · 6 平台分发</div>
+        <div class="row"><div class="k">语言</div><div class="v">Dart 3.6</div></div>
+        <div class="row"><div class="k">UI 框架</div><div class="v">Flutter 3.27</div></div>
+        <div class="row"><div class="k">设计系统</div><div class="v">DTCG token (W3C) + Widgetbook</div></div>
+        <div class="row"><div class="k">状态管理</div><div class="v"><code>Riverpod 2.x</code> <span style="color:var(--text-muted);font-size:0.7rem">(J-03 PENDING)</span></div></div>
+        <div class="row"><div class="k">路由</div><div class="v"><code>go_router 14.x</code></div></div>
+        <div class="row"><div class="k">E2E 测试</div><div class="v"><code>patrol</code> · 真机回归</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ §4 GATES ═══════ -->
+  <section id="s4" class="arch-section">
+    <div class="sec-head">
+      <div class="sec-num"><strong>04</strong>GATE · L1—L4</div>
+      <div>
+        <h2 class="sec-h2">四层门禁：从 10 秒格式到 10 分钟行为<span class="sbadge">L1·L2·L3 BLOCKING · L4 ADVISORY</span></h2>
+        <p class="sec-lead">每个 Pull Request 必须依次通过 L1 → L2 → L3 三层强制门禁，L4 Sentinel 哨兵层负责长期质量趋势监控（不阻塞合并但产出周报）。任意一层失败 → PR 状态置 fail，禁止合并。</p>
+      </div>
+    </div>
+
+    <div class="gate-funnel">
+      <div class="gate-row l1">
+        <div class="gate-num"><div class="lvl">L1</div><div class="tm">~10s · BLOCKING</div></div>
+        <div class="gate-body">
+          <h4>格式 / 静态层 — Format & Lint</h4>
+          <div class="desc">语言级静态检查 + 文件结构合规：spotless 格式化、detekt 规则、ktlint、import 顺序、license header、CODEOWNERS 路径校验、分支命名规范。</div>
+          <div class="tools">tools: <b>spotless · detekt · ktlint · gradle check-format</b></div>
+        </div>
+        <div class="gate-side">
+          <div class="label">CI 脚本（hl-factory）</div>
+          <ul>
+            <li>check-domain-isolation</li>
+            <li>check-no-implicit-spring</li>
+            <li>check-jpa-isolation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="gate-row l2">
+        <div class="gate-num"><div class="lvl">L2</div><div class="tm">2–3min · BLOCKING</div></div>
+        <div class="gate-body">
+          <h4>确定性层 — Deterministic Tests</h4>
+          <div class="desc">单元测试 + 模块切片测试 + 契约测试，要求 100% 确定性（无 flaky、无 sleep、无外部网络依赖）。Testcontainers 提供 PostgreSQL / Outbox 隔离。</div>
+          <div class="tools">tools: <b>JUnit 5 · Kotest Property · Testcontainers · Spring Modulith Test</b></div>
+        </div>
+        <div class="gate-side">
+          <div class="label">CI 脚本（hl-factory）</div>
+          <ul>
+            <li>check-reason-codes</li>
+            <li>gate-circular-dep</li>
+            <li>validate-contracts</li>
+          </ul>
+        </div>
+      </div>
+      <div class="gate-row l3">
+        <div class="gate-num"><div class="lvl">L3</div><div class="tm">5–10min · BLOCKING</div></div>
+        <div class="gate-body">
+          <h4>行为层 — Behavior & QA Verdict</h4>
+          <div class="desc">基于 DD-TEST v1.1 设计的端到端行为用例，由 QA 团队（独立质量权）签发 <code>qa-verdict</code>。包含 patrol E2E、API 黑盒回归、性能基线（p95/p99 latency）。</div>
+          <div class="tools">tools: <b>patrol · k6 · Cypress · QA-designed scenarios</b></div>
+        </div>
+        <div class="gate-side">
+          <div class="label">CI 脚本（hl-factory）</div>
+          <ul>
+            <li>gate-deny-check</li>
+            <li>gate-spring-isolation</li>
+            <li>qa-verdict-emitter</li>
+          </ul>
+        </div>
+      </div>
+      <div class="gate-row l4">
+        <div class="gate-num"><div class="lvl">L4</div><div class="tm">async · ADVISORY</div></div>
+        <div class="gate-body">
+          <h4>哨兵层 — Sentinel (Advisory)</h4>
+          <div class="desc">长周期质量趋势：技术债增长率、模块边界违规历史、依赖漂移、安全漏洞 (Renovate / Snyk / OWASP)、SBOM 生成。每周输出 Sentinel Report 给 Founder + QA Architect。</div>
+          <div class="tools">tools: <b>Renovate · Snyk · OWASP Dep-Check · ArchUnit trend</b></div>
+        </div>
+        <div class="gate-side">
+          <div class="label">输出物</div>
+          <ul>
+            <li>weekly-sentinel-report.md</li>
+            <li>arch-drift-trend.png</li>
+            <li>sbom-cyclonedx.json</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="req-checks">
+      <div class="rc"><div><b>qa-verdict</b><br><small>QA Authority</small></div></div>
+      <div class="rc"><div><b>pm-acceptance</b><br><small>PM Semantic</small></div></div>
+      <div class="rc"><div><b>pm-hprd-pass</b><br><small>PM HPRD Doc</small></div></div>
+      <div class="rc"><div><b>l1-format</b><br><small>CI Static</small></div></div>
+      <div class="rc"><div><b>l2-deterministic</b><br><small>CI Test</small></div></div>
+      <div class="rc"><div><b>linear-history</b><br><small>Branch Protect</small></div></div>
+    </div>
+
+    <div class="agent-panel">
+      <div class="icon">⚙</div>
+      <div>
+        <h4>Technical Co-founder Agent · 决策辅助（手动触发）</h4>
+        <p>Founder 在面对架构决策（合约冻结、Ruling 发布、技术栈变更）时，可手动触发该 Agent 拉取 <code>hl-contracts</code> 全量上下文 + 最近 30 天 Sentinel 报告，生成<b>风险清单 + 反例 + 历史 Ruling 引用</b>。Agent <b>不写代码、不合并、不发布 Ruling</b>，仅提供决策依据，最终签发权仍归 Founder。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ §5 DELIVERY ═══════ -->
+  <section id="s5" class="arch-section">
+    <div class="sec-head">
+      <div class="sec-num"><strong>05</strong>FLOW · 12 STATES</div>
+      <div>
+        <h2 class="sec-h2">五步交付流程 + 12 状态机<span class="sbadge">单向状态推进 · 失败回环</span></h2>
+        <p class="sec-lead">每个功能从「Proposed 提案」流到「Released 发布」需穿过 12 个治理状态、由 6 个角色协同推进。任意门禁失败均回环至最近一个可修复的角色泳道，而不是回到起点。</p>
+      </div>
+    </div>
+
+    <div class="pipeline-arch">
+      <div class="step s1">
+        <div class="sn">STEP 01</div>
+        <div class="st">Cap-Spec 冻结</div>
+        <div class="so">Owner: <b>Founder + PM</b></div>
+        <div class="sd">在 hl-contracts 写入能力规约（行为 / 不变量 / 边界），由 Founder 二人评审签发 contract-locked tag。</div>
+      </div>
+      <div class="step s2">
+        <div class="sn">STEP 02</div>
+        <div class="st">Design + HPRD</div>
+        <div class="so">Owner: <b>PM + Designer</b></div>
+        <div class="sd">PM 撰写 HPRD（高保真 PRD），Designer 产出 DTCG token 与 Widgetbook 组件，pm-hprd-pass 通过后冻结。</div>
+      </div>
+      <div class="step s3">
+        <div class="sn">STEP 03</div>
+        <div class="st">AI-First 实现</div>
+        <div class="so">Owner: <b>Engineer</b></div>
+        <div class="sd">Engineer 以 AI 协助方式编码，强制 TDD（先写 L2 测试 → 再实现），Draft PR 持续推送，触发 L1 + L2 反馈循环。</div>
+      </div>
+      <div class="step s4">
+        <div class="sn">STEP 04</div>
+        <div class="st">门禁 + QA</div>
+        <div class="so">Owner: <b>CI + QA</b></div>
+        <div class="sd">L1 → L2 → L3 顺序执行；QA 设计的 DD-TEST 行为场景跑通 → 签发 qa-verdict。</div>
+      </div>
+      <div class="step s5">
+        <div class="sn">STEP 05</div>
+        <div class="st">PM 验收 + 合并</div>
+        <div class="so">Owner: <b>PM + Founder</b></div>
+        <div class="sd">PM 执行端到端 HPRD 验收 → pm-acceptance 通过 → Founder squash & merge → release-train 自动产出版本。</div>
+      </div>
+    </div>
+
+    <div class="lanes">
+      <div class="lhead">
+        <div class="label">Owner / State</div>
+        <div>① Proposed</div>
+        <div>② Contract<br>Locked</div>
+        <div>③ Cap-Spec<br>Frozen</div>
+        <div>④ HPRD<br>Passed</div>
+        <div>⑤ Design<br>Approved</div>
+        <div>⑥ In<br>Development</div>
+        <div>⑦ Draft PR<br>Open</div>
+        <div>⑧ L1-L3<br>Running</div>
+        <div>⑨ Gates<br>Passed</div>
+        <div>⑩ QA<br>Passed</div>
+        <div>⑪ PM<br>Accepted</div>
+        <div>⑫ Released</div>
+      </div>
+      <div class="lane pm">
+        <div class="lname"><span class="clr"></span>PM</div>
+        <div class="cell s"><span class="state-tag">提案</span></div>
+        <div class="cell"></div><div class="cell"></div>
+        <div class="cell s"><span class="state-tag">HPRD✓</span></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell s"><span class="state-tag">验收</span></div>
+        <div class="cell"></div>
+      </div>
+      <div class="lane gov">
+        <div class="lname"><span class="clr"></span>Founder</div>
+        <div class="cell"></div>
+        <div class="cell s"><span class="state-tag">合约🔒</span></div>
+        <div class="cell s"><span class="state-tag">CapSpec🔒</span></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell s"><span class="state-tag">合并→发布</span></div>
+      </div>
+      <div class="lane des">
+        <div class="lname"><span class="clr"></span>Designer</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell s"><span class="state-tag">DTCG✓</span></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      </div>
+      <div class="lane eng">
+        <div class="lname"><span class="clr"></span>Engineer</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell s"><span class="state-tag">编码</span></div>
+        <div class="cell s"><span class="state-tag">Draft PR</span></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      </div>
+      <div class="lane ci">
+        <div class="lname"><span class="clr"></span>CI / hl-factory</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell s"><span class="state-tag">L1·L2·L3</span></div>
+        <div class="cell s"><span class="state-tag">门禁✓</span></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      </div>
+      <div class="lane qa">
+        <div class="lname"><span class="clr"></span>QA</div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell s"><span class="state-tag">qa-verdict</span></div>
+        <div class="cell"></div><div class="cell"></div>
+      </div>
+    </div>
+    <div class="loop-note">
+      <b>↺ 失败回环规则：</b>L1/L2 失败 → 回 ⑥ Engineer · L3 失败 → 回 ⑥ Engineer + 通知 QA · qa-verdict 拒绝 → 回 ⑦ Draft PR · pm-acceptance 拒绝 → 回 ④ HPRD 复盘（如属于语义偏差）或 ⑥ Engineer（如属于实现偏差）。<b>禁止跨回 ① ② ③</b>，需重新走合约冻结流程。
+    </div>
+  </section>
+
+  <!-- ═══════ §6 DOCS & FORBIDDEN ═══════ -->
+  <section id="s6" class="arch-section">
+    <div class="sec-head">
+      <div class="sec-num"><strong>06</strong>DOCS · FORBIDDEN</div>
+      <div>
+        <h2 class="sec-h2">文档体系 + Phase 0 禁区<span class="sbadge">SSOT 优先级链 · 6 项禁用</span></h2>
+        <p class="sec-lead">所有治理决策需遵循 <b>飞书公告 ≻ TEAM-COLLAB v2.1 Pilot ≻ TECH-STACK v3 ≻ RULINGS ≻ SAAC-HL-EP-001 ≻ SAAC-HL-001</b> 优先级链。Phase 0 阶段为降低复杂度，明令禁用以下 6 类组件，待具备明确需求 + Ruling 解锁后方可引入。</p>
+      </div>
+    </div>
+
+    <div class="docs-tree">
+      <span class="root">SAAC-HL · 唤龙治理文档体系</span><br>
+      <span class="br">├──</span> <span class="doc"><b>SAAC-HL-001</b> 顶层架构与原则</span> <span class="ver">v1.1</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/cap-specs/saac-hl-001.md</span><br>
+      <span class="br">├──</span> <span class="doc"><b>SAAC-HL-EP-001</b> 工程实践扩展提案</span> <span class="ver">v0.3</span> <span class="stat proposed">⚙ PROPOSED</span> <span class="src">/proposals/saac-hl-ep-001.md</span><br>
+      <span class="br">├──</span> <span class="doc"><b>TEAM-COLLABORATION-SPEC</b> 团队协作规范</span> <span class="ver">v2.1</span> <span class="stat draft">📝 DRAFT · Pilot</span> <span class="src">huanlongai.github.io/hl-dispatch</span><br>
+      <span class="br">├──</span> <span class="doc"><b>TECH-STACK-SPEC</b> 技术栈选型</span> <span class="ver">v3</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/cap-specs/tech-stack-v3.md</span><br>
+      <span class="br">├──</span> <span class="doc"><b>DD-TEST</b> 设计驱动测试规范</span> <span class="ver">v1.1</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/cap-specs/dd-test-v1.1.md</span><br>
+      <span class="br">├──</span> <span class="doc"><b>UI-DELIVERY-SPEC</b> 设计交付规范</span> <span class="ver">v1.0</span> <span class="stat draft">📝 DRAFT</span> <span class="src">/proposals/ui-delivery-v1.md</span><br>
+      <span class="br">├──</span> <span class="doc"><b>FRONTEND-REPO-SPEC</b> 前端仓库结构</span> <span class="ver">v1</span> <span class="stat draft">📝 DRAFT</span> <span class="src">/proposals/frontend-repo-v1.md</span><br>
+      <span class="br">└──</span> <span class="doc"><b>RULINGS / 裁决索引</b></span> <span class="ver">live</span> <span class="stat locked">🔒 BLOCKING</span> <span class="src">H-001 (no implicit Spring scan) · H-002 (JPA only) · J-01 ⏳ · J-03 ⏳</span>
+    </div>
+
+    <div class="forbidden">
+      <div class="fb-card">
+        <div class="head"><div class="name">① 外部消息队列</div><div class="icon">✕</div></div>
+        <div class="why">禁用 Kafka / RabbitMQ / RocketMQ / Pulsar — 由 Spring Modulith Event Publication Log + Outbox 替代，零外部依赖。</div>
+        <div class="unlock">解锁条件：<b>跨 service 异步 + 持久化吞吐 ≥ 5k tps</b></div>
+      </div>
+      <div class="fb-card">
+        <div class="head"><div class="name">② Redis / Cache 层</div><div class="icon">✕</div></div>
+        <div class="why">禁用 Redis / Caffeine / EhCache — Phase 0 数据规模 PostgreSQL 18 + index 完全覆盖；缓存引入需 SLO 证明。</div>
+        <div class="unlock">解锁条件：<b>p95 query > 200ms 持续 14 天</b></div>
+      </div>
+      <div class="fb-card">
+        <div class="head"><div class="name">③ Keycloak / 外部 IdP</div><div class="icon">✕</div></div>
+        <div class="why">禁用 Keycloak / Auth0 / Casbin — 使用 Spring Security 内置 JWT + 应用级 RBAC，避免运维负担与外部锁定。</div>
+        <div class="unlock">解锁条件：<b>需要联合身份 / SAML / 第三方登录</b></div>
+      </div>
+      <div class="fb-card">
+        <div class="head"><div class="name">④ Nacos / Apollo 配置中心</div><div class="icon">✕</div></div>
+        <div class="why">禁用任何外部配置中心 — application.yml + Spring Profiles + GitOps 静态发布；动态配置在 Phase 0 是过度工程。</div>
+        <div class="unlock">解锁条件：<b>多区域 + 实时灰度需求</b></div>
+      </div>
+      <div class="fb-card">
+        <div class="head"><div class="name">⑤ gRPC / Thrift</div><div class="icon">✕</div></div>
+        <div class="why">禁用 gRPC / Thrift / Protobuf RPC — 仅 OpenAPI 3 + REST/JSON；服务边界由 Spring Modulith 模块化解决，不依赖跨进程协议。</div>
+        <div class="unlock">解锁条件：<b>跨语言服务 + 流式 RPC 必要</b></div>
+      </div>
+      <div class="fb-card">
+        <div class="head"><div class="name">⑥ JOOQ / MyBatis</div><div class="icon">✕</div></div>
+        <div class="why">禁用所有非 JPA 数据访问层（H-002 BLOCKING）— 维持单一 ORM 心智模型，避免 schema 漂移与 N+1 调试矩阵爆炸。</div>
+        <div class="unlock">解锁条件：<b>无（H-002 永久 BLOCKING）</b></div>
+      </div>
+      <div class="fb-card warn">
+        <div class="head"><div class="name">⚠ Kubernetes</div><div class="icon">⏳</div></div>
+        <div class="why">DEFERRED — Phase 0 用 systemd + docker compose 即可承载流量；K8s 引入需 CapEx + 运维 headcount 评估。</div>
+        <div class="unlock">解锁条件：<b>≥ 3 节点常驻 + 自动扩缩需求</b></div>
+      </div>
+      <div class="fb-card warn">
+        <div class="head"><div class="name">⚠ Terraform / IaC</div><div class="icon">⏳</div></div>
+        <div class="why">PENDING（J-01）— 当前云资源由脚本声明；待 J-01 裁决签发后切换至 Terraform 单源管理。</div>
+        <div class="unlock">解锁条件：<b>RULING J-01 签发</b></div>
+      </div>
+      <div class="fb-card warn">
+        <div class="head"><div class="name">⚠ Riverpod (J-03)</div><div class="icon">⏳</div></div>
+        <div class="why">PENDING（J-03）— 客户端状态管理拟定 Riverpod，但等待 J-03 Ruling 最终签发，期间默认使用 Provider 简化实现。</div>
+        <div class="unlock">解锁条件：<b>RULING J-03 签发</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ Footer ═══════ -->
+  <footer class="arch-footer">
+    <div class="leg">
+      <div><b>颜色图例 · Color Legend</b></div>
+      <span class="swatch" style="background:var(--founder)"></span> 治理 / Founder · 合约层 &nbsp;
+      <span class="swatch" style="background:var(--pm)"></span> 语义 / PM · HPRD &nbsp;
+      <span class="swatch" style="background:var(--design)"></span> 设计 / Designer · DTCG &nbsp;
+      <span class="swatch" style="background:var(--eng)"></span> 工程 / Engineer · 实现 &nbsp;
+      <span class="swatch" style="background:var(--qa)"></span> 质量 / QA · L3 + 锁定状态 &nbsp;
+      <span class="swatch" style="background:var(--ops)"></span> 运维 / Ops · CI &nbsp;
+      <span class="swatch" style="background:var(--danger)"></span> 禁区 / 阻断 BLOCKING
+      <br>
+      <b>状态图例：</b>🔒 LOCKED 不可变 · 📝 DRAFT 草案 · ⚙ PROPOSED 提案 · ⏳ DEFERRED/PENDING 待解锁 · ✕ DENY 永久禁用
+    </div>
+    <div class="sig">
+      <b>SAAC-HL-001 v1.1</b> + <b>TEAM-COLLAB v2.1</b><br>
+      源 SSOT · huanlongai.github.io/hl-dispatch<br>
+      绘制：<b>2026-04-16</b> · 基线：HK-KERNEL-AUDIT 2026-04-07
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

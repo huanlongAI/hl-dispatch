@@ -32,7 +32,11 @@ echo "✓ gh CLI 已认证"
 echo "→ 创建 orphan 分支 $BRANCH ..."
 git checkout --orphan "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
 
-# 确保所有文件已暂存
+# 清理 macOS 元数据，避免污染发布产物
+echo "→ 清理 .DS_Store / ._* 元数据 ..."
+find . -type f \( -name '.DS_Store' -o -name '._*' \) -not -path './.git/*' -delete 2>/dev/null || true
+
+# 确保所有文件已暂存（.gitignore 已排除 .DS_Store 等噪声）
 git add -A
 
 # 提交

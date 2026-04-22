@@ -8,29 +8,155 @@
 <style>
 body { min-width:1200px; }
 
-/* ── Pipeline Canvas ── */
-.pl-canvas { max-width:980px; margin:0 auto 24px; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; position:relative; overflow:hidden; }
-.pl-canvas::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#24292F,#6C5CE7,#FF6A00,#00B894); background-size:300% 100%; animation:shimmer 4s linear infinite; }
+/* ── Hero ── */
+.pl-hero {
+  text-align:left; padding:48px 32px 28px;
+  background:linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%);
+  position:relative; overflow:hidden;
+}
+.pl-hero::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 18% 50%,rgba(108,92,231,0.20) 0%,transparent 55%),
+    radial-gradient(circle at 82% 50%,rgba(255,106,0,0.12) 0%,transparent 55%);
+}
+.pl-hero .inner { max-width:1200px; margin:0 auto; position:relative; z-index:1; }
+.pl-hero .eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:0.78rem; color:var(--text-muted); letter-spacing:0.18em; text-transform:uppercase;
+  margin-bottom:14px; font-weight:600;
+}
+.pl-hero .eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--secondary); box-shadow:0 0 8px var(--secondary); animation:pulse 2s ease infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,184,148,0.4)} 50%{box-shadow:0 0 0 8px rgba(0,184,148,0)} }
+.pl-hero h1 { font-size:2.2em; font-weight:900; margin:0; line-height:1.3; }
+.pl-hero h1 span { background:linear-gradient(135deg,#FF6A00,#FDCB6E); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.pl-hero p.lead { margin:10px 0 0; color:var(--text-muted); font-size:1em; max-width:780px; }
+.pl-hero .badges { margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
+.pl-hero .hbadge { padding:4px 12px; border-radius:16px; font-size:0.78rem; border:1px solid; }
+.pl-hero .hbadge.b1 { background:rgba(108,92,231,0.15); border-color:var(--primary); color:var(--primary-light); }
+.pl-hero .hbadge.b2 { background:rgba(0,184,148,0.15); border-color:var(--secondary); color:var(--secondary); }
+.pl-hero .hbadge.b3 { background:rgba(255,106,0,0.15); border-color:#FF6A00; color:#FFA66B; }
+
+/* ── Tabs Nav ── */
+.tabs-nav-wrap { position:sticky; top:0; z-index:50; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(8px); }
+.tabs-nav { max-width:1200px; margin:0 auto; display:flex; gap:2px; padding:0 24px; overflow-x:auto; }
+.tabs-nav button {
+  padding:14px 18px; background:none; border:none; color:var(--text-muted);
+  font-size:0.88em; font-weight:600; cursor:pointer; position:relative;
+  border-bottom:3px solid transparent; transition:all 0.25s; white-space:nowrap;
+  display:flex; align-items:center; gap:8px;
+}
+.tabs-nav button .tn-num {
+  width:22px; height:22px; border-radius:50%; background:rgba(108,92,231,0.15);
+  color:var(--primary-light); font-size:0.75em; font-weight:800;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.tabs-nav button:hover { color:var(--text); background:rgba(108,92,231,0.05); }
+.tabs-nav button.active { color:var(--text); border-bottom-color:var(--primary); }
+.tabs-nav button.active .tn-num { background:var(--primary); color:#fff; }
+
+/* ── Tab Pane ── */
+.tab-pane { display:none; max-width:1200px; margin:0 auto; padding:32px 32px 64px; animation:fadeSlide 0.35s ease; }
+.tab-pane.active { display:block; }
+@keyframes fadeSlide { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.tab-pane h2 { font-size:1.4em; font-weight:700; margin:0 0 16px; color:var(--text); }
+.tab-pane h3 { font-size:1.08em; font-weight:600; margin:24px 0 10px; color:var(--primary-light); }
+.tab-pane p { color:var(--text); margin:0 0 12px; line-height:1.7; }
+
+/* ── Interactive Pipeline ── */
+.il-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:24px; position:relative; overflow:hidden; margin-bottom:20px; }
+.il-wrap::before { content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg,#24292F,#6C5CE7,#FF6A00,#00B894); background-size:300% 100%; animation:shimmer 4s linear infinite; }
 @keyframes shimmer { 0%{background-position:300% 0} 100%{background-position:0 0} }
-.pl-svg { width:100%; }
-.pl-svg .lane-bg { fill:rgba(15,15,26,0.4); stroke:#2D2D4A; stroke-width:1; }
-.pl-svg .lane-label { font-size:10px; font-weight:700; fill:#9999B0; text-transform:uppercase; letter-spacing:0.5px; }
-.pl-svg .node { cursor:pointer; transition:all 0.3s; }
-.pl-svg .node:hover { filter:brightness(1.25); }
-.pl-svg .node-label { pointer-events:none; font-size:10px; font-weight:700; fill:#E8E8F0; }
-.pl-svg .node-sub { pointer-events:none; font-size:8px; fill:#9999B0; }
-.pl-svg .arrow { stroke:#4A4A6A; stroke-width:1.5; fill:none; marker-end:url(#plArrow); }
-.pl-svg .arrow.blocking { stroke:var(--danger); stroke-dasharray:3,2; }
-.pl-svg .arrow.highlight { stroke:var(--primary); stroke-width:2; }
-.pl-svg .button-badge { font-size:9px; font-weight:800; fill:#FDCB6E; }
 
-/* ── Lane legend ── */
-.lane-legend { display:flex; gap:20px; justify-content:center; margin-top:12px; flex-wrap:wrap; font-size:0.78em; color:var(--text-muted); }
-.lane-legend span { display:flex; align-items:center; gap:6px; }
-.lane-legend i { width:12px; height:12px; display:inline-block; border-radius:3px; }
+/* Progress bar */
+.il-prog { display:flex; gap:3px; margin-bottom:20px; border-radius:6px; overflow:hidden; }
+.il-prog-seg { flex:1; height:6px; background:#2D2D4A; transition:background 0.4s; cursor:pointer; }
+.il-prog-seg.done { background:var(--secondary); }
+.il-prog-seg.active { background:var(--primary); box-shadow:0 0 8px rgba(108,92,231,0.5); }
+.il-prog-seg.failed { background:var(--danger); }
 
-/* ── Button-right compact matrix ── */
-.btn-matrix { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:20px 0; }
+/* Controls */
+.il-ctrl { display:flex; gap:10px; justify-content:center; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
+.il-btn { padding:7px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:0.85em; cursor:pointer; transition:all 0.2s; }
+.il-btn:hover { border-color:var(--primary); background:rgba(108,92,231,0.1); }
+.il-btn.playing { border-color:var(--secondary); color:var(--secondary); }
+.il-btn.primary { background:var(--primary); border-color:var(--primary); color:#fff; font-weight:700; }
+.il-btn.primary:hover { filter:brightness(1.15); }
+.il-speed { display:flex; align-items:center; gap:6px; font-size:0.8em; color:var(--text-muted); }
+.il-speed select { background:var(--bg-card); border:1px solid var(--border); color:var(--text); border-radius:6px; padding:4px 8px; font-size:0.85em; }
+
+/* SVG */
+.il-svg { width:100%; height:auto; }
+.il-svg .lane-bg { fill:rgba(15,15,26,0.45); stroke:#2D2D4A; stroke-width:1; }
+.il-svg .lane-label { font-size:11px; font-weight:700; fill:#9999B0; text-transform:uppercase; letter-spacing:0.5px; }
+.il-svg .il-node { cursor:pointer; transition:transform 0.25s; }
+.il-svg .il-node:hover { transform:translateY(-2px); }
+.il-svg .il-node-bg { transition:all 0.4s; }
+.il-svg .il-node-ring { fill:none; stroke:transparent; stroke-width:3; transition:all 0.4s; }
+.il-svg .il-node-ring.active { stroke:var(--primary); filter:drop-shadow(0 0 10px rgba(108,92,231,0.7)); }
+.il-svg .il-node-ring.done { stroke:var(--secondary); }
+.il-svg .il-node-ring.failed { stroke:var(--danger); }
+.il-svg .il-node-label { pointer-events:none; font-size:10px; font-weight:700; fill:#E8E8F0; }
+.il-svg .il-node-sub { pointer-events:none; font-size:8px; fill:#9999B0; }
+.il-svg .il-node-icon { pointer-events:none; font-size:14px; }
+.il-svg .il-arrow { stroke:#3A3A5A; stroke-width:1.8; fill:none; marker-end:url(#ilArrow); transition:all 0.4s; }
+.il-svg .il-arrow.lit { stroke:var(--primary); stroke-width:2.5; stroke-dasharray:4,3; animation:dashflow 0.6s linear infinite; marker-end:url(#ilArrowLit); }
+@keyframes dashflow { to { stroke-dashoffset:-14; } }
+.il-svg .il-arrow.done { stroke:var(--secondary); stroke-width:2; }
+.il-svg .il-button-pill { pointer-events:none; }
+.il-svg .il-button-pill text { font-size:9px; font-weight:800; fill:#FDCB6E; }
+.il-svg .il-status-dot { transition:all 0.4s; }
+.il-svg .il-status-dot.pending { fill:#4A4A6A; }
+.il-svg .il-status-dot.running { fill:var(--primary); animation:nodepulse 1.2s ease infinite; }
+.il-svg .il-status-dot.done { fill:var(--secondary); }
+.il-svg .il-status-dot.failed { fill:var(--danger); }
+@keyframes nodepulse { 0%,100%{r:4;opacity:0.9} 50%{r:6;opacity:1} }
+
+/* Detail panel below SVG */
+.il-detail { background:rgba(15,15,26,0.5); border:1px solid var(--border); border-radius:10px; padding:18px 20px; margin-top:16px; min-height:120px; animation:fadeUp 0.25s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.il-detail-head { display:flex; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+.il-detail-idx { width:32px; height:32px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.85em; }
+.il-detail-title { font-size:1.05em; font-weight:700; }
+.il-detail-lane { font-size:0.72em; padding:2px 9px; border-radius:10px; font-weight:600; }
+.il-detail-body { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:8px; }
+.il-dc { padding:10px 12px; background:var(--bg-card); border-radius:8px; }
+.il-dc-label { font-size:0.68em; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:4px; }
+.il-dc-value { font-size:0.85em; color:var(--text); line-height:1.5; }
+.il-dc-value .chip { display:inline-block; padding:1px 7px; border-radius:5px; font-size:0.78em; font-weight:600; }
+.il-detail-desc { margin-top:14px; padding:10px 14px; background:rgba(108,92,231,0.08); border-left:3px solid var(--primary); border-radius:6px; font-size:0.85em; color:var(--text); line-height:1.7; }
+
+/* Legend */
+.il-legend { display:flex; gap:18px; justify-content:center; margin-top:14px; flex-wrap:wrap; font-size:0.78em; color:var(--text-muted); }
+.il-legend span { display:flex; align-items:center; gap:5px; }
+.il-legend i { width:11px; height:11px; display:inline-block; border-radius:3px; }
+
+/* Tables */
+table.spec-table { width:100%; border-collapse:collapse; margin:10px 0; font-size:0.88em; }
+table.spec-table th, table.spec-table td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+table.spec-table th { background:rgba(108,92,231,0.08); color:var(--text-muted); font-weight:600; font-size:0.76em; text-transform:uppercase; letter-spacing:0.3px; }
+table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,239,196,0.08); padding:1px 5px; border-radius:4px; }
+
+.chip { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.74em; font-weight:600; }
+.chip.blocking { background:rgba(225,112,85,0.15); color:var(--danger); border:1px solid rgba(225,112,85,0.3); }
+.chip.advisory { background:rgba(253,203,110,0.15); color:var(--accent); border:1px solid rgba(253,203,110,0.3); }
+.chip.pm { background:rgba(116,185,255,0.15); color:var(--pm); }
+.chip.qa { background:rgba(255,234,167,0.15); color:var(--qa); }
+.chip.ops { background:rgba(250,177,160,0.15); color:var(--ops); }
+.chip.founder { background:rgba(162,155,254,0.15); color:var(--founder); }
+.chip.eng { background:rgba(85,239,196,0.15); color:var(--eng); }
+
+.callout { padding:14px 18px; border-radius:8px; margin:14px 0; border-left:4px solid; }
+.callout.warn { background:rgba(253,203,110,0.08); border-color:var(--accent); }
+.callout.danger { background:rgba(225,112,85,0.08); border-color:var(--danger); }
+.callout.info { background:rgba(116,185,255,0.08); border-color:var(--pm); }
+.callout.success { background:rgba(0,184,148,0.08); border-color:var(--secondary); }
+.callout strong { display:block; margin-bottom:4px; }
+.callout p { margin:4px 0 0; font-size:0.9em; }
+
+/* Button matrix */
+.btn-matrix { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
 .btn-cell { padding:14px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; position:relative; }
 .btn-cell.pm { border-left:3px solid var(--pm); }
 .btn-cell.qa { border-left:3px solid var(--qa); }
@@ -38,27 +164,32 @@ body { min-width:1200px; }
 .btn-cell.founder { border-left:3px solid var(--founder); }
 .btn-cell .bt-name { font-weight:700; font-size:0.92em; margin-bottom:4px; font-family:'SF Mono','Monaco',monospace; }
 .btn-cell .bt-owner { font-size:0.82em; color:var(--text); }
-.btn-cell .bt-where { font-size:0.74em; color:var(--text-muted); margin-top:6px; }
+.btn-cell .bt-where { font-size:0.74em; color:var(--text-muted); margin-top:6px; line-height:1.5; }
 
-.nav-back { padding:20px 24px; max-width:980px; margin:20px auto 0; display:flex; justify-content:space-between; gap:12px; font-size:0.85em; }
+/* Flow steps */
+.flow-steps-mini { margin:10px 0; }
+.flow-step-mini { display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; padding:12px 14px; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; }
+.flow-step-mini .fsm-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; flex-shrink:0; font-size:0.82em; }
+.flow-step-mini .fsm-body h4 { margin:0 0 3px; font-size:0.94em; }
+.flow-step-mini .fsm-body p { margin:0; font-size:0.82em; color:var(--text-muted); line-height:1.6; }
+.flow-step-mini .fsm-tags { display:flex; gap:5px; margin-top:6px; flex-wrap:wrap; }
+
+/* Nav back */
+.nav-back { padding:24px 32px; max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; gap:12px; font-size:0.85em; border-top:1px solid var(--border); }
 .nav-back a { padding:8px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text-muted); text-decoration:none; transition:all 0.25s; }
 .nav-back a:hover { border-color:var(--primary); color:var(--primary-light); }
 
-.pipeline-inline-note { font-size:0.78em; color:var(--text-muted); margin-top:4px; }
 .top-nav a { cursor:pointer; }
+.term-link { text-decoration:none; border-bottom:1px dotted var(--primary-light); color:var(--primary-light); }
+.term-link:hover { background:rgba(108,92,231,0.1); }
 
-.chip { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.74em; font-weight:600; vertical-align:middle; }
-.chip.blocking { background:rgba(225,112,85,0.15); color:var(--danger); border:1px solid rgba(225,112,85,0.3); }
-.chip.advisory { background:rgba(253,203,110,0.15); color:var(--accent); border:1px solid rgba(253,203,110,0.3); }
-.chip.pm { background:rgba(116,185,255,0.15); color:var(--pm); }
-.chip.qa { background:rgba(255,234,167,0.15); color:var(--qa); }
-.chip.ops { background:rgba(250,177,160,0.15); color:var(--ops); }
-.chip.founder { background:rgba(162,155,254,0.15); color:var(--founder); }
-
-table.spec-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.88em; }
-table.spec-table th, table.spec-table td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
-table.spec-table th { background:rgba(108,92,231,0.08); color:var(--text-muted); font-weight:600; font-size:0.78em; text-transform:uppercase; letter-spacing:0.3px; }
-table.spec-table code { font-size:0.85em; color:var(--eng); background:rgba(85,239,196,0.08); padding:1px 5px; border-radius:4px; }
+/* Sub-section cards for §7 */
+.relate-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px; }
+.relate-card { display:block; padding:16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; text-decoration:none; color:var(--text); transition:all 0.3s; }
+.relate-card:hover { border-color:var(--primary); transform:translateX(3px); }
+.relate-card h4 { margin:0 0 6px; font-size:0.95em; }
+.relate-card p { margin:0; font-size:0.78em; color:var(--text-muted); line-height:1.6; }
+.relate-card .rc-tag { display:inline-block; margin-top:6px; padding:2px 8px; border-radius:6px; font-size:0.72em; }
 </style>
 </head>
 <body>
@@ -69,6 +200,7 @@ table.spec-table code { font-size:0.85em; color:var(--eng); background:rgba(85,2
     <a href="../index.html">首页</a>
     <a href="global.html">全局工作流</a>
     <a href="architecture.html">系统架构图</a>
+    <a href="github-yunxiao-pipeline.html" class="active">流水线指南</a>
     <a href="product.html">产品团队</a>
     <a href="frontend-design.html">前端与设计</a>
     <a href="engineering.html">工程师</a>
@@ -84,462 +216,511 @@ table.spec-table code { font-size:0.85em; color:var(--eng); background:rgba(85,2
     本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
 </div>
 
-<div class="page-header" style="max-width:980px;margin:0 auto;padding:28px 24px 16px;">
-  <h1 style="font-size:1.9em;margin:0;">GitHub + 云效 <span>流水线指南</span></h1>
-  <p class="meta">
-    PR（Pull Request，合并请求）从提交到上线，在 GitHub 与阿里云云效之间如何流转 · 谁按哪个按钮 · 在哪一关会卡住。
-  </p>
-  <p class="meta" style="margin-top:8px;">
-    <span class="badge">可视化 + 规范 · 二合一</span>
-    <span class="badge" style="background:rgba(0,184,148,0.15);border-color:var(--secondary);color:var(--secondary);">DRAFT · 2026-04-22 首发</span>
-  </p>
-</div>
-
-<div class="content">
-
-<!-- ═══ §1 TL;DR ═══ -->
-<h2 id="tldr">§1 · 一分钟读懂</h2>
-
-<div class="callout info">
-  <strong>核心两句话</strong>
-  <p style="margin:6px 0 0;">① GitHub 负责<strong>代码合入</strong>：PR → Required Status Checks（必须通过的强制检查）→ Merge（合并）。<br>
-  ② 云效 负责<strong>制品与部署</strong>：合入 <code>main</code> 后触发镜像构建 → 部署编排（蓝绿/灰度）→ 健康巡检。</p>
-</div>
-
-<p>这两套系统<strong>职责不重叠</strong>：GitHub 是<a href="glossary.html#term-semantic-sovereignty" class="term-link">代码合入门禁</a>的权威，云效是<a href="glossary.html#term-blue-green-canary" class="term-link">运行态部署</a>的权威。跨系统的衔接点只有一个——合入 <code>main</code> 的那一刻，GitHub Webhook 通知云效开始构建。</p>
-
-<p><strong>为什么需要两套</strong>：GitHub 的 Actions 做不了 <a href="glossary.html#term-blue-green-canary" class="term-link">蓝绿/金丝雀发布</a>（Blue-Green / Canary，渐进式上线）、回滚、多可用区编排；云效做不了代码评审与 <a href="glossary.html#term-required-status-check" class="term-link">Required Status Checks</a>（组织级强制检查）。分工合作，谁专业谁来做。</p>
-
-<!-- ═══ §2 全景流程图 ═══ -->
-<h2 id="overview">§2 · 全景流程图</h2>
-
-<p>下图把 PR 从创建到线上的全流程拆成 <strong>3 条泳道</strong>（Lane，并行执行的通道）：本地开发、GitHub 门禁、云效部署。</p>
-
-<div class="pl-canvas">
-  <svg class="pl-svg" viewBox="0 0 940 520" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <marker id="plArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-        <polygon points="0 0, 8 3, 0 6" fill="#6C5CE7"/>
-      </marker>
-    </defs>
-
-    <!-- Lane backgrounds -->
-    <rect class="lane-bg" x="10" y="10" width="920" height="110" rx="8"/>
-    <rect class="lane-bg" x="10" y="130" width="920" height="240" rx="8"/>
-    <rect class="lane-bg" x="10" y="380" width="920" height="130" rx="8"/>
-
-    <!-- Lane labels -->
-    <text class="lane-label" x="22" y="30">① 本地开发</text>
-    <text class="lane-label" x="22" y="150">② GitHub · 代码合入门禁</text>
-    <text class="lane-label" x="22" y="400">③ 云效 · 制品 &amp; 部署</text>
-
-    <!-- ═══ Lane 1: Local ═══ -->
-    <g class="node">
-      <rect x="30" y="50" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#55EFC4" stroke-width="1.5"/>
-      <text class="node-label" x="42" y="72">本地 commit</text>
-      <text class="node-sub" x="42" y="86">工程师 feature 分支</text>
-    </g>
-    <path class="arrow" d="M170,75 L220,75"/>
-
-    <g class="node">
-      <rect x="220" y="50" width="130" height="50" rx="8" fill="#0F0F1A" stroke="#55EFC4" stroke-width="1.5"/>
-      <text class="node-label" x="232" y="72">git push</text>
-      <text class="node-sub" x="232" y="86">推送到 GitHub</text>
-    </g>
-    <path class="arrow" d="M350,75 L400,75"/>
-
-    <g class="node">
-      <rect x="400" y="50" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#A29BFE" stroke-width="1.5"/>
-      <text class="node-label" x="412" y="72">创建 Pull Request</text>
-      <text class="node-sub" x="412" y="86">工程师 @ Reviewer</text>
-    </g>
-
-    <!-- arrow from lane 1 (Create PR) into lane 2 (CI trigger) -->
-    <path class="arrow" d="M475,100 L475,160"/>
-
-    <!-- ═══ Lane 2: GitHub ═══ -->
-    <g class="node">
-      <rect x="400" y="160" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
-      <text class="node-label" x="412" y="182">GitHub Actions</text>
-      <text class="node-sub" x="412" y="196">L1 格式 · L2 构建 · L3 单测</text>
-    </g>
-    <path class="arrow" d="M475,210 L475,240"/>
-
-    <g class="node">
-      <rect x="400" y="240" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
-      <text class="node-label" x="412" y="262">L4 契约 &amp; 集成测试</text>
-      <text class="node-sub" x="412" y="276">BLOCKING · 约 2–8min</text>
-    </g>
-
-    <!-- Side: 3 required status checks -->
-    <g class="node">
-      <rect x="600" y="160" width="160" height="40" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
-      <text class="node-label" x="612" y="184">qa-verdict</text>
-      <text class="button-badge" x="700" y="184">BLOCKING</text>
-    </g>
-    <text class="node-sub" x="610" y="216">QA 按钮 · 李云峰</text>
-
-    <g class="node">
-      <rect x="600" y="230" width="160" height="40" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
-      <text class="node-label" x="612" y="254">pm-acceptance</text>
-      <text class="button-badge" x="700" y="254">BLOCKING</text>
-    </g>
-    <text class="node-sub" x="610" y="286">PM 按钮 · 能力包 PM Owner</text>
-
-    <g class="node">
-      <rect x="600" y="300" width="160" height="40" rx="8" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
-      <text class="node-label" x="612" y="324">pm-hprd-pass</text>
-      <text class="button-badge" x="704" y="324" fill="#FDCB6E">ADVISORY</text>
-    </g>
-
-    <!-- Merge gate -->
-    <g class="node">
-      <rect x="230" y="300" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#A29BFE" stroke-width="2"/>
-      <text class="node-label" x="242" y="322">Merge button</text>
-      <text class="node-sub" x="242" y="336">按钮权：INV-0 童正辉</text>
-    </g>
-    <path class="arrow" d="M475,290 L300,300"/>
-    <path class="arrow highlight" d="M370,325 L470,325"/>
-
-    <g class="node">
-      <rect x="470" y="300" width="110" height="50" rx="8" fill="#0F0F1A" stroke="#00B894" stroke-width="1.5"/>
-      <text class="node-label" x="482" y="322">合入 main</text>
-      <text class="node-sub" x="482" y="336">Webhook → 云效</text>
-    </g>
-
-    <!-- arrow from lane 2 to lane 3 -->
-    <path class="arrow highlight" d="M525,350 L525,400"/>
-
-    <!-- ═══ Lane 3: Yunxiao ═══ -->
-    <g class="node">
-      <rect x="30" y="410" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
-      <text class="node-label" x="42" y="432">① 镜像构建</text>
-      <text class="node-sub" x="42" y="446">Dockerfile · 推送制品仓库</text>
-    </g>
-    <path class="arrow" d="M170,435 L220,435"/>
-
-    <g class="node">
-      <rect x="220" y="410" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
-      <text class="node-label" x="232" y="432">② 部署编排</text>
-      <text class="node-sub" x="232" y="446">staging → canary → prod</text>
-    </g>
-    <path class="arrow" d="M370,435 L420,435"/>
-
-    <g class="node">
-      <rect x="420" y="410" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
-      <text class="node-label" x="432" y="432">③ 健康巡检</text>
-      <text class="node-sub" x="432" y="446">Observability 看板</text>
-    </g>
-    <path class="arrow" d="M560,435 L610,435"/>
-
-    <g class="node">
-      <rect x="610" y="410" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#00B894" stroke-width="1.5"/>
-      <text class="node-label" x="622" y="432">④ 上线完成</text>
-      <text class="node-sub" x="622" y="446">Released 状态回写</text>
-    </g>
-
-    <g class="node">
-      <rect x="760" y="410" width="160" height="50" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
-      <text class="node-label" x="772" y="432">⚠️ 回滚按钮</text>
-      <text class="node-sub" x="772" y="446">按钮权：曾正龙（Ops Lead）</text>
-    </g>
-  </svg>
-
-  <div class="lane-legend">
-    <span><i style="background:#55EFC4;"></i> 工程师操作</span>
-    <span><i style="background:#FDCB6E;"></i> CI 自动检查</span>
-    <span><i style="background:#E17055;"></i> 人工 BLOCKING 按钮</span>
-    <span><i style="background:#A29BFE;"></i> 治理节点</span>
-    <span><i style="background:#FF6A00;"></i> 云效 编排</span>
-  </div>
-</div>
-
-<p class="pipeline-inline-note">图示说明：qa-verdict / pm-acceptance 两个 BLOCKING 按钮与 CI 自动检查并行执行，<strong>全部绿灯</strong>后 Merge button 才可点击；<a href="gate-levels.html#section4" class="term-link">详细规则见"门禁体系详解 §4"</a>（本页不重复）。</p>
-
-<!-- ═══ §3 GitHub 侧 ═══ -->
-<h2 id="github">§3 · GitHub 侧 · 代码合入</h2>
-
-<p>GitHub 这一侧是<strong>门禁方</strong>，核心产物有三类：分支保护（Branch Protection）、GitHub Actions（CI 脚本）、Required Status Checks（组织级强制检查）。</p>
-
-<h3>§3.1 · 分支策略</h3>
-
-<div class="table-wrapper">
-<table class="spec-table">
-  <thead>
-    <tr><th>分支</th><th>允许谁推送</th><th>保护规则</th><th>用途</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>main</code></td>
-      <td>禁止直推</td>
-      <td>PR only · 强制 Required Checks · 禁止 force push</td>
-      <td>发布基线 · 与云效 prod 对齐</td>
-    </tr>
-    <tr>
-      <td><code>feature/*</code></td>
-      <td>工程师</td>
-      <td>无保护 · 建议每次 rebase <code>main</code></td>
-      <td>日常开发</td>
-    </tr>
-    <tr>
-      <td><code>release/*</code></td>
-      <td>Ops Lead（曾正龙）</td>
-      <td>只允许 cherry-pick 合入 <code>main</code> 的 commit</td>
-      <td>稳定版回归测试 · 补丁发布</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<h3>§3.2 · Required Status Checks（组织级强制检查）</h3>
-
-<div class="callout warn">
-  <strong>⚠️ 权威源在 <a href="gate-levels.html#section4" class="term-link">门禁体系详解 §4</a></strong>
-  <p style="margin:6px 0 0;">本页不重复 Required Status Checks 的定义与审批权限表。以下只列出<strong>在流水线上的落位</strong>：哪个检查出现在 PR 的哪个阶段。</p>
-</div>
-
-<div class="table-wrapper">
-<table class="spec-table">
-  <thead>
-    <tr><th>Check</th><th>来源</th><th>触发时机</th><th>典型耗时</th></tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>qa-verdict</code> <span class="chip blocking">BLOCKING</span></td>
-      <td>QA 团队后台（人工）</td>
-      <td>PR 打开后 · QA 完成验收场景测试</td>
-      <td>数小时 – 1 天</td>
-    </tr>
-    <tr>
-      <td><code>pm-acceptance</code> <span class="chip blocking">BLOCKING</span></td>
-      <td>PM 在 PR 页面点击 Approve</td>
-      <td>代码 review 与 QA 验收完成后</td>
-      <td>约 30min</td>
-    </tr>
-    <tr>
-      <td><code>pm-hprd-pass</code> <span class="chip advisory">ADVISORY</span></td>
-      <td>hl-factory 流程内检查（自动）</td>
-      <td>PR 创建时立即触发</td>
-      <td>约 10s</td>
-    </tr>
-    <tr>
-      <td>GitHub Actions CI</td>
-      <td><code>.github/workflows/*.yml</code></td>
-      <td>每次 push 到 PR 分支</td>
-      <td>约 2–8min（L1–L4 完整跑）</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<h3>§3.3 · Merge 策略</h3>
-
-<p>三种合并方式的选择规则：</p>
-
-<ul>
-  <li><strong>Squash and merge</strong>（压缩合并，默认）—— 适用于 99% 的能力包 PR。把 feature 分支的 N 次 commit 压成一个 commit 进 <code>main</code>，保持主干历史干净。</li>
-  <li><strong>Rebase and merge</strong>（变基合并）—— 仅限 Ops Lead 用于 <code>release/*</code> 分支 cherry-pick 场景。</li>
-  <li><strong>Merge commit</strong>（合并提交） —— <strong>已禁用</strong>。避免主干出现 "Merge pull request #xxx" 噪声。</li>
-</ul>
-
-<h3>§3.4 · Merge Queue（合并队列）</h3>
-
-<p>当多个 PR 同时就绪时，GitHub Merge Queue 串行化合并：每个 PR 在进入 <code>main</code> 前都以最新 <code>main</code> 为 base 重跑一遍 CI。这保证<strong>语义合并</strong>——两个单独绿灯但合并后冲突的 PR 不会同时进主干。</p>
-
-<!-- ═══ §4 云效侧 ═══ -->
-<h2 id="yunxiao">§4 · 云效 侧 · 制品与部署</h2>
-
-<p>云效接管 <code>main</code> 合入之后的所有工作。分两个大块：<strong>镜像构建</strong>和<strong>部署编排</strong>。</p>
-
-<h3>§4.1 · 镜像构建（Container Build）</h3>
-
-<div class="flow-steps">
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--primary);">1</div>
-    <div class="flow-body">
-      <h4>Webhook 触发</h4>
-      <p>GitHub <code>main</code> 合入 → 云效流水线收到 push 事件，拉取最新 commit。</p>
+<!-- ═══ Hero ═══ -->
+<section class="pl-hero">
+  <div class="inner">
+    <div class="eyebrow"><span class="dot"></span>流水线全景 · v2.1.3-patch · 2026-04-22</div>
+    <h1>GitHub + 云效 <span>流水线指南</span></h1>
+    <p class="lead">
+      从工程师提交 PR（Pull Request，合并请求）到新版本跑在 prod 上，12 个关键步骤跨越两套系统：GitHub（代码合入门禁）与阿里云云效（制品与部署）。本页把这条完整路径画成可交互流程图，并用二级 Tab 组织所有细节。
+    </p>
+    <div class="badges">
+      <span class="hbadge b1">可视化 + 规范 二合一</span>
+      <span class="hbadge b2">12 步交互演示</span>
+      <span class="hbadge b3">按钮权落位 · 熔断规则</span>
     </div>
   </div>
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--primary);">2</div>
-    <div class="flow-body">
-      <h4>Docker build</h4>
-      <p>按 <code>Dockerfile</code> 构建镜像，打上 tag（格式：<code>&lt;branch&gt;-&lt;commit-sha7&gt;-&lt;timestamp&gt;</code>）。</p>
-    </div>
-  </div>
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--primary);">3</div>
-    <div class="flow-body">
-      <h4>镜像扫描</h4>
-      <p>Trivy 扫高危漏洞 · License 合规检查（非 GPL-3.0）。任一失败阻断后续部署。</p>
-    </div>
-  </div>
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--primary);">4</div>
-    <div class="flow-body">
-      <h4>推送到制品仓库（ACR）</h4>
-      <p>阿里云容器镜像服务 Container Registry。镜像保留期：prod 标签永久；非 prod 标签 30 天。</p>
-    </div>
+</section>
+
+<!-- ═══ Tabs Nav ═══ -->
+<div class="tabs-nav-wrap">
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="overview"><span class="tn-num">1</span>总览</button>
+    <button class="tab-btn" data-tab="flow"><span class="tn-num">2</span>全景流程图</button>
+    <button class="tab-btn" data-tab="github"><span class="tn-num">3</span>GitHub 侧</button>
+    <button class="tab-btn" data-tab="yunxiao"><span class="tn-num">4</span>云效 侧</button>
+    <button class="tab-btn" data-tab="buttons"><span class="tn-num">5</span>按钮权</button>
+    <button class="tab-btn" data-tab="failure"><span class="tn-num">6</span>失败与熔断</button>
+    <button class="tab-btn" data-tab="relate"><span class="tn-num">7</span>相关页面</button>
   </div>
 </div>
 
-<h3>§4.2 · 部署编排（Deployment Pipeline）</h3>
+<!-- ═══ Tab 1: Overview ═══ -->
+<section class="tab-pane active" id="tab-overview">
+  <h2>§1 · 一分钟读懂</h2>
 
-<p>四段递进 · 全程可观测 · 任一段失败可一键回滚：</p>
+  <div class="callout info">
+    <strong>核心两句话</strong>
+    <p>① GitHub 负责<strong>代码合入</strong>：PR → Required Status Checks（必须通过的强制检查）→ Merge（合并）。<br>
+    ② 云效 负责<strong>制品与部署</strong>：合入 <code>main</code> 后触发镜像构建 → 部署编排（蓝绿 / 金丝雀） → 健康巡检。</p>
+  </div>
 
-<div class="flow-steps">
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--ops);">A</div>
-    <div class="flow-body">
-      <h4>staging 部署（自动）</h4>
-      <p>合入 <code>main</code> 后镜像自动推 staging 环境。QA 在 staging 做最终冒烟测试（约 30min）。</p>
-      <div class="flow-tags"><span class="flow-tag ops">自动</span><span class="flow-tag qa">QA 验证</span></div>
+  <h3>两套系统的职责分工</h3>
+  <p>这两套系统<strong>职责不重叠</strong>：GitHub 是<a href="glossary.html#term-semantic-sovereignty" class="term-link">代码合入门禁</a>的权威，云效是<a href="glossary.html#term-blue-green-canary" class="term-link">运行态部署</a>的权威。跨系统的衔接点只有一个——合入 <code>main</code> 的那一刻，GitHub Webhook 通知云效开始构建。</p>
+
+  <p><strong>为什么需要两套</strong>：GitHub Actions 做不了 <a href="glossary.html#term-blue-green-canary" class="term-link">蓝绿 / 金丝雀发布</a>（渐进式上线）、回滚、多可用区编排；云效做不了代码评审与 <a href="glossary.html#term-required-status-check" class="term-link">Required Status Checks</a>（组织级强制检查）。分工合作，谁专业谁来做。</p>
+
+  <h3>本页怎么读</h3>
+  <ol>
+    <li>先打开 Tab 2 "全景流程图"——按"播放"按钮走完一次完整演示，建立全局印象。</li>
+    <li>在演示中点击任何节点——该节点的详细说明展开在流程图下方。</li>
+    <li>通过 Tab 3~7 深入对应细节——每个 Tab 是一个独立主题的完整说明。</li>
+  </ol>
+
+  <div class="callout success">
+    <strong>阅读时长</strong>
+    <p>TL;DR 1 分钟 · 流程图演示 90 秒 · 全量阅读 10 分钟 · 作为规范查阅按需跳 Tab。</p>
+  </div>
+</section>
+
+<!-- ═══ Tab 2: Flow Diagram ═══ -->
+<section class="tab-pane" id="tab-flow">
+  <h2>§2 · 全景流程图 · 12 步交互演示</h2>
+  <p>三条泳道（本地开发 / GitHub / 云效）· 12 个节点 · 点击任意节点查看详情，或"播放"按钮观看完整旅程。</p>
+
+  <div class="il-wrap">
+    <!-- Progress -->
+    <div class="il-prog" id="ilProg"></div>
+
+    <!-- Controls -->
+    <div class="il-ctrl">
+      <button class="il-btn primary" id="ilPlayBtn" onclick="ilToggle()">▶ 播放完整演示</button>
+      <button class="il-btn" onclick="ilStep(-1)">◀ 上一步</button>
+      <button class="il-btn" onclick="ilStep(1)">下一步 ▶</button>
+      <button class="il-btn" onclick="ilReset()">↻ 重置</button>
+      <button class="il-btn" id="ilFailBtn" onclick="ilSimFail()">⚠ 演示失败分支</button>
+      <span class="il-speed">速度 <select id="ilSpeed"><option value="2500">慢</option><option value="1800" selected>中</option><option value="1200">快</option></select></span>
+    </div>
+
+    <!-- SVG -->
+    <svg class="il-svg" viewBox="0 0 1140 560" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ilArrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+          <polygon points="0 0, 9 3.5, 0 7" fill="#3A3A5A"/>
+        </marker>
+        <marker id="ilArrowLit" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+          <polygon points="0 0, 9 3.5, 0 7" fill="#6C5CE7"/>
+        </marker>
+        <linearGradient id="grLocal" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#55EFC4" stop-opacity="0.12"/><stop offset="1" stop-color="#55EFC4" stop-opacity="0.04"/>
+        </linearGradient>
+        <linearGradient id="grGH" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#6C5CE7" stop-opacity="0.12"/><stop offset="1" stop-color="#6C5CE7" stop-opacity="0.04"/>
+        </linearGradient>
+        <linearGradient id="grYX" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#FF6A00" stop-opacity="0.12"/><stop offset="1" stop-color="#FF6A00" stop-opacity="0.04"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Lane backgrounds -->
+      <rect class="lane-bg" x="10" y="10" width="1120" height="110" rx="10" fill="url(#grLocal)" stroke="#2D4A3E"/>
+      <rect class="lane-bg" x="10" y="135" width="1120" height="250" rx="10" fill="url(#grGH)" stroke="#3A2D5A"/>
+      <rect class="lane-bg" x="10" y="400" width="1120" height="150" rx="10" fill="url(#grYX)" stroke="#5A3A2D"/>
+
+      <!-- Lane labels -->
+      <text class="lane-label" x="26" y="32">① 本地开发</text>
+      <text x="90" y="32" font-size="9" fill="#6A6A80">（工程师）</text>
+      <text class="lane-label" x="26" y="157">② GitHub · 代码合入门禁</text>
+      <text x="186" y="157" font-size="9" fill="#6A6A80">（CI + 人工 BLOCKING 按钮）</text>
+      <text class="lane-label" x="26" y="422">③ 云效 · 制品 &amp; 部署</text>
+      <text x="162" y="422" font-size="9" fill="#6A6A80">（Ops Lead 按钮面板）</text>
+
+      <!-- ═══ Lane 1 · Steps 0, 1 ═══ -->
+      <g class="il-node" data-idx="0" onclick="ilJump(0)">
+        <rect class="il-node-ring" x="37" y="52" width="146" height="58" rx="12"/>
+        <rect class="il-node-bg" x="40" y="55" width="140" height="52" rx="10" fill="#0F0F1A" stroke="#55EFC4" stroke-width="1.5"/>
+        <text class="il-node-icon" x="54" y="78">💻</text>
+        <text class="il-node-label" x="74" y="78">本地 commit</text>
+        <text class="il-node-sub" x="54" y="96">工程师 feature 分支</text>
+        <circle class="il-status-dot pending" cx="170" cy="68" r="4"/>
+      </g>
+      <path class="il-arrow" data-arr="0" d="M183,81 L218,81"/>
+
+      <g class="il-node" data-idx="1" onclick="ilJump(1)">
+        <rect class="il-node-ring" x="217" y="52" width="146" height="58" rx="12"/>
+        <rect class="il-node-bg" x="220" y="55" width="140" height="52" rx="10" fill="#0F0F1A" stroke="#55EFC4" stroke-width="1.5"/>
+        <text class="il-node-icon" x="234" y="78">📤</text>
+        <text class="il-node-label" x="254" y="78">git push</text>
+        <text class="il-node-sub" x="234" y="96">推送到 GitHub</text>
+        <circle class="il-status-dot pending" cx="350" cy="68" r="4"/>
+      </g>
+      <!-- arrow from local→github -->
+      <path class="il-arrow" data-arr="1" d="M290,110 L290,175"/>
+
+      <!-- ═══ Lane 2 · Steps 2-7 ═══ -->
+      <g class="il-node" data-idx="2" onclick="ilJump(2)">
+        <rect class="il-node-ring" x="217" y="172" width="146" height="58" rx="12"/>
+        <rect class="il-node-bg" x="220" y="175" width="140" height="52" rx="10" fill="#0F0F1A" stroke="#A29BFE" stroke-width="1.5"/>
+        <text class="il-node-icon" x="234" y="198">🧾</text>
+        <text class="il-node-label" x="254" y="198">创建 Pull Request</text>
+        <text class="il-node-sub" x="234" y="216">工程师 @ Reviewer</text>
+        <circle class="il-status-dot pending" cx="350" cy="188" r="4"/>
+      </g>
+      <path class="il-arrow" data-arr="2" d="M363,201 L398,201"/>
+
+      <g class="il-node" data-idx="3" onclick="ilJump(3)">
+        <rect class="il-node-ring" x="397" y="172" width="156" height="58" rx="12"/>
+        <rect class="il-node-bg" x="400" y="175" width="150" height="52" rx="10" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
+        <text class="il-node-icon" x="414" y="198">⚙️</text>
+        <text class="il-node-label" x="434" y="198">GitHub Actions L1–L4</text>
+        <text class="il-node-sub" x="414" y="216">格式 · 构建 · 单测 · 契约</text>
+        <circle class="il-status-dot pending" cx="540" cy="188" r="4"/>
+      </g>
+      <path class="il-arrow" data-arr="3" d="M553,201 L588,201"/>
+
+      <!-- Required Checks cluster (steps 4, 5, 6) -->
+      <g class="il-node" data-idx="4" onclick="ilJump(4)">
+        <rect class="il-node-ring" x="587" y="148" width="176" height="44" rx="10"/>
+        <rect class="il-node-bg" x="590" y="151" width="170" height="38" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
+        <text class="il-node-icon" x="600" y="174">🔍</text>
+        <text class="il-node-label" x="618" y="174">qa-verdict</text>
+        <text class="il-node-sub" x="700" y="174" font-weight="700" fill="#E17055">BLOCKING</text>
+        <circle class="il-status-dot pending" cx="750" cy="170" r="4"/>
+      </g>
+      <g class="il-node" data-idx="5" onclick="ilJump(5)">
+        <rect class="il-node-ring" x="587" y="198" width="176" height="44" rx="10"/>
+        <rect class="il-node-bg" x="590" y="201" width="170" height="38" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
+        <text class="il-node-icon" x="600" y="224">✅</text>
+        <text class="il-node-label" x="618" y="224">pm-acceptance</text>
+        <text class="il-node-sub" x="704" y="224" font-weight="700" fill="#E17055">BLOCKING</text>
+        <circle class="il-status-dot pending" cx="750" cy="220" r="4"/>
+      </g>
+      <g class="il-node" data-idx="6" onclick="ilJump(6)">
+        <rect class="il-node-ring" x="587" y="248" width="176" height="44" rx="10"/>
+        <rect class="il-node-bg" x="590" y="251" width="170" height="38" rx="8" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
+        <text class="il-node-icon" x="600" y="274">📋</text>
+        <text class="il-node-label" x="618" y="274">pm-hprd-pass</text>
+        <text class="il-node-sub" x="708" y="274" font-weight="700" fill="#FDCB6E">ADVISORY</text>
+        <circle class="il-status-dot pending" cx="750" cy="270" r="4"/>
+      </g>
+
+      <!-- connectors from L1-4 node to the 3 checks -->
+      <path class="il-arrow" data-arr="4" d="M553,215 L588,170"/>
+      <path class="il-arrow" data-arr="5" d="M553,218 L588,220"/>
+      <path class="il-arrow" data-arr="6" d="M553,221 L588,270"/>
+
+      <!-- Merge gate -->
+      <g class="il-node" data-idx="7" onclick="ilJump(7)">
+        <rect class="il-node-ring" x="807" y="198" width="146" height="58" rx="12"/>
+        <rect class="il-node-bg" x="810" y="201" width="140" height="52" rx="10" fill="#0F0F1A" stroke="#A29BFE" stroke-width="2"/>
+        <text class="il-node-icon" x="824" y="224">🔀</text>
+        <text class="il-node-label" x="844" y="224">Merge button</text>
+        <text class="il-node-sub" x="824" y="242">按钮权：INV-0 童正辉</text>
+        <circle class="il-status-dot pending" cx="940" cy="214" r="4"/>
+      </g>
+      <!-- converging arrows to Merge -->
+      <path class="il-arrow" data-arr="7" d="M763,170 L810,220"/>
+      <path class="il-arrow" data-arr="8a" d="M763,220 L810,225"/>
+      <path class="il-arrow" data-arr="8b" d="M763,270 L810,230"/>
+
+      <!-- After Merge → main -->
+      <g class="il-node" data-idx="8" onclick="ilJump(8)">
+        <rect class="il-node-ring" x="957" y="198" width="166" height="58" rx="12"/>
+        <rect class="il-node-bg" x="960" y="201" width="160" height="52" rx="10" fill="#0F0F1A" stroke="#00B894" stroke-width="1.5"/>
+        <text class="il-node-icon" x="974" y="224">🌿</text>
+        <text class="il-node-label" x="994" y="224">合入 main</text>
+        <text class="il-node-sub" x="974" y="242">Webhook → 云效</text>
+        <circle class="il-status-dot pending" cx="1110" cy="214" r="4"/>
+      </g>
+      <path class="il-arrow" data-arr="9" d="M950,227 L963,227"/>
+      <!-- connector down to yunxiao -->
+      <path class="il-arrow" data-arr="10" d="M1040,253 L1040,440"/>
+
+      <!-- ═══ Lane 3 · Steps 9, 10, 11 ═══ -->
+      <g class="il-node" data-idx="9" onclick="ilJump(9)">
+        <rect class="il-node-ring" x="37" y="450" width="166" height="58" rx="12"/>
+        <rect class="il-node-bg" x="40" y="453" width="160" height="52" rx="10" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
+        <text class="il-node-icon" x="54" y="476">📦</text>
+        <text class="il-node-label" x="74" y="476">镜像构建</text>
+        <text class="il-node-sub" x="54" y="494">Docker build + 扫描 + ACR</text>
+        <circle class="il-status-dot pending" cx="190" cy="466" r="4"/>
+      </g>
+      <path class="il-arrow" data-arr="11" d="M203,479 L238,479"/>
+
+      <g class="il-node" data-idx="10" onclick="ilJump(10)">
+        <rect class="il-node-ring" x="237" y="450" width="216" height="58" rx="12"/>
+        <rect class="il-node-bg" x="240" y="453" width="210" height="52" rx="10" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
+        <text class="il-node-icon" x="254" y="476">🚢</text>
+        <text class="il-node-label" x="274" y="476">部署编排</text>
+        <text class="il-node-sub" x="254" y="494">staging → canary 5% → prod 100%</text>
+        <circle class="il-status-dot pending" cx="440" cy="466" r="4"/>
+      </g>
+      <path class="il-arrow" data-arr="12" d="M453,479 L488,479"/>
+
+      <g class="il-node" data-idx="11" onclick="ilJump(11)">
+        <rect class="il-node-ring" x="487" y="450" width="176" height="58" rx="12"/>
+        <rect class="il-node-bg" x="490" y="453" width="170" height="52" rx="10" fill="#0F0F1A" stroke="#00B894" stroke-width="1.5"/>
+        <text class="il-node-icon" x="504" y="476">🎉</text>
+        <text class="il-node-label" x="524" y="476">Released</text>
+        <text class="il-node-sub" x="504" y="494">能力包状态回写</text>
+        <circle class="il-status-dot pending" cx="650" cy="466" r="4"/>
+      </g>
+
+      <!-- Rollback branch (failure path) -->
+      <g class="il-node" id="ilRollback" style="opacity:0.35" onclick="ilJump('R')">
+        <rect x="690" y="453" width="176" height="52" rx="10" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text class="il-node-icon" x="704" y="476">🚨</text>
+        <text class="il-node-label" x="724" y="476">回滚按钮</text>
+        <text class="il-node-sub" x="704" y="494">Ops Lead · 曾正龙</text>
+      </g>
+      <path d="M660,479 L693,479" stroke="#4A4A6A" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#ilArrow)" opacity="0.4"/>
+    </svg>
+
+    <!-- Legend -->
+    <div class="il-legend">
+      <span><i style="background:#55EFC4;"></i> 工程师操作</span>
+      <span><i style="background:#FDCB6E;"></i> CI 自动</span>
+      <span><i style="background:#E17055;"></i> BLOCKING 按钮</span>
+      <span><i style="background:#A29BFE;"></i> 治理节点</span>
+      <span><i style="background:#FF6A00;"></i> 云效编排</span>
+      <span><i style="background:#00B894;"></i> 完成 / 成功</span>
+    </div>
+
+    <!-- Detail Panel -->
+    <div class="il-detail" id="ilDetail">
+      <div class="il-detail-head">
+        <span class="il-detail-idx">0</span>
+        <span class="il-detail-title">本地 commit</span>
+        <span class="il-detail-lane" style="background:rgba(85,239,196,0.15);color:#55EFC4;">① 本地开发</span>
+      </div>
+      <div class="il-detail-body">
+        <div class="il-dc"><div class="il-dc-label">执行者</div><div class="il-dc-value"><span class="chip eng">工程师</span></div></div>
+        <div class="il-dc"><div class="il-dc-label">典型耗时</div><div class="il-dc-value">数分钟 – 数小时</div></div>
+        <div class="il-dc"><div class="il-dc-label">产物</div><div class="il-dc-value">feature 分支的 commit 序列</div></div>
+        <div class="il-dc"><div class="il-dc-label">下一步</div><div class="il-dc-value">git push 推送到 GitHub</div></div>
+      </div>
+      <div class="il-detail-desc">工程师在本地 feature 分支按 <code>git commit -m</code> 提交代码。commit 信息遵循 Conventional Commits 规范（<code>feat:</code> / <code>fix:</code> / <code>docs:</code> 等前缀）。建议每次推送前以最新 <code>main</code> 为基 rebase，避免后续 Merge Queue 冲突。</div>
     </div>
   </div>
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--ops);">B</div>
-    <div class="flow-body">
-      <h4>canary 部署（金丝雀，5% 流量）</h4>
-      <p>Ops Lead（曾正龙）在<strong>云效按钮面板</strong>点击"进入 canary"。5% 流量切到新版本，观察 30min。</p>
-      <div class="flow-tags"><span class="flow-tag ops">曾正龙 按钮</span></div>
-    </div>
+</section>
+
+<!-- ═══ Tab 3: GitHub Side ═══ -->
+<section class="tab-pane" id="tab-github">
+  <h2>§3 · GitHub 侧 · 代码合入</h2>
+  <p>GitHub 这一侧是<strong>门禁方</strong>，核心产物有三类：分支保护、GitHub Actions（CI 脚本）、Required Status Checks（组织级强制检查）。</p>
+
+  <h3>§3.1 · 分支策略</h3>
+  <table class="spec-table">
+    <thead>
+      <tr><th>分支</th><th>允许谁推送</th><th>保护规则</th><th>用途</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>main</code></td><td>禁止直推</td><td>PR only · 强制 Required Checks · 禁止 force push</td><td>发布基线 · 与云效 prod 对齐</td></tr>
+      <tr><td><code>feature/*</code></td><td>工程师</td><td>无保护 · 建议每次 rebase <code>main</code></td><td>日常开发</td></tr>
+      <tr><td><code>release/*</code></td><td>Ops Lead（曾正龙）</td><td>只允许 cherry-pick 合入 <code>main</code> 的 commit</td><td>稳定版回归测试 · 补丁发布</td></tr>
+    </tbody>
+  </table>
+
+  <h3>§3.2 · Required Status Checks（组织级强制检查）</h3>
+  <div class="callout warn">
+    <strong>⚠️ 权威源在 <a href="gate-levels.html#section4" class="term-link">门禁体系详解 §4</a></strong>
+    <p>本页不重复 Required Status Checks 的完整定义与审批权限表。以下只列出<strong>在流水线上的落位</strong>。</p>
   </div>
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--ops);">C</div>
-    <div class="flow-body">
-      <h4>prod 全量（100% 流量）</h4>
-      <p>canary 指标绿灯（错误率 &lt; 0.5% · p99 延迟无退化） → Ops Lead 点击"切 prod"。老版本保留 24h 作回滚兜底。</p>
-      <div class="flow-tags"><span class="flow-tag ops">曾正龙 按钮</span></div>
-    </div>
-  </div>
-  <div class="flow-step">
-    <div class="flow-num" style="background:var(--ops);">D</div>
-    <div class="flow-body">
-      <h4>稳定期 + Released</h4>
-      <p>prod 全量 24h 无回滚 → 能力包状态自动回写为 <a href="workflow-states.html#state-machine" class="term-link">Released</a>。</p>
-      <div class="flow-tags"><span class="flow-tag ci">自动</span></div>
-    </div>
-  </div>
-</div>
+  <table class="spec-table">
+    <thead>
+      <tr><th>Check</th><th>来源</th><th>触发时机</th><th>典型耗时</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>qa-verdict</code> <span class="chip blocking">BLOCKING</span></td><td>QA 团队后台（人工）</td><td>PR 打开后 · QA 完成验收场景测试</td><td>数小时 – 1 天</td></tr>
+      <tr><td><code>pm-acceptance</code> <span class="chip blocking">BLOCKING</span></td><td>PM 在 PR 页面点击 Approve</td><td>代码 review 与 QA 验收完成后</td><td>约 30min</td></tr>
+      <tr><td><code>pm-hprd-pass</code> <span class="chip advisory">ADVISORY</span></td><td>hl-factory 流程内检查（自动）</td><td>PR 创建时立即触发</td><td>约 10s</td></tr>
+      <tr><td>GitHub Actions CI</td><td><code>.github/workflows/*.yml</code></td><td>每次 push 到 PR 分支</td><td>约 2–8min（L1–L4 完整跑）</td></tr>
+    </tbody>
+  </table>
 
-<h3>§4.3 · 回滚（Rollback）</h3>
-
-<div class="callout danger">
-  <strong>🚨 回滚只有一个按钮 · 只有 Ops Lead 能按</strong>
-  <p style="margin:6px 0 0;">触发条件：canary/prod 指标告警（错误率 &gt; 1% · p99 退化 &gt; 30% · 健康巡检失败）。云效控制台一键切回上一个 prod 标签，<strong>无需代码 revert</strong>。回滚后 24h 内 Ops Lead 必须提交 <a href="glossary.html#term-blocking-advisory" class="term-link">事故复盘</a>。</p>
-</div>
-
-<!-- ═══ §5 按钮权在流水线上的落位 ═══ -->
-<h2 id="buttons">§5 · 按钮权在流水线上的落位</h2>
-
-<p>流水线的关键决策点都由<strong>按钮权</strong>控制。按钮权 = 物理上能按下那个按钮的人。以下 5 个按钮贯穿整条流水线：</p>
-
-<div class="btn-matrix">
-  <div class="btn-cell founder">
-    <div class="bt-name">Merge button</div>
-    <div class="bt-owner">INV-0 童正辉</div>
-    <div class="bt-where">GitHub PR 页面 · 所有 Required Checks 绿灯后可按</div>
-  </div>
-  <div class="btn-cell qa">
-    <div class="bt-name">qa-verdict</div>
-    <div class="bt-owner">李云峰（QA Lead）</div>
-    <div class="bt-where">QA 团队后台 · 验收场景全通过后打 Approve</div>
-  </div>
-  <div class="btn-cell pm">
-    <div class="bt-name">pm-acceptance</div>
-    <div class="bt-owner">能力包 PM Owner</div>
-    <div class="bt-where">GitHub PR 页面 · Approve review（团队统筹由 PM Lead 邹骢负责）</div>
-  </div>
-  <div class="btn-cell pm">
-    <div class="bt-name">pm-hprd-pass</div>
-    <div class="bt-owner">能力包 PM Owner</div>
-    <div class="bt-where">hl-factory 流程自动检 · PM 在 Cap-Spec 阶段完成 HPRD 后自动绿灯</div>
-  </div>
-  <div class="btn-cell ops">
-    <div class="bt-name">进 canary / 切 prod / 回滚</div>
-    <div class="bt-owner">曾正龙（Ops Lead）</div>
-    <div class="bt-where">云效控制台按钮面板 · 所有环境切换与回滚</div>
-  </div>
-</div>
-
-<div class="callout info">
-  <strong>📘 按钮权与签字边界的区别</strong>
-  <p style="margin:6px 0 0;">按钮权在<strong>物理层</strong>（谁能点），签字边界在<strong>治理层</strong>（谁要为决定负责）。两者经常重合但不等价——例如 INV-0 按 Merge button 不代表 INV-0 要为代码质量负责，QA 的 qa-verdict 才是质量签字。完整签字边界见 <a href="team-leads.html#signature-matrix" class="term-link">团队代表 · 签字矩阵</a>。</p>
-</div>
-
-<!-- ═══ §6 失败路径与熔断 ═══ -->
-<h2 id="failure">§6 · 失败路径与熔断</h2>
-
-<p>流水线不是"一路绿灯直到上线"的理想路径，60% 的 PR 都会在某个节点卡住。以下是三类常见失败及处置：</p>
-
-<h3>§6.1 · GitHub 侧失败</h3>
-
-<ul>
-  <li><strong>CI 红灯</strong>（L1 格式 / L2 构建 / L3 单测 / L4 契约失败）—— 工程师修，push 新 commit，Actions 自动重跑。</li>
-  <li><strong>qa-verdict 打回</strong>（Request Changes）—— QA 在 PR 里写明拒绝原因，工程师修，QA 复测。</li>
-  <li><strong>pm-acceptance 打回</strong>—— PM 认为实现与 <a href="glossary.html#term-cap-spec" class="term-link">Cap-Spec</a> 不一致，工程师与 PM 对齐，必要时修改 Cap-Spec 走治理流程。</li>
-  <li><strong>Merge Queue 冲突</strong>—— 前车 PR 改动与本 PR 冲突，Queue 自动把本 PR 踢出，工程师 rebase 后重新入队。</li>
-</ul>
-
-<h3>§6.2 · 云效构建失败</h3>
-
-<ul>
-  <li><strong>Docker build 失败</strong>—— Dockerfile 与 <code>main</code> 代码不同步。工程师补 PR 修 Dockerfile。</li>
-  <li><strong>镜像扫描阻断</strong>（Trivy 高危）—— 升级依赖，补 PR。紧急情况走 <a href="glossary.html#term-power-separation" class="term-link">WAIVER</a>（临时豁免）走治理审批。</li>
-</ul>
-
-<h3>§6.3 · 云效部署失败（熔断）</h3>
-
-<div class="callout danger">
-  <strong>🛑 熔断阈值（自动回滚触发）</strong>
-  <ul style="margin:6px 0 0 16px;">
-    <li>canary 阶段：错误率 &gt; 1% 持续 5min</li>
-    <li>prod 切量：p99 延迟退化 &gt; 50%</li>
-    <li>健康巡检：任意核心接口 5xx &gt; 10 次 / min</li>
+  <h3>§3.3 · Merge 策略</h3>
+  <ul>
+    <li><strong>Squash and merge</strong>（压缩合并，默认）—— 99% 能力包 PR。把 feature 分支的 N 次 commit 压成一个 commit 进 <code>main</code>。</li>
+    <li><strong>Rebase and merge</strong>（变基合并）—— 仅限 Ops Lead 用于 <code>release/*</code> cherry-pick。</li>
+    <li><strong>Merge commit</strong>（合并提交）—— <strong>已禁用</strong>。避免主干出现 "Merge pull request #xxx" 噪声。</li>
   </ul>
-  <p style="margin:6px 0 0;">以上任一达成 → 云效自动停止切量 + 告警 Ops Lead。由 Ops Lead 决定手动回滚 or 继续观察。</p>
-</div>
 
-<!-- ═══ §7 与其他页面的关系 ═══ -->
-<h2 id="links">§7 · 与其他页面的关系</h2>
+  <h3>§3.4 · Merge Queue（合并队列）</h3>
+  <p>当多个 PR 同时就绪，GitHub Merge Queue 串行化合并：每个 PR 在进入 <code>main</code> 前都以最新 <code>main</code> 为 base 重跑 CI。保证<strong>语义合并</strong>——两个单独绿灯但合并后冲突的 PR 不会同时进主干。</p>
+</section>
 
-<p>本页的定位是 <strong>"GitHub + 云效 两套系统的流水线说明"</strong>。更细的规则，去以下页面：</p>
+<!-- ═══ Tab 4: Yunxiao Side ═══ -->
+<section class="tab-pane" id="tab-yunxiao">
+  <h2>§4 · 云效 侧 · 制品与部署</h2>
+  <p>云效接管 <code>main</code> 合入之后的所有工作，分两大块：镜像构建 + 部署编排。</p>
 
-<div class="card-grid">
-  <a class="card" href="gate-levels.html#section4" style="text-decoration:none;">
-    <h3>🛡️ 门禁体系详解 · §4</h3>
-    <p>Required Status Checks 组织级规则的权威定义（<code>qa-verdict</code> / <code>pm-acceptance</code> / <code>pm-hprd-pass</code>），含审批权限表。本页不重复。</p>
-    <span class="tag" style="background:rgba(253,203,110,0.15);color:#FDCB6E;">权威源</span>
-  </a>
-  <a class="card" href="workflow-states.html#state-machine" style="text-decoration:none;">
-    <h3>⚡ 12 状态机详解</h3>
-    <p>能力包从 Proposed 到 Released 的 12 状态。本页流水线图示的每一步会对应一次状态跃迁。</p>
-    <span class="tag" style="background:rgba(108,92,231,0.15);color:#A29BFE;">上下文</span>
-  </a>
-  <a class="card" href="ops.html" style="text-decoration:none;">
-    <h3>🔧 运维人员指南</h3>
-    <p>Ops Lead（曾正龙）在云效上的日常操作清单：按钮面板、看板、应急预案。</p>
-    <span class="tag" style="background:rgba(250,177,160,0.15);color:var(--ops);">实操</span>
-  </a>
-  <a class="card" href="team-leads.html#signature-matrix" style="text-decoration:none;">
-    <h3>👥 团队代表 · 签字矩阵</h3>
-    <p>按钮权之外的治理签字边界：哪位 Lead 要为哪个决定负责。</p>
-    <span class="tag" style="background:rgba(162,155,254,0.15);color:var(--founder);">治理</span>
-  </a>
-  <a class="card" href="engineering.html" style="text-decoration:none;">
-    <h3>⚙️ 工程师团队指南</h3>
-    <p>工程师日常在 GitHub 上的操作细则（feature 分支、PR 规范、rebase 流程）。</p>
-    <span class="tag" style="background:rgba(85,239,196,0.15);color:var(--eng);">实操</span>
-  </a>
-  <a class="card" href="repo-directory.html" style="text-decoration:none;">
-    <h3>📂 六仓库架构详解</h3>
-    <p>GitHub 上的 6 个唤龙仓库 · CODEOWNERS · 能力包跨仓库流转。</p>
-    <span class="tag" style="background:rgba(85,239,196,0.15);color:var(--eng);">拓扑</span>
-  </a>
-</div>
+  <h3>§4.1 · 镜像构建（Container Build）</h3>
+  <div class="flow-steps-mini">
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--primary);">1</div>
+      <div class="fsm-body"><h4>Webhook 触发</h4><p>GitHub <code>main</code> 合入 → 云效流水线收到 push 事件，拉取最新 commit。</p></div>
+    </div>
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--primary);">2</div>
+      <div class="fsm-body"><h4>Docker build</h4><p>按 <code>Dockerfile</code> 构建镜像，打 tag：<code>&lt;branch&gt;-&lt;sha7&gt;-&lt;timestamp&gt;</code>。</p></div>
+    </div>
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--primary);">3</div>
+      <div class="fsm-body"><h4>镜像扫描</h4><p>Trivy 扫高危漏洞 · License 合规检查（非 GPL-3.0）。任一失败阻断后续部署。</p></div>
+    </div>
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--primary);">4</div>
+      <div class="fsm-body"><h4>推送到制品仓库（ACR）</h4><p>阿里云容器镜像服务。镜像保留期：prod 标签永久；非 prod 标签 30 天。</p></div>
+    </div>
+  </div>
 
-</div>
+  <h3>§4.2 · 部署编排（Deployment Pipeline）</h3>
+  <p>四段递进 · 全程可观测 · 任一段失败可一键回滚。</p>
+  <div class="flow-steps-mini">
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--ops);">A</div>
+      <div class="fsm-body"><h4>staging 部署（自动）</h4><p>合入 <code>main</code> 后镜像自动推 staging 环境。QA 在 staging 做最终冒烟测试（约 30min）。</p><div class="fsm-tags"><span class="chip ops">自动</span><span class="chip qa">QA 验证</span></div></div>
+    </div>
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--ops);">B</div>
+      <div class="fsm-body"><h4>canary 部署（金丝雀，5% 流量）</h4><p>Ops Lead（曾正龙）在<strong>云效按钮面板</strong>点击"进入 canary"。5% 流量切到新版本，观察 30min。</p><div class="fsm-tags"><span class="chip ops">曾正龙 按钮</span></div></div>
+    </div>
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--ops);">C</div>
+      <div class="fsm-body"><h4>prod 全量（100% 流量）</h4><p>canary 指标绿灯（错误率 &lt; 0.5% · p99 延迟无退化） → Ops Lead 点击"切 prod"。老版本保留 24h 作回滚兜底。</p><div class="fsm-tags"><span class="chip ops">曾正龙 按钮</span></div></div>
+    </div>
+    <div class="flow-step-mini">
+      <div class="fsm-num" style="background:var(--ops);">D</div>
+      <div class="fsm-body"><h4>稳定期 + Released</h4><p>prod 全量 24h 无回滚 → 能力包状态自动回写 <a href="workflow-states.html#state-machine" class="term-link">Released</a>。</p><div class="fsm-tags"><span class="chip eng">自动</span></div></div>
+    </div>
+  </div>
+
+  <h3>§4.3 · 回滚（Rollback）</h3>
+  <div class="callout danger">
+    <strong>🚨 回滚只有一个按钮 · 只有 Ops Lead 能按</strong>
+    <p>触发条件：canary / prod 指标告警（错误率 &gt; 1% · p99 退化 &gt; 30% · 健康巡检失败）。云效控制台一键切回上一个 prod 标签，<strong>无需代码 revert</strong>。回滚后 24h 内 Ops Lead 必须提交 <a href="glossary.html#term-blocking-advisory" class="term-link">事故复盘</a>。</p>
+  </div>
+</section>
+
+<!-- ═══ Tab 5: Buttons ═══ -->
+<section class="tab-pane" id="tab-buttons">
+  <h2>§5 · 按钮权在流水线上的落位</h2>
+  <p>流水线的关键决策点都由<strong>按钮权</strong>控制。按钮权 = 物理上能按下那个按钮的人。以下 5 个按钮贯穿整条流水线：</p>
+
+  <div class="btn-matrix">
+    <div class="btn-cell founder">
+      <div class="bt-name">Merge button</div>
+      <div class="bt-owner">INV-0 童正辉</div>
+      <div class="bt-where">GitHub PR 页面 · 所有 Required Checks 绿灯后可按</div>
+    </div>
+    <div class="btn-cell qa">
+      <div class="bt-name">qa-verdict</div>
+      <div class="bt-owner">李云峰（QA Lead）</div>
+      <div class="bt-where">QA 团队后台 · 验收场景全通过后打 Approve</div>
+    </div>
+    <div class="btn-cell pm">
+      <div class="bt-name">pm-acceptance</div>
+      <div class="bt-owner">能力包 PM Owner</div>
+      <div class="bt-where">GitHub PR 页面 · Approve review（团队统筹由 PM Lead 邹骢负责）</div>
+    </div>
+    <div class="btn-cell pm">
+      <div class="bt-name">pm-hprd-pass</div>
+      <div class="bt-owner">能力包 PM Owner</div>
+      <div class="bt-where">hl-factory 流程自动检 · PM 在 Cap-Spec 阶段完成 HPRD 后自动绿灯</div>
+    </div>
+    <div class="btn-cell ops">
+      <div class="bt-name">进 canary / 切 prod / 回滚</div>
+      <div class="bt-owner">曾正龙（Ops Lead）</div>
+      <div class="bt-where">云效控制台按钮面板 · 所有环境切换与回滚</div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>📘 按钮权与签字边界的区别</strong>
+    <p>按钮权在<strong>物理层</strong>（谁能点），签字边界在<strong>治理层</strong>（谁要为决定负责）。两者经常重合但不等价——例如 INV-0 按 Merge button 不代表 INV-0 要为代码质量负责，QA 的 qa-verdict 才是质量签字。完整签字边界见 <a href="team-leads.html#signature-matrix" class="term-link">团队代表 · 签字矩阵</a>。</p>
+  </div>
+
+  <h3>§5.1 · 按钮权时序</h3>
+  <p>一个能力包 PR 从打开到上线，5 个按钮按以下顺序点击：</p>
+  <ol>
+    <li><code>pm-hprd-pass</code> —— 自动检查（HPRD 存在即绿），PM 在 Cap-Spec 阶段已完成。</li>
+    <li><code>qa-verdict</code> —— QA Lead 在验收场景全通过后打 Approve（可能与 pm-acceptance 并行）。</li>
+    <li><code>pm-acceptance</code> —— 能力包 PM Owner 确认代码实现与 Cap-Spec 一致。</li>
+    <li><code>Merge button</code> —— INV-0 看到三项 Required Checks 全绿灯 → 点击合并。</li>
+    <li><code>进 canary / 切 prod</code> —— Ops Lead 在 canary 5% 观察 30min 达标后切 prod。</li>
+  </ol>
+</section>
+
+<!-- ═══ Tab 6: Failure ═══ -->
+<section class="tab-pane" id="tab-failure">
+  <h2>§6 · 失败路径与熔断</h2>
+  <p>流水线不是"一路绿灯直到上线"的理想路径，60% 的 PR 都会在某个节点卡住。以下是三类常见失败及处置：</p>
+
+  <h3>§6.1 · GitHub 侧失败</h3>
+  <ul>
+    <li><strong>CI 红灯</strong>（L1 格式 / L2 构建 / L3 单测 / L4 契约失败）—— 工程师修，push 新 commit，Actions 自动重跑。</li>
+    <li><strong>qa-verdict 打回</strong>（Request Changes）—— QA 在 PR 里写明拒绝原因，工程师修，QA 复测。</li>
+    <li><strong>pm-acceptance 打回</strong>—— PM 认为实现与 <a href="glossary.html#term-cap-spec" class="term-link">Cap-Spec</a> 不一致，工程师与 PM 对齐，必要时修改 Cap-Spec 走治理流程。</li>
+    <li><strong>Merge Queue 冲突</strong>—— 前车 PR 改动与本 PR 冲突，Queue 自动把本 PR 踢出，工程师 rebase 后重新入队。</li>
+  </ul>
+
+  <h3>§6.2 · 云效构建失败</h3>
+  <ul>
+    <li><strong>Docker build 失败</strong>—— Dockerfile 与 <code>main</code> 代码不同步。工程师补 PR 修 Dockerfile。</li>
+    <li><strong>镜像扫描阻断</strong>（Trivy 高危）—— 升级依赖，补 PR。紧急情况走 <a href="glossary.html#term-power-separation" class="term-link">WAIVER</a>（临时豁免）治理审批。</li>
+  </ul>
+
+  <h3>§6.3 · 云效部署失败（熔断）</h3>
+  <div class="callout danger">
+    <strong>🛑 熔断阈值（自动回滚触发）</strong>
+    <ul style="margin:6px 0 0 16px; padding:0;">
+      <li>canary 阶段：错误率 &gt; 1% 持续 5min</li>
+      <li>prod 切量：p99 延迟退化 &gt; 50%</li>
+      <li>健康巡检：任意核心接口 5xx &gt; 10 次 / min</li>
+    </ul>
+    <p>以上任一达成 → 云效自动停止切量 + 告警 Ops Lead。由 Ops Lead 决定手动回滚 or 继续观察。</p>
+  </div>
+
+  <h3>§6.4 · 可以在全景流程图里模拟</h3>
+  <p>回到 Tab 2 "全景流程图"，点击 <strong>⚠ 演示失败分支</strong> 按钮，观察 qa-verdict 打回时流程图如何变红、如何回到工程师修改循环。</p>
+</section>
+
+<!-- ═══ Tab 7: Related ═══ -->
+<section class="tab-pane" id="tab-relate">
+  <h2>§7 · 与其他页面的关系</h2>
+  <p>本页定位是 <strong>"GitHub + 云效 两套系统的流水线说明"</strong>。更细的规则去以下页面：</p>
+
+  <div class="relate-grid">
+    <a class="relate-card" href="gate-levels.html#section4">
+      <h4>🛡️ 门禁体系详解 · §4</h4>
+      <p>Required Status Checks 组织级规则的权威定义（<code>qa-verdict</code> / <code>pm-acceptance</code> / <code>pm-hprd-pass</code>），含审批权限表。本页不重复。</p>
+      <span class="rc-tag" style="background:rgba(253,203,110,0.15);color:#FDCB6E;">权威源</span>
+    </a>
+    <a class="relate-card" href="workflow-states.html#state-machine">
+      <h4>⚡ 12 状态机详解</h4>
+      <p>能力包从 Proposed 到 Released 的 12 状态。本页流程图的每一步会对应一次状态跃迁。</p>
+      <span class="rc-tag" style="background:rgba(108,92,231,0.15);color:#A29BFE;">上下文</span>
+    </a>
+    <a class="relate-card" href="ops.html">
+      <h4>🔧 运维人员指南</h4>
+      <p>Ops Lead（曾正龙）在云效上的日常操作清单：按钮面板、看板、应急预案。</p>
+      <span class="rc-tag" style="background:rgba(250,177,160,0.15);color:var(--ops);">实操</span>
+    </a>
+    <a class="relate-card" href="team-leads.html#signature-matrix">
+      <h4>👥 团队代表 · 签字矩阵</h4>
+      <p>按钮权之外的治理签字边界：哪位 Lead 要为哪个决定负责。</p>
+      <span class="rc-tag" style="background:rgba(162,155,254,0.15);color:var(--founder);">治理</span>
+    </a>
+    <a class="relate-card" href="engineering.html">
+      <h4>⚙️ 工程师团队指南</h4>
+      <p>工程师在 GitHub 上的日常操作细则（feature 分支、PR 规范、rebase 流程）。</p>
+      <span class="rc-tag" style="background:rgba(85,239,196,0.15);color:var(--eng);">实操</span>
+    </a>
+    <a class="relate-card" href="repo-directory.html">
+      <h4>📂 六仓库架构详解</h4>
+      <p>GitHub 上的 6 个唤龙仓库 · CODEOWNERS · 能力包跨仓库流转。</p>
+      <span class="rc-tag" style="background:rgba(85,239,196,0.15);color:var(--eng);">拓扑</span>
+    </a>
+  </div>
+
+  <h3>§7.1 · 文档层级定位</h3>
+  <p>本页属于 <strong>guide layer</strong>（指南层），<strong>不包含</strong>治理性规范条款。治理条款的权威源在：</p>
+  <ul>
+    <li><code>hl-contracts/docs/TEAM-COLLABORATION-SPEC.md</code> v2.1.3-patch §A（6 Lead 条款）+ §B（按钮权矩阵）</li>
+    <li><code>hl-contracts/docs/TOOLCHAIN-GUIDE.md</code> v1（工具链建议，非强制）</li>
+  </ul>
+  <p>发现任何规则冲突，以上述 hl-contracts 源为准。</p>
+</section>
 
 <div class="nav-back">
   <a href="../index.html">&larr; 返回首页</a>
@@ -547,14 +728,200 @@ table.spec-table code { font-size:0.85em; color:var(--eng); background:rgba(85,2
 </div>
 
 <script>
-// 简单的锚点平滑滚动
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    const id = a.getAttribute('href').slice(1);
-    const t = document.getElementById(id);
-    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+// ─── Tab switching ───
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const name = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+    // scroll to top of pane
+    window.scrollTo({ top: document.querySelector('.tabs-nav-wrap').offsetTop, behavior: 'smooth' });
   });
 });
+
+// ─── Interactive Pipeline State ───
+const IL_STEPS = [
+  { idx:0, lane:'local', laneLabel:'① 本地开发', laneColor:'rgba(85,239,196,0.15)', laneFg:'#55EFC4',
+    title:'本地 commit', icon:'💻', actor:'工程师', dur:'数分钟 – 数小时',
+    output:'feature 分支的 commit 序列', next:'git push',
+    desc:'工程师在本地 feature 分支按 <code>git commit -m</code> 提交代码。commit 信息遵循 Conventional Commits 规范（<code>feat:</code> / <code>fix:</code> / <code>docs:</code> 等前缀）。建议每次推送前以最新 <code>main</code> 为基 rebase，避免后续 Merge Queue 冲突。' },
+  { idx:1, lane:'local', laneLabel:'① 本地开发', laneColor:'rgba(85,239,196,0.15)', laneFg:'#55EFC4',
+    title:'git push', icon:'📤', actor:'工程师', dur:'约 10s',
+    output:'GitHub 远端 feature 分支', next:'创建 Pull Request',
+    desc:'把本地 commit 推送到 GitHub。推送完成后，工程师在 GitHub 网页上点击 "Compare &amp; pull request" 按钮进入 PR 创建界面。' },
+  { idx:2, lane:'github', laneLabel:'② GitHub', laneColor:'rgba(162,155,254,0.15)', laneFg:'#A29BFE',
+    title:'创建 Pull Request', icon:'🧾', actor:'工程师 + Reviewer', dur:'约 15min',
+    output:'PR 包含：标题 · 描述 · 关联 Issue · @ Reviewer', next:'Actions 自动跑 · 同时等待三项 Required Checks',
+    desc:'PR 创建瞬间触发：① GitHub Actions 自动启动（L1–L4 四层 CI）；② Required Status Checks 的状态初始化（全部为 Pending）。<code>pm-hprd-pass</code> 如果 HPRD 已在 Cap-Spec 阶段生成，此时会秒变绿。' },
+  { idx:3, lane:'github', laneLabel:'② GitHub', laneColor:'rgba(162,155,254,0.15)', laneFg:'#A29BFE',
+    title:'GitHub Actions L1–L4', icon:'⚙️', actor:'CI 自动', dur:'约 2–8min',
+    output:'4 层 CI 结果：格式 · 构建 · 单测 · 契约', next:'并行等 qa-verdict / pm-acceptance',
+    desc:'L1 格式（ktlint / dart format / yamllint · ~10s）→ L2 构建（~2min）→ L3 单测（~3min）→ L4 契约 &amp; 集成测试（~3min）。任一失败立即红灯，后续不再跑。工程师可在失败 log 里看到具体失败步骤。' },
+  { idx:4, lane:'github', laneLabel:'② GitHub', laneColor:'rgba(162,155,254,0.15)', laneFg:'#A29BFE',
+    title:'qa-verdict (BLOCKING)', icon:'🔍', actor:'李云峰 / QA Lead', dur:'数小时 – 1 天',
+    output:'QA 在 PR 中的 Approve review', next:'等 pm-acceptance + Merge',
+    desc:'QA 团队在验收场景全通过后，在 PR 页面打 Approve。审批权限在 <code>@hl-qa-team</code>（组织级 Ruleset）。打回则走失败分支（见 §6.1）。' },
+  { idx:5, lane:'github', laneLabel:'② GitHub', laneColor:'rgba(162,155,254,0.15)', laneFg:'#A29BFE',
+    title:'pm-acceptance (BLOCKING)', icon:'✅', actor:'能力包 PM Owner', dur:'约 30min',
+    output:'PM 在 PR 中的 Approve review', next:'等 qa-verdict + Merge',
+    desc:'PM 确认代码实现与 Cap-Spec（能力包规格）一致。团队统筹由 PM Lead 邹骢负责，但具体按钮由每个能力包的 PM Owner 按。' },
+  { idx:6, lane:'github', laneLabel:'② GitHub', laneColor:'rgba(162,155,254,0.15)', laneFg:'#A29BFE',
+    title:'pm-hprd-pass (ADVISORY)', icon:'📋', actor:'hl-factory 自动', dur:'约 10s',
+    output:'HPRD 存在 → 绿灯', next:'不阻塞 Merge',
+    desc:'流程内检查：验证 HPRD（人机产品需求）是否已创建。<strong>非组织级 Ruleset</strong>，仅供参考，不阻塞 Merge。' },
+  { idx:7, lane:'github', laneLabel:'② GitHub', laneColor:'rgba(162,155,254,0.15)', laneFg:'#A29BFE',
+    title:'Merge button', icon:'🔀', actor:'INV-0 童正辉', dur:'约 10s',
+    output:'main 分支新 commit', next:'Webhook 通知云效',
+    desc:'所有 Required Checks（qa-verdict BLOCKING + pm-acceptance BLOCKING）绿灯后，Merge button 点击可用。按钮权归 INV-0。选择 Squash and merge（默认）。' },
+  { idx:8, lane:'github', laneLabel:'② GitHub', laneColor:'rgba(162,155,254,0.15)', laneFg:'#A29BFE',
+    title:'合入 main', icon:'🌿', actor:'GitHub 自动', dur:'约 5s',
+    output:'<code>main</code> 分支 HEAD 前进一个 commit', next:'Webhook → 云效',
+    desc:'Squash 合并后的 commit 进入 <code>main</code>。GitHub 立即向云效发 Webhook（push 事件），携带 commit SHA 和 metadata。' },
+  { idx:9, lane:'yunxiao', laneLabel:'③ 云效', laneColor:'rgba(255,106,0,0.15)', laneFg:'#FF6A00',
+    title:'镜像构建', icon:'📦', actor:'云效 自动', dur:'约 3–6min',
+    output:'带 tag 的 Docker 镜像 · 推送到 ACR', next:'部署编排',
+    desc:'Dockerfile build → Trivy 扫高危 → License 检查 → push to ACR。镜像 tag 格式：<code>&lt;branch&gt;-&lt;sha7&gt;-&lt;timestamp&gt;</code>。扫描失败阻断部署。' },
+  { idx:10, lane:'yunxiao', laneLabel:'③ 云效', laneColor:'rgba(255,106,0,0.15)', laneFg:'#FF6A00',
+    title:'部署编排', icon:'🚢', actor:'Ops Lead 按钮', dur:'1 天 – 数天',
+    output:'staging 自动 → canary 5% → prod 100%', next:'稳定期 + Released',
+    desc:'staging 自动部署（QA 冒烟 30min）→ Ops Lead 按"进 canary" 切 5% 流量（观察 30min）→ Ops Lead 按"切 prod" 切 100%（老版本保 24h）。<strong>触发熔断</strong>时自动停止切量。' },
+  { idx:11, lane:'yunxiao', laneLabel:'③ 云效', laneColor:'rgba(255,106,0,0.15)', laneFg:'#FF6A00',
+    title:'Released', icon:'🎉', actor:'云效 自动回写', dur:'prod 全量 24h 后',
+    output:'能力包状态机 → Released', next:'进入下一个能力包周期',
+    desc:'prod 全量 24h 无回滚 → 能力包状态自动回写为 <a href="workflow-states.html#state-machine" class="term-link">Released</a>。至此本能力包从 Proposed 到 Released 走完一个完整生命周期。' },
+];
+
+let ilCurrent = 0;
+let ilPlaying = false;
+let ilTimer = null;
+let ilFailMode = false;
+
+function ilInitProg() {
+  const p = document.getElementById('ilProg');
+  p.innerHTML = '';
+  for (let i=0; i<12; i++) {
+    const s = document.createElement('div');
+    s.className = 'il-prog-seg';
+    s.onclick = () => ilJump(i);
+    p.appendChild(s);
+  }
+}
+
+function ilUpdateProg() {
+  document.querySelectorAll('.il-prog-seg').forEach((s,i) => {
+    s.classList.remove('done', 'active', 'failed');
+    if (ilFailMode && i === 4) { s.classList.add('failed'); return; }
+    if (i < ilCurrent) s.classList.add('done');
+    else if (i === ilCurrent) s.classList.add('active');
+  });
+}
+
+function ilUpdateNodes() {
+  document.querySelectorAll('.il-svg [data-idx]').forEach(g => {
+    const idx = isNaN(g.dataset.idx) ? g.dataset.idx : parseInt(g.dataset.idx);
+    const ring = g.querySelector('.il-node-ring');
+    const dot = g.querySelector('.il-status-dot');
+    if (!ring || !dot) return;
+    ring.classList.remove('active', 'done', 'failed');
+    dot.classList.remove('pending', 'running', 'done', 'failed');
+    if (ilFailMode && idx === 4) {
+      ring.classList.add('failed'); dot.classList.add('failed'); return;
+    }
+    if (idx < ilCurrent) { ring.classList.add('done'); dot.classList.add('done'); }
+    else if (idx === ilCurrent) { ring.classList.add('active'); dot.classList.add('running'); }
+    else { dot.classList.add('pending'); }
+  });
+  // arrows lit
+  document.querySelectorAll('.il-svg .il-arrow').forEach(a => {
+    a.classList.remove('lit','done');
+  });
+  if (ilCurrent > 0) {
+    // lit the arrow entering current node
+    const arr = document.querySelector(`.il-svg .il-arrow[data-arr="${ilCurrent - 1}"]`);
+    if (arr) arr.classList.add('lit');
+    // mark previous arrows done
+    for (let i=0; i<ilCurrent-1; i++) {
+      const a = document.querySelector(`.il-svg .il-arrow[data-arr="${i}"]`);
+      if (a) a.classList.add('done');
+    }
+  }
+  // rollback highlight
+  const rb = document.getElementById('ilRollback');
+  if (rb) rb.style.opacity = ilFailMode ? '1' : '0.35';
+}
+
+function ilUpdateDetail() {
+  const step = IL_STEPS[ilCurrent];
+  if (!step) return;
+  let failBanner = '';
+  if (ilFailMode && ilCurrent === 4) {
+    failBanner = '<div class="callout danger" style="margin-bottom:10px;"><strong>🛑 失败分支演示</strong><p>QA 对验收场景不满意，打回 Request Changes。工程师需要修改代码，push 新 commit，然后 QA 复测。流程图上本节点标红。</p></div>';
+  }
+  document.getElementById('ilDetail').innerHTML = `
+    ${failBanner}
+    <div class="il-detail-head">
+      <span class="il-detail-idx">${step.idx}</span>
+      <span class="il-detail-title">${step.title} <span style="margin-left:6px;">${step.icon}</span></span>
+      <span class="il-detail-lane" style="background:${step.laneColor};color:${step.laneFg};">${step.laneLabel}</span>
+    </div>
+    <div class="il-detail-body">
+      <div class="il-dc"><div class="il-dc-label">执行者</div><div class="il-dc-value">${step.actor}</div></div>
+      <div class="il-dc"><div class="il-dc-label">典型耗时</div><div class="il-dc-value">${step.dur}</div></div>
+      <div class="il-dc"><div class="il-dc-label">产物</div><div class="il-dc-value">${step.output}</div></div>
+      <div class="il-dc"><div class="il-dc-label">下一步</div><div class="il-dc-value">${step.next}</div></div>
+    </div>
+    <div class="il-detail-desc">${step.desc}</div>
+  `;
+}
+
+function ilRender() {
+  ilUpdateProg();
+  ilUpdateNodes();
+  ilUpdateDetail();
+}
+
+function ilJump(i) {
+  if (i === 'R') { ilSimFail(); return; }
+  ilCurrent = Math.max(0, Math.min(11, parseInt(i)));
+  ilRender();
+}
+function ilStep(d) {
+  ilJump(ilCurrent + d);
+}
+function ilReset() {
+  ilCurrent = 0;
+  ilFailMode = false;
+  if (ilPlaying) ilToggle();
+  ilRender();
+}
+function ilToggle() {
+  ilPlaying = !ilPlaying;
+  const btn = document.getElementById('ilPlayBtn');
+  if (ilPlaying) {
+    btn.textContent = '⏸ 暂停';
+    btn.classList.add('playing');
+    const speed = parseInt(document.getElementById('ilSpeed').value);
+    ilTimer = setInterval(() => {
+      if (ilCurrent >= 11) { ilToggle(); return; }
+      ilJump(ilCurrent + 1);
+    }, speed);
+  } else {
+    btn.textContent = '▶ 播放完整演示';
+    btn.classList.remove('playing');
+    clearInterval(ilTimer);
+  }
+}
+function ilSimFail() {
+  ilFailMode = !ilFailMode;
+  if (ilFailMode) {
+    ilCurrent = 4;
+    if (ilPlaying) ilToggle();
+  }
+  ilRender();
+}
+
+ilInitProg();
+ilRender();
 </script>
 </body>
 </html>

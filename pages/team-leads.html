@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>唤龙平台 · 团队 Lead 说明（5 Lead 版）</title>
+<style>
+  :root {
+    --primary: #6C5CE7;
+    --primary-light: #A29BFE;
+    --secondary: #00B894;
+    --accent: #FDCB6E;
+    --danger: #E17055;
+    --bg: #0F0F1A;
+    --bg-card: #1A1A2E;
+    --bg-card-hover: #222240;
+    --text: #E8E8F0;
+    --text-muted: #9999B0;
+    --border: #2D2D4A;
+    --pm: #74B9FF;
+    --eng: #55EFC4;
+    --qa: #FFEAA7;
+    --ops: #FAB1A0;
+    --design: #DFE6E9;
+    --frontend: #81ECEC;
+    --founder: #A29BFE;
+    --lead: #FDCB6E;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  nav.top-nav {
+    display: flex; align-items: center; gap: 16px;
+    padding: 12px 24px; background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 200; flex-wrap: wrap;
+  }
+  .top-nav .logo {
+    font-weight: 800; font-size: 1.1em; text-decoration: none;
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .top-nav .nav-links { display: flex; gap: 4px; flex-wrap: wrap; }
+  .top-nav .nav-links a {
+    padding: 5px 14px; border-radius: 20px; font-size: 0.82em;
+    color: var(--text-muted); text-decoration: none;
+  }
+  .top-nav .nav-links a.active { color: #fff; background: var(--primary); }
+
+  .hero {
+    text-align: center; padding: 60px 24px 40px;
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: radial-gradient(circle at 20% 50%, rgba(129,236,236,0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(253,203,110,0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(250,177,160,0.1) 0%, transparent 50%);
+  }
+  .hero h1 { font-size: 2.2em; font-weight: 800; position: relative; z-index: 1; }
+  .hero h1 span { background: linear-gradient(135deg, var(--frontend), var(--lead), var(--ops)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.05em; color: var(--text-muted); margin-top: 12px; position: relative; z-index: 1; }
+  .hero .badge {
+    display: inline-block; padding: 5px 14px; background: rgba(253,203,110,0.15);
+    border: 1px solid var(--lead); border-radius: 20px; font-size: 0.82em;
+    color: var(--lead); margin-top: 16px; position: relative; z-index: 1;
+  }
+
+  .disclaimer {
+    max-width: 900px; margin: 16px auto; padding: 12px 20px;
+    background: rgba(253,203,110,0.1); border: 1px solid rgba(253,203,110,0.3);
+    border-radius: 8px; font-size: 0.88em; color: var(--accent); text-align: center;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+  section { margin: 40px 0; }
+  section > h2 {
+    font-size: 1.6em; font-weight: 700; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  section > h2 .icon { font-size: 1.2em; }
+  section > p.lead-sub { color: var(--text-muted); margin-bottom: 24px; font-size: 1em; }
+
+  .lead-card {
+    padding: 24px; margin: 16px 0;
+    background: var(--bg-card); border: 2px solid var(--border); border-radius: 16px;
+    border-left: 6px solid var(--lead);
+    transition: all 0.3s;
+  }
+  .lead-card:hover { border-color: var(--lead); transform: translateY(-2px); }
+  .lead-card.frontend-lead { border-left-color: var(--frontend); }
+  .lead-card.design-lead { border-left-color: var(--design); }
+  .lead-card.eng-lead { border-left-color: var(--eng); }
+  .lead-card.qa-lead { border-left-color: var(--qa); }
+  .lead-card.ops-lead { border-left-color: var(--ops); }
+  .lead-header { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .lead-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--lead), var(--ops));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.4em; color: #1A1A2E; flex-shrink: 0;
+  }
+  .frontend-lead .lead-avatar { background: linear-gradient(135deg, var(--frontend), var(--primary-light)); }
+  .design-lead .lead-avatar { background: linear-gradient(135deg, var(--design), var(--primary-light)); color: #1A1A2E; }
+  .eng-lead .lead-avatar { background: linear-gradient(135deg, var(--eng), var(--secondary)); }
+  .qa-lead .lead-avatar { background: linear-gradient(135deg, var(--qa), var(--accent)); }
+  .ops-lead .lead-avatar { background: linear-gradient(135deg, var(--ops), var(--danger)); }
+  .lead-name h3 { font-size: 1.3em; margin-bottom: 4px; }
+  .lead-name .title-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 12px;
+    background: rgba(253,203,110,0.15); color: var(--lead);
+    font-size: 0.75em; font-weight: 600;
+  }
+  .lead-name .team-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 12px;
+    margin-left: 6px; font-size: 0.75em; font-weight: 600;
+  }
+  .frontend-lead .team-badge { background: rgba(129,236,236,0.15); color: var(--frontend); }
+  .design-lead .team-badge { background: rgba(223,230,233,0.15); color: var(--design); }
+  .eng-lead .team-badge { background: rgba(85,239,196,0.15); color: var(--eng); }
+  .qa-lead .team-badge { background: rgba(255,234,167,0.15); color: var(--qa); }
+  .ops-lead .team-badge { background: rgba(250,177,160,0.15); color: var(--ops); }
+  .lead-responsibilities {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+  }
+  @media (max-width: 720px) { .lead-responsibilities { grid-template-columns: 1fr; } }
+  .lead-resp-box {
+    padding: 16px; background: rgba(15,15,26,0.5); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .lead-resp-box h4 { font-size: 0.95em; margin-bottom: 8px; color: var(--text); }
+  .lead-resp-box ul { list-style: none; padding-left: 0; font-size: 0.88em; color: var(--text-muted); }
+  .lead-resp-box ul li { padding: 3px 0; padding-left: 18px; position: relative; }
+  .lead-resp-box ul li::before {
+    content: '✓'; position: absolute; left: 0;
+    color: var(--secondary); font-weight: 700;
+  }
+  .lead-resp-box.not ul li::before { content: '✗'; color: var(--danger); }
+
+  .compare-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .compare-table th, .compare-table td {
+    padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.92em;
+  }
+  .compare-table th {
+    color: var(--text-muted); font-size: 0.82em; text-transform: uppercase;
+    letter-spacing: 0.5px; font-weight: 600;
+  }
+  .compare-table tr:hover td { background: rgba(108,92,231,0.05); }
+  .compare-table td.owner-col { color: var(--primary-light); font-weight: 600; }
+  .compare-table td.lead-col { color: var(--lead); font-weight: 600; }
+
+  .tldr-box {
+    padding: 24px; background: linear-gradient(135deg, rgba(108,92,231,0.1), rgba(0,184,148,0.1));
+    border: 1px solid rgba(108,92,231,0.3); border-radius: 12px; margin: 16px 0;
+  }
+  .tldr-box h3 {
+    color: var(--primary-light); margin-bottom: 12px; font-size: 1.1em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tldr-box p { font-size: 0.95em; margin-bottom: 8px; }
+  .tldr-box strong { color: var(--text); }
+
+  .rule-list { margin: 16px 0; }
+  .rule-list .rule {
+    padding: 16px 20px; margin: 8px 0;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .rule .rule-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--primary); color: #fff; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; font-size: 0.85em; flex-shrink: 0;
+  }
+  .rule .rule-body { flex: 1; }
+  .rule .rule-body h4 { font-size: 0.98em; margin-bottom: 4px; }
+  .rule .rule-body p { font-size: 0.88em; color: var(--text-muted); }
+
+  .faq-item { border-bottom: 1px solid var(--border); padding: 16px 0; }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q { font-weight: 600; color: var(--text); margin-bottom: 6px; font-size: 0.95em; }
+  .faq-q::before { content: 'Q：'; color: var(--primary-light); font-weight: 700; }
+  .faq-a { font-size: 0.9em; color: var(--text-muted); padding-left: 28px; }
+  .faq-a::before { content: 'A：'; color: var(--secondary); font-weight: 700; margin-left: -28px; margin-right: 4px; }
+
+  .cross-ref-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px; margin: 16px 0;
+  }
+  .cross-ref-card {
+    padding: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+    text-decoration: none; color: var(--text); transition: all 0.3s;
+  }
+  .cross-ref-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .cross-ref-card h4 { font-size: 0.95em; margin-bottom: 4px; }
+  .cross-ref-card p { font-size: 0.82em; color: var(--text-muted); margin-bottom: 0; }
+  .cross-ref-card .arrow { color: var(--primary-light); font-size: 0.85em; margin-top: 8px; display: inline-block; }
+
+  footer.site-footer {
+    text-align: center; padding: 32px 24px; margin-top: 48px;
+    color: var(--text-muted); font-size: 0.85em; border-top: 1px solid var(--border);
+  }
+  footer.site-footer .meta { font-size: 0.78em; margin-top: 8px; color: var(--text-muted); opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="team-leads.html" class="active">团队 Lead</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <h1><span>团队 Lead</span> · 5 线代表身份与职责边界</h1>
+  <p>胡杰威 · 童静 · 魏鹏 · 李云峰 · 曾正龙 — 五条业务线的团队代表</p>
+  <div class="badge">TEAM-COLLAB-SPEC v2.1.2 patch · 5 Lead 扩展版</div>
+</div>
+
+<div class="disclaimer">
+  ⚠️ 本页为 <strong>v2.1.2-patch 升级版专页</strong>（2026-04-21 HP-1.1 Q5=A 签字生效）。Lead 是"团队代表"不是新 Owner 层——<strong>四权分离结构不变</strong>，Owner 依然是整个角色组。本页取代 v1（仅 2 Lead）。
+</div>
+
+<div class="container">
+
+  <!-- §0 · TL;DR -->
+  <section>
+    <div class="tldr-box">
+      <h3>📌 一分钟读懂本页</h3>
+      <p><strong>Lead = 团队代表</strong>。每个业务线派一名代表出席跨线协作、代审方案、协调对外事务。</p>
+      <p><strong>Lead ≠ Owner</strong>。Owner 是整个角色组集体行使的权力（四权分离）；Lead 只是对外的联络人和方案代审人，无 PR 层放行权。</p>
+      <p><strong>5 位 Lead</strong>：
+        <strong style="color:var(--frontend);">胡杰威</strong>（前端 Lead · AI-first Flutter · 前端 × 5）·
+        <strong style="color:var(--design);">童静</strong>（UI 设计 Lead · 设计师 × 2）·
+        <strong style="color:var(--eng);">魏鹏</strong>（工程师 Lead · 技术总监 · 后端 × 8）·
+        <strong style="color:var(--qa);">李云峰</strong>（QA Lead · QA × 4）·
+        <strong style="color:var(--ops);">曾正龙</strong>（运维 Lead · 运维负责人 · 运维 × 1）。</p>
+      <p><strong>GitHub / 云效按钮权不在 Lead 手里</strong>。按钮权：GitHub → <span style="color:var(--founder)">童正辉（INV-0）</span>；云效 → <span style="color:var(--ops)">曾正龙</span>（兼，非因 Lead 身份）；qa-verdict 后台 → <span style="color:var(--qa)">李云峰</span>（兼，非因 Lead 身份）。</p>
+    </div>
+  </section>
+
+  <!-- §1 · Why Lead? -->
+  <section id="why">
+    <h2><span class="icon">🤔</span> 一、为什么要设 Lead？</h2>
+    <p class="lead-sub">v2.1 扁平 Owner 结构 → v2.1.1 引入 2 Lead → v2.1.2 扩展 5 Lead 的演进路径</p>
+
+    <p style="color:var(--text-muted); font-size:0.95em; margin-bottom:12px;">
+      TEAM-COLLABORATION-SPEC v2.1 原设计采用<strong>扁平 Owner 语言</strong>（只说"谁是 Owner"不说"谁是头"），这让四权分离的概念非常清晰。但实际运行中出现三个问题：
+    </p>
+
+    <div class="rule-list">
+      <div class="rule">
+        <div class="rule-num">1</div>
+        <div class="rule-body">
+          <h4>对外协作需要一个联络点</h4>
+          <p>与友商 / 甲方 / 第三方厂商对接时，"找前端团队"太模糊——需要一个具名代表出席对外会议和签协作备忘。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">2</div>
+        <div class="rule-body">
+          <h4>方案评审需要一个技术代审人</h4>
+          <p>INV-0 无法对每个 PR 做代码合规代审，需要有人代表线做"方案合理性"把关（区别于 CI 门禁的代码级检查）。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">3</div>
+        <div class="rule-body">
+          <h4>团队内部需要一个协调人</h4>
+          <p>每条业务线的工作分派、技术栈选型、新人带教，需要一个日常协调角色（不是 Owner 级的签字权，但是协调级的分派权）。</p>
+        </div>
+      </div>
+    </div>
+
+    <p style="color:var(--text-muted); font-size:0.95em; margin-top:12px;">
+      v2.1.1 首轮（2026-04-21 HP-1）在工程师和运维团队分别显式化一位 Lead；v2.1.2 本轮（HP-1.1 Q5=A）扩展到前端、UI 设计、QA 三条线，形成 5 Lead 全覆盖。仍采用<strong>脚注式</strong>（不新增 L1-Lead 管理层，保留扁平 Owner 原设计）路径 B。
+    </p>
+  </section>
+
+  <!-- §2 · Lead vs Owner 对照 -->
+  <section id="lead-vs-owner">
+    <h2><span class="icon">⚖️</span> 二、Lead vs Owner 对照</h2>
+    <p class="lead-sub">核心区分：Owner 集体行使权力 · Lead 代表集体对外</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr><th>维度</th><th>Owner</th><th>Lead</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>定义</td><td class="owner-col">某种权力的集体持有人</td><td class="lead-col">某角色组对外的代表联络人</td></tr>
+        <tr><td>四权分离中的位置</td><td class="owner-col">语义 / 技术 / 质量 / 治理四权之一</td><td class="lead-col">不是权力层 · 是协调层</td></tr>
+        <tr><td>签字</td><td class="owner-col">角色组任一成员可 approve PR</td><td class="lead-col">代表团队签跨团队方案 · 不代签 PR</td></tr>
+        <tr><td>签字权边界</td><td class="owner-col">由 CODEOWNERS 决定</td><td class="lead-col">由 TEAM-COLLAB-SPEC §A/§B 决定</td></tr>
+        <tr><td>GitHub 按钮权</td><td class="owner-col">approve / request-changes</td><td class="lead-col">无额外按钮权（与普通 Owner 成员同）</td></tr>
+        <tr><td>云效 / qa-verdict 按钮权</td><td class="owner-col">N/A（Owner 概念在 GitHub 侧）</td><td class="lead-col">运维 Lead 兼云效 · QA Lead 兼 qa-verdict 后台（非 Lead 身份赋予）</td></tr>
+        <tr><td>人数</td><td class="owner-col">整个角色组（如前端 5 / 后端 8 / QA 4 ...）</td><td class="lead-col">每角色组 1 人（共 5 Lead）</td></tr>
+        <tr><td>是否 L1 管理层</td><td class="owner-col">是（L1 Owner 位）</td><td class="lead-col">否（L1 内部代表，不升层）</td></tr>
+        <tr><td>决策机制</td><td class="owner-col">CODEOWNERS + Required Status Checks</td><td class="lead-col">方案代审 + 跨团队协作签</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tldr-box" style="background: linear-gradient(135deg, rgba(253,203,110,0.1), rgba(250,177,160,0.1)); border-color: rgba(253,203,110,0.3);">
+      <h3 style="color: var(--lead);">🎯 一句话记住</h3>
+      <p><strong>Owner 决定"该怎么做"，Lead 决定"谁来做"。</strong></p>
+      <p><strong>Owner 签代码，Lead 签方案。</strong></p>
+      <p><strong>Owner 走 CODEOWNERS，Lead 走 TEAM-COLLAB-SPEC。</strong></p>
+    </div>
+  </section>
+
+  <!-- §3 · Five Leads -->
+  <section id="leads">
+    <h2><span class="icon">👤</span> 三、5 位 Lead（按业务线顺序）</h2>
+    <p class="lead-sub">2026-04-21 由 INV-0 指派（HP-1 Q1=B 奠基 · HP-1.1 Q5=A 扩展）</p>
+
+    <!-- Lead 1: 胡杰威 -->
+    <div class="lead-card frontend-lead">
+      <div class="lead-header">
+        <div class="lead-avatar">胡</div>
+        <div class="lead-name">
+          <h3>胡杰威 · 前端 Lead · AI-first Flutter</h3>
+          <span class="title-badge">Lead</span>
+          <span class="team-badge">前端团队 · 5 人</span>
+        </div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.92em;">
+        作为前端团队 Lead，代表团队出席跨线方案评审、守护 AI-first Flutter 技术路线、协调前端与设计 / 后端的接口、HPRD 前端段代审。
+      </p>
+      <div class="lead-responsibilities">
+        <div class="lead-resp-box">
+          <h4>✓ Lead 签什么</h4>
+          <ul>
+            <li>前端跨线技术方案（Flutter 升级 / C-L1 C-L2 平台策略）</li>
+            <li>HPRD 前端段代审 / design.md 前端实现部分</li>
+            <li>前端与 UI 设计的组件规范联审（与童静联合守门）</li>
+            <li>能力包前端排期 / 新人带教分派</li>
+            <li>AI-first 开发节点的实验推进</li>
+          </ul>
+        </div>
+        <div class="lead-resp-box not">
+          <h4>✗ Lead 不签什么</h4>
+          <ul>
+            <li>具体 PR 的代码合规（由 CODEOWNERS @hl-frontend 集体签）</li>
+            <li>业务需求 / Cap-Spec（那是 PM）</li>
+            <li>验收通过（那是 QA · qa-verdict）</li>
+            <li>部署放行（那是运维 Lead 曾正龙）</li>
+            <li>GitHub push / merge（那是 INV-0）</li>
+            <li>后端技术栈裁决（那是工程师 Lead 魏鹏）</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:12px 16px; background:rgba(129,236,236,0.08); border:1px solid rgba(129,236,236,0.3); border-radius:8px; font-size:0.88em; color:var(--text-muted);">
+        <strong style="color:var(--frontend);">任命依据</strong>：胡杰威担任前端 Lead——不是因为 Flutter 经验最深，而是因为他在 AI 驱动上积极拥抱和实验，最适合带领团队完成转型。详见 <a href="frontend-design.html" style="color:var(--frontend);">前端与设计页</a>。
+      </div>
+    </div>
+
+    <!-- Lead 2: 童静 -->
+    <div class="lead-card design-lead">
+      <div class="lead-header">
+        <div class="lead-avatar">童</div>
+        <div class="lead-name">
+          <h3>童静 · UI 设计 Lead</h3>
+          <span class="title-badge">Lead</span>
+          <span class="team-badge">UI 设计团队 · 2 人</span>
+        </div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.92em;">
+        作为 UI 设计团队 Lead，代表团队签设计规范、管理 Figma 团队库、对接 PM 需求交付、守护 UI-DELIVERY-SPEC 合规，与前端 Lead 联合维护组件规范。
+      </p>
+      <div class="lead-responsibilities">
+        <div class="lead-resp-box">
+          <h4>✓ Lead 签什么</h4>
+          <ul>
+            <li>UI-DELIVERY-SPEC 合规性代审</li>
+            <li>Figma 源文件版本移交审计</li>
+            <li>设计资产命名 / 分层规范</li>
+            <li>与前端的组件规范联审（与胡杰威联合守门）</li>
+            <li>Cap-Spec 视觉需求分派 / 评估</li>
+          </ul>
+        </div>
+        <div class="lead-resp-box not">
+          <h4>✗ Lead 不签什么</h4>
+          <ul>
+            <li>代码层面任何 approve（设计师不是 CODEOWNERS）</li>
+            <li>业务需求定义（那是 PM）</li>
+            <li>前端实现细节（那是前端 Lead 胡杰威）</li>
+            <li>规范升版（那是 INV-0）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead 3: 魏鹏 -->
+    <div class="lead-card eng-lead">
+      <div class="lead-header">
+        <div class="lead-avatar">魏</div>
+        <div class="lead-name">
+          <h3>魏鹏 · 工程师 Lead · 技术总监</h3>
+          <span class="title-badge">Lead</span>
+          <span class="team-badge">后端团队 · 8 人（含 2 名 PHP）</span>
+        </div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.92em;">
+        作为工程师团队（后端）Lead，代表团队出席跨线方案评审、签技术方案合理性、协调后端与前端 / QA / 运维团队、verdict 总服务管理员。
+      </p>
+      <div class="lead-responsibilities">
+        <div class="lead-resp-box">
+          <h4>✓ Lead 签什么</h4>
+          <ul>
+            <li>跨团队技术方案（如 R-065 DD-CI-HYBRID 这类多角色协作规范）</li>
+            <li>HPRD 后端段 / design.md 方案合理性代审</li>
+            <li>技术栈选型守门（TECH-STACK-SPEC 变更的 Lead 代审）</li>
+            <li>PHP 迁移方案评估 / 后端与前端接口裁决</li>
+            <li>verdict 总服务可用性（§B 表 #8）</li>
+          </ul>
+        </div>
+        <div class="lead-resp-box not">
+          <h4>✗ Lead 不签什么</h4>
+          <ul>
+            <li>具体 PR 的代码合规（由 CODEOWNERS @hl-engineering 集体签）</li>
+            <li>业务需求 / Cap-Spec（那是 PM）</li>
+            <li>验收通过（那是 QA · qa-verdict）</li>
+            <li>部署放行（那是运维 Lead 曾正龙）</li>
+            <li>GitHub push / merge（那是 INV-0）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead 4: 李云峰 -->
+    <div class="lead-card qa-lead">
+      <div class="lead-header">
+        <div class="lead-avatar">李</div>
+        <div class="lead-name">
+          <h3>李云峰 · QA Lead</h3>
+          <span class="title-badge">Lead</span>
+          <span class="team-badge">QA 团队 · QA 架构师 × 1 + QA 工程师 × 3 = 4 人</span>
+        </div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.92em;">
+        作为 QA 团队 Lead，代表团队签验收规范、管理 qa-verdict 服务后台（QA Owner 身份赋予）、与 PM 联合守门 pm-acceptance + qa-verdict 双轨验收、缺陷分级规范。
+      </p>
+      <div class="lead-responsibilities">
+        <div class="lead-resp-box">
+          <h4>✓ Lead 签什么</h4>
+          <ul>
+            <li>用例库治理规范</li>
+            <li>qa-verdict 服务规则变更（QA Owner 权 · §B 表 #6）</li>
+            <li>缺陷分级规范（P0/P1/P2/P3 判定口径）</li>
+            <li>跨线验收流程（与 PM 联合守门 pm-acceptance）</li>
+            <li>QA 工程师新人带教分派</li>
+          </ul>
+        </div>
+        <div class="lead-resp-box not">
+          <h4>✗ Lead 不签什么</h4>
+          <ul>
+            <li>业务需求 / Cap-Spec（那是 PM）</li>
+            <li>代码实现合规（那是工程师 Lead / CODEOWNERS）</li>
+            <li>部署放行（那是运维 Lead）</li>
+            <li>GitHub push / merge（那是 INV-0）</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:12px 16px; background:rgba(255,234,167,0.08); border:1px solid rgba(255,234,167,0.3); border-radius:8px; font-size:0.88em; color:var(--text-muted);">
+        <strong style="color:var(--qa);">qa-verdict 管理员身份</strong>：李云峰同时担任 qa-verdict 服务后台管理员（按钮权 · §B 表 #6），此权限来自 <strong>QA Owner</strong> 身份，<strong>不是因为 Lead 头衔赋予</strong>。即使将来 QA 团队扩编、另设 Lead，qa-verdict 按钮权仍随 QA Owner 走。
+      </div>
+    </div>
+
+    <!-- Lead 5: 曾正龙 -->
+    <div class="lead-card ops-lead">
+      <div class="lead-header">
+        <div class="lead-avatar">曾</div>
+        <div class="lead-name">
+          <h3>曾正龙 · 运维 Lead · 运维负责人</h3>
+          <span class="title-badge">Lead</span>
+          <span class="team-badge">运维团队 · 1 人</span>
+        </div>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.92em;">
+        作为运维团队 Lead，代表团队签部署方案、管理云效流水线（Release &amp; Infra Owner 身份赋予）、对接工程师 / QA / 前端 Lead 的部署需求、负责可运维性审阅。
+      </p>
+      <div class="lead-responsibilities">
+        <div class="lead-resp-box">
+          <h4>✓ Lead 签什么</h4>
+          <ul>
+            <li>部署方案可运维性签注（可部署 / 可监控 / 可回滚）</li>
+            <li>云效流水线配置变更</li>
+            <li>CI/CD 基础设施 workflow 签注</li>
+            <li>镜像发布策略（如 DD-IMAGE-BASE v1.3）</li>
+            <li>P0 紧急发布的运维放行 + Class C 破窗主导</li>
+          </ul>
+        </div>
+        <div class="lead-resp-box not">
+          <h4>✗ Lead 不签什么</h4>
+          <ul>
+            <li>代码合规（那是工程师 / 前端 Lead · 方案级 / CODEOWNERS · 代码级）</li>
+            <li>业务需求 / 验收（PM / QA）</li>
+            <li>GitHub push / merge / gh-pages deploy（那是 INV-0）</li>
+            <li>规范签字（SPEC / RULINGS · 那是 INV-0）</li>
+            <li>合约核心路径（那是 INV-0）</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:12px 16px; background:rgba(250,177,160,0.08); border:1px solid rgba(250,177,160,0.3); border-radius:8px; font-size:0.88em; color:var(--text-muted);">
+        <strong style="color:var(--ops);">云效按钮权身份</strong>：曾正龙同时兼任云效管理员（按钮权 · §B 表 #5），此权限来自 <strong>运维 Owner</strong> 身份（唯一运维工程师），<strong>不是因为 Lead 头衔赋予</strong>。
+      </div>
+    </div>
+  </section>
+
+  <!-- §4 · 签字边界矩阵 -->
+  <section id="signature-matrix">
+    <h2><span class="icon">✍️</span> 四、Lead 签字边界 · 全平台矩阵</h2>
+    <p class="lead-sub">哪个动作由谁签 · 5 Lead 扩展版</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr><th>动作</th><th>起草 / 实施</th><th>代审</th><th>按钮人</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>GitHub hl-dispatch merge PR</td><td>起草员</td><td class="lead-col">涉线 Lead</td><td style="color:var(--founder);font-weight:600;">童正辉（INV-0）</td></tr>
+        <tr><td>GitHub hl-contracts 入 RULINGS.md</td><td>起草员</td><td class="lead-col">涉线 Lead</td><td style="color:var(--founder);font-weight:600;">童正辉（INV-0）</td></tr>
+        <tr><td>GitHub gh-pages push（站点发布）</td><td>Cowork 起草员</td><td class="lead-col">魏鹏（方案）+ 曾正龙（部署）</td><td style="color:var(--founder);font-weight:600;">童正辉（INV-0）</td></tr>
+        <tr><td>云效流水线触发</td><td>起草员</td><td>—</td><td class="lead-col">曾正龙（Owner 身份）</td></tr>
+        <tr><td>qa-verdict 规则变更</td><td>QA 工程师</td><td>—</td><td class="lead-col">李云峰（QA Owner 身份）</td></tr>
+        <tr><td>verdict 服务可用性告警</td><td>运维 / 工程师</td><td class="lead-col">魏鹏（责任人）</td><td style="color:var(--eng);">工程师 Owner</td></tr>
+        <tr><td>前端能力包 PR 代码合规</td><td>前端工程师</td><td style="color:var(--frontend);">@hl-frontend CODEOWNERS</td><td style="color:var(--frontend);">任一前端 Owner</td></tr>
+        <tr><td>后端能力包 PR 代码合规</td><td>后端工程师</td><td style="color:var(--eng);">@hl-engineering CODEOWNERS</td><td style="color:var(--eng);">任一后端 Owner</td></tr>
+        <tr><td>UI 设计规范变更</td><td>UI 设计师</td><td class="lead-col">童静</td><td style="color:var(--founder);font-weight:600;">童正辉（INV-0）</td></tr>
+        <tr><td>跨线技术方案（如 R-065）</td><td>起草员</td><td class="lead-col">多 Lead 会签</td><td style="color:var(--founder);font-weight:600;">童正辉（INV-0）</td></tr>
+        <tr><td>业务验收（pm-acceptance）</td><td>工程师</td><td>—</td><td style="color:var(--pm);">PM Owner</td></tr>
+        <tr><td>质量验收（qa-verdict）</td><td>QA</td><td>—</td><td style="color:var(--qa);">QA Owner</td></tr>
+        <tr><td>Cap-Spec 业务码变更</td><td>PM</td><td>—</td><td style="color:var(--founder);font-weight:600;">童正辉（INV-0 · 治理权）</td></tr>
+        <tr><td>飞书公告发布</td><td>起草员</td><td>—</td><td style="color:var(--founder);font-weight:600;">童正辉（INV-0）</td></tr>
+      </tbody>
+    </table>
+
+    <p style="color:var(--text-muted); font-size:0.9em; margin-top:12px;">
+      <strong>铁律</strong>：Lead 不直接按 GitHub 按钮。任何 merge / push / release 操作都经 <span style="color:var(--founder);font-weight:600;">INV-0</span> 按下。云效 / qa-verdict 侧例外——那是 Owner 权不是 Lead 权。
+    </p>
+  </section>
+
+  <!-- §5 · 与 CODEOWNERS / 四权分离的关系 -->
+  <section id="codeowners-relation">
+    <h2><span class="icon">🔗</span> 五、与 CODEOWNERS / 四权分离的关系</h2>
+    <p class="lead-sub">Lead 不进 CODEOWNERS 特殊组 · 四权分离结构不变</p>
+
+    <div class="rule-list">
+      <div class="rule">
+        <div class="rule-num">1</div>
+        <div class="rule-body">
+          <h4>CODEOWNERS 不为 Lead 开特殊组</h4>
+          <p>hl-platform / hl-contracts / hl-app 里 CODEOWNERS 仍按 <code>@hl-engineering</code> / <code>@hl-frontend</code> / <code>@hl-qa-team</code> / <code>@hl-pm-team</code> 整组授权；Lead 的 approve 权来自其本线 Owner 身份，与其他组内成员同。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">2</div>
+        <div class="rule-body">
+          <h4>四权分离结构完全不变</h4>
+          <p>语义主权（PM + 创始人）· 技术实现（工程师 / 前端）· 独立质量（QA）· 组织治理（创始人）—— Lead 不创造第五权，也不替代已有四权。UI 设计 Lead 归在技术实现线协作层（与前端 Lead 并列协调前端呈现），不单独构成一权。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">3</div>
+        <div class="rule-body">
+          <h4>Lead 签字体现在方案层，不体现在 Status Checks 层</h4>
+          <p>pm-hprd-pass / qa-verdict / pm-acceptance 这三个 GitHub 组织级 Required Status Checks <strong>不</strong>因 Lead 变化——Lead 签方案用飞书 / 卷宗 SIGN-OFF，不用 GitHub PR approve 动作（除非该 Lead 本身也是 CODEOWNERS）。详见 <a href="gate-levels.html#section4" style="color:var(--primary-light);">gate-levels.html §4 · 组织级规则</a>。</p>
+        </div>
+      </div>
+      <div class="rule">
+        <div class="rule-num">4</div>
+        <div class="rule-body">
+          <h4>Lead 人选变更不需要改 CODEOWNERS / 门禁</h4>
+          <p>Lead 轮换只需更新本页 + TEAM-COLLAB-SPEC §A/§B + 飞书公告，不触发任何 CI 门禁 / CODEOWNERS / Required Status Checks 调整。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §6 · FAQ -->
+  <section id="faq">
+    <h2><span class="icon">❓</span> 六、常见问题</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Lead 和原试点期的"架构师"、"验收官"是什么关系？</div>
+      <div class="faq-a">
+        试点期"架构师（许久明）/ 验收官（李旭阳）"口径<strong>已作废</strong>（2026-04-21 INV-0 裁决 HP-1 Q2=A）。他们在 v2.1 全组织分工表里归为普通工程师。5 Lead 中工程师 Lead（魏鹏）承担方案代审职能，但这<strong>不是</strong>原架构师职责的延续——Lead 权力更轻（不独立签 PR，只代审方案）。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">如果 Lead 不在，谁代行？</div>
+      <div class="faq-a">
+        Lead 请假 ≤ 3 天：由本线 Owner 任一成员代签（如前端团队任一人 approve）。
+        Lead 请假 &gt; 3 天：由 INV-0 指派临时代 Lead，飞书公告。
+        <strong>不存在"Lead 默认代行人"</strong>——这是为了避免形成隐性第二顺位管理层。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">PM 团队为什么不设 Lead？</div>
+      <div class="faq-a">
+        PM × 3 采用<strong>横向覆盖能力包</strong>的模式（PM-A/B/C），对外协作压力已通过 pm-acceptance Required Check 机制解决，本轮不设 Lead。若未来扩编出现跨团队协作压力，再行增设。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">前端和 UI 设计的 Lead 有什么区别？</div>
+      <div class="faq-a">
+        <strong>前端 Lead（胡杰威）</strong>代表前端工程师 × 5，关注 Flutter 技术路线 / AI-first 实验 / 代码实现侧的 HPRD 代审。<br>
+        <strong>UI 设计 Lead（童静）</strong>代表 UI 设计师 × 2，关注 UI-DELIVERY-SPEC / Figma 源文件 / 设计规范守门。<br>
+        组件规范（Design Token / UI Kit）由<strong>两位 Lead 联合守门</strong>——前端负责技术实现，设计负责视觉规范。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Lead 有额外补贴 / 职级 / 权限吗？</div>
+      <div class="faq-a">
+        本页只定义"协作职责"，不定义"人力制度"——薪资、职级、绩效评审由 INV-0 另行处理，不在团队指南站点覆盖范围。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Lead 和创始人 / INV-0 的关系是什么？</div>
+      <div class="faq-a">
+        Lead 直接对 INV-0 汇报（规范签字 + 方案代审结果）。INV-0 保留对 Lead 所代审方案的复核权和最终否决权。Lead 代审 ≠ INV-0 授权一次完成——重大事项（如规范升版、契约核心变更）INV-0 保留介入权。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">本页发布后，Gate H / Gate R / Gate 3 这些旧词还能用吗？</div>
+      <div class="faq-a">
+        <strong>不能</strong>。试点期三 Gate 口径（Gate H 代码合规 / Gate R 可部署 / Gate 3 验收）已随 HP-1 整体作废。本站后续出现的"Gate"一词，统一指 CI 门禁层级 L1-L4 —— 即 <a href="gate-levels.html" style="color:var(--primary-light);">gate-levels.html</a> 定义的机器门禁，不指人的签字位。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">CI/CD 组织级流程和相关制度在哪里？</div>
+      <div class="faq-a">
+        权威页：<a href="gate-levels.html" style="color:var(--primary-light);">gate-levels.html</a>，尤其是 <strong>§4 Required Status Checks · 组织级规则</strong>，定义了 qa-verdict / pm-acceptance / pm-hprd-pass 三个 GitHub 组织级强制规则。按钮权分工见 <a href="team-leads.html#signature-matrix">§4 矩阵</a>。2026-04-21 HP-1.1 Q7=A 裁定 ci-cd-batch-signoff.html 作废（与 gate-levels §4 重复），不入站点。
+      </div>
+    </div>
+  </section>
+
+  <!-- §7 · Cross References -->
+  <section id="cross-ref">
+    <h2><span class="icon">📚</span> 七、相关页面</h2>
+    <div class="cross-ref-grid">
+      <a class="cross-ref-card" href="global.html">
+        <h4>🌐 全局工作流</h4>
+        <p>组织架构 · 四权分离 · 五步流程 — 整体背景</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+      <a class="cross-ref-card" href="frontend-design.html">
+        <h4>🎨 前端与设计</h4>
+        <p>胡杰威 + 童静 代表的两线 · AI-first Flutter · UI-DELIVERY-SPEC</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+      <a class="cross-ref-card" href="engineering.html">
+        <h4>💻 工程师团队指南</h4>
+        <p>魏鹏所代表的后端团队 · HPRD / design.md / CI 门禁</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+      <a class="cross-ref-card" href="qa.html">
+        <h4>🧪 测试团队指南</h4>
+        <p>李云峰所代表的 QA 团队 · 用例库 · qa-verdict 服务</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+      <a class="cross-ref-card" href="ops.html">
+        <h4>🚀 运维人员指南</h4>
+        <p>曾正龙所代表的运维团队 · CI/CD · 发布 · 监控</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+      <a class="cross-ref-card" href="gate-levels.html">
+        <h4>🛡️ CI/CD 门禁与组织级规则</h4>
+        <p>Required Status Checks 权威定义页</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+      <a class="cross-ref-card" href="power-separation.html">
+        <h4>⚖️ 四权分离详解</h4>
+        <p>Lead 不属于四权之任一 — 弄清边界</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+      <a class="cross-ref-card" href="governance-docs.html">
+        <h4>📜 治理文档体系</h4>
+        <p>TEAM-COLLAB-SPEC v2.1.2 全文（hl-contracts）</p>
+        <div class="arrow">→ 阅读</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- §8 · Version meta -->
+  <section id="version">
+    <h2><span class="icon">📌</span> 八、版本元信息</h2>
+    <table class="compare-table">
+      <tbody>
+        <tr><td style="width:28%;color:var(--text-muted);">页面版本</td><td>v2.0（5 Lead 扩展版 · 取代 v1.0 2 Lead 版）</td></tr>
+        <tr><td style="color:var(--text-muted);">依据规范</td><td>TEAM-COLLABORATION-SPEC v2.1.2-patch · SITE-PUBLISHING-PROTOCOL v1.0 §11 addendum v2</td></tr>
+        <tr><td style="color:var(--text-muted);">上游决议</td><td>HP-1 决议备忘录 2026-04-21（Q1=B / Q2=A / Q3=A / C1=A）+ HP-1.1-ADDENDUM（Q5=A / Q6=B / Q7=A / Q8=A / Q9=A）</td></tr>
+        <tr><td style="color:var(--text-muted);">起草员</td><td>Cowork 起草员</td></tr>
+        <tr><td style="color:var(--text-muted);">5 Lead 代审</td><td>胡杰威 · 童静 · 魏鹏 · 李云峰 · 曾正龙 — 2026-04-28 前各自本线代审</td></tr>
+        <tr><td style="color:var(--text-muted);">INV-0 终签</td><td>童正辉 · SIGN-OFF v1.2-patch · 2026-04-28 前（HP-2' 批签字窗口）</td></tr>
+        <tr><td style="color:var(--text-muted);">last_verified</td><td>2026-04-21</td></tr>
+        <tr><td style="color:var(--text-muted);">修订节律</td><td>Lead 人选变更时修订 · 2026-05-21 LOCKED 评审随同复核 · 每 quarter 末随 monthly-inventory 审视</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1.2-patch + SITE-PUBLISHING-PROTOCOL v1.0 §7/§11 Addendum v2 · Internal Guide<br>
+  <div class="meta">2026-04-21 生成 · 5 Lead 扩展版（HP-1.1 Q5=A） · 治理来源：HP-1 + HP-1.1 决议 · INV-0 裁决</div>
+</footer>
+
+</body>
+</html>

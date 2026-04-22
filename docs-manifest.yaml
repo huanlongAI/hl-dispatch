@@ -1,13 +1,13 @@
 # 唤龙平台 · 团队协作指南站点 — 文档清单
 # 用途：统一控制每页的源文档、版本、状态、最后校验日期
 # CI 检查脚本会读取此文件做版本漂移检测
-# 更新时间：2026-04-16
+# 更新时间：2026-04-22（HP-2' v2.1.2-patch · 5 Lead 摊位置 + 按钮权摘要 + 补录 3 页）
 
 site:
   name: 唤龙平台团队协作指南
   layer: guide          # guide | normative — 本站只是 guide layer
   deploy: internal      # internal | public
-  last_verified: "2026-04-16"
+  last_verified: "2026-04-22"   # v2.1.2-patch 文件层校对完成，待 INV-0 按钮权 push
   # 部署历史（最近一次）
   last_deploy:
     date: "2026-04-16"
@@ -15,6 +15,18 @@ site:
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
     note: "新增 pages/architecture.html，全站导航第三项已对齐"
+  # 待部署变更（HP-2' / HP-3' 直推）
+  pending_deploy:
+    date: "2026-04-22"
+    branch: gh-pages
+    spec_addendum: "TEAM-COLLABORATION-SPEC v2.1.2-patch + SITE-PUB §11 addendum v2"
+    changeset:
+      - "pages/global.html · Lead × 5 信息栏 · 索引卡 count 11→13 · hero badge v2.1.2-patch"
+      - "pages/engineering.html · 双 Lead 信息栏（魏鹏+胡杰威） · badge 改写"
+      - "pages/ops.html · 曾正龙 Lead 信息栏 · 按钮权摘要 6 行 · H6 作废红框"
+      - "pages/team-leads.html · 新建（5 Lead 代表专页 · §4 签字边界矩阵）"
+      - "index.html L477 · 真名回写（胡杰威 · AI-first Flutter） · Q8=A PII scrub 撤销"
+      - "docs-manifest.yaml · 补录 team-leads / tech-selection / glossary / workflow-states 4 页 · Q6=B"
 
 pages:
   - page: index.html
@@ -156,7 +168,28 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1"
         status: DRAFT
-    last_verified: "2026-04-13"
+    last_verified: "2026-04-22"   # HP-2' 曾正龙 Lead 信息栏 + 按钮权摘要 + H6 作废
+
+  - page: pages/team-leads.html
+    title: 团队代表（5 Lead）专页
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1.2-patch"       # §A 5 Lead 条款 + §B 按钮权矩阵
+        status: DRAFT
+    sections:
+      - id: representatives
+        title: 5 Lead 代表名单
+        spec_status: DRAFT
+      - id: lead-vs-owner
+        title: Lead ≠ Owner 边界
+        spec_status: DRAFT
+      - id: button-matrix
+        title: 按钮权矩阵（§B）
+        spec_status: DRAFT
+      - id: signature-matrix
+        title: Lead 签字边界 · 全平台矩阵
+        spec_status: DRAFT
+    last_verified: "2026-04-22"   # HP-2' 新建
 
   # ── 深入专题二级页面 ──
 
@@ -216,6 +249,39 @@ pages:
         version: "1.1"
         status: LOCKED
     last_verified: "2026-04-13"
+
+  # ── 2026-04-22 HP-2' Q6=B 补录（原漏收录）──
+
+  - page: pages/tech-selection.html
+    title: 技术栈选型详解
+    source_docs:
+      - doc: TECH-STACK-SPEC
+        version: "3"
+        status: LOCKED
+      - doc: SAAC-HL-001
+        version: "1.1"
+        status: LOCKED
+    last_verified: "2026-04-22"   # Q6=B 补录 · 原 2026-04-16 前漏收
+
+  - page: pages/glossary.html
+    title: 术语对照表
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT
+    last_verified: "2026-04-22"   # Q6=B 补录 · 原 2026-04-16 前漏收
+
+  - page: pages/workflow-states.html
+    title: 工作流状态机详解（12 状态全景）
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1"
+        status: DRAFT               # §4 能力包状态机（v2.2 候选细化）
+    sections:
+      - id: state-machine
+        title: 12 状态流转图
+        spec_status: PROPOSED       # v2.2 候选
+    last_verified: "2026-04-22"   # Q6=B 补录 · 原 2026-04-16 前漏收
 
 # 规范状态定义
 status_definitions:

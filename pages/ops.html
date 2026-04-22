@@ -55,14 +55,44 @@ body { min-width: 1200px; }
 <div class="page-header">
   <h1>🚀 <span>运维人员指南</span></h1>
   <div class="meta">唤龙平台 AI 驱动协作模型</div>
-  <div class="badge">运维工程师 1 人</div>
+  <div class="badge">运维 × 1 · 曾正龙 Lead</div>
+</div>
+
+<!-- Lead 信息栏 + 按钮权摘要 · TEAM-COLLAB-SPEC v2.1.2-patch §A + §B + §B.3 -->
+<div style="max-width: 960px; margin: 20px auto 12px; padding: 16px 20px; background: rgba(250,177,160,0.04); border: 1px solid rgba(250,177,160,0.25); border-left: 4px solid #FAB1A0; border-radius: 8px;">
+  <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+    <div style="font-size: 0.72em; color: #FDCB6E; letter-spacing: 0.1em; font-weight: 600; padding: 3px 8px; background: rgba(253,203,110,0.1); border: 1px solid rgba(253,203,110,0.3); border-radius: 4px;">◆ 团队 LEAD</div>
+    <div style="flex: 1; min-width: 200px;">
+      <div style="font-size: 1.05em; color: #FAB1A0; font-weight: 700;">曾正龙 · 运维负责人</div>
+      <div style="font-size: 0.82em; color: #9999B0; margin-top: 2px;">运维 × 1 团队的对外联络人 + 云效流水线按钮权持有人</div>
+    </div>
+    <a href="team-leads.html" style="font-size: 0.82em; color: #FDCB6E; text-decoration: none; border: 1px solid rgba(253,203,110,0.4); padding: 6px 12px; border-radius: 4px; white-space: nowrap;">Lead 详解 →</a>
+  </div>
+  <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(250,177,160,0.2); font-size: 0.8em; color: #9999B0; line-height: 1.7;">
+    <strong style="color: #E8E8F0;">Lead ≠ Owner</strong>：四权分离 "Release &amp; Infra" 权的 Owner 仍是 CODEOWNERS 定义的 <code style="color:#FDCB6E;font-size:0.92em;">@hl-ops</code> 路径集合；因运维线只 1 人，Lead 与 Owner 物理合一，但语义仍分层——<em>Lead = 对外联络 · 方案代审 · 云效按钮执行</em>，<em>Owner = 制度层的 Release &amp; Infra 权</em>。
+  </div>
+  <!-- 按钮权摘要（完整 Required Status Checks 在 gate-levels.html §4） -->
+  <div style="margin-top: 12px; padding: 12px 14px; background: rgba(108,92,231,0.06); border-radius: 4px; font-size: 0.8em; color: #9999B0; line-height: 1.85;">
+    <div style="color: #A29BFE; font-weight: 600; margin-bottom: 6px;">◆ 按钮权分工摘要（TEAM-COLLAB v2.1.2-patch §B）</div>
+    <div>· <strong style="color:#FAB1A0;">云效流水线 pipeline 触发</strong>：曾正龙</div>
+    <div>· <strong style="color:#FDCB6E;">GitHub 仓库管理（保护分支 / Required Status Checks 配置）</strong>：童正辉（INV-0）</div>
+    <div>· <strong style="color:#FDCB6E;">gh-pages 部署 push</strong>：童正辉（INV-0）</div>
+    <div>· <strong style="color:#FDCB6E;">hl-dispatch@main 归档 push</strong>：童正辉（INV-0）</div>
+    <div>· <strong style="color:#55EFC4;">verdict 总服务运行</strong>：魏鹏（工程师 Lead · 技术总监）</div>
+    <div>· <strong style="color:#FFEAA7;">qa-verdict 出具</strong>：李云峰（QA Lead）· <strong style="color:#A29BFE;">pm-acceptance / pm-hprd-pass</strong>：PM 团队轮值</div>
+    <div style="margin-top: 8px; font-size: 0.88em; color:#7F8C9B;">↑ 以上为常态分工摘要。<strong style="color:#E8E8F0;">组织级 Required Status Checks 权威配置</strong>见 <a href="gate-levels.html#section4" style="color:#FDCB6E;text-decoration:underline;">gate-levels.html §4</a>；完整按钮权矩阵（含异常窗口、代签流程）见 <a href="team-leads.html#signature-matrix" style="color:#FDCB6E;text-decoration:underline;">团队代表专页 §4</a>。</div>
+  </div>
+  <!-- H6 作废说明（Q7=A 要求显式提示） -->
+  <div style="margin-top: 10px; padding: 8px 12px; background: rgba(255,107,107,0.05); border-left: 3px solid #FF6B6B; border-radius: 3px; font-size: 0.76em; color: #9999B0; line-height: 1.6;">
+    <strong style="color:#FF6B6B;">⚠ 作废提示</strong>：历史 <code>ci-cd-batch-signoff.html</code>（H6 · CI/CD 整包签批页）已于 HP-1.1 Q7=A 决议中作废，按钮权规则改由 <code>gate-levels.html §4</code> 作为唯一组织级真源管理。
+  </div>
 </div>
 
 <div class="content">
 <blockquote>
-<p><strong>适用角色</strong>：运维工程师 / Release &amp; Infra Owner（1 人）
+<p><strong>适用角色</strong>：运维工程师 / Release &amp; Infra Owner（1 人 · 曾正龙 Lead）
 <strong>关联文档</strong>：<a href="global.html">全局工作流</a> · <a href="qa.html">测试团队指南</a>
-<strong>治理来源</strong>：TEAM-COLLABORATION-SPEC v2.1 §2.6 · TOOLCHAIN-GUIDE v1</p>
+<strong>治理来源</strong>：TEAM-COLLABORATION-SPEC v2.1 §2.6 + v2.1.2-patch §A（5 Lead）+ §B（按钮权分工）+ §B.3（与 gate-levels §4 对齐）· TOOLCHAIN-GUIDE v1 · SITE-PUBLISHING-PROTOCOL v1.0 §11 addendum v2</p>
 </blockquote>
 <hr />
 <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:20px; margin:24px 0;">
@@ -464,7 +494,7 @@ A：在 AI-first 模型下，大量运维工作可以自动化。你的核心价
 </div>
 
 <footer class="site-footer">
-  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + UI-DELIVERY-SPEC v1.0 · Internal Guide · 2026-04-13<br>
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + v2.1.2-patch + UI-DELIVERY-SPEC v1.0 + SITE-PUB §11 addendum v2 · Internal Guide · 2026-04-22 · last_verified 2026-04-22<br>
   <a href="../index.html" style="color:var(--primary-light);text-decoration:none;">← 返回首页</a>
 </footer>
 

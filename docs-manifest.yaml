@@ -11,7 +11,7 @@ site:
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-22"
-    commit: "pending-S7"
+    commit: "ba95284"
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
     note: "S7：流水线指南升级三项 · ① 全站顶栏 11→12（系统架构图后新增 流水线指南） · ② 流水线指南页重写为 7-Tab 二级菜单结构 · ③ 全景流程图升级为 12 步交互演示（播放/单步/失败分支模拟 · 节点点击详情 · 进度条 · 状态配色）· CI 5/5 PASS"

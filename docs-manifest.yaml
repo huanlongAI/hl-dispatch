@@ -1,27 +1,27 @@
 # 唤龙平台 · 团队协作指南站点 — 文档清单
 # 用途：统一控制每页的源文档、版本、状态、最后校验日期
 # CI 检查脚本会读取此文件做版本漂移检测
-# 更新时间：2026-04-22（S7：流水线指南升级 · 12 顶栏 + Tab 菜单 + 交互 SVG）
+# 更新时间：2026-04-22（S8：流水线模型纠正 · 三段式 上游契约→云效中段→下游合入）
 
 site:
   name: 唤龙平台团队协作指南
   layer: guide          # guide | normative — 本站只是 guide layer
   deploy: internal      # internal | public
-  last_verified: "2026-04-22"   # S7：所有页面顶栏 11→12 项（+ 流水线指南）· 流水线指南页 Tab 化 + 交互 SVG
+  last_verified: "2026-04-22"   # S8：流水线模型纠正 · 三段式（上游契约/中段云效工作区/下游合入）· IL_STEPS 12 节点重写
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
+    date: "2026-04-22"
+    commit: "0ca6273"
+    branch: gh-pages
+    url: "https://huanlongai.github.io/hl-dispatch/"
+    note: "S8：流水线模型纠正 · 原 2 段式（GitHub 门禁→云效部署）改写为 3 段式：① 上游 = GitHub 契约源（hl-contracts + HK · INV-0 维护）② 中段 = 云效工作区（接入 GitHub 拉取 + 创建流水线 + HPRD 内部分发审计 + 云效 PR + 一系列 CI/Required Checks/部署验证）③ 下游 = GitHub 最终合入（云效一系列完成后 INV-0 合 main）· IL_STEPS 重写为 12 节点 · 3 泳道 SVG 重绘 · 按钮权矩阵 6 桩（+ 契约写权 · + GitHub Merge 下游桩）· 失败演示切到 HPRD 审计打回（idx=8）· Tab 1 加 callout 标注 gate-levels.html §4 与新模型张力 · CI 5/5 PASS"
+  # 部署历史（倒数第二次 · 审计保留 · 站点内容变更语义）
+  previous_deploy:
     date: "2026-04-22"
     commit: "ba95284"
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
     note: "S7：流水线指南升级三项 · ① 全站顶栏 11→12（系统架构图后新增 流水线指南） · ② 流水线指南页重写为 7-Tab 二级菜单结构 · ③ 全景流程图升级为 12 步交互演示（播放/单步/失败分支模拟 · 节点点击详情 · 进度条 · 状态配色）· CI 5/5 PASS"
-  # 部署历史（倒数第二次 · 审计保留 · 站点内容变更语义）
-  previous_deploy:
-    date: "2026-04-22"
-    commit: "4ff3701"
-    branch: gh-pages
-    url: "https://huanlongai.github.io/hl-dispatch/"
-    note: "S3+S4+S5+S6 一次性直推：S3（二级页顶栏 11-nav 统一）+ S4（术语表锚链化 + 英文术语首现中文括注）+ S5（5→6 Lead 扩展 · PM Lead 邹骢）+ S6（新建 GitHub + 云效 流水线指南页 github-yunxiao-pipeline.html）· manifest 轮换 commit f847af2"
 
 pages:
   - page: index.html
@@ -311,7 +311,7 @@ pages:
       - id: links
         title: 与其他页面的关系
         spec_status: DRAFT
-    last_verified: "2026-04-22"   # S6 首发 · v1.3 补充修正第 4 项
+    last_verified: "2026-04-22"   # S8 流水线模型纠正（三段式）· IL_STEPS 12 节点重写 · 3 泳道 SVG · 按钮权 6 桩
 
 # 规范状态定义
 status_definitions:

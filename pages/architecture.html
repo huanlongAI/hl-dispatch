@@ -468,6 +468,7 @@
     <a href="engineering.html">工程师</a>
     <a href="qa.html">测试团队</a>
     <a href="ops.html">运维</a>
+    <a href="team-leads.html">团队代表</a>
     <a href="tech-selection.html">技术选型</a>
     <a href="glossary.html">术语表</a>
   </div>
@@ -570,7 +571,7 @@
         <div class="qhead"><div class="qname">语义主权 Semantic Sovereignty</div><div class="qowner">PM + Founder</div></div>
         <ul>
           <li>定义「这个功能要解决什么问题」（HPRD ≥ Cap-Spec）</li>
-          <li>独占 <code>pm-acceptance</code> 与 <code>pm-hprd-pass</code> Required Status Check</li>
+          <li>独占 <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-acceptance</code></a> 与 <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-hprd-pass</code></a> Required Status Check</li>
           <li>禁止：编辑测试代码、绕过 QA、私自合并</li>
         </ul>
       </div>
@@ -586,7 +587,7 @@
         <div class="qhead"><div class="qname">独立质量权 Quality Authority</div><div class="qowner">QA Architect + Engineer</div></div>
         <ul>
           <li>测试设计 (DD-TEST)、L3 行为门禁、回归矩阵</li>
-          <li>独占 <code>qa-verdict</code> Required Status Check</li>
+          <li>独占 <a href="glossary.html#term-blocking-advisory" class="term-link"><code>qa-verdict</code></a> Required Status Check</li>
           <li>禁止：自行修复缺陷代码、定义需求语义</li>
         </ul>
       </div>
@@ -613,7 +614,7 @@
       <div class="sec-num"><strong>02</strong>REPO · TOPOLOGY</div>
       <div>
         <h2 class="sec-h2">六仓库拓扑：以契约为中心的星形架构<span class="sbadge">SSOT 单源 · 单向依赖</span></h2>
-        <p class="sec-lead">所有仓库以 <code>hl-contracts</code>（SSOT 治理仓）为中心，<b>只允许下游 read，禁止上游 write</b>。前端 C-L1 与 C-L2 之间存在<b style="color:var(--danger)">硬边界</b>：代码、设计、依赖、构建产物均不互通。后端单仓 <code>hl-platform</code> 内部按 Spring Modulith 强制模块边界。</p>
+        <p class="sec-lead">所有仓库以 <a href="glossary.html#term-hl-contracts" class="term-link"><code>hl-contracts</code></a>（SSOT 治理仓）为中心，<b>只允许下游 read，禁止上游 write</b>。前端 C-L1 与 C-L2 之间存在<b style="color:var(--danger)">硬边界</b>：代码、设计、依赖、构建产物均不互通。后端单仓 <a href="glossary.html#term-hl-platform" class="term-link"><code>hl-platform</code></a> 内部按 Spring Modulith 强制模块边界。</p>
       </div>
     </div>
 
@@ -864,7 +865,7 @@
         <div class="gate-num"><div class="lvl">L3</div><div class="tm">5–10min · BLOCKING</div></div>
         <div class="gate-body">
           <h4>行为层 — Behavior & QA Verdict</h4>
-          <div class="desc">基于 DD-TEST v1.1 设计的端到端行为用例，由 QA 团队（独立质量权）签发 <code>qa-verdict</code>。包含 patrol E2E、API 黑盒回归、性能基线（p95/p99 latency）。</div>
+          <div class="desc">基于 DD-TEST v1.1 设计的端到端行为用例，由 QA 团队（独立质量权）签发 <a href="glossary.html#term-blocking-advisory" class="term-link"><code>qa-verdict</code></a>。包含 patrol E2E、API 黑盒回归、性能基线（p95/p99 latency）。</div>
           <div class="tools">tools: <b>patrol · k6 · Cypress · QA-designed scenarios</b></div>
         </div>
         <div class="gate-side">
@@ -907,7 +908,7 @@
       <div class="icon">⚙</div>
       <div>
         <h4>Technical Co-founder Agent · 决策辅助（手动触发）</h4>
-        <p>Founder 在面对架构决策（合约冻结、Ruling 发布、技术栈变更）时，可手动触发该 Agent 拉取 <code>hl-contracts</code> 全量上下文 + 最近 30 天 Sentinel 报告，生成<b>风险清单 + 反例 + 历史 Ruling 引用</b>。Agent <b>不写代码、不合并、不发布 Ruling</b>，仅提供决策依据，最终签发权仍归 Founder。</p>
+        <p>Founder 在面对架构决策（合约冻结、Ruling 发布、技术栈变更）时，可手动触发该 Agent 拉取 <a href="glossary.html#term-hl-contracts" class="term-link"><code>hl-contracts</code></a> 全量上下文 + 最近 30 天 Sentinel 报告，生成<b>风险清单 + 反例 + 历史 Ruling 引用</b>。Agent <b>不写代码、不合并、不发布 Ruling</b>，仅提供决策依据，最终签发权仍归 Founder。</p>
       </div>
     </div>
   </section>

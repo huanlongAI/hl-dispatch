@@ -202,6 +202,18 @@ body {
   font-size: 0.8em; border-top: 1px solid var(--border);
 }
 
+/* ── 术语表锚链（英文术语 → glossary.html）── */
+a.term-link {
+  text-decoration: none;
+  border-bottom: 1px dotted var(--text-muted);
+}
+a.term-link:hover {
+  border-bottom-color: var(--primary-light, #a29bfe);
+}
+a.term-link code {
+  color: inherit;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .page-header h1 { font-size: 1.4em; }

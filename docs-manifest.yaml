@@ -166,14 +166,14 @@ pages:
     last_verified: "2026-04-22"   # HP-2' 曾正龙 Lead 信息栏 + 按钮权摘要 + H6 作废
 
   - page: pages/team-leads.html
-    title: 团队代表（5 Lead）专页
+    title: 团队代表（6 Lead）专页
     source_docs:
       - doc: TEAM-COLLABORATION-SPEC
-        version: "2.1.2-patch"       # §A 5 Lead 条款 + §B 按钮权矩阵
+        version: "2.1.3-patch"       # §A 6 Lead 条款（+ PM Lead 邹骢 · 2026-04-22 INV-0 指派）+ §B 按钮权矩阵
         status: DRAFT
     sections:
       - id: representatives
-        title: 5 Lead 代表名单
+        title: 6 Lead 代表名单
         spec_status: DRAFT
       - id: lead-vs-owner
         title: Lead ≠ Owner 边界
@@ -184,7 +184,7 @@ pages:
       - id: signature-matrix
         title: Lead 签字边界 · 全平台矩阵
         spec_status: DRAFT
-    last_verified: "2026-04-22"   # HP-2' 新建
+    last_verified: "2026-04-22"   # S5：PM Lead 邹骢加入 6 Lead 扩展版
 
   # ── 深入专题二级页面 ──
 
@@ -277,6 +277,41 @@ pages:
         title: 12 状态流转图
         spec_status: PROPOSED       # v2.2 候选
     last_verified: "2026-04-22"   # Q6=B 补录 · 原 2026-04-16 前漏收
+
+  # ── 2026-04-22 S6 新增：GitHub + 云效 流水线 ──
+
+  - page: pages/github-yunxiao-pipeline.html
+    title: GitHub + 云效 流水线指南（可视化 + 规范 · 二合一）
+    source_docs:
+      - doc: TEAM-COLLABORATION-SPEC
+        version: "2.1.3-patch"
+        status: DRAFT
+      - doc: TOOLCHAIN-GUIDE
+        version: "1"
+        status: DRAFT
+    sections:
+      - id: tldr
+        title: 一分钟读懂
+        spec_status: DRAFT
+      - id: overview
+        title: 全景流程图（3 泳道）
+        spec_status: DRAFT
+      - id: github
+        title: GitHub 侧 · 代码合入
+        spec_status: DRAFT           # §3.2 Required Checks 引用 gate-levels.html §4 权威源
+      - id: yunxiao
+        title: 云效 侧 · 制品与部署
+        spec_status: PROPOSED        # 蓝绿/金丝雀细则为 TOOLCHAIN-GUIDE v2 候选
+      - id: buttons
+        title: 按钮权在流水线上的落位
+        spec_status: DRAFT           # §B 按钮权矩阵对齐
+      - id: failure
+        title: 失败路径与熔断
+        spec_status: PROPOSED
+      - id: links
+        title: 与其他页面的关系
+        spec_status: DRAFT
+    last_verified: "2026-04-22"   # S6 首发 · v1.3 补充修正第 4 项
 
 # 规范状态定义
 status_definitions:

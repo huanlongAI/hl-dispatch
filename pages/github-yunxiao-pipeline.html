@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub + 云效 流水线指南 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+body { min-width:1200px; }
+
+/* ── Pipeline Canvas ── */
+.pl-canvas { max-width:980px; margin:0 auto 24px; padding:24px; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; position:relative; overflow:hidden; }
+.pl-canvas::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#24292F,#6C5CE7,#FF6A00,#00B894); background-size:300% 100%; animation:shimmer 4s linear infinite; }
+@keyframes shimmer { 0%{background-position:300% 0} 100%{background-position:0 0} }
+.pl-svg { width:100%; }
+.pl-svg .lane-bg { fill:rgba(15,15,26,0.4); stroke:#2D2D4A; stroke-width:1; }
+.pl-svg .lane-label { font-size:10px; font-weight:700; fill:#9999B0; text-transform:uppercase; letter-spacing:0.5px; }
+.pl-svg .node { cursor:pointer; transition:all 0.3s; }
+.pl-svg .node:hover { filter:brightness(1.25); }
+.pl-svg .node-label { pointer-events:none; font-size:10px; font-weight:700; fill:#E8E8F0; }
+.pl-svg .node-sub { pointer-events:none; font-size:8px; fill:#9999B0; }
+.pl-svg .arrow { stroke:#4A4A6A; stroke-width:1.5; fill:none; marker-end:url(#plArrow); }
+.pl-svg .arrow.blocking { stroke:var(--danger); stroke-dasharray:3,2; }
+.pl-svg .arrow.highlight { stroke:var(--primary); stroke-width:2; }
+.pl-svg .button-badge { font-size:9px; font-weight:800; fill:#FDCB6E; }
+
+/* ── Lane legend ── */
+.lane-legend { display:flex; gap:20px; justify-content:center; margin-top:12px; flex-wrap:wrap; font-size:0.78em; color:var(--text-muted); }
+.lane-legend span { display:flex; align-items:center; gap:6px; }
+.lane-legend i { width:12px; height:12px; display:inline-block; border-radius:3px; }
+
+/* ── Button-right compact matrix ── */
+.btn-matrix { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:20px 0; }
+.btn-cell { padding:14px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; position:relative; }
+.btn-cell.pm { border-left:3px solid var(--pm); }
+.btn-cell.qa { border-left:3px solid var(--qa); }
+.btn-cell.ops { border-left:3px solid var(--ops); }
+.btn-cell.founder { border-left:3px solid var(--founder); }
+.btn-cell .bt-name { font-weight:700; font-size:0.92em; margin-bottom:4px; font-family:'SF Mono','Monaco',monospace; }
+.btn-cell .bt-owner { font-size:0.82em; color:var(--text); }
+.btn-cell .bt-where { font-size:0.74em; color:var(--text-muted); margin-top:6px; }
+
+.nav-back { padding:20px 24px; max-width:980px; margin:20px auto 0; display:flex; justify-content:space-between; gap:12px; font-size:0.85em; }
+.nav-back a { padding:8px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text-muted); text-decoration:none; transition:all 0.25s; }
+.nav-back a:hover { border-color:var(--primary); color:var(--primary-light); }
+
+.pipeline-inline-note { font-size:0.78em; color:var(--text-muted); margin-top:4px; }
+.top-nav a { cursor:pointer; }
+
+.chip { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.74em; font-weight:600; vertical-align:middle; }
+.chip.blocking { background:rgba(225,112,85,0.15); color:var(--danger); border:1px solid rgba(225,112,85,0.3); }
+.chip.advisory { background:rgba(253,203,110,0.15); color:var(--accent); border:1px solid rgba(253,203,110,0.3); }
+.chip.pm { background:rgba(116,185,255,0.15); color:var(--pm); }
+.chip.qa { background:rgba(255,234,167,0.15); color:var(--qa); }
+.chip.ops { background:rgba(250,177,160,0.15); color:var(--ops); }
+.chip.founder { background:rgba(162,155,254,0.15); color:var(--founder); }
+
+table.spec-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.88em; }
+table.spec-table th, table.spec-table td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+table.spec-table th { background:rgba(108,92,231,0.08); color:var(--text-muted); font-weight:600; font-size:0.78em; text-transform:uppercase; letter-spacing:0.3px; }
+table.spec-table code { font-size:0.85em; color:var(--eng); background:rgba(85,239,196,0.08); padding:1px 5px; border-radius:4px; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="architecture.html">系统架构图</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="team-leads.html">团队代表</a>
+    <a href="tech-selection.html">技术选型</a>
+    <a href="glossary.html">术语表</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.5rem 1rem; text-align:center; font-size:0.82rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
+
+<div class="page-header" style="max-width:980px;margin:0 auto;padding:28px 24px 16px;">
+  <h1 style="font-size:1.9em;margin:0;">GitHub + 云效 <span>流水线指南</span></h1>
+  <p class="meta">
+    PR（Pull Request，合并请求）从提交到上线，在 GitHub 与阿里云云效之间如何流转 · 谁按哪个按钮 · 在哪一关会卡住。
+  </p>
+  <p class="meta" style="margin-top:8px;">
+    <span class="badge">可视化 + 规范 · 二合一</span>
+    <span class="badge" style="background:rgba(0,184,148,0.15);border-color:var(--secondary);color:var(--secondary);">DRAFT · 2026-04-22 首发</span>
+  </p>
+</div>
+
+<div class="content">
+
+<!-- ═══ §1 TL;DR ═══ -->
+<h2 id="tldr">§1 · 一分钟读懂</h2>
+
+<div class="callout info">
+  <strong>核心两句话</strong>
+  <p style="margin:6px 0 0;">① GitHub 负责<strong>代码合入</strong>：PR → Required Status Checks（必须通过的强制检查）→ Merge（合并）。<br>
+  ② 云效 负责<strong>制品与部署</strong>：合入 <code>main</code> 后触发镜像构建 → 部署编排（蓝绿/灰度）→ 健康巡检。</p>
+</div>
+
+<p>这两套系统<strong>职责不重叠</strong>：GitHub 是<a href="glossary.html#term-semantic-sovereignty" class="term-link">代码合入门禁</a>的权威，云效是<a href="glossary.html#term-blue-green-canary" class="term-link">运行态部署</a>的权威。跨系统的衔接点只有一个——合入 <code>main</code> 的那一刻，GitHub Webhook 通知云效开始构建。</p>
+
+<p><strong>为什么需要两套</strong>：GitHub 的 Actions 做不了 <a href="glossary.html#term-blue-green-canary" class="term-link">蓝绿/金丝雀发布</a>（Blue-Green / Canary，渐进式上线）、回滚、多可用区编排；云效做不了代码评审与 <a href="glossary.html#term-required-status-check" class="term-link">Required Status Checks</a>（组织级强制检查）。分工合作，谁专业谁来做。</p>
+
+<!-- ═══ §2 全景流程图 ═══ -->
+<h2 id="overview">§2 · 全景流程图</h2>
+
+<p>下图把 PR 从创建到线上的全流程拆成 <strong>3 条泳道</strong>（Lane，并行执行的通道）：本地开发、GitHub 门禁、云效部署。</p>
+
+<div class="pl-canvas">
+  <svg class="pl-svg" viewBox="0 0 940 520" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="plArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#6C5CE7"/>
+      </marker>
+    </defs>
+
+    <!-- Lane backgrounds -->
+    <rect class="lane-bg" x="10" y="10" width="920" height="110" rx="8"/>
+    <rect class="lane-bg" x="10" y="130" width="920" height="240" rx="8"/>
+    <rect class="lane-bg" x="10" y="380" width="920" height="130" rx="8"/>
+
+    <!-- Lane labels -->
+    <text class="lane-label" x="22" y="30">① 本地开发</text>
+    <text class="lane-label" x="22" y="150">② GitHub · 代码合入门禁</text>
+    <text class="lane-label" x="22" y="400">③ 云效 · 制品 &amp; 部署</text>
+
+    <!-- ═══ Lane 1: Local ═══ -->
+    <g class="node">
+      <rect x="30" y="50" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#55EFC4" stroke-width="1.5"/>
+      <text class="node-label" x="42" y="72">本地 commit</text>
+      <text class="node-sub" x="42" y="86">工程师 feature 分支</text>
+    </g>
+    <path class="arrow" d="M170,75 L220,75"/>
+
+    <g class="node">
+      <rect x="220" y="50" width="130" height="50" rx="8" fill="#0F0F1A" stroke="#55EFC4" stroke-width="1.5"/>
+      <text class="node-label" x="232" y="72">git push</text>
+      <text class="node-sub" x="232" y="86">推送到 GitHub</text>
+    </g>
+    <path class="arrow" d="M350,75 L400,75"/>
+
+    <g class="node">
+      <rect x="400" y="50" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#A29BFE" stroke-width="1.5"/>
+      <text class="node-label" x="412" y="72">创建 Pull Request</text>
+      <text class="node-sub" x="412" y="86">工程师 @ Reviewer</text>
+    </g>
+
+    <!-- arrow from lane 1 (Create PR) into lane 2 (CI trigger) -->
+    <path class="arrow" d="M475,100 L475,160"/>
+
+    <!-- ═══ Lane 2: GitHub ═══ -->
+    <g class="node">
+      <rect x="400" y="160" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
+      <text class="node-label" x="412" y="182">GitHub Actions</text>
+      <text class="node-sub" x="412" y="196">L1 格式 · L2 构建 · L3 单测</text>
+    </g>
+    <path class="arrow" d="M475,210 L475,240"/>
+
+    <g class="node">
+      <rect x="400" y="240" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
+      <text class="node-label" x="412" y="262">L4 契约 &amp; 集成测试</text>
+      <text class="node-sub" x="412" y="276">BLOCKING · 约 2–8min</text>
+    </g>
+
+    <!-- Side: 3 required status checks -->
+    <g class="node">
+      <rect x="600" y="160" width="160" height="40" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
+      <text class="node-label" x="612" y="184">qa-verdict</text>
+      <text class="button-badge" x="700" y="184">BLOCKING</text>
+    </g>
+    <text class="node-sub" x="610" y="216">QA 按钮 · 李云峰</text>
+
+    <g class="node">
+      <rect x="600" y="230" width="160" height="40" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
+      <text class="node-label" x="612" y="254">pm-acceptance</text>
+      <text class="button-badge" x="700" y="254">BLOCKING</text>
+    </g>
+    <text class="node-sub" x="610" y="286">PM 按钮 · 能力包 PM Owner</text>
+
+    <g class="node">
+      <rect x="600" y="300" width="160" height="40" rx="8" fill="#0F0F1A" stroke="#FDCB6E" stroke-width="1.5"/>
+      <text class="node-label" x="612" y="324">pm-hprd-pass</text>
+      <text class="button-badge" x="704" y="324" fill="#FDCB6E">ADVISORY</text>
+    </g>
+
+    <!-- Merge gate -->
+    <g class="node">
+      <rect x="230" y="300" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#A29BFE" stroke-width="2"/>
+      <text class="node-label" x="242" y="322">Merge button</text>
+      <text class="node-sub" x="242" y="336">按钮权：INV-0 童正辉</text>
+    </g>
+    <path class="arrow" d="M475,290 L300,300"/>
+    <path class="arrow highlight" d="M370,325 L470,325"/>
+
+    <g class="node">
+      <rect x="470" y="300" width="110" height="50" rx="8" fill="#0F0F1A" stroke="#00B894" stroke-width="1.5"/>
+      <text class="node-label" x="482" y="322">合入 main</text>
+      <text class="node-sub" x="482" y="336">Webhook → 云效</text>
+    </g>
+
+    <!-- arrow from lane 2 to lane 3 -->
+    <path class="arrow highlight" d="M525,350 L525,400"/>
+
+    <!-- ═══ Lane 3: Yunxiao ═══ -->
+    <g class="node">
+      <rect x="30" y="410" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
+      <text class="node-label" x="42" y="432">① 镜像构建</text>
+      <text class="node-sub" x="42" y="446">Dockerfile · 推送制品仓库</text>
+    </g>
+    <path class="arrow" d="M170,435 L220,435"/>
+
+    <g class="node">
+      <rect x="220" y="410" width="150" height="50" rx="8" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
+      <text class="node-label" x="232" y="432">② 部署编排</text>
+      <text class="node-sub" x="232" y="446">staging → canary → prod</text>
+    </g>
+    <path class="arrow" d="M370,435 L420,435"/>
+
+    <g class="node">
+      <rect x="420" y="410" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#FF6A00" stroke-width="1.5"/>
+      <text class="node-label" x="432" y="432">③ 健康巡检</text>
+      <text class="node-sub" x="432" y="446">Observability 看板</text>
+    </g>
+    <path class="arrow" d="M560,435 L610,435"/>
+
+    <g class="node">
+      <rect x="610" y="410" width="140" height="50" rx="8" fill="#0F0F1A" stroke="#00B894" stroke-width="1.5"/>
+      <text class="node-label" x="622" y="432">④ 上线完成</text>
+      <text class="node-sub" x="622" y="446">Released 状态回写</text>
+    </g>
+
+    <g class="node">
+      <rect x="760" y="410" width="160" height="50" rx="8" fill="#0F0F1A" stroke="#E17055" stroke-width="1.5"/>
+      <text class="node-label" x="772" y="432">⚠️ 回滚按钮</text>
+      <text class="node-sub" x="772" y="446">按钮权：曾正龙（Ops Lead）</text>
+    </g>
+  </svg>
+
+  <div class="lane-legend">
+    <span><i style="background:#55EFC4;"></i> 工程师操作</span>
+    <span><i style="background:#FDCB6E;"></i> CI 自动检查</span>
+    <span><i style="background:#E17055;"></i> 人工 BLOCKING 按钮</span>
+    <span><i style="background:#A29BFE;"></i> 治理节点</span>
+    <span><i style="background:#FF6A00;"></i> 云效 编排</span>
+  </div>
+</div>
+
+<p class="pipeline-inline-note">图示说明：qa-verdict / pm-acceptance 两个 BLOCKING 按钮与 CI 自动检查并行执行，<strong>全部绿灯</strong>后 Merge button 才可点击；<a href="gate-levels.html#section4" class="term-link">详细规则见"门禁体系详解 §4"</a>（本页不重复）。</p>
+
+<!-- ═══ §3 GitHub 侧 ═══ -->
+<h2 id="github">§3 · GitHub 侧 · 代码合入</h2>
+
+<p>GitHub 这一侧是<strong>门禁方</strong>，核心产物有三类：分支保护（Branch Protection）、GitHub Actions（CI 脚本）、Required Status Checks（组织级强制检查）。</p>
+
+<h3>§3.1 · 分支策略</h3>
+
+<div class="table-wrapper">
+<table class="spec-table">
+  <thead>
+    <tr><th>分支</th><th>允许谁推送</th><th>保护规则</th><th>用途</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>main</code></td>
+      <td>禁止直推</td>
+      <td>PR only · 强制 Required Checks · 禁止 force push</td>
+      <td>发布基线 · 与云效 prod 对齐</td>
+    </tr>
+    <tr>
+      <td><code>feature/*</code></td>
+      <td>工程师</td>
+      <td>无保护 · 建议每次 rebase <code>main</code></td>
+      <td>日常开发</td>
+    </tr>
+    <tr>
+      <td><code>release/*</code></td>
+      <td>Ops Lead（曾正龙）</td>
+      <td>只允许 cherry-pick 合入 <code>main</code> 的 commit</td>
+      <td>稳定版回归测试 · 补丁发布</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>§3.2 · Required Status Checks（组织级强制检查）</h3>
+
+<div class="callout warn">
+  <strong>⚠️ 权威源在 <a href="gate-levels.html#section4" class="term-link">门禁体系详解 §4</a></strong>
+  <p style="margin:6px 0 0;">本页不重复 Required Status Checks 的定义与审批权限表。以下只列出<strong>在流水线上的落位</strong>：哪个检查出现在 PR 的哪个阶段。</p>
+</div>
+
+<div class="table-wrapper">
+<table class="spec-table">
+  <thead>
+    <tr><th>Check</th><th>来源</th><th>触发时机</th><th>典型耗时</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>qa-verdict</code> <span class="chip blocking">BLOCKING</span></td>
+      <td>QA 团队后台（人工）</td>
+      <td>PR 打开后 · QA 完成验收场景测试</td>
+      <td>数小时 – 1 天</td>
+    </tr>
+    <tr>
+      <td><code>pm-acceptance</code> <span class="chip blocking">BLOCKING</span></td>
+      <td>PM 在 PR 页面点击 Approve</td>
+      <td>代码 review 与 QA 验收完成后</td>
+      <td>约 30min</td>
+    </tr>
+    <tr>
+      <td><code>pm-hprd-pass</code> <span class="chip advisory">ADVISORY</span></td>
+      <td>hl-factory 流程内检查（自动）</td>
+      <td>PR 创建时立即触发</td>
+      <td>约 10s</td>
+    </tr>
+    <tr>
+      <td>GitHub Actions CI</td>
+      <td><code>.github/workflows/*.yml</code></td>
+      <td>每次 push 到 PR 分支</td>
+      <td>约 2–8min（L1–L4 完整跑）</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>§3.3 · Merge 策略</h3>
+
+<p>三种合并方式的选择规则：</p>
+
+<ul>
+  <li><strong>Squash and merge</strong>（压缩合并，默认）—— 适用于 99% 的能力包 PR。把 feature 分支的 N 次 commit 压成一个 commit 进 <code>main</code>，保持主干历史干净。</li>
+  <li><strong>Rebase and merge</strong>（变基合并）—— 仅限 Ops Lead 用于 <code>release/*</code> 分支 cherry-pick 场景。</li>
+  <li><strong>Merge commit</strong>（合并提交） —— <strong>已禁用</strong>。避免主干出现 "Merge pull request #xxx" 噪声。</li>
+</ul>
+
+<h3>§3.4 · Merge Queue（合并队列）</h3>
+
+<p>当多个 PR 同时就绪时，GitHub Merge Queue 串行化合并：每个 PR 在进入 <code>main</code> 前都以最新 <code>main</code> 为 base 重跑一遍 CI。这保证<strong>语义合并</strong>——两个单独绿灯但合并后冲突的 PR 不会同时进主干。</p>
+
+<!-- ═══ §4 云效侧 ═══ -->
+<h2 id="yunxiao">§4 · 云效 侧 · 制品与部署</h2>
+
+<p>云效接管 <code>main</code> 合入之后的所有工作。分两个大块：<strong>镜像构建</strong>和<strong>部署编排</strong>。</p>
+
+<h3>§4.1 · 镜像构建（Container Build）</h3>
+
+<div class="flow-steps">
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--primary);">1</div>
+    <div class="flow-body">
+      <h4>Webhook 触发</h4>
+      <p>GitHub <code>main</code> 合入 → 云效流水线收到 push 事件，拉取最新 commit。</p>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--primary);">2</div>
+    <div class="flow-body">
+      <h4>Docker build</h4>
+      <p>按 <code>Dockerfile</code> 构建镜像，打上 tag（格式：<code>&lt;branch&gt;-&lt;commit-sha7&gt;-&lt;timestamp&gt;</code>）。</p>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--primary);">3</div>
+    <div class="flow-body">
+      <h4>镜像扫描</h4>
+      <p>Trivy 扫高危漏洞 · License 合规检查（非 GPL-3.0）。任一失败阻断后续部署。</p>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--primary);">4</div>
+    <div class="flow-body">
+      <h4>推送到制品仓库（ACR）</h4>
+      <p>阿里云容器镜像服务 Container Registry。镜像保留期：prod 标签永久；非 prod 标签 30 天。</p>
+    </div>
+  </div>
+</div>
+
+<h3>§4.2 · 部署编排（Deployment Pipeline）</h3>
+
+<p>四段递进 · 全程可观测 · 任一段失败可一键回滚：</p>
+
+<div class="flow-steps">
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--ops);">A</div>
+    <div class="flow-body">
+      <h4>staging 部署（自动）</h4>
+      <p>合入 <code>main</code> 后镜像自动推 staging 环境。QA 在 staging 做最终冒烟测试（约 30min）。</p>
+      <div class="flow-tags"><span class="flow-tag ops">自动</span><span class="flow-tag qa">QA 验证</span></div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--ops);">B</div>
+    <div class="flow-body">
+      <h4>canary 部署（金丝雀，5% 流量）</h4>
+      <p>Ops Lead（曾正龙）在<strong>云效按钮面板</strong>点击"进入 canary"。5% 流量切到新版本，观察 30min。</p>
+      <div class="flow-tags"><span class="flow-tag ops">曾正龙 按钮</span></div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--ops);">C</div>
+    <div class="flow-body">
+      <h4>prod 全量（100% 流量）</h4>
+      <p>canary 指标绿灯（错误率 &lt; 0.5% · p99 延迟无退化） → Ops Lead 点击"切 prod"。老版本保留 24h 作回滚兜底。</p>
+      <div class="flow-tags"><span class="flow-tag ops">曾正龙 按钮</span></div>
+    </div>
+  </div>
+  <div class="flow-step">
+    <div class="flow-num" style="background:var(--ops);">D</div>
+    <div class="flow-body">
+      <h4>稳定期 + Released</h4>
+      <p>prod 全量 24h 无回滚 → 能力包状态自动回写为 <a href="workflow-states.html#state-machine" class="term-link">Released</a>。</p>
+      <div class="flow-tags"><span class="flow-tag ci">自动</span></div>
+    </div>
+  </div>
+</div>
+
+<h3>§4.3 · 回滚（Rollback）</h3>
+
+<div class="callout danger">
+  <strong>🚨 回滚只有一个按钮 · 只有 Ops Lead 能按</strong>
+  <p style="margin:6px 0 0;">触发条件：canary/prod 指标告警（错误率 &gt; 1% · p99 退化 &gt; 30% · 健康巡检失败）。云效控制台一键切回上一个 prod 标签，<strong>无需代码 revert</strong>。回滚后 24h 内 Ops Lead 必须提交 <a href="glossary.html#term-blocking-advisory" class="term-link">事故复盘</a>。</p>
+</div>
+
+<!-- ═══ §5 按钮权在流水线上的落位 ═══ -->
+<h2 id="buttons">§5 · 按钮权在流水线上的落位</h2>
+
+<p>流水线的关键决策点都由<strong>按钮权</strong>控制。按钮权 = 物理上能按下那个按钮的人。以下 5 个按钮贯穿整条流水线：</p>
+
+<div class="btn-matrix">
+  <div class="btn-cell founder">
+    <div class="bt-name">Merge button</div>
+    <div class="bt-owner">INV-0 童正辉</div>
+    <div class="bt-where">GitHub PR 页面 · 所有 Required Checks 绿灯后可按</div>
+  </div>
+  <div class="btn-cell qa">
+    <div class="bt-name">qa-verdict</div>
+    <div class="bt-owner">李云峰（QA Lead）</div>
+    <div class="bt-where">QA 团队后台 · 验收场景全通过后打 Approve</div>
+  </div>
+  <div class="btn-cell pm">
+    <div class="bt-name">pm-acceptance</div>
+    <div class="bt-owner">能力包 PM Owner</div>
+    <div class="bt-where">GitHub PR 页面 · Approve review（团队统筹由 PM Lead 邹骢负责）</div>
+  </div>
+  <div class="btn-cell pm">
+    <div class="bt-name">pm-hprd-pass</div>
+    <div class="bt-owner">能力包 PM Owner</div>
+    <div class="bt-where">hl-factory 流程自动检 · PM 在 Cap-Spec 阶段完成 HPRD 后自动绿灯</div>
+  </div>
+  <div class="btn-cell ops">
+    <div class="bt-name">进 canary / 切 prod / 回滚</div>
+    <div class="bt-owner">曾正龙（Ops Lead）</div>
+    <div class="bt-where">云效控制台按钮面板 · 所有环境切换与回滚</div>
+  </div>
+</div>
+
+<div class="callout info">
+  <strong>📘 按钮权与签字边界的区别</strong>
+  <p style="margin:6px 0 0;">按钮权在<strong>物理层</strong>（谁能点），签字边界在<strong>治理层</strong>（谁要为决定负责）。两者经常重合但不等价——例如 INV-0 按 Merge button 不代表 INV-0 要为代码质量负责，QA 的 qa-verdict 才是质量签字。完整签字边界见 <a href="team-leads.html#signature-matrix" class="term-link">团队代表 · 签字矩阵</a>。</p>
+</div>
+
+<!-- ═══ §6 失败路径与熔断 ═══ -->
+<h2 id="failure">§6 · 失败路径与熔断</h2>
+
+<p>流水线不是"一路绿灯直到上线"的理想路径，60% 的 PR 都会在某个节点卡住。以下是三类常见失败及处置：</p>
+
+<h3>§6.1 · GitHub 侧失败</h3>
+
+<ul>
+  <li><strong>CI 红灯</strong>（L1 格式 / L2 构建 / L3 单测 / L4 契约失败）—— 工程师修，push 新 commit，Actions 自动重跑。</li>
+  <li><strong>qa-verdict 打回</strong>（Request Changes）—— QA 在 PR 里写明拒绝原因，工程师修，QA 复测。</li>
+  <li><strong>pm-acceptance 打回</strong>—— PM 认为实现与 <a href="glossary.html#term-cap-spec" class="term-link">Cap-Spec</a> 不一致，工程师与 PM 对齐，必要时修改 Cap-Spec 走治理流程。</li>
+  <li><strong>Merge Queue 冲突</strong>—— 前车 PR 改动与本 PR 冲突，Queue 自动把本 PR 踢出，工程师 rebase 后重新入队。</li>
+</ul>
+
+<h3>§6.2 · 云效构建失败</h3>
+
+<ul>
+  <li><strong>Docker build 失败</strong>—— Dockerfile 与 <code>main</code> 代码不同步。工程师补 PR 修 Dockerfile。</li>
+  <li><strong>镜像扫描阻断</strong>（Trivy 高危）—— 升级依赖，补 PR。紧急情况走 <a href="glossary.html#term-power-separation" class="term-link">WAIVER</a>（临时豁免）走治理审批。</li>
+</ul>
+
+<h3>§6.3 · 云效部署失败（熔断）</h3>
+
+<div class="callout danger">
+  <strong>🛑 熔断阈值（自动回滚触发）</strong>
+  <ul style="margin:6px 0 0 16px;">
+    <li>canary 阶段：错误率 &gt; 1% 持续 5min</li>
+    <li>prod 切量：p99 延迟退化 &gt; 50%</li>
+    <li>健康巡检：任意核心接口 5xx &gt; 10 次 / min</li>
+  </ul>
+  <p style="margin:6px 0 0;">以上任一达成 → 云效自动停止切量 + 告警 Ops Lead。由 Ops Lead 决定手动回滚 or 继续观察。</p>
+</div>
+
+<!-- ═══ §7 与其他页面的关系 ═══ -->
+<h2 id="links">§7 · 与其他页面的关系</h2>
+
+<p>本页的定位是 <strong>"GitHub + 云效 两套系统的流水线说明"</strong>。更细的规则，去以下页面：</p>
+
+<div class="card-grid">
+  <a class="card" href="gate-levels.html#section4" style="text-decoration:none;">
+    <h3>🛡️ 门禁体系详解 · §4</h3>
+    <p>Required Status Checks 组织级规则的权威定义（<code>qa-verdict</code> / <code>pm-acceptance</code> / <code>pm-hprd-pass</code>），含审批权限表。本页不重复。</p>
+    <span class="tag" style="background:rgba(253,203,110,0.15);color:#FDCB6E;">权威源</span>
+  </a>
+  <a class="card" href="workflow-states.html#state-machine" style="text-decoration:none;">
+    <h3>⚡ 12 状态机详解</h3>
+    <p>能力包从 Proposed 到 Released 的 12 状态。本页流水线图示的每一步会对应一次状态跃迁。</p>
+    <span class="tag" style="background:rgba(108,92,231,0.15);color:#A29BFE;">上下文</span>
+  </a>
+  <a class="card" href="ops.html" style="text-decoration:none;">
+    <h3>🔧 运维人员指南</h3>
+    <p>Ops Lead（曾正龙）在云效上的日常操作清单：按钮面板、看板、应急预案。</p>
+    <span class="tag" style="background:rgba(250,177,160,0.15);color:var(--ops);">实操</span>
+  </a>
+  <a class="card" href="team-leads.html#signature-matrix" style="text-decoration:none;">
+    <h3>👥 团队代表 · 签字矩阵</h3>
+    <p>按钮权之外的治理签字边界：哪位 Lead 要为哪个决定负责。</p>
+    <span class="tag" style="background:rgba(162,155,254,0.15);color:var(--founder);">治理</span>
+  </a>
+  <a class="card" href="engineering.html" style="text-decoration:none;">
+    <h3>⚙️ 工程师团队指南</h3>
+    <p>工程师日常在 GitHub 上的操作细则（feature 分支、PR 规范、rebase 流程）。</p>
+    <span class="tag" style="background:rgba(85,239,196,0.15);color:var(--eng);">实操</span>
+  </a>
+  <a class="card" href="repo-directory.html" style="text-decoration:none;">
+    <h3>📂 六仓库架构详解</h3>
+    <p>GitHub 上的 6 个唤龙仓库 · CODEOWNERS · 能力包跨仓库流转。</p>
+    <span class="tag" style="background:rgba(85,239,196,0.15);color:var(--eng);">拓扑</span>
+  </a>
+</div>
+
+</div>
+
+<div class="nav-back">
+  <a href="../index.html">&larr; 返回首页</a>
+  <a href="gate-levels.html">门禁体系详解 &rarr;</a>
+</div>
+
+<script>
+// 简单的锚点平滑滚动
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id = a.getAttribute('href').slice(1);
+    const t = document.getElementById(id);
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
+});
+</script>
+</body>
+</html>

@@ -58,6 +58,15 @@ def get_relative_path(filepath):
 
 class VersionBadgeParser(HTMLParser):
     """Extract version badges from HTML"""
+
+    # Meta names that are version-bearing. Viewport, generator, charset,
+    # description etc. are NOT version sources and must be skipped — they
+    # previously triggered false positives via initial-scale=1.0 in viewport.
+    VERSION_META_NAMES = {
+        'version', 'spec-version', 'doc-version', 'docs-version',
+        'site-version', 'guide-version',
+    }
+
     def __init__(self):
         super().__init__()
         self.versions = []
@@ -69,8 +78,10 @@ class VersionBadgeParser(HTMLParser):
         if tag == 'span' and 'badge' in attrs_dict.get('class', ''):
             self.in_badge = True
         elif tag == 'meta':
-            # Also check meta tags for version info
-            if 'name' in attrs_dict and 'content' in attrs_dict:
+            # Only honour meta tags whose name is an explicit version source.
+            # Prevents viewport `initial-scale=1.0` from masquerading as v1.0.
+            name = attrs_dict.get('name', '').strip().lower()
+            if name in self.VERSION_META_NAMES and 'content' in attrs_dict:
                 self._extract_versions(attrs_dict['content'])
 
     def handle_data(self, data):
@@ -131,6 +142,14 @@ def check_version_sync():
 
         # Normalize extracted versions
         html_versions_set = set(v.lstrip('v') for v in html_versions)
+
+        # Soft-pass pages that carry no version tokens at all.
+        # The check fires only when a page self-declares versions AND they
+        # disagree with the manifest. A page with zero declared versions is
+        # assumed to inherit the manifest silently (documentation pages are
+        # not required to badge every source_doc version inline).
+        if not html_versions_set:
+            continue
 
         # Check if all manifest versions appear in HTML
         missing = manifest_versions - html_versions_set
@@ -255,7 +274,23 @@ def check_public_deploy():
 # ============================================================================
 
 def check_ratification():
-    """Check 4: Verify status consistency between HTML and manifest"""
+    """Check 4: Verify status consistency between HTML and manifest.
+
+    A page is treated as claiming LOCKED ratification ONLY when it carries an
+    explicit page-level marker. Two conventions are honoured:
+
+        1. HTML comment marker:  <!-- RATIFICATION: Locked -->
+        2. Class-based badge:    <... class="... ratification-locked ...">
+
+    Bare occurrences of the word "Locked" (inside state-machine node labels
+    such as "Contract Locked" / "Pilot Locked", historical fact references
+    like "TEAM-COLLAB-SPEC v2.1 Pilot-Locked 2026-04-11", or tech-stack
+    dependency status columns) are NOT ratification claims and must not
+    trigger this check.
+
+    A page without the explicit marker is assumed to inherit the manifest
+    status silently (fine for DRAFT pages).
+    """
     print("\n" + "="*70)
     print("CHECK 4: Ratification Check")
     print("="*70)
@@ -264,6 +299,12 @@ def check_ratification():
     pages = manifest.get('pages', [])
 
     issues = []
+
+    # Explicit ratification-claim markers. Keep narrow on purpose.
+    LOCKED_MARKERS = [
+        re.compile(r'<!--\s*RATIFICATION\s*:\s*Locked\s*-->', re.IGNORECASE),
+        re.compile(r'class\s*=\s*"[^"]*\bratification-locked\b[^"]*"', re.IGNORECASE),
+    ]
 
     for page_entry in pages:
         page_path = page_entry.get('page')
@@ -277,16 +318,7 @@ def check_ratification():
 
         html_content = read_file(full_path)
 
-        # Check if HTML contains Pilot-Locked or Locked status indicators
-        locked_patterns = [
-            r'Pilot-Locked',
-            r'(?<!\w)Locked(?!\w)',  # Whole word "Locked"
-        ]
-
-        has_locked_indicator = any(
-            re.search(pattern, html_content)
-            for pattern in locked_patterns
-        )
+        has_locked_indicator = any(m.search(html_content) for m in LOCKED_MARKERS)
 
         if has_locked_indicator:
             # Check manifest status - if it says DRAFT, that's a mismatch
@@ -294,8 +326,9 @@ def check_ratification():
                 status = doc.get('status', '').upper()
                 if status == 'DRAFT':
                     issues.append(
-                        f"  ✗ {page_path}: HTML shows Pilot-Locked/Locked status, "
-                        f"but source doc '{doc.get('doc')}' is marked as DRAFT in manifest"
+                        f"  ✗ {page_path}: HTML carries explicit ratification-locked "
+                        f"marker, but source doc '{doc.get('doc')}' is marked as "
+                        f"DRAFT in manifest"
                     )
 
             # Also check section statuses
@@ -304,14 +337,11 @@ def check_ratification():
                 if section_status == 'DRAFT':
                     section_id = section.get('id')
                     section_title = section.get('title')
-                    # Only flag if the locked indicator actually appears in this section
-                    if section_id in html_content and any(
-                        re.search(pattern, html_content)
-                        for pattern in locked_patterns
-                    ):
+                    if section_id and section_id in html_content:
                         issues.append(
                             f"  ✗ {page_path}#{section_id} ({section_title}): "
-                            f"Shows locked status but manifest section is DRAFT"
+                            f"Carries ratification-locked marker but manifest "
+                            f"section is DRAFT"
                         )
 
     if issues:

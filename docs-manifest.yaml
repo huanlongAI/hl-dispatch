@@ -10,23 +10,18 @@ site:
   last_verified: "2026-04-22"   # v2.1.2-patch 文件层校对完成，待 INV-0 按钮权 push
   # 部署历史（最近一次）
   last_deploy:
+    date: "2026-04-22"
+    commit: "c818d95"
+    branch: gh-pages
+    url: "https://huanlongai.github.io/hl-dispatch/"
+    note: "HP-2'/HP-3' 直推：5 Lead 信息栏 + 按钮权摘要 + Q6/Q7/Q8 补裁（TEAM-COLLAB v2.1.2-patch）· INV-0 按钮权直推（HP-3 培训发布停机点 HALT-002 已取消）"
+  # 部署历史（倒数第二次 · 审计保留）
+  previous_deploy:
     date: "2026-04-16"
     commit: "7cace5a"
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
     note: "新增 pages/architecture.html，全站导航第三项已对齐"
-  # 待部署变更（HP-2' / HP-3' 直推）
-  pending_deploy:
-    date: "2026-04-22"
-    branch: gh-pages
-    spec_addendum: "TEAM-COLLABORATION-SPEC v2.1.2-patch + SITE-PUB §11 addendum v2"
-    changeset:
-      - "pages/global.html · Lead × 5 信息栏 · 索引卡 count 11→13 · hero badge v2.1.2-patch"
-      - "pages/engineering.html · 双 Lead 信息栏（魏鹏+胡杰威） · badge 改写"
-      - "pages/ops.html · 曾正龙 Lead 信息栏 · 按钮权摘要 6 行 · H6 作废红框"
-      - "pages/team-leads.html · 新建（5 Lead 代表专页 · §4 签字边界矩阵）"
-      - "index.html L477 · 真名回写（胡杰威 · AI-first Flutter） · Q8=A PII scrub 撤销"
-      - "docs-manifest.yaml · 补录 team-leads / tech-selection / glossary / workflow-states 4 页 · Q6=B"
 
 pages:
   - page: index.html

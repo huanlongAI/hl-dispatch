@@ -38,6 +38,7 @@
 | 文件 | 状态 | 议题 ID | 说明 |
 |---|---|---|---|
 | DD-DB-MIGRATION-FLYWAY-2026-04-14.md | 🔒 LOCKED 2026-04-14 | J-04 | Flyway 10.x LTS 为 Phase 0 起 DB Schema 治理唯一方案。结项 GREENFIELD T-05。 |
+| DD-FE-CLIENT-v1.md | 🔒 LOCKED 2026-04-20 | J-A2 | 场景前端 App（`huanlongAI/hl-scene-app`）技术决策派生（Flutter 3.41 / Dart 3.x / 13 字段 + 性能 SLO + 依赖审计约束）· 承接 R-FE-CLIENT-001 LOCKED + amend-001（`hl-contracts/governance/RULINGS.md`）|
 
 *（注：DD-ORM / DD-AUTH / DD-CACHE / DD-TEST v1.2 / BRIDGE-DERIVATION v1 等上游 DD 原则上存于 hl-contracts 仓，本目录仅收录本地产出的 DD）*
 

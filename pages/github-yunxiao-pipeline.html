@@ -209,6 +209,39 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 .fm-box p { margin:0 0 4px; font-size:0.85em; color:var(--text); line-height:1.7; }
 .fm-box ul { margin:4px 0 0; padding-left:20px; font-size:0.82em; color:var(--text-muted); line-height:1.7; }
 .fm-bridge { text-align:center; font-size:0.82em; color:var(--primary-light); padding:6px 0; border-top:1px dashed var(--primary); border-bottom:1px dashed var(--primary); margin:2px 40px; }
+
+/* Complete repository map tab */
+.map-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0; }
+.map-summary-card {
+  padding:14px 16px; border:1px solid var(--border); border-radius:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012));
+}
+.map-summary-card .num { font-size:1.45em; font-weight:900; color:var(--primary-light); margin-bottom:4px; }
+.map-summary-card .label { font-size:0.8em; color:var(--text-muted); line-height:1.55; }
+.repo-map-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0; }
+.repo-map-card {
+  min-height:158px; padding:15px 16px; border:1px solid var(--border); border-left:4px solid var(--primary);
+  border-radius:12px; background:var(--bg-card); position:relative; overflow:hidden;
+}
+.repo-map-card::after {
+  content:''; position:absolute; right:-42px; top:-42px; width:96px; height:96px; border-radius:50%;
+  background:rgba(108,92,231,0.08); pointer-events:none;
+}
+.repo-map-card.core { border-left-color:var(--founder); }
+.repo-map-card.code { border-left-color:var(--eng); }
+.repo-map-card.site { border-left-color:var(--pm); }
+.repo-map-card.aux { border-left-color:#74B9FF; }
+.repo-map-card.founder-only { border-left-color:#DFE6E9; }
+.repo-map-card.planned { border-left-color:#FDCB6E; }
+.repo-map-card.archived { border-left-color:#777B92; opacity:0.82; }
+.repo-map-card h4 { margin:0 0 8px; font-size:0.98em; color:var(--text); font-family:'SF Mono','Monaco',monospace; }
+.repo-map-card p { margin:0 0 10px; font-size:0.82em; color:var(--text-muted); line-height:1.65; }
+.repo-map-card .repo-meta { display:flex; gap:6px; flex-wrap:wrap; margin-top:auto; }
+.repo-map-card .repo-meta span { padding:2px 7px; border-radius:999px; background:rgba(255,255,255,0.07); color:#AEB4D1; font-size:0.68em; font-weight:800; }
+.scope-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px 0; }
+.scope-box { padding:15px 16px; border-radius:12px; border:1px solid var(--border); background:rgba(15,15,26,0.42); }
+.scope-box h4 { margin:0 0 8px; font-size:0.94em; color:var(--text); }
+.scope-box p { margin:0; font-size:0.82em; color:var(--text-muted); line-height:1.65; }
 </style>
 </head>
 <body>
@@ -256,6 +289,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <div class="tabs-nav">
     <button class="tab-btn active" data-tab="flow">仓库流转图</button>
     <button class="tab-btn" data-tab="overview">一分钟读懂</button>
+    <button class="tab-btn" data-tab="repo-map">仓库地图</button>
     <button class="tab-btn" data-tab="github">GitHub 主轨</button>
     <button class="tab-btn" data-tab="yunxiao">云效执行器</button>
     <button class="tab-btn" data-tab="buttons">按钮权</button>
@@ -322,6 +356,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <ol>
     <li>先看下面的 <strong>仓库流转图</strong>：它按仓库/副本/PR/部署面展示完整路径。</li>
     <li>点击任意仓库节点，详情会在流程图下方展开。</li>
+    <li>再看 <strong>仓库地图</strong>：它把 R-028 产品线七仓、R-070 平台附属仓、guanghe 创始人独家仓和规划仓分层拆开，避免把不同层级混成一个计数。</li>
     <li>后面按顺序补充 GitHub 主轨、云效执行器、按钮权、失败路径与文档边界。</li>
   </ol>
 </section>
@@ -450,12 +485,124 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </div>
 </section>
 
+<!-- ═══ Repository Map ═══ -->
+<section class="tab-pane" id="repo-map">
+  <h2>§3 · 完整仓库地图 · R-028 + R-070</h2>
+  <p>这张地图是 2026-04-23 整理确认后的口径：<strong>R-028 的产品线七仓仍是产品线定义</strong>，R-070 只是把仓库所有权和平台附属载体补登记清楚。不要把平台附属、创始人独家、规划仓全部混入“七仓”计数。</p>
+
+  <div class="callout success">
+    <strong>权威锚点</strong>
+    <p><code>hl-contracts/governance/RULINGS.md</code>：R-006 / R-012 / R-016 / R-028 / R-036 / R-037 / <strong>R-070 LOCKED 2026-04-23</strong>。R-070 还引入 <code>governance/REPO-OWNERSHIP-LOG.md</code>，以后仓库 create / transfer / archive / rename 都先登记。</p>
+  </div>
+
+  <div class="map-summary">
+    <div class="map-summary-card"><div class="num">7</div><div class="label">产品线七仓：R-028 口径，含已归档 <code>hl-console</code>；规划 <code>hl-scene-*</code> 另列。</div></div>
+    <div class="map-summary-card"><div class="num">3</div><div class="label">平台附属：<code>team-memory</code>、<code>sentinel-shared</code>、<code>tech-cofounder-bot</code>。</div></div>
+    <div class="map-summary-card"><div class="num">1</div><div class="label">创始人独家：<code>huanlongAI/guanghe</code>，服务 C-L1，不进入团队建设流。</div></div>
+    <div class="map-summary-card"><div class="num">2</div><div class="label">规划仓：<code>hl-scene-app</code>、<code>hl-scene-design-system</code>，建仓时再触发登记。</div></div>
+  </div>
+
+  <h3>产品线七仓（R-028 定义 · R-070 只补事实）</h3>
+  <div class="repo-map-grid">
+    <div class="repo-map-card core">
+      <h4>hl-contracts</h4>
+      <p>SSOT 契约仓：RULINGS / Decisions / OpenAPI / ReasonCodes / Cap-Spec / SIGN-OFF。纯 GitHub，上游语义和治理真源。</p>
+      <div class="repo-meta"><span>SSOT</span><span>R-006</span><span>R-028</span><span>纯 GitHub</span></div>
+    </div>
+    <div class="repo-map-card code">
+      <h4>hl-platform</h4>
+      <p>后端单仓：HK Kernel Modulith + Gateway，承载 HK.ID / HK.OrgLink / HK.Policy / HK.Consent / HK.Audit / HK.ReasonDict。</p>
+      <div class="repo-meta"><span>已建</span><span>双仓流水线</span><span>Kotlin/JVM</span></div>
+    </div>
+    <div class="repo-map-card code">
+      <h4>hl-framework</h4>
+      <p>公司级统一框架：starters + BOM，R-037 定义模块边界；不含 MyBatis，不加 HK 前缀。</p>
+      <div class="repo-meta"><span>已建</span><span>R-037</span><span>双仓流水线</span></div>
+    </div>
+    <div class="repo-map-card code">
+      <h4>hl-console-native</h4>
+      <p>C-L1 内部控制台：Swift / SwiftUI / GHKit，服务 Founder 的合约冻结、监控和 release-train 视图。</p>
+      <div class="repo-meta"><span>已建</span><span>C-L1</span><span>Founder only</span></div>
+    </div>
+    <div class="repo-map-card code">
+      <h4>hl-factory</h4>
+      <p>唤龙超级工厂：R-012 独立产品线，平台流水线中只保留 CI/CD 门禁规格源和跨用工具身份。</p>
+      <div class="repo-meta"><span>已建</span><span>R-012</span><span>规格源</span></div>
+    </div>
+    <div class="repo-map-card site">
+      <h4>hl-dispatch</h4>
+      <p>调度服务 + 本站 GitHub Pages 部署载体。站点内容是 guide layer，不替代 <code>hl-contracts</code> 治理真源。</p>
+      <div class="repo-meta"><span>已建</span><span>gh-pages</span><span>纯 GitHub</span></div>
+    </div>
+    <div class="repo-map-card archived">
+      <h4>hl-console</h4>
+      <p>旧 Vue 控制台，R-016 后归档废弃，由 <code>hl-console-native</code> 取代。保留在产品线七仓历史口径里。</p>
+      <div class="repo-meta"><span>archived</span><span>R-016</span><span>历史口径</span></div>
+    </div>
+  </div>
+
+  <h3>R-070 平台附属与创始人独家</h3>
+  <div class="repo-map-grid">
+    <div class="repo-map-card aux">
+      <h4>team-memory</h4>
+      <p>团队 AI session 记忆沉淀层：95% session digest 不审批，5% 正式治理文档走 01-drafts → 04-locked。</p>
+      <div class="repo-meta"><span>R-070</span><span>平台附属</span><span>B6</span></div>
+    </div>
+    <div class="repo-map-card aux">
+      <h4>sentinel-shared</h4>
+      <p>L4 Consistency Sentinel 共享基础设施：reusable workflows + scripts，为各仓提供长期一致性哨兵。</p>
+      <div class="repo-meta"><span>R-070</span><span>L4</span><span>基础设施</span></div>
+    </div>
+    <div class="repo-map-card aux">
+      <h4>tech-cofounder-bot</h4>
+      <p>Node-C 大辉子 · 终生技术合伙人智能体，MAIA-001 治理辅助，不进入能力包交付链路。</p>
+      <div class="repo-meta"><span>R-070</span><span>MAIA-001</span><span>治理辅助</span></div>
+    </div>
+    <div class="repo-map-card founder-only">
+      <h4>guanghe</h4>
+      <p>光合设计系统：GHKit + GHComponents，服务 <code>hl-console-native</code>。R-070 确认权威位置为 <code>huanlongAI/guanghe</code>，创始人独立维护。</p>
+      <div class="repo-meta"><span>R-036</span><span>R-070</span><span>Founder only</span></div>
+    </div>
+    <div class="repo-map-card planned">
+      <h4>hl-scene-app</h4>
+      <p>C-L2 场景 App，原 <code>hl-app</code> 概念落位；Flutter 3.41 技术栈已锁，GitHub 仓库仍规划中未建。</p>
+      <div class="repo-meta"><span>规划中</span><span>C-L2</span><span>建仓时登记</span></div>
+    </div>
+    <div class="repo-map-card planned">
+      <h4>hl-scene-design-system</h4>
+      <p>C-L2 场景设计系统，服务 <code>hl-scene-app</code>，承载 Flutter DTCG Token + Widgetbook。</p>
+      <div class="repo-meta"><span>规划中</span><span>DTCG</span><span>建仓时登记</span></div>
+    </div>
+  </div>
+
+  <h3>流水线作用域</h3>
+  <div class="scope-strip">
+    <div class="scope-box">
+      <h4>纯 GitHub</h4>
+      <p><code>hl-contracts</code>、<code>team-memory</code>、<code>hl-dispatch</code>。它们不进入云效执行器，分别对应契约、治理记忆和站点发布。</p>
+    </div>
+    <div class="scope-box">
+      <h4>双仓并行</h4>
+      <p><code>hl-platform</code>、<code>hl-framework</code>、<code>hl-console-native</code>，以及未来 <code>hl-scene-*</code>。GitHub 发 PR，Step 5 起云效副本并行执行。</p>
+    </div>
+    <div class="scope-box">
+      <h4>背景/辅助</h4>
+      <p><code>hl-factory</code> 保留规格源身份；<code>sentinel-shared</code> 跑 L4；<code>tech-cofounder-bot</code> 做治理辅助；<code>guanghe</code> 创始人独家维护。</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>范围排除</strong>
+    <p>个人域 <code>tzhOS</code>、<code>tzhOS-App</code>、<code>super-founder</code>、<code>tzh-*</code>、<code>TerraMind</code> 不属于本指南；全程 GitHub，不走云效，仅阿里云服务器部署由运维介入。</p>
+  </div>
+</section>
+
 <!-- ═══ GitHub Main Rail ═══ -->
 <section class="tab-pane" id="github">
-  <h2>§3 · GitHub 主轨 · 永远的合并门禁</h2>
+  <h2>§4 · GitHub 主轨 · 永远的合并门禁</h2>
   <p>GitHub 在唤龙流水线里是<strong>永远的主轨</strong>：契约、PR、Required Status Checks、Merge button 全部在此；云效的 CI 结果只是回推进来的 Status Check。所有治理证据汇聚在 GitHub。</p>
 
-  <h3>§3.1 · 上游契约层</h3>
+  <h3>§4.1 · 上游契约层</h3>
   <p>上游契约层<strong>纯 GitHub · 不碰云效</strong>。两仓：</p>
   <table class="spec-table">
     <thead>
@@ -467,7 +614,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </tbody>
   </table>
 
-  <h3>§3.2 · 代码仓 PR 主战场</h3>
+  <h3>§4.2 · 代码仓 PR 主战场</h3>
   <p>双仓流水线作用域 = 产品线七仓中的协作代码仓。PR 全部在 GitHub 主仓发起，云效仅作执行器镜像：</p>
   <table class="spec-table">
     <thead>
@@ -489,7 +636,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     <p>HK = Huanlong Kernel · Huanlong OS 的治理控制面（Control Plane）· 住在 <code>hl-platform/kernel/</code>：<code>HK.ID</code>（统一身份 · HLID 锚点）· <code>HK.OrgLink</code>（组织链网络）· <code>HK.Policy</code>（策略引擎 · R-008 合并原 HL.Auth RBAC）· <code>HK.Consent</code>（可撤销授权账本）· <code>HK.Audit</code>（审计证据 · R-011 全量证据仓库）· <code>HK.ReasonDict</code>（原因码词典 · R-013 三域拆分 authn/authz/policy）。</p>
   </div>
 
-  <h3>§3.3 · Required Status Checks（挂 GitHub PR）</h3>
+  <h3>§4.3 · Required Status Checks（挂 GitHub PR）</h3>
   <p>Required Status Checks 全部定位在 <strong>GitHub PR</strong>，与 <a href="gate-levels.html#section4" class="term-link">gate-levels.html §4</a> 一致：</p>
   <table class="spec-table">
     <thead>
@@ -504,7 +651,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </tbody>
   </table>
 
-  <h3>§3.4 · INV-0 Merge button · 最终合并门禁</h3>
+  <h3>§4.4 · INV-0 Merge button · 最终合并门禁</h3>
   <p>所有 Required Status Checks 全绿后，<strong>INV-0 童正辉</strong> 在 GitHub PR 页面按 Merge button（<code>B4</code>），代码合入 <code>main</code>。这是流水线的最终合并门禁 · 任何替代通道（直推、force-push、管理员绕过）都被 GitHub 分支保护规则禁止。</p>
 
   <table class="spec-table">
@@ -520,10 +667,10 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
 <!-- ═══ Yunxiao Parallel Executor ═══ -->
 <section class="tab-pane" id="yunxiao">
-  <h2>§4 · 云效 · 并行执行器（INV-0 黑盒）</h2>
+  <h2>§5 · 云效 · 并行执行器（INV-0 黑盒）</h2>
   <p>云效的定位是 <strong>工程师接入后的并行执行器</strong>：Step 3 先把 HPRD / 开发设计 / 测试规格纳入 GitHub 主仓审计基线；从 Step 5 feature 分支开发起，云效副本才开始并行拉取代码、跑 CI、生成制品、部署到阿里云，并通过 GitHub App 席位把结果回推为 GitHub PR 的 Status Check。<strong>INV-0 对云效完全黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
 
-  <h3>§4.1 · GitHub App 席位机制</h3>
+  <h3>§5.1 · GitHub App 席位机制</h3>
   <div class="flow-steps-mini">
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#6C5CE7;">1</div>
@@ -539,7 +686,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </div>
   </div>
 
-  <h3>§4.2 · 工程师接入点（Step 5 云效并行起）</h3>
+  <h3>§5.2 · 工程师接入点（Step 5 云效并行起）</h3>
   <p>工程师的云效接入时点 = 能力包 Step 5（feature 分支开发），Step 3 只是 HPRD / 开发设计 / 测试规格进入 GitHub 主仓：</p>
   <div class="flow-steps-mini">
     <div class="flow-step-mini">
@@ -556,7 +703,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </div>
   </div>
 
-  <h3>§4.3 · L1-L4 CI 执行</h3>
+  <h3>§5.3 · L1-L4 CI 执行</h3>
   <table class="spec-table">
     <thead>
       <tr><th>层级</th><th>内容</th><th>执行载体</th><th>典型耗时</th><th>级别</th></tr>
@@ -570,7 +717,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </table>
   <p style="color:var(--text-muted); font-size:0.85em;">原本 <code>hl-factory</code> 侧的 GitHub Actions L1-L3 执行能力，v2 迁到云效集中执行；<code>hl-factory</code> 仍持有门禁规格源（spec owner），CI 执行体迁移与规格权柄解耦。</p>
 
-  <h3>§4.4 · 制品 + 部署验证</h3>
+  <h3>§5.4 · 制品 + 部署验证</h3>
   <div class="flow-steps-mini">
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:var(--ops);">α</div>
@@ -590,7 +737,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </div>
   </div>
 
-  <h3>§4.5 · INV-0 黑盒边界</h3>
+  <h3>§5.5 · INV-0 黑盒边界</h3>
   <div class="callout note">
     <strong>INV-0 对云效黑盒</strong>
     <p>INV-0 不登录云效 · 不查看云效流水线日志 · 不直接按云效按钮。曾正龙（运维 Owner）的 <code>B5</code> 按钮由云效承载，与 GitHub 无关；INV-0 的 <code>B4</code> GitHub Merge 永远前置于 <code>B5</code> 云效部署。流水线的治理视图对 INV-0 仅是一个东西：<strong>GitHub PR 上的 Required Status Checks 和 Merge button</strong>。</p>
@@ -599,9 +746,9 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
 <!-- ═══ 6 Buttons ═══ -->
 <section class="tab-pane" id="buttons">
-  <h2>§5 · 按钮权 6 桩矩阵</h2>
+  <h2>§6 · 按钮权 6 桩矩阵</h2>
 
-  <h3>§5.0 · Lead 零桩原则</h3>
+  <h3>§6.0 · Lead 零桩原则</h3>
   <div class="callout info">
     <strong>Lead 不持按钮 · Owner 才持按钮</strong>
     <p>六位 Lead 都没有按钮权。Lead = 协调 / 代审 / 对外联络身份，按钮权在 Owner 手里。特例：李云峰（QA Lead + QA Owner）和曾正龙（运维 Lead + 运维 Owner）因 <strong>Owner 身份</strong>持按钮，不是 Lead 身份。</p>
@@ -646,7 +793,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     <p>按钮权 = <strong>物理层</strong>（谁能点）· 签字边界 = <strong>治理层</strong>（谁要为决定负责）。两者经常重合但不等价：INV-0 按 GitHub Merge 不代表 INV-0 要为代码质量负责，<code>qa-verdict</code> 的按钮（李云峰）才是质量签字。完整签字边界见 <a href="team-leads.html#signature-matrix" class="term-link">团队代表 · 签字矩阵</a>。</p>
   </div>
 
-  <h3>§5.1 · 按钮时序（9 步 · 主轨 + 并行器）</h3>
+  <h3>§6.1 · 按钮时序（9 步 · 主轨 + 并行器）</h3>
   <ol>
     <li><strong>B1 · 契约冻结</strong>：INV-0 在 GitHub 合入 <code>hl-contracts</code> PR · PM 冻结 Cap-Spec。</li>
     <li><strong>B2 半桩 · pm-hprd-pass</strong>：PM Owner 在 GitHub PR 上核对 HPRD 与 Cap-Spec 一致（ADVISORY）。</li>
@@ -663,8 +810,8 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
 <!-- ═══ Failure ═══ -->
 <section class="tab-pane" id="boundary">
-  <h2>§6 · 失败路径与文档边界</h2>
-  <h3>§6.1 · 失败路径与熔断</h3>
+  <h2>§7 · 失败路径与文档边界</h2>
+  <h3>§7.1 · 失败路径与熔断</h3>
   <p>流水线不是"一路绿灯到上线"的理想路径，60% 的能力包会在某个节点卡住。三类典型失败 + 演示按钮：</p>
 
   <h3>HPRD 审计打回</h3>
@@ -696,7 +843,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <h3>在流程图里模拟</h3>
   <p>回到 <a href="#flow" class="term-link">§2 仓库流转图</a>，点击 <strong>⚠ 演示 QA 打回</strong> 按钮 · 观察 Step 9（QA Passed）处标红 · 流程回到"工程师修 + QA 复测"循环 · Status Check 重新走一遍。</p>
 
-  <h3>§6.2 · 与其他页面的关系</h3>
+  <h3>§7.2 · 与其他页面的关系</h3>
   <p>本页定位是 <strong>"GitHub + 云效 双仓并行的流水线说明"</strong>。具体细节见：</p>
 
   <div class="relate-grid">
@@ -735,19 +882,19 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       <p>6 桩按钮权之外的治理签字边界 · 哪位 Lead 为哪个决定负责。</p>
       <span class="rc-tag" style="background:rgba(162,155,254,0.15);color:var(--founder);">治理</span>
     </a>
-    <a class="relate-card" href="repo-directory.html">
+    <a class="relate-card" href="#repo-map">
       <h4>📂 仓库目录</h4>
-      <p>产品线七仓（R-028 LOCKED）+ R-070 补登记（team-memory / sentinel-shared / tech-cofounder-bot）+ 创始人独家（guanghe）。</p>
+      <p>本页仓库地图：产品线七仓（R-028 LOCKED）+ R-070 平台附属 + 创始人独家 guanghe + 规划仓。</p>
       <span class="rc-tag" style="background:rgba(85,239,196,0.15);color:var(--eng);">拓扑</span>
     </a>
     <a class="relate-card" href="architecture.html">
       <h4>🧭 系统架构图</h4>
-      <p>四权分离 · 九仓库拓扑 · HK 6 能力 · 双仓并行 · 12 状态 · 门禁 L1-L4 全景叙事。</p>
+      <p>四权分离 · 完整仓库拓扑 · HK 6 能力 · 双仓并行 · 12 状态 · 门禁 L1-L4 全景叙事。</p>
       <span class="rc-tag" style="background:rgba(108,92,231,0.15);color:var(--primary-light);">全景</span>
     </a>
   </div>
 
-  <h3>§6.3 · 文档层级定位</h3>
+  <h3>§7.3 · 文档层级定位</h3>
   <p>本页属于 <strong>guide layer</strong>（指南层），<strong>不包含</strong>治理性规范条款。治理条款的权威源：</p>
   <ul>
     <li><code>hl-contracts/governance/RULINGS.md</code>：R-006 / R-028（七仓 LOCKED）· R-012（超级工厂独立产品线）· R-036（光合设计账号独占）· R-037（hl-framework 模块划分）· <strong>R-070（2026-04-23 LOCKED · 仓库治理补登记 + <code>REPO-OWNERSHIP-LOG.md</code> 机制）</strong></li>
@@ -758,7 +905,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </ul>
   <p>发现任何规则冲突，以上述 <code>hl-contracts</code> 源为准。</p>
 
-  <h3>§6.4 · 范围边界</h3>
+  <h3>§7.4 · 范围边界</h3>
   <div class="callout info">
     <strong>本指南仅覆盖唤龙平台域</strong>
     <p>个人域（<code>tzhOS</code> · <code>tzhOS-App</code> · <code>super-founder</code> · <code>tzh-marketing</code> · <code>tzh-legal</code> · <code>tzh-dotfiles</code> · <code>tzh-evals</code> · <code>tzh-agent-configs</code> · <code>tzh-Harness</code> · <code>TerraMind</code> 共 10 个）<strong>全程 GitHub · 不走云效 · 仅阿里云服务器部署由运维介入</strong>，<strong>不在本指南叙述范围</strong>。</p>

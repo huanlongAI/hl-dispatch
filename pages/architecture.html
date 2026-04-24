@@ -182,22 +182,27 @@
 
   /* ── §2 Repo canvas ── */
   .repo-canvas {
-    position: relative; height: 520px; border: 1px solid var(--border); border-radius: 12px;
-    background: radial-gradient(circle at 50% 50%,rgba(162,155,254,0.06),transparent 50%), var(--bg-card);
+    position: relative; height: 900px; border: 1px solid var(--border); border-radius: 14px;
+    background:
+      radial-gradient(circle at 50% 48%,rgba(162,155,254,0.10),transparent 42%),
+      linear-gradient(180deg,rgba(116,185,255,0.05),transparent 35%,rgba(253,203,110,0.04) 100%),
+      var(--bg-card);
     overflow: hidden; margin-bottom: 24px;
   }
   .repo-canvas svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   .repo {
-    position: absolute; width: 178px; padding: 12px 14px; border-radius: 8px;
+    position: absolute; width: 192px; padding: 12px 14px; border-radius: 10px;
     background: var(--bg-card-hover); border: 1.5px solid; backdrop-filter: blur(8px);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.18);
   }
   .repo .rh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .repo .rname { font-family: 'JetBrains Mono',monospace; font-size: 0.82em; font-weight: 700; color: var(--text); }
+  .repo.console .rname { font-size: 0.78em; white-space: nowrap; }
   .repo .rrole { font-family: 'JetBrains Mono',monospace; font-size: 0.62rem; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
   .repo .rdesc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 6px; }
   .repo .rmeta { font-family: 'JetBrains Mono',monospace; font-size: 0.65rem; color: var(--text-muted); line-height: 1.5; border-top: 1px dashed var(--border); padding-top: 6px; }
   .repo.center {
-    width: 230px; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    width: 270px; left: 50%; top: 50%; transform: translate(-50%,-50%);
     border-color: var(--founder);
     background: linear-gradient(180deg,rgba(162,155,254,0.16),var(--bg-card));
     z-index: 5;
@@ -205,23 +210,55 @@
   .repo.center .rname { color: var(--founder); font-size: 0.95em; }
   .repo.center .rrole { background: rgba(162,155,254,0.2); color: var(--founder); }
 
-  .repo.platform { left: 50%; top: 24px; transform: translateX(-50%); border-color: var(--eng); }
+  .repo.platform { left: 462px; top: 42px; border-color: var(--eng); }
   .repo.platform .rname { color: var(--eng); } .repo.platform .rrole { background: rgba(85,239,196,0.18); color: var(--eng); }
 
-  .repo.factory { right: 24px; top: 24px; border-color: var(--ops); }
+  .repo.framework { left: 704px; top: 72px; border-color: var(--eng); }
+  .repo.framework .rname { color: var(--eng); } .repo.framework .rrole { background: rgba(85,239,196,0.18); color: var(--eng); }
+
+  .repo.factory { right: 36px; top: 230px; border-color: var(--ops); }
   .repo.factory .rname { color: var(--ops); } .repo.factory .rrole { background: rgba(250,177,160,0.18); color: var(--ops); }
 
-  .repo.console { right: 24px; bottom: 24px; border-color: var(--founder); }
+  .repo.console { right: 12px; bottom: 230px; width: 214px; border-color: var(--founder); }
   .repo.console .rname { color: var(--founder); } .repo.console .rrole { background: rgba(162,155,254,0.18); color: var(--founder); }
 
-  .repo.app { left: 50%; bottom: 24px; transform: translateX(-50%); border-color: var(--pm); }
+  .repo.dispatch { right: 276px; bottom: 58px; border-color: var(--pm); }
+  .repo.dispatch .rname { color: var(--pm); } .repo.dispatch .rrole { background: rgba(116,185,255,0.18); color: var(--pm); }
+
+  .repo.app { left: 462px; bottom: 58px; border-color: var(--pm); }
   .repo.app .rname { color: var(--pm); } .repo.app .rrole { background: rgba(116,185,255,0.18); color: var(--pm); }
 
-  .repo.design { left: 24px; bottom: 24px; border-color: var(--design); }
+  .repo.design { left: 224px; bottom: 86px; border-color: var(--design); }
   .repo.design .rname { color: var(--design); } .repo.design .rrole { background: rgba(223,230,233,0.18); color: var(--design); }
 
-  .repo.docs { left: 24px; top: 24px; border-color: var(--qa); }
+  .repo.docs { left: 36px; top: 230px; border-color: var(--qa); }
   .repo.docs .rname { color: var(--qa); } .repo.docs .rrole { background: rgba(255,234,167,0.18); color: var(--qa); }
+
+  .repo.memory { left: 224px; top: 72px; border-color: var(--pm); }
+  .repo.memory .rname { color: var(--pm); } .repo.memory .rrole { background: rgba(116,185,255,0.18); color: var(--pm); }
+
+  .repo.sentinel { left: 36px; bottom: 86px; border-color: #74B9FF; }
+  .repo.sentinel .rname { color: #74B9FF; } .repo.sentinel .rrole { background: rgba(116,185,255,0.18); color: #74B9FF; }
+
+  .repo.bot { left: 232px; bottom: 236px; border-color: var(--primary-light); }
+  .repo.bot .rname { color: var(--primary-light); } .repo.bot .rrole { background: rgba(162,155,254,0.18); color: var(--primary-light); }
+
+  .repo.guanghe { left: 36px; top: 420px; border-color: var(--design); }
+  .repo.guanghe .rname { color: var(--design); } .repo.guanghe .rrole { background: rgba(223,230,233,0.18); color: var(--design); }
+
+  .repo.archived { left: 704px; bottom: 322px; border-color: #777B92; opacity: 0.78; }
+  .repo.archived .rname { color: #B8BCD4; } .repo.archived .rrole { background: rgba(153,153,176,0.18); color: #B8BCD4; }
+
+  .repo.planned { background: linear-gradient(180deg,rgba(253,203,110,0.08),var(--bg-card-hover)); }
+  .repo.aux { background: linear-gradient(180deg,rgba(116,185,255,0.07),var(--bg-card-hover)); }
+  .repo.exclusive { background: linear-gradient(180deg,rgba(223,230,233,0.08),var(--bg-card-hover)); }
+
+  .repo-map-notes { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px; }
+  .repo-map-notes div {
+    padding:12px 14px; border:1px solid var(--border); border-radius:10px;
+    background:rgba(255,255,255,0.025); font-size:0.8em; color:var(--text-muted); line-height:1.6;
+  }
+  .repo-map-notes b { display:block; color:var(--text); margin-bottom:4px; }
 
   .repo-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
   .repo-table { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg-card); }
@@ -485,12 +522,12 @@
     <div class="eyebrow"><span class="dot"></span> SAAC-HL · TEAM-COLLABORATION-SPEC v2.1 · Pilot-Locked 2026-04-11</div>
     <h1>唤龙平台 <em>Huanlong</em><br>系统架构叙事图谱 · v2.1</h1>
     <p class="lead">
-      一份按治理要素重新组织的单页架构图：从 <b class="gov">四权分离</b>（语义主权 / 技术实现权 / 独立质量权 / 组织治理权）出发，沿 <b class="eng">六仓库</b>（hl-contracts SSOT × hl-platform × hl-factory × hl-console-native × hl-design-system × hl-app）展开，经 <b class="qa">L1–L4 四层门禁</b> 与 <b class="pm">五步交付流</b>，最终由 <b class="pm">PM 验收</b> + <b class="gov">Founder 合并</b> 关环。
+      一份按治理要素重新组织的单页架构图：从 <b class="gov">四权分离</b>（语义主权 / 技术实现权 / 独立质量权 / 组织治理权）出发，沿 <b class="eng">完整仓库拓扑</b>（R-028 产品线七仓 × R-070 平台附属 × guanghe 创始人独家 × hl-scene-* 规划位）展开，经 <b class="qa">L1–L4 四层门禁</b> 与 <b class="pm">五步交付流</b>，最终由 <b class="pm">PM 验收</b> + <b class="gov">Founder 合并</b> 关环。
     </p>
     <div class="arch-meta">
       <div><div class="k">SSOT 源</div><div class="v"><b>huanlongai.github.io/hl-dispatch</b></div></div>
       <div><div class="k">基线审计</div><div class="v">HK-KERNEL-AUDIT 2026-04-07</div></div>
-      <div><div class="k">绘制日期</div><div class="v">2026-04-16</div></div>
+      <div><div class="k">绘制日期</div><div class="v">2026-04-24</div></div>
       <div><div class="k">阶段</div><div class="v">Phase 0 · Pilot Locked</div></div>
     </div>
     <div class="arch-chips">
@@ -509,7 +546,7 @@
 <!-- ═══════ TOC ═══════ -->
 <nav class="arch-toc">
   <a href="#s1"><span class="n">CHAPTER · 01</span><span class="t">组织 & 四权</span></a>
-  <a href="#s2"><span class="n">CHAPTER · 02</span><span class="t">六仓库拓扑</span></a>
+  <a href="#s2"><span class="n">CHAPTER · 02</span><span class="t">仓库拓扑</span></a>
   <a href="#s3"><span class="n">CHAPTER · 03</span><span class="t">技术栈选型</span></a>
   <a href="#s4"><span class="n">CHAPTER · 04</span><span class="t">门禁 L1–L4</span></a>
   <a href="#s5"><span class="n">CHAPTER · 05</span><span class="t">五步交付 + 12 状态</span></a>
@@ -614,66 +651,110 @@
     <div class="sec-head">
       <div class="sec-num"><strong>02</strong>REPO · TOPOLOGY</div>
       <div>
-        <h2 class="sec-h2">六仓库拓扑：以契约为中心的星形架构<span class="sbadge">SSOT 单源 · 单向依赖</span></h2>
-        <p class="sec-lead">所有仓库以 <a href="glossary.html#term-hl-contracts" class="term-link"><code>hl-contracts</code></a>（SSOT 治理仓）为中心，<b>只允许下游 read，禁止上游 write</b>。前端 C-L1 与 C-L2 之间存在<b style="color:var(--danger)">硬边界</b>：代码、设计、依赖、构建产物均不互通。后端单仓 <a href="glossary.html#term-hl-platform" class="term-link"><code>hl-platform</code></a> 内部按 Spring Modulith 强制模块边界。</p>
+        <h2 class="sec-h2">完整仓库拓扑：以契约为中心的星形架构<span class="sbadge">R-028 七仓 · R-070 补登记</span></h2>
+        <p class="sec-lead">所有平台域仓库仍以 <a href="glossary.html#term-hl-contracts" class="term-link"><code>hl-contracts</code></a>（SSOT 治理仓）为中心，<b>只允许下游 read，禁止上游 write</b>。R-028 的“七仓”是产品线口径；R-070 只是把 <code>team-memory</code> / <code>sentinel-shared</code> / <code>tech-cofounder-bot</code> 等平台附属载体和 <code>guanghe</code> 创始人独家仓补登记清楚。C-L1 与 C-L2 之间仍有<b style="color:var(--danger)">硬边界</b>：代码、设计、依赖、构建产物均不互通。</p>
       </div>
     </div>
 
     <div class="repo-canvas">
-      <svg viewBox="0 0 1200 520" preserveAspectRatio="none">
-        <g stroke="rgba(153,153,176,0.3)" stroke-width="1" fill="none" stroke-dasharray="4 3">
-          <line x1="600" y1="260" x2="600" y2="92"/>
-          <line x1="600" y1="260" x2="1080" y2="92"/>
-          <line x1="600" y1="260" x2="1080" y2="428"/>
-          <line x1="600" y1="260" x2="600" y2="428"/>
-          <line x1="600" y1="260" x2="120" y2="428"/>
-          <line x1="600" y1="260" x2="120" y2="92"/>
+      <svg viewBox="0 0 1200 900" preserveAspectRatio="none">
+        <g stroke="rgba(153,153,176,0.32)" stroke-width="1.2" fill="none" stroke-dasharray="5 5">
+          <line x1="600" y1="450" x2="554" y2="128"/>
+          <line x1="600" y1="450" x2="806" y2="158"/>
+          <line x1="600" y1="450" x2="1004" y2="310"/>
+          <line x1="600" y1="450" x2="1004" y2="610"/>
+          <line x1="600" y1="450" x2="552" y2="762"/>
+          <line x1="600" y1="450" x2="322" y2="744"/>
+          <line x1="600" y1="450" x2="132" y2="310"/>
+          <line x1="600" y1="450" x2="326" y2="158"/>
+          <line x1="600" y1="450" x2="102" y2="535"/>
+          <line x1="600" y1="450" x2="1020" y2="535"/>
         </g>
-        <g font-family="'JetBrains Mono',monospace" font-size="9">
-          <text x="610" y="180" fill="#55EFC4">read contracts ↑</text>
-          <text x="850" y="180" fill="#FAB1A0">read contracts ↗</text>
-          <text x="850" y="350" fill="#A29BFE">read contracts ↘</text>
-          <text x="610" y="370" fill="#74B9FF">read contracts ↓</text>
-          <text x="290" y="370" fill="#DFE6E9">read contracts ↙</text>
-          <text x="290" y="180" fill="#FFEAA7">SSOT pages ↖</text>
+        <g stroke="rgba(255,106,0,0.44)" stroke-width="2" fill="none" stroke-dasharray="8 7">
+          <path d="M646,488 C760,555 790,655 906,740"/>
+          <path d="M520,494 C416,580 368,665 318,738"/>
+        </g>
+        <g font-family="'JetBrains Mono',monospace" font-size="10">
+          <text x="608" y="258" fill="#A29BFE">SSOT read-only dependency</text>
+          <text x="756" y="610" fill="#FF6A00">C-L1 / C-L2 hard boundary</text>
+          <text x="270" y="622" fill="#FF6A00">no shared UI / build artifacts</text>
+          <text x="82" y="32" fill="#74B9FF">R-070 platform attachments</text>
+          <text x="908" y="864" fill="#FDCB6E">planned / archived kept explicit</text>
         </g>
       </svg>
 
       <div class="repo center">
         <div class="rh"><div class="rname">hl-contracts</div><div class="rrole">SSOT</div></div>
-        <div class="rdesc">所有 Cap-Spec / HPRD / DTCG / OpenAPI / SQL DDL 的唯一权威源</div>
-        <div class="rmeta">CODEOWNERS · Founder + PM<br>tag-driven release · semver</div>
+        <div class="rdesc">RULINGS / Decisions / OpenAPI / ReasonCodes / Cap-Spec / SIGN-OFF 的唯一治理真源</div>
+        <div class="rmeta">R-006 · R-028 · R-070<br>Founder + PM · 纯 GitHub</div>
       </div>
       <div class="repo platform">
         <div class="rh"><div class="rname">hl-platform</div><div class="rrole">Backend</div></div>
-        <div class="rdesc">Spring Modulith 单仓后端，按 bounded context 强制隔离</div>
-        <div class="rmeta">JVM 21 · Kotlin 2.1.10<br>Spring Boot 3.5.11</div>
+        <div class="rdesc">HK Kernel Modulith + Gateway，承载 HK 6 能力与后端业务域</div>
+        <div class="rmeta">JVM 21 · Kotlin 2.1.10<br>双仓并行 · 已建</div>
+      </div>
+      <div class="repo framework">
+        <div class="rh"><div class="rname">hl-framework</div><div class="rrole">Framework</div></div>
+        <div class="rdesc">公司级统一框架：starters + BOM，R-037 锁定模块划分</div>
+        <div class="rmeta">R-028 · R-037<br>双仓并行 · 已建</div>
       </div>
       <div class="repo factory">
         <div class="rh"><div class="rname">hl-factory</div><div class="rrole">CI/CD</div></div>
-        <div class="rdesc">门禁脚本、reusable workflow、Required Status Check 编排</div>
-        <div class="rmeta">8 verification scripts<br>L1–L4 gate runner</div>
+        <div class="rdesc">R-012 独立产品线；在平台侧只保留门禁规格源与跨用工具身份</div>
+        <div class="rmeta">已建 · spec owner<br>执行载体可迁云效</div>
       </div>
       <div class="repo console">
         <div class="rh"><div class="rname">hl-console-native</div><div class="rrole">C-L1</div></div>
-        <div class="rdesc">Founder 内部控制台，Swift / SwiftUI / GHKit · macOS 26 + iOS 26</div>
-        <div class="rmeta">受众：Founder only<br>不发布 App Store</div>
+        <div class="rdesc">Founder 内部控制台，Swift / SwiftUI / GHKit，监控合约冻结与 release-train</div>
+        <div class="rmeta">已建 · Founder only<br>服务内部治理</div>
       </div>
-      <div class="repo app">
-        <div class="rh"><div class="rname">hl-app</div><div class="rrole">C-L2</div></div>
-        <div class="rdesc">面向客户的 6 平台 App，Flutter / Dart · go_router · Riverpod</div>
-        <div class="rmeta">iOS · Android · Web<br>macOS · Windows · Linux</div>
+      <div class="repo app planned">
+        <div class="rh"><div class="rname">hl-scene-app</div><div class="rrole">C-L2</div></div>
+        <div class="rdesc">客户场景 App，原 hl-app 概念落位；Flutter 3.41 技术栈锁定</div>
+        <div class="rmeta">规划中未建<br>建仓时写 OWNERSHIP-LOG</div>
       </div>
-      <div class="repo design">
-        <div class="rh"><div class="rname">hl-design-system</div><div class="rrole">C-L2 DS</div></div>
-        <div class="rdesc">DTCG token + Flutter 组件库 + Widgetbook</div>
-        <div class="rmeta">仅服务 hl-app<br>禁止跨向 C-L1</div>
+      <div class="repo design planned">
+        <div class="rh"><div class="rname">hl-scene-design-system</div><div class="rrole">C-L2 DS</div></div>
+        <div class="rdesc">C-L2 场景设计系统，DTCG token + Flutter 组件库 + Widgetbook</div>
+        <div class="rmeta">规划中未建<br>仅服务 hl-scene-app</div>
       </div>
-      <div class="repo docs">
+      <div class="repo dispatch">
         <div class="rh"><div class="rname">hl-dispatch</div><div class="rrole">Pages</div></div>
-        <div class="rdesc">SSOT 文档站点（GitHub Pages） · 16 个治理页面</div>
-        <div class="rmeta">huanlongai.github.io<br>last_verified 2026-04-13</div>
+        <div class="rdesc">调度服务 + 本站 gh-pages 部署载体；guide layer，不替代契约真源</div>
+        <div class="rmeta">已建 · 纯 GitHub<br>huanlongai.github.io</div>
       </div>
+      <div class="repo docs aux">
+        <div class="rh"><div class="rname">team-memory</div><div class="rrole">Memory</div></div>
+        <div class="rdesc">团队 AI session 记忆沉淀与正式治理文档四阶流转</div>
+        <div class="rmeta">R-070 · 平台附属<br>B6 治理文档审批</div>
+      </div>
+      <div class="repo memory aux">
+        <div class="rh"><div class="rname">sentinel-shared</div><div class="rrole">L4</div></div>
+        <div class="rdesc">L4 Consistency Sentinel 共享基础设施：reusable workflows + scripts</div>
+        <div class="rmeta">R-070 · 平台基建<br>辅助七仓</div>
+      </div>
+      <div class="repo sentinel aux">
+        <div class="rh"><div class="rname">tech-cofounder-bot</div><div class="rrole">Agent</div></div>
+        <div class="rdesc">Node-C 大辉子，MAIA-001 治理辅助；不进能力包交付链路</div>
+        <div class="rmeta">R-070 · 治理辅助<br>非 Cap-Spec/HPRD 链</div>
+      </div>
+      <div class="repo guanghe exclusive">
+        <div class="rh"><div class="rname">guanghe</div><div class="rrole">GHKit</div></div>
+        <div class="rdesc">GHKit + GHComponents，服务 C-L1；R-070 确认迁入 huanlongAI/guanghe</div>
+        <div class="rmeta">R-036 · R-070<br>Founder 独家维护</div>
+      </div>
+      <div class="repo archived">
+        <div class="rh"><div class="rname">hl-console</div><div class="rrole">Archived</div></div>
+        <div class="rdesc">旧 Vue 控制台，R-016 后归档废弃，由 hl-console-native 取代</div>
+        <div class="rmeta">R-016 · 历史口径<br>保留在七仓记录</div>
+      </div>
+    </div>
+
+    <div class="repo-map-notes">
+      <div><b>产品线七仓</b><code>hl-contracts</code> / <code>hl-platform</code> / <code>hl-framework</code> / <code>hl-console-native</code> / <code>hl-factory</code> / <code>hl-dispatch</code> / <code>hl-console</code>。</div>
+      <div><b>平台附属</b><code>team-memory</code>、<code>sentinel-shared</code>、<code>tech-cofounder-bot</code> 与七仓分层并列，不合并进七仓计数。</div>
+      <div><b>创始人独家</b><code>guanghe</code> 在平台域内，但团队不参与建设；只服务 C-L1 内部控制台。</div>
+      <div><b>规划扩展</b><code>hl-scene-app</code> 与 <code>hl-scene-design-system</code> 尚未建仓，建仓时先写 OWNERSHIP-LOG。</div>
     </div>
 
     <div class="repo-tables">
@@ -694,8 +775,10 @@
           <tr><td class="k">qa-verdict</td><td>QA · L3 行为通过 + 回归矩阵签发</td></tr>
           <tr><td class="k">pm-acceptance</td><td>PM · 端到端 HPRD 行为已观察确认</td></tr>
           <tr><td class="k">pm-hprd-pass</td><td>PM · HPRD 文档完整性、Cap-Spec 一致性</td></tr>
-          <tr><td class="k">l1-format</td><td>CI · 格式 / lint / spotless / detekt</td></tr>
-          <tr><td class="k">l2-deterministic</td><td>CI · JUnit + Kotest 确定性 + Testcontainers</td></tr>
+          <tr><td class="k">l1-format</td><td>云效执行 · 回推 GitHub PR Status Check</td></tr>
+          <tr><td class="k">l2-deterministic</td><td>云效执行 · JUnit + Kotest 确定性 + Testcontainers</td></tr>
+          <tr><td class="k">l3-behavior</td><td>云效执行 · QA 行为场景与回归矩阵</td></tr>
+          <tr><td class="k">l4-sentinel</td><td>sentinel-shared · advisory，不阻塞合并</td></tr>
           <tr><td class="k">linear-history</td><td>禁止 merge commit · 强制 squash</td></tr>
         </table>
       </div>
@@ -708,8 +791,8 @@
         <ul>
           <li>受众：Founder（不公开发行）</li>
           <li>用途：合约冻结、HPRD 审核、release-train 监控</li>
-          <li>不引用 hl-design-system token / 组件</li>
-          <li>不通过 hl-app 路由</li>
+          <li>只可引用 guanghe / GHKit</li>
+          <li>不引用 hl-scene-design-system token / 组件</li>
         </ul>
       </div>
       <div class="wall">硬边界 · NO SHARING</div>
@@ -718,7 +801,7 @@
         <div class="stack">FLUTTER 3 · DART · DTCG · RIVERPOD · GO_ROUTER · WIDGETBOOK · PATROL</div>
         <ul>
           <li>受众：终端客户（6 平台分发）</li>
-          <li>仅消费 hl-design-system 的 DTCG token + 组件</li>
+          <li>仅消费 hl-scene-design-system 的 DTCG token + 组件</li>
           <li>不引用 GHKit / SwiftUI 组件</li>
           <li>独立的 release-train 与版本号</li>
         </ul>

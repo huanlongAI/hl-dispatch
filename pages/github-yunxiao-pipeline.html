@@ -274,12 +274,12 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     <div class="eyebrow"><span class="dot"></span>流水线全景 · v2 双仓并行 · 2026-04-24</div>
     <h1>GitHub + 云效 <span>双仓并行指南</span></h1>
     <p class="lead">
-      唤龙平台的流水线是一条 <strong>"双仓并行"</strong> 的协同轨道：<strong>GitHub 是永远的主轨</strong>，承载契约、PR、合并门禁与审计；<strong>云效是并行执行器</strong>，从工程师接入起跑 CI、生成制品、部署到阿里云，通过 GitHub App 席位把结果回推为 GitHub PR 的 Status Check。代码与 HPRD 在 GitHub 主仓与云效副本之间双仓同步；INV-0 对云效黑盒，只看 GitHub PR 上的绿勾。
+      唤龙平台的流水线是一条 <strong>"双仓并行"</strong> 的协同轨道：<strong>GitHub 是永远的主轨</strong>，承载契约、PR、合并门禁与审计；<strong>云效是并行执行器</strong>，从工程师接入起跑 CI、生成制品、部署到阿里云，通过 GitHub 执行身份把结果回推为 GitHub PR 的 Status Check。当前不新增独立云效 Bot 席位，由魏鹏账号承接云效拉取与回推；代码与 HPRD 在 GitHub 主仓与云效副本之间双仓同步；INV-0 对云效黑盒，只看 GitHub PR 上的绿勾。
     </p>
     <div class="badges">
       <span class="hbadge b1">双仓并行模型</span>
       <span class="hbadge b2">6 桩按钮权</span>
-      <span class="hbadge b3">GitHub App 席位机制</span>
+      <span class="hbadge b3">GitHub 执行身份机制</span>
     </div>
   </div>
 </section>
@@ -303,7 +303,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
   <div class="callout info">
     <strong>模型一句话</strong>
-    <p><strong>GitHub 永远主轨</strong>承载 PR、合并门禁与审计；<strong>云效从工程师接入起并行执行</strong> CI、生成制品、部署到阿里云；两者通过 <strong>GitHub App 席位</strong> 双向沟通，云效把 CI 结果回推为 GitHub PR 的 Status Check；<strong>INV-0 对云效黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
+    <p><strong>GitHub 永远主轨</strong>承载 PR、合并门禁与审计；<strong>云效从工程师接入起并行执行</strong> CI、生成制品、部署到阿里云；两者通过 <strong>GitHub 执行身份</strong> 双向沟通，云效把 CI 结果回推为 GitHub PR 的 Status Check；<strong>INV-0 对云效黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
   </div>
 
   <h3>双仓并行模型</h3>
@@ -324,7 +324,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       </ul>
     </div>
 
-    <div class="fm-bridge">↕ GitHub App 席位（云效 bot 拉代码 / 回推 Status Check）</div>
+    <div class="fm-bridge">↕ GitHub 执行身份（魏鹏账号拉代码 / 回推 Status Check）</div>
 
     <div class="fm-box parallel-rail">
       <h4>云效 · 并行执行器（工程师接入起 · INV-0 黑盒）</h4>
@@ -332,7 +332,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
         <li>双仓镜像：GitHub 主仓 ↔ 云效副本（App 同步）· 代码 + HPRD + 开发设计 + 测试规格全部同步</li>
         <li>HPRD 走代码仓 <code>/hprd/</code> 目录 · 受 Git 版本管理</li>
         <li>工程师在云效创建流水线 · 跑 L1-L4 CI · 生成制品 · 部署到阿里云（staging → canary → prod）</li>
-        <li>通过 GitHub App 席位回推 GitHub PR Status Check</li>
+        <li>通过 GitHub 执行身份回推 GitHub PR Status Check</li>
         <li>曾正龙按云效按钮：staging / canary / prod / rollback</li>
       </ul>
       <p style="margin-top:8px;color:var(--text-muted);"><em>INV-0 不关心流水线细节 · 只看 GitHub PR 上的绿勾</em></p>
@@ -469,7 +469,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     <div class="il-legend">
       <span><i style="background:#74B9FF;"></i> GitHub 主轨</span>
       <span><i style="background:#FF6A00;"></i> 云效并行执行器</span>
-      <span><i style="background:#6C5CE7;"></i> GitHub App 席位 / 双仓同步</span>
+      <span><i style="background:#6C5CE7;"></i> GitHub 执行身份 / 双仓同步</span>
       <span><i style="background:#FFEAA7;"></i> QA</span>
       <span><i style="background:#FDCB6E;"></i> 发布部署</span>
     </div>
@@ -668,9 +668,13 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ Yunxiao Parallel Executor ═══ -->
 <section class="tab-pane" id="yunxiao">
   <h2>§5 · 云效 · 并行执行器（INV-0 黑盒）</h2>
-  <p>云效的定位是 <strong>工程师接入后的并行执行器</strong>：Step 3 先把 HPRD / 开发设计 / 测试规格纳入 GitHub 主仓审计基线；从 Step 5 feature 分支开发起，云效副本才开始并行拉取代码、跑 CI、生成制品、部署到阿里云，并通过 GitHub App 席位把结果回推为 GitHub PR 的 Status Check。<strong>INV-0 对云效完全黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
+  <p>云效的定位是 <strong>工程师接入后的并行执行器</strong>：Step 3 先把 HPRD / 开发设计 / 测试规格纳入 GitHub 主仓审计基线；从 Step 5 feature 分支开发起，云效副本才开始并行拉取代码、跑 CI、生成制品、部署到阿里云，并通过 GitHub 执行身份把结果回推为 GitHub PR 的 Status Check。<strong>INV-0 对云效完全黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
 
-  <h3>§5.1 · GitHub App 席位机制</h3>
+  <h3>§5.1 · GitHub 执行身份机制</h3>
+  <div class="callout warn">
+    <strong>当前席位口径</strong>
+    <p>GitHub Team 席位当前为 7/7，暂不新增独立云效 Bot。云效侧 GitHub 拉取与 Status Check 回推由魏鹏账号承接；云效侧凭证和执行账号后续单独在云效控制台验证。</p>
+  </div>
   <div class="flow-steps-mini">
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#6C5CE7;">1</div>
@@ -678,7 +682,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </div>
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#6C5CE7;">2</div>
-      <div class="fsm-body"><h4>OAuth / GitHub App 凭证</h4><p>云效以 GitHub App 身份访问 · 组织级权限含：仓库 read / PR write comments / Commit statuses write / Workflow read。凭证由 INV-0 一次性配置，运维（曾正龙）日常维护。</p></div>
+      <div class="fsm-body"><h4>OAuth / GitHub 执行凭证</h4><p>云效以受控 GitHub 执行身份访问 · 权限边界含：仓库 read / PR write comments / Commit statuses write / Workflow read。现阶段由魏鹏账号承接拉取与回推，凭证由 INV-0 一次性配置，运维（曾正龙）日常维护。</p></div>
     </div>
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#6C5CE7;">3</div>
@@ -874,7 +878,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </a>
     <a class="relate-card" href="ops.html">
       <h4>🔧 运维人员指南</h4>
-      <p>运维 Owner 在云效按钮面板的日常操作：staging / canary / prod / rollback + GitHub App 席位维护。</p>
+      <p>运维 Owner 在云效按钮面板的日常操作：staging / canary / prod / rollback + GitHub 执行身份维护。</p>
       <span class="rc-tag" style="background:rgba(250,177,160,0.15);color:var(--ops);">实操</span>
     </a>
     <a class="relate-card" href="team-leads.html#signature-matrix">
@@ -973,11 +977,11 @@ const IL_STEPS = [
   { idx:5, lane:'bridge', laneLabel:'GitHub 主仓 + 云效并行起点', laneColor:'rgba(255,106,0,0.22)', laneFg:'#FF6A00',
     title:'In Development · feature 开发 + 云效接入', icon:'⚙️', actor:'工程师', dur:'1 – 数周',
     output:'GitHub feature commit · 云效副本开始拉取 · 云效流水线定义', next:'发起 GitHub Draft PR',
-    desc:'从这一步开始进入<strong>双仓并行</strong>：工程师仍以 GitHub 主仓 feature 分支提交代码，同时云效副本通过 GitHub App 持续拉取，创建流水线（定义 stage · 绑定阿里云部署目标）。代码 + HPRD + 设计 + 测试规格仍以 GitHub 版本管理为审计基线。' },
+    desc:'从这一步开始进入<strong>双仓并行</strong>：工程师仍以 GitHub 主仓 feature 分支提交代码，同时云效副本通过 GitHub 执行身份持续拉取，创建流水线（定义 stage · 绑定阿里云部署目标）。代码 + HPRD + 设计 + 测试规格仍以 GitHub 版本管理为审计基线。' },
   { idx:6, lane:'bridge', laneLabel:'GitHub + 云效 并行', laneColor:'rgba(85,239,196,0.18)', laneFg:'#55EFC4',
     title:'Draft PR Open · GitHub PR + 云效触发', icon:'📬', actor:'工程师', dur:'即时',
     output:'GitHub Draft PR · 云效 CI 首次触发', next:'L1-L3 CI 执行',
-    desc:'工程师在 GitHub 主轨开 Draft PR · 同时云效通过 GitHub App 席位拉取最新代码 + 触发 CI 流水线。Required Status Checks 列表在 GitHub PR 上即时出现（pending 状态）。' },
+    desc:'工程师在 GitHub 主轨开 Draft PR · 同时云效通过 GitHub 执行身份拉取最新代码 + 触发 CI 流水线。Required Status Checks 列表在 GitHub PR 上即时出现（pending 状态）。' },
   { idx:7, lane:'yunxiao', laneLabel:'云效并行执行器', laneColor:'rgba(255,106,0,0.22)', laneFg:'#FF6A00',
     title:'L1-L3 Running · 云效 CI 执行', icon:'🔧', actor:'CI 自动', dur:'5–10 min',
     output:'L1 格式 / L2 确定性 / L3 行为 三层结果', next:'回推 GitHub Status Check',

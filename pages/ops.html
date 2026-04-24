@@ -299,7 +299,7 @@ Post-Merge: 你登场
 
 <hr />
 <h2 id="cicd">六、CI/CD 基础设施维护</h2>
-<p>你需要维护的是云效流水线、GitHub App 席位和回推到 GitHub PR 的 Status Check；GitHub Actions 只保留在站点、工具或特定治理 workflow 中。</p>
+<p>你需要维护的是云效流水线、GitHub 执行身份凭证和回推到 GitHub PR 的 Status Check；GitHub Actions 只保留在站点、工具或特定治理 workflow 中。</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -327,7 +327,7 @@ Post-Merge: 你登场
 <tr>
 <td>pr-classification</td>
 <td>PR 分类校验</td>
-<td>确保规则与 GitHub App 回推正常</td>
+<td>确保规则与 GitHub 执行身份回推正常</td>
 </tr>
 <tr>
 <td>g026-acceptance-manifest-check</td>
@@ -344,7 +344,7 @@ Post-Merge: 你登场
 <p><strong>日常维护</strong>：</p>
 <ul>
 <li>监控 CI 队列，确保门禁不卡队</li>
-<li>云效执行资源、队列和 GitHub App 回推延迟</li>
+<li>云效执行资源、队列和 GitHub 执行身份回推延迟</li>
 <li>自动化脚本的版本更新</li>
 <li>CI 缓存策略优化</li>
 </ul>
@@ -475,7 +475,7 @@ A：在 AI-first 模型下，大量运维工作可以自动化。你的核心价
 <tbody>
 <tr><td><strong>Docker + Compose</strong></td><td>容器</td><td>开发/预发一致性；本地 compose 起全栈</td><td><a href="https://docs.docker.com/get-started/" target="_blank" rel="noopener">Docker Get Started</a> · <a href="https://docs.docker.com/compose/" target="_blank" rel="noopener">Compose Docs</a></td></tr>
 <tr><td><strong>ECS 4C8G + Docker Compose</strong></td><td>生产编排（Phase 0）</td><td>SAAC-HL-EP-001 v1.1 P0-4 LOCKED：Phase 0 单 VM + Compose，不预置 Kubernetes；待 Phase 1 按负载评估再定 K8s / K3s</td><td><a href="https://docs.docker.com/compose/" target="_blank" rel="noopener">Docker Compose 文档</a> · <a href="https://docs.docker.com/compose/compose-file/" target="_blank" rel="noopener">Compose File 规范</a></td></tr>
-<tr><td><strong>云效 + GitHub App</strong></td><td>CI/CD</td><td>云效负责 L1-L3 与部署执行，GitHub App 回推 Status Check，GitHub PR 保留合并门禁与审计</td><td><a href="github-yunxiao-pipeline.html">本站：流水线指南</a></td></tr>
+<tr><td><strong>云效 + GitHub 执行身份</strong></td><td>CI/CD</td><td>云效负责 L1-L3 与部署执行，GitHub 执行身份回推 Status Check，GitHub PR 保留合并门禁与审计</td><td><a href="github-yunxiao-pipeline.html">本站：流水线指南</a></td></tr>
 <tr><td><strong>Prometheus</strong></td><td>指标</td><td>时序数据库事实标准；Spring Boot Actuator 原生导出</td><td><a href="https://prometheus.io/docs/prometheus/latest/getting_started/" target="_blank" rel="noopener">Prometheus 入门</a></td></tr>
 <tr><td><strong>Grafana</strong></td><td>可视化</td><td>多数据源仪表板；配置可 Git 管理（Provisioning）</td><td><a href="https://grafana.com/docs/grafana/latest/getting-started/" target="_blank" rel="noopener">Grafana Getting Started</a></td></tr>
 <tr><td><strong>Loki</strong></td><td>日志</td><td>轻量日志聚合；与 Grafana/Prometheus 同家族，运维心智负担低</td><td><a href="https://grafana.com/docs/loki/latest/get-started/" target="_blank" rel="noopener">Loki Get Started</a></td></tr>
@@ -487,7 +487,7 @@ A：在 AI-first 模型下，大量运维工作可以自动化。你的核心价
 <div class="callout info">
 <strong>学习路径建议（1 个月上岗）</strong><br>
 第一周：Docker + Docker Compose 熟练；本地 compose 起全栈、理解 Compose Profiles / healthcheck / depends_on。<br>
-第二周：云效流水线 + GitHub App；配一条从 PR 到 ECS staging 的自动流水线（build / push / compose up）并回推 GitHub Status Check。<br>
+第二周：云效流水线 + GitHub 执行身份；配一条从 PR 到 ECS staging 的自动流水线（build / push / compose up）并回推 GitHub Status Check。<br>
 第三周：Prometheus + Grafana + Loki 三件套；配好一套黄金指标仪表板。<br>
 第四周：跟一次完整的发布 + 一次故障演练；学会用 Claude 快速定位根因。<br>
 （Kubernetes / K3s / Terraform 不在 Phase 0 范围内，留待 Phase 1 按负载重新评估。）

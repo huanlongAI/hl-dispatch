@@ -280,6 +280,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       <span class="hbadge b1">双仓并行模型</span>
       <span class="hbadge b2">6 桩按钮权</span>
       <span class="hbadge b3">GitHub 执行身份机制</span>
+      <span class="hbadge b1">Phase A 分支保护已生效</span>
     </div>
   </div>
 </section>
@@ -306,6 +307,11 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     <p><strong>GitHub 永远主轨</strong>承载 PR、合并门禁与审计；<strong>云效从工程师接入起并行执行</strong> CI、生成制品、部署到阿里云；两者通过 <strong>GitHub 执行身份</strong> 双向沟通，云效把 CI 结果回推为 GitHub PR 的 Status Check；<strong>INV-0 对云效黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
   </div>
 
+  <div class="callout success">
+    <strong>当前落地状态 · 2026-04-24</strong>
+    <p><strong>Phase A 已生效</strong>：<code>hl-scene-design-system</code>、<code>hl-scene-app</code>、<code>hl-platform</code>、<code>hl-framework</code> 的 <code>main</code> 已强制 PR + 1 approval，禁止 force push / delete，要求 conversation resolution，管理员同样受保护规则约束。<strong>Phase B 未执行</strong>：等待云效在真实 PR 上回推首个稳定 check 名称后，再把 <code>yunxiao-ci</code> 或 L1/L2/L3 加为 required checks。</p>
+  </div>
+
   <h3>双仓并行模型</h3>
 
   <div class="flow-model-box">
@@ -319,7 +325,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       <p style="margin-top:10px;"><strong>② 代码仓 PR 主战场</strong></p>
       <ul>
         <li>代码仓：<code>hl-platform</code> · <code>hl-framework</code> · <code>hl-console-native</code> · <code>hl-scene-app</code> · <code>hl-scene-design-system</code></li>
-        <li>PR 承载 Required Status Checks：L1-L4 CI（BLOCKING · 云效回推）· <code>pm-hprd-pass</code>（ADVISORY）· <code>pm-acceptance</code>（BLOCKING）· <code>qa-verdict</code>（BLOCKING）</li>
+        <li>PR 承载治理信号：当前已强制 PR + 1 approval；目标态承载 L1-L3 CI（BLOCKING · 云效回推）· <code>pm-hprd-pass</code>（ADVISORY）· <code>pm-acceptance</code>（BLOCKING）· <code>qa-verdict</code>（BLOCKING）</li>
         <li>INV-0 Merge button = 最终合并门禁</li>
       </ul>
     </div>
@@ -638,6 +644,10 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
   <h3>§4.3 · Required Status Checks（挂 GitHub PR）</h3>
   <p>Required Status Checks 全部定位在 <strong>GitHub PR</strong>，与 <a href="gate-levels.html#section4" class="term-link">gate-levels.html §4</a> 一致：</p>
+  <div class="callout warn">
+    <strong>实施状态</strong>
+    <p>当前 GitHub 侧已完成 Phase A：强制 PR + 1 approval，先堵住 direct push main。下表是目标态门禁矩阵；L1-L3 只有在云效回推首个稳定 check 后，才会进入 Phase B 并写入 GitHub required checks。</p>
+  </div>
   <table class="spec-table">
     <thead>
       <tr><th>Status Check</th><th>级别</th><th>执行载体</th><th>挂载位</th><th>签字人</th></tr>
@@ -652,14 +662,14 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </table>
 
   <h3>§4.4 · INV-0 Merge button · 最终合并门禁</h3>
-  <p>所有 Required Status Checks 全绿后，<strong>INV-0 童正辉</strong> 在 GitHub PR 页面按 Merge button（<code>B4</code>），代码合入 <code>main</code>。这是流水线的最终合并门禁 · 任何替代通道（直推、force-push、管理员绕过）都被 GitHub 分支保护规则禁止。</p>
+  <p>目标态下，所有 Required Status Checks 全绿后，<strong>INV-0 童正辉</strong> 在 GitHub PR 页面按 Merge button（<code>B4</code>），代码合入 <code>main</code>。当前已先落地 Phase A：直推、force-push、删除分支、未解决 conversation 合并被 GitHub 分支保护规则禁止；云效 required check 等 Phase B 再启用。</p>
 
   <table class="spec-table">
     <thead>
       <tr><th>分支</th><th>允许谁推送</th><th>保护规则</th><th>用途</th></tr>
     </thead>
     <tbody>
-      <tr><td><code>main</code></td><td>禁止直推（仅通过 PR 合入）</td><td>Required Checks 全绿 + INV-0 按 Merge</td><td>发布基线 · 下一轮能力包契约起点</td></tr>
+      <tr><td><code>main</code></td><td>禁止直推（仅通过 PR 合入）</td><td>Phase A：PR + 1 approval；Phase B：Required Checks 全绿 + INV-0 按 Merge</td><td>发布基线 · 下一轮能力包契约起点</td></tr>
       <tr><td><code>release/*</code></td><td>运维 Owner（曾正龙）cherry-pick</td><td>补丁专用</td><td>稳定版回归 · hotfix</td></tr>
     </tbody>
   </table>

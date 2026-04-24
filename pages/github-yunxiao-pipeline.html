@@ -318,7 +318,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       </ul>
       <p style="margin-top:10px;"><strong>② 代码仓 PR 主战场</strong></p>
       <ul>
-        <li>代码仓：<code>hl-platform</code> · <code>hl-framework</code> · <code>hl-console-native</code> · <code>hl-scene-app</code>（规划）· <code>hl-scene-design-system</code>（规划）</li>
+        <li>代码仓：<code>hl-platform</code> · <code>hl-framework</code> · <code>hl-console-native</code> · <code>hl-scene-app</code> · <code>hl-scene-design-system</code></li>
         <li>PR 承载 Required Status Checks：L1-L4 CI（BLOCKING · 云效回推）· <code>pm-hprd-pass</code>（ADVISORY）· <code>pm-acceptance</code>（BLOCKING）· <code>qa-verdict</code>（BLOCKING）</li>
         <li>INV-0 Merge button = 最终合并门禁</li>
       </ul>
@@ -496,10 +496,10 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </div>
 
   <div class="map-summary">
-    <div class="map-summary-card"><div class="num">7</div><div class="label">产品线七仓：R-028 口径，含已归档 <code>hl-console</code>；规划 <code>hl-scene-*</code> 另列。</div></div>
+    <div class="map-summary-card"><div class="num">7</div><div class="label">产品线七仓：R-028 口径，含已归档 <code>hl-console</code>；C-L2 <code>hl-scene-*</code> 作为场景域扩展位另列。</div></div>
     <div class="map-summary-card"><div class="num">3</div><div class="label">平台附属：<code>team-memory</code>、<code>sentinel-shared</code>、<code>tech-cofounder-bot</code>。</div></div>
     <div class="map-summary-card"><div class="num">1</div><div class="label">创始人独家：<code>huanlongAI/guanghe</code>，服务 C-L1，不进入团队建设流。</div></div>
-    <div class="map-summary-card"><div class="num">2</div><div class="label">规划仓：<code>hl-scene-app</code>、<code>hl-scene-design-system</code>，建仓时再触发登记。</div></div>
+    <div class="map-summary-card"><div class="num">2</div><div class="label">C-L2 场景双仓：<code>hl-scene-app</code>、<code>hl-scene-design-system</code>，2026-04-24 已按 OWNERSHIP-LOG 登记。</div></div>
   </div>
 
   <h3>产品线七仓（R-028 定义 · R-070 只补事实）</h3>
@@ -563,15 +563,15 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       <p>光合设计系统：GHKit + GHComponents，服务 <code>hl-console-native</code>。R-070 确认权威位置为 <code>huanlongAI/guanghe</code>，创始人独立维护。</p>
       <div class="repo-meta"><span>R-036</span><span>R-070</span><span>Founder only</span></div>
     </div>
-    <div class="repo-map-card planned">
+    <div class="repo-map-card code">
       <h4>hl-scene-app</h4>
-      <p>C-L2 场景 App，承接场景前端 App 概念；Flutter 3.41 技术栈已锁，GitHub 仓库仍规划中未建。</p>
-      <div class="repo-meta"><span>规划中</span><span>C-L2</span><span>建仓时登记</span></div>
+      <p>C-L2 场景 App，承接场景前端 App 概念；Flutter 3.41 技术栈已锁，2026-04-24 已建仓。</p>
+      <div class="repo-meta"><span>已建</span><span>C-L2</span><span>胡杰威 write</span></div>
     </div>
-    <div class="repo-map-card planned">
+    <div class="repo-map-card code">
       <h4>hl-scene-design-system</h4>
       <p>C-L2 场景设计系统，服务 <code>hl-scene-app</code>，承载 Flutter DTCG Token + Widgetbook。</p>
-      <div class="repo-meta"><span>规划中</span><span>DTCG</span><span>建仓时登记</span></div>
+      <div class="repo-meta"><span>已建</span><span>DTCG</span><span>胡杰威 write</span></div>
     </div>
   </div>
 
@@ -583,7 +583,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </div>
     <div class="scope-box">
       <h4>双仓并行</h4>
-      <p><code>hl-platform</code>、<code>hl-framework</code>、<code>hl-console-native</code>，以及未来 <code>hl-scene-*</code>。GitHub 发 PR，Step 5 起云效副本并行执行。</p>
+      <p><code>hl-platform</code>、<code>hl-framework</code>、<code>hl-console-native</code>、<code>hl-scene-app</code>、<code>hl-scene-design-system</code>。GitHub 发 PR，Step 5 起云效副本并行执行。</p>
     </div>
     <div class="scope-box">
       <h4>背景/辅助</h4>
@@ -624,8 +624,8 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       <tr><td><code>hl-platform</code></td><td>后端单仓 · HK Kernel Modulith · HK 6 能力（HK.ID · HK.OrgLink · HK.Policy · HK.Consent · HK.Audit · HK.ReasonDict）</td><td>创始人 + 工程师 × 8</td><td>✅ 已建</td></tr>
       <tr><td><code>hl-framework</code></td><td>公司级统一框架（starters + BOM · R-037 LOCKED）</td><td>架构组（Gate-H · Infra-A）</td><td>✅ 已建 · R-028 LOCKED</td></tr>
       <tr><td><code>hl-console-native</code></td><td>C-L1 内部控制台（Apple 原生 · Swift/SwiftUI）</td><td>创始人</td><td>✅ 已建</td></tr>
-      <tr><td><code>hl-scene-app</code></td><td>C-L2 场景 App（Flutter 3.41 · R-FE-CLIENT-001 LOCKED）</td><td>前端工程师</td><td>🚧 规划中未建</td></tr>
-      <tr><td><code>hl-scene-design-system</code></td><td>C-L2 场景设计系统（Flutter DTCG Token）</td><td>设计师 + 前端负责人</td><td>🚧 规划中未建</td></tr>
+      <tr><td><code>hl-scene-app</code></td><td>C-L2 场景 App（Flutter 3.41 · R-FE-CLIENT-001 LOCKED）</td><td>前端工程师</td><td>✅ 已建 · 胡杰威 write</td></tr>
+      <tr><td><code>hl-scene-design-system</code></td><td>C-L2 场景设计系统（Flutter DTCG Token）</td><td>设计师 + 前端负责人</td><td>✅ 已建 · 胡杰威 write</td></tr>
       <tr><td><code>hl-factory</code></td><td>唤龙超级工厂（R-012 独立产品线 · 非平台产品线但跨用）</td><td>创始人 · AI Ops</td><td>✅ 已建</td></tr>
       <tr><td><code>hl-dispatch</code></td><td>调度服务 + 本站 gh-pages 部署载体</td><td>创始人 + PM</td><td>✅ 已建</td></tr>
     </tbody>
@@ -969,7 +969,7 @@ const IL_STEPS = [
   { idx:4, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(223,230,233,0.18)', laneFg:'#DFE6E9',
     title:'Design Approved · 设计冻结', icon:'🎨', actor:'设计师', dur:'2–4 天',
     output:'Design Packet · DTCG Token · 交互规范', next:'工程师进入编码',
-    desc:'设计师在 <code>guanghe</code>（C-L1 · 创始人独家）或 <code>hl-scene-design-system</code>（C-L2 · 规划中）的 PR 完成 Design Packet · 前端引用 DTCG Token。' },
+    desc:'设计师在 <code>guanghe</code>（C-L1 · 创始人独家）或 <code>hl-scene-design-system</code>（C-L2 · 已建）的 PR 完成 Design Packet · 前端引用 DTCG Token。' },
   { idx:5, lane:'bridge', laneLabel:'GitHub 主仓 + 云效并行起点', laneColor:'rgba(255,106,0,0.22)', laneFg:'#FF6A00',
     title:'In Development · feature 开发 + 云效接入', icon:'⚙️', actor:'工程师', dur:'1 – 数周',
     output:'GitHub feature commit · 云效副本开始拉取 · 云效流水线定义', next:'发起 GitHub Draft PR',

@@ -196,7 +196,7 @@ td strong { color:var(--text); }
       <div class="summary-card">
         <div class="num">7</div>
         <div class="label">产品线七仓</div>
-        <div class="desc">R-028 口径：含已归档 <code>hl-console</code>，不把平台附属与规划仓混入计数。</div>
+        <div class="desc">R-028 口径：含已归档 <code>hl-console</code>，不把平台附属与 C-L2 场景扩展仓混入计数。</div>
       </div>
       <div class="summary-card">
         <div class="num">3</div>
@@ -210,8 +210,8 @@ td strong { color:var(--text); }
       </div>
       <div class="summary-card">
         <div class="num">2</div>
-        <div class="label">规划扩展</div>
-        <div class="desc"><code>hl-scene-app</code> 与 <code>hl-scene-design-system</code> 未建仓，建仓时先写 OWNERSHIP-LOG。</div>
+        <div class="label">C-L2 场景扩展</div>
+        <div class="desc"><code>hl-scene-app</code> 与 <code>hl-scene-design-system</code> 已建仓，OWNERSHIP-LOG 013/014 已登记。</div>
       </div>
     </div>
   </section>
@@ -247,7 +247,7 @@ td strong { color:var(--text); }
       </svg>
       <div class="topo-label attach">R-070 platform attachments</div>
       <div class="topo-label product">R-028 product line</div>
-      <div class="topo-label planned">planned / archived explicit</div>
+      <div class="topo-label planned">C-L2 extension / archived explicit</div>
 
       <div class="topo-node center core">
         <div class="head"><div class="name">hl-contracts</div><div class="tag">SSOT</div></div>
@@ -304,15 +304,15 @@ td strong { color:var(--text); }
         <div class="desc">GHKit + GHComponents，服务 C-L1；R-070 确认权威位置为 huanlongAI/guanghe。</div>
         <div class="meta">R-036 · R-070<br>Founder 独家维护</div>
       </div>
-      <div class="topo-node topo-scene-app planned">
+      <div class="topo-node topo-scene-app code">
         <div class="head"><div class="name">hl-scene-app</div><div class="tag">C-L2</div></div>
         <div class="desc">客户场景 App，承接 C-L2 App 概念；Flutter 3.41 技术栈锁定。</div>
-        <div class="meta">规划中未建<br>建仓时写 OWNERSHIP-LOG</div>
+        <div class="meta">已建 · 2026-04-24<br>胡杰威 write</div>
       </div>
-      <div class="topo-node topo-scene-ds planned">
+      <div class="topo-node topo-scene-ds code">
         <div class="head"><div class="name">hl-scene-design-system</div><div class="tag">C-L2 DS</div></div>
         <div class="desc">C-L2 场景设计系统，DTCG token + Flutter 组件库 + Widgetbook。</div>
-        <div class="meta">规划中未建<br>仅服务 hl-scene-app</div>
+        <div class="meta">已建 · 2026-04-24<br>仅服务 hl-scene-app</div>
       </div>
     </div>
   </section>
@@ -349,8 +349,8 @@ td strong { color:var(--text); }
           <tr><td><strong>sentinel-shared</strong></td><td>平台基建</td><td>L4 Consistency Sentinel 共享基础设施。</td><td>R-070 补登记；辅助七仓，不进入七仓计数。</td></tr>
           <tr><td><strong>tech-cofounder-bot</strong></td><td>治理辅助</td><td>Node-C 大辉子，MAIA-001 runtime。</td><td>R-070 补登记；不进入 Cap-Spec/HPRD 能力包链路。</td></tr>
           <tr><td><strong>guanghe</strong></td><td>创始人独家</td><td>GHKit + GHComponents，服务 C-L1 内部控制台。</td><td>R-070 确认迁入 huanlongAI/guanghe；团队不参与建设。</td></tr>
-          <tr><td><strong>hl-scene-app</strong></td><td>规划扩展</td><td>C-L2 客户场景 App，承接 App 概念落位。</td><td><span class="status planned">规划中</span> 建仓时先写 OWNERSHIP-LOG。</td></tr>
-          <tr><td><strong>hl-scene-design-system</strong></td><td>规划扩展</td><td>C-L2 场景设计系统，服务 hl-scene-app。</td><td><span class="status planned">规划中</span> 建仓时先写 OWNERSHIP-LOG。</td></tr>
+          <tr><td><strong>hl-scene-app</strong></td><td>C-L2 场景扩展</td><td>C-L2 客户场景 App，承接 App 概念落位。</td><td><span class="status built">已建</span> OWNERSHIP-LOG 013。</td></tr>
+          <tr><td><strong>hl-scene-design-system</strong></td><td>C-L2 场景扩展</td><td>C-L2 场景设计系统，服务 hl-scene-app。</td><td><span class="status built">已建</span> OWNERSHIP-LOG 014。</td></tr>
         </tbody>
       </table>
     </div>
@@ -365,7 +365,7 @@ td strong { color:var(--text); }
       </div>
       <div class="scope-card">
         <h4>GitHub 主轨 + 云效并行</h4>
-        <p><code>hl-platform</code>、<code>hl-framework</code>、<code>hl-console-native</code> 以及未来 <code>hl-scene-*</code>。GitHub 发 PR，Step 5 起云效副本并行拉取、执行 CI、回推 Status Check。</p>
+        <p><code>hl-platform</code>、<code>hl-framework</code>、<code>hl-console-native</code>、<code>hl-scene-app</code>、<code>hl-scene-design-system</code>。GitHub 发 PR，Step 5 起云效副本并行拉取、执行 CI、回推 Status Check。</p>
       </div>
       <div class="scope-card">
         <h4>背景/辅助</h4>
@@ -395,7 +395,7 @@ td strong { color:var(--text); }
         </ul>
       </div>
       <div class="owner-card">
-        <h4>C-L2 规划仓</h4>
+        <h4>C-L2 场景仓</h4>
         <ul>
           <li>hl-scene-app：前端工程 Owner。</li>
           <li>hl-scene-design-system：设计 + 前端负责人。</li>

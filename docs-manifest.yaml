@@ -11,7 +11,7 @@ site:
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-24"
-    commit: "PENDING"
+    commit: "398bc22"
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
     note: "S19：流水线指南 v2 双仓并行重写 · GitHub 永远主轨（PR + Required Status Checks + Merge + 审计）· 云效为 Step 5 feature 开发起的并行执行器（CI + 制品 + 阿里云部署）· GitHub App 席位回推 Status Check · 页面重规划为 6 个分页式 Tab（仓库流转图优先）· 核心图改为扩高三泳道仓库流转 SVG 动效图（上游契约仓 / GitHub 主控区与云效并行入口 / 云效副本与部署）· IL_STEPS 12 节点对齐能力包状态机 · 按钮权矩阵收敛为 6 桩 · QA 打回演示 idx=9 · 文档边界增补 R-070 与范围边界 · CI 5/5 PASS"

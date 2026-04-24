@@ -155,7 +155,7 @@
 
   <div class="term-card" id="term-pm-acceptance">
     <div class="term-head"><span class="term-zh">pm-acceptance</span><span class="term-en">PM Acceptance Check</span><span class="term-tag flow">流程</span></div>
-    <div class="term-body">GitHub Required Status Check 之一，代表 PM 已在预览环境跑过验收场景。不是口头"我看过了"，是可审计的 CI 标志。</div>
+    <div class="term-body">GitHub Required Status Check 之一，代表 PM 已在预览环境跑过验收场景。不是口头"我看过了"，是可审计的 PR 绿灯；云效只提供环境与 CI 结果，不承载 PM 签字。</div>
   </div>
 
   <div class="term-card" id="term-state-machine-12">
@@ -179,13 +179,18 @@
   </div>
 
   <div class="term-card" id="term-hl-console-native">
-    <div class="term-head"><span class="term-zh">hl-console-native / hl-app</span><span class="term-en">Console / Mobile App</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">前端分治（SAAC §4.1）：<strong>hl-console-native</strong> = 平台控制台 C-L1，SwiftUI + 光合设计系统（GHKit），原生 macOS / iOS 26；<strong>hl-app</strong> = 租户/消费者端 C-L2，Flutter + Dart + DTCG，覆盖 Desktop / Mobile / Web。</div>
+    <div class="term-head"><span class="term-zh">hl-console-native</span><span class="term-en">Console Native</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">平台控制台 C-L1：SwiftUI + 光合设计系统（GHKit），原生 macOS / iOS 26，由 Founder 内部维护，不与 C-L2 共享 UI / token / 构建产物。</div>
   </div>
 
-  <div class="term-card" id="term-hl-design-system">
-    <div class="term-head"><span class="term-zh">hl-design-system / 光合 GHKit</span><span class="term-en">Design System</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">前端设计系统双线：<strong>hl-design-system</strong> 服务 C-L2（Flutter + DTCG Token 真源）；<strong>光合设计系统（GHKit）</strong> 服务 C-L1（SwiftUI 组件库，随 hl-console-native 一起演进）。两者各自为本栈的 Token / 组件 / 规范单一真相源。</div>
+  <div class="term-card" id="term-hl-scene-app">
+    <div class="term-head"><span class="term-zh">hl-scene-app</span><span class="term-en">Scene App</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">C-L2 租户/消费者端应用：Flutter + Dart + DTCG，覆盖 Desktop / Mobile / Web；依赖 hl-scene-design-system，不依赖 C-L1 光合 GHKit。</div>
+  </div>
+
+  <div class="term-card" id="term-hl-scene-design-system">
+    <div class="term-head"><span class="term-zh">hl-scene-design-system / 光合 GHKit</span><span class="term-en">Design System</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">前端设计系统双线：<strong>hl-scene-design-system</strong> 服务 C-L2（Flutter + DTCG Token 真源）；<strong>光合设计系统（GHKit）</strong> 服务 C-L1（SwiftUI 组件库，随 hl-console-native 一起演进）。两者各自为本栈的 Token / 组件 / 规范单一真相源。</div>
   </div>
 
 </div>
@@ -210,12 +215,12 @@
 
   <div class="term-card" id="term-sentinel">
     <div class="term-head"><span class="term-zh">哨兵</span><span class="term-en">Sentinel</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">CI 里的轻量检查脚本，定期跑一次确认"系统还活着 / 契约没漂移"。不是主测试，是"守夜人"。</div>
+    <div class="term-body">L4 语义守夜人。可由 sentinel-shared reusable workflow 或等价机制执行，确认"系统还活着 / 契约没漂移"；不是主测试，默认 ADVISORY。</div>
   </div>
 
   <div class="term-card" id="term-required-status-check">
     <div class="term-head"><span class="term-zh">Required Status Check</span><span class="term-en">GitHub 必过检查</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">GitHub 合并保护规则：指定的 CI job 没显示绿勾，PR 就点不了 Merge。本站的四层门禁全部通过这个机制落地。</div>
+    <div class="term-body">GitHub 合并保护规则：指定检查没显示绿勾，PR 就点不了 Merge。执行体可以是云效、sentinel-shared 或 GitHub 原生 workflow，但挂载位统一是 GitHub PR。</div>
   </div>
 
   <div class="term-card" id="term-observability">

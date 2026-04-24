@@ -738,7 +738,7 @@
             <p>QA 在不同仓库中的代码审阅权和责任范围</p>
 
             <div class="info-box">
-                <strong>hl-design-system 仓库</strong>
+                <strong>hl-scene-design-system 仓库</strong>
                 <ul style="list-style: none; padding: 0; margin-top: 0.5rem;">
                     <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
                         <code style="color: var(--accent);">/widgetbook/**</code> — UI 组件库的可视化文档和交互演示
@@ -753,7 +753,7 @@
             </div>
 
             <div class="info-box">
-                <strong>hl-app 仓库</strong>
+                <strong>hl-scene-app 仓库</strong>
                 <ul style="list-style: none; padding: 0; margin-top: 0.5rem;">
                     <li style="margin: 0.5rem 0; border-left: 3px solid var(--secondary); padding-left: 0.75rem;">
                         <code style="color: var(--accent);">/test/acceptance/**</code> — 验收测试脚本
@@ -778,7 +778,7 @@
 
             <div style="background: rgba(225, 112, 85, 0.1); border: 1px solid var(--danger); border-radius: 8px; padding: 1.5rem; margin-top: 2rem;">
                 <strong style="color: var(--danger);">⚠️ CODEOWNERS 权限</strong>
-                <p style="margin-top: 0.5rem;">所有 CODEOWNERS 定义的路径变更都需要 QA 代码审核（Required Status Check），以确保测试基础设施的完整性和可靠性。</p>
+                <p style="margin-top: 0.5rem;">所有 CODEOWNERS 定义的测试路径变更都需要 QA review；能力包验收通过后，QA 在 GitHub PR 上给出 qa-verdict，云效只负责执行测试并回推结果。</p>
             </div>
         </section>
 
@@ -1000,7 +1000,7 @@
                 <li><strong>DD-TEST v1.1</strong> — 完整的测试工程推导文档</li>
                 <li><strong>TEAM-COLLABORATION-SPEC v2.1</strong> — 四权分离和协作规范</li>
                 <li><strong>5步流工作指南</strong> — 每个步骤的详细检查清单</li>
-                <li><strong>CI/CD 门禁配置</strong> — GitHub Actions 和 PR status check 设置</li>
+                <li><strong>CI/CD 门禁配置</strong> — 云效流水线、GitHub App 回推和 PR Status Check 设置</li>
             </ul>
         </section>
     </main>

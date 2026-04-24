@@ -279,7 +279,7 @@
 <div class="hero">
   <h1><span>唤龙平台</span> · AI 驱动协作模型</h1>
   <p>23 人全组织 · 四权分离 · 五步交付流 · AI-First 编码</p>
-  <div class="badge" style="background:rgba(253,203,110,0.15);border-color:#FDCB6E;color:#FDCB6E;">Internal Guide · v2.1.2-patch · 2026-04-22</div>
+  <div class="badge" style="background:rgba(253,203,110,0.15);border-color:#FDCB6E;color:#FDCB6E;">Internal Guide · v2.1 + R-070 · 2026-04-24</div>
 </div>
 
 <div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
@@ -307,7 +307,7 @@
     <div class="metric-card"><div class="value">23</div><div class="label">全职团队成员</div></div>
     <a href="power-separation.html" class="metric-card" style="text-decoration:none;color:inherit;"><div class="value">4</div><div class="label">权力分离维度</div><div style="font-size:0.7em;color:var(--primary-light);margin-top:4px;">→ 详解</div></a>
     <a href="delivery-steps.html" class="metric-card" style="text-decoration:none;color:inherit;"><div class="value">5</div><div class="label">能力包交付步骤</div><div style="font-size:0.7em;color:var(--primary-light);margin-top:4px;">→ 详解</div></a>
-    <a href="repo-directory.html" class="metric-card" style="text-decoration:none;color:inherit;"><div class="value">6</div><div class="label">代码仓库</div><div style="font-size:0.7em;color:var(--primary-light);margin-top:4px;">→ 详解</div></a>
+    <a href="repo-directory.html" class="metric-card" style="text-decoration:none;color:inherit;"><div class="value">全量</div><div class="label">仓库地图</div><div style="font-size:0.7em;color:var(--primary-light);margin-top:4px;">→ 详解</div></a>
     <a href="workflow-states.html" class="metric-card" style="text-decoration:none;color:inherit;"><div class="value">12</div><div class="label">工作流状态</div><div style="font-size:0.7em;color:var(--primary-light);margin-top:4px;">→ 详解</div></a>
     <a href="gate-levels.html" class="metric-card" style="text-decoration:none;color:inherit;"><div class="value">4</div><div class="label">CI 门禁层级</div><div style="font-size:0.7em;color:var(--primary-light);margin-top:4px;">→ 详解</div></a>
   </div>
@@ -407,7 +407,7 @@
       </div>
       <div class="org-node eng" style="min-width:130px;">
         <div class="role">前端 × 5</div>
-        <div class="desc">Web → Flutter · hl-design-system + hl-app<br><span style="color:#81ECEC;font-size:0.85em;">胡杰威 Lead</span></div>
+        <div class="desc">Web → Flutter · hl-scene-design-system + hl-scene-app<br><span style="color:#81ECEC;font-size:0.85em;">胡杰威 Lead</span></div>
       </div>
       <div class="org-node qa" style="min-width:130px;">
         <div class="role">QA 架构师 × 1</div>
@@ -422,7 +422,7 @@
     <!-- 6 Lead 脚注框 · TEAM-COLLAB-SPEC v2.1.3-patch（2026-04-22 补 PM Lead 邹骢）-->
     <div class="org-connector"></div>
     <div style="margin-top: 24px; padding: 20px; border: 1px dashed #FDCB6E; border-radius: 10px; background: rgba(253,203,110,0.04); max-width: 920px; margin-left: auto; margin-right: auto;">
-      <div style="font-size: 0.82em; color: #FDCB6E; letter-spacing: 0.08em; margin-bottom: 10px; font-weight: 600;">◆ 团队代表层（Lead · v2.1.2-patch · 5 条线）</div>
+      <div style="font-size: 0.82em; color: #FDCB6E; letter-spacing: 0.08em; margin-bottom: 10px; font-weight: 600;">◆ 团队代表层（6 Lead · v2.1 + R-070）</div>
       <div style="font-size: 0.92em; color: var(--text); line-height: 1.8;">
         五条专业线各设 <strong>Lead</strong>（团队代表）以便批次代审与对外联络。Lead 不是新增 Owner 层，四权分离（语义 / 技术 / 质量 / 治理）结构不变。
       </div>
@@ -555,9 +555,9 @@
       <div class="flow-line"></div>
       <div class="flow-content">
         <h3>Gates + Acceptance · 门禁验收（并行）</h3>
-        <p>四条线并行：CI 门禁自动执行（L1-L3 BLOCKING），AI 审计（L4 ADVISORY），QA 独立验收出具 qa-verdict，工程师互审 Code Review。全部通过后 Draft PR 转 Ready for Review。</p>
+        <p>四条线并行：云效自动执行 CI 门禁（L1-L3 BLOCKING）并回推 GitHub PR，AI 审计（L4 ADVISORY），QA 独立验收出具 qa-verdict，工程师互审 Code Review。全部通过后 Draft PR 转 Ready for Review。</p>
         <div class="flow-tags">
-          <span class="flow-tag ci">CI 自动门禁 L1-L3</span>
+          <span class="flow-tag ci">云效 CI L1-L3</span>
           <span class="flow-tag qa">QA 验收 verdict</span>
           <span class="flow-tag eng">Code Review</span>
           <span class="flow-tag ci">AI 审计 L4</span>
@@ -664,7 +664,7 @@
       <ul>
         <li>不需要 Cap-Spec / HPRD / PM 验收</li>
         <li>触碰 kernel / gateway / framework → founder_required = true</li>
-        <li>CI L1-L3 必须全绿</li>
+        <li>云效回推的 CI L1-L3 必须全绿</li>
         <li><strong>防滥用：</strong>不得包含业务逻辑变更；涉及 TECH-STACK-SPEC 锁定项 → 升级为 governance</li>
       </ul>
     </div>
@@ -678,7 +678,7 @@
       <p>对契约核心、门禁规格、CODEOWNERS、内核架构的变更。</p>
       <ul>
         <li>创始人全程审批（必须）</li>
-        <li>CI L1-L3 必须全绿</li>
+        <li>云效回推的 CI L1-L3 必须全绿</li>
         <li>若影响在进行中的能力包 → 通知相关 PM + 工程师</li>
         <li>治理变更立即生效，不等发布窗口</li>
       </ul>
@@ -723,13 +723,14 @@
   </div>
 
   <h2 style="margin: 32px 0 16px; font-size: 1.3em;">Required Status Checks（人工门禁机读化）</h2>
+  <p style="color:var(--text-muted);margin-top:-8px;">GitHub PR 是统一挂载位：PM / QA 在 PR approve，云效 L1-L3 结果通过 GitHub App 回推，INV-0 只看 GitHub 红绿灯。</p>
   <div class="table-wrapper">
     <table>
       <thead><tr><th>Check</th><th>含义</th><th>通过条件</th><th>适用仓库</th></tr></thead>
       <tbody>
-        <tr><td style="color:var(--pm);font-weight:600">pm-hprd-pass <span style="font-size:0.7em;font-weight:400;color:var(--accent);">[流程内检查]</span></td><td>PM 确认 HPRD 理解正确</td><td>PM 团队成员 approve PR</td><td>hl-platform, hl-app</td></tr>
-        <tr><td style="color:var(--qa);font-weight:600">qa-verdict</td><td>QA 验收通过</td><td>QA 团队成员 approve PR</td><td>hl-platform, hl-app</td></tr>
-        <tr><td style="color:var(--pm);font-weight:600">pm-acceptance</td><td>PM 产品验收通过</td><td>PM 团队成员 approve PR</td><td>hl-platform, hl-app</td></tr>
+        <tr><td style="color:var(--pm);font-weight:600">pm-hprd-pass <span style="font-size:0.7em;font-weight:400;color:var(--accent);">[流程内检查]</span></td><td>PM 确认 HPRD 理解正确</td><td>PM 团队成员 approve PR</td><td>hl-platform, hl-scene-app</td></tr>
+        <tr><td style="color:var(--qa);font-weight:600">qa-verdict</td><td>QA 验收通过</td><td>QA 团队成员 approve PR</td><td>hl-platform, hl-scene-app</td></tr>
+        <tr><td style="color:var(--pm);font-weight:600">pm-acceptance</td><td>PM 产品验收通过</td><td>PM 团队成员 approve PR</td><td>hl-platform, hl-scene-app</td></tr>
       </tbody>
     </table>
   </div>
@@ -755,8 +756,8 @@
 
 <!-- ══════════ 6. Repos ══════════ -->
 <div id="repos" class="section">
-  <div class="section-title"><span class="icon">📦</span> 仓库与权限<span style="margin-left:12px;padding:2px 10px;background:rgba(253,203,110,0.15);border:1px solid rgba(253,203,110,0.3);border-radius:12px;font-size:0.65em;font-weight:400;color:#FDCB6E;vertical-align:middle;">DRAFT</span> <a href="repo-directory.html" style="margin-left:8px;font-size:0.6em;color:var(--primary-light);text-decoration:none;border:1px solid var(--primary);padding:2px 10px;border-radius:12px;">→ 深入详解：六仓库架构 · CODEOWNERS</a></div>
-  <p class="section-subtitle">六个仓库 · 路径即权限 · CODEOWNERS 自动执行</p>
+  <div class="section-title"><span class="icon">📦</span> 仓库与权限<span style="margin-left:12px;padding:2px 10px;background:rgba(253,203,110,0.15);border:1px solid rgba(253,203,110,0.3);border-radius:12px;font-size:0.65em;font-weight:400;color:#FDCB6E;vertical-align:middle;">DRAFT</span> <a href="repo-directory.html" style="margin-left:8px;font-size:0.6em;color:var(--primary-light);text-decoration:none;border:1px solid var(--primary);padding:2px 10px;border-radius:12px;">→ 深入详解：完整仓库架构 · CODEOWNERS</a></div>
+  <p class="section-subtitle">完整仓库地图以 <code>repo-directory.html</code> 为准；本节只列团队日常最常碰到的工作仓 · 路径即权限 · CODEOWNERS 自动执行</p>
 
   <div class="repo-grid">
     <div class="repo-card">
@@ -783,13 +784,13 @@
       <div><span class="owner-tag" style="background:rgba(162,155,254,0.15);color:var(--founder)">创始人 — 全部路径</span></div>
     </div>
     <div class="repo-card">
-      <h3>hl-design-system</h3>
+      <h3>hl-scene-design-system</h3>
       <p>C-L2 设计系统 — DTCG Design Token + Flutter 组件库 + 主题切换</p>
       <div><span class="owner-tag" style="background:rgba(223,230,233,0.15);color:var(--design)">设计负责人 — Token + 主题</span></div>
       <div><span class="owner-tag" style="background:rgba(85,239,196,0.15);color:var(--eng)">前端负责人 — 组件库</span></div>
     </div>
     <div class="repo-card">
-      <h3>hl-app</h3>
+      <h3>hl-scene-app</h3>
       <p>租户端多端应用 — 能力包 UI + 多能力聚合（Flutter）</p>
       <div><span class="owner-tag" style="background:rgba(85,239,196,0.15);color:var(--eng)">前端工程师 — 默认</span></div>
       <div><span class="owner-tag" style="background:rgba(162,155,254,0.15);color:var(--founder)">创始人 — .github</span></div>
@@ -827,11 +828,11 @@ founder_required: false     # true | false</pre>
         <tr><td>Cap-Spec-1（规格书）</td><td style="color:var(--pm)">PM</td><td>PM freeze</td><td>能力包语义 SSOT</td><td>hl-contracts/prd/core/</td></tr>
         <tr><td>Cap-Spec-2（验收场景集）</td><td style="color:var(--pm)">PM</td><td>PM（QA 协作）</td><td>验收标准</td><td>hl-contracts/prd/core/</td></tr>
         <tr><td>Cap-Spec-3（业务码提案）</td><td style="color:var(--pm)">PM</td><td style="color:var(--founder)">创始人必须先批</td><td>reason_code 变更</td><td>hl-contracts/reasoncodes/</td></tr>
-        <tr><td>Design Packet</td><td style="color:var(--design)">设计师</td><td>PM + 前端负责人</td><td>视觉/交互真输入</td><td>hl-app/docs/design-packets/</td></tr>
+        <tr><td>Design Packet</td><td style="color:var(--design)">设计师</td><td>PM + 前端负责人</td><td>视觉/交互真输入</td><td>hl-scene-app/docs/design-packets/</td></tr>
         <tr><td>HPRD（理解确认件）</td><td style="color:var(--eng)">工程师</td><td style="color:var(--pm)">PM（审业务理解）</td><td>Cap-Spec 派生解读</td><td>hl-platform/docs/hprd/</td></tr>
         <tr><td>design.md（技术设计）</td><td style="color:var(--eng)">工程师</td><td>工程师互审 + AI</td><td>技术方案</td><td>hl-platform/docs/design/</td></tr>
-        <tr><td>frontend-design.md</td><td style="color:var(--eng)">前端工程师</td><td>前端工程师互审</td><td>前端技术方案</td><td>hl-app/docs/frontend-design/</td></tr>
-        <tr><td>代码 + 测试</td><td style="color:var(--eng)">工程师</td><td>CI + 互审</td><td>实现</td><td>hl-platform/app/ 或 hl-app/lib/features/</td></tr>
+        <tr><td>frontend-design.md</td><td style="color:var(--eng)">前端工程师</td><td>前端工程师互审</td><td>前端技术方案</td><td>hl-scene-app/docs/frontend-design/</td></tr>
+        <tr><td>代码 + 测试</td><td style="color:var(--eng)">工程师</td><td>CI + 互审</td><td>实现</td><td>hl-platform/app/ 或 hl-scene-app/lib/features/</td></tr>
         <tr><td>acceptance-manifest.yaml</td><td style="color:var(--qa)">QA</td><td>QA</td><td>验收映射</td><td>hl-platform/app/biz-*/acceptance/</td></tr>
         <tr><td>Quality Verdict</td><td style="color:var(--qa)">QA</td><td>—</td><td>qa-verdict check</td><td>PR Status Check</td></tr>
         <tr><td>PM Acceptance</td><td style="color:var(--pm)">PM</td><td>—</td><td>pm-acceptance check</td><td>PR Status Check</td></tr>
@@ -878,7 +879,7 @@ founder_required: false     # true | false</pre>
     <table>
       <thead><tr><th>文档</th><th>定位</th><th>状态</th></tr></thead>
       <tbody>
-        <tr><td>TEAM-COLLABORATION-SPEC v2.1</td><td>核心协作规格（本页来源）</td><td style="color:var(--accent)">DRAFT（锁版前置：T1 能力包全链路试运行通过）</td></tr>
+        <tr><td>TEAM-COLLABORATION-SPEC v2.1 + R-065/R-067/R-070</td><td>核心协作规格 + 已签批裁决补丁（本页来源）</td><td style="color:var(--accent)">DRAFT（锁版前置：T1 能力包全链路试运行通过）</td></tr>
         <tr><td>UI-DELIVERY-SPEC v1.0</td><td>前端/设计双线交付模型</td><td style="color:var(--accent)">DRAFT</td></tr>
         <tr><td>WORKFLOW-GUIDE v1</td><td>非能力包流程（Bugfix/技术改动/治理）</td><td style="color:var(--accent)">DRAFT</td></tr>
         <tr><td>TOOLCHAIN-GUIDE v1</td><td>工具链选型与流程映射</td><td style="color:var(--accent)">DRAFT</td></tr>
@@ -891,7 +892,7 @@ founder_required: false     # true | false</pre>
 
 <!-- ══════════ Footer ══════════ -->
 <div class="footer">
-  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + v2.1.2-patch + UI-DELIVERY-SPEC v1.0 + SITE-PUB §11 addendum v2 · Internal Guide · 2026-04-22 生成 · last_verified 2026-04-22<br>
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + R-065/R-067/R-070 + UI-DELIVERY-SPEC v1.0 + SITE-PUB §11 addendum v2 · Internal Guide · 2026-04-24 生成 · last_verified 2026-04-24<br>
   治理来源：SAAC-HL-001 v1.1 → BRIDGE-DERIVATION v1 → PRD-REDEFINITION-SPEC v2.0 → 创始人裁决
 </div>
 

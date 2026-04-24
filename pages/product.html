@@ -176,7 +176,7 @@ body { min-width: 1200px; }
 <p><strong>关键规则</strong>：你的 Cap-Spec 必须在创始人定义的契约框架内。如果需要变更契约（新增 reason_code、修改 API 规范），先走创始人审批的治理前置门。</p>
 <h3 id="22-design-packet">2.2 设计师的 Design Packet</h3>
 <p>Design Packet 是前端的真输入，取代了"群里说设计好了"。它是一份 YAML 文件，存在仓库里，有版本、可追溯。</p>
-<p>存放位置：<code>hl-app/docs/design-packets/{能力包}/design-packet.yaml</code></p>
+<p>存放位置：<code>hl-scene-app/docs/design-packets/{能力包}/design-packet.yaml</code></p>
 <p>必填字段（12 个）：</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -290,7 +290,7 @@ UI 设计师 补充视觉/交互设计
 </tr>
 </tbody>
 </table></div>
-<p>审批通过 → pm-hprd-pass（流程内检查，非组织级 Ruleset）Required Status Check = PASS → 工程师可以开始实现</p>
+<p>审批通过 → pm-hprd-pass（GitHub PR 上的流程内 Status Check，非组织级 Ruleset）= PASS → 工程师可以开始实现；Step 5 起云效再并行拉取代码跑 CI。</p>
 <p><strong>流程规则：pm-hprd-pass 未通过前，工程师不得开始 Step 3 实现。</strong></p>
 <h3 id="step-5pm">Step 5：PM 产品验收 — 你是终审</h3>
 <p>工程师完成实现后，你在可交互演示版本上执行产品验收：</p>
@@ -299,7 +299,7 @@ UI 设计师 补充视觉/交互设计
 <li>确认用户可见行为符合预期</li>
 <li>UI 设计师协同参与视觉/交互维度验收</li>
 </ul>
-<p>验收通过 → 你在 PR 上 approve → pm-acceptance Required Status Check = PASS → 进入 merge queue</p>
+<p>验收通过 → 你在 GitHub PR 上 approve → pm-acceptance Required Status Check = PASS → 进入 merge queue；云效只提供环境与 CI 结果，不承载 PM 签字。</p>
 <hr />
 <h2 id="_4" style="margin-bottom:24px; margin-top:32px;">四、你和其他团队的协作边界</h2>
 <div class="table-wrapper"><table>
@@ -351,7 +351,7 @@ A：正式解冻 Cap-Spec（状态回退到 Cap-Spec Frozen），通知工程师
 <p><strong>Q：我能直接 merge Cap-Spec 的 PR 吗？</strong>
 A：可以。prd/core/ 路径的 CODEOWNERS 是 @hl-pm-team，PM 可以直接 merge Cap-Spec PR。创始人可选 review 但不 block。</p>
 <p><strong>Q：设计师的产出在哪里冻结？</strong>
-A：在 hl-app/docs/design-packets/ 下提交 design-packet.yaml。这是机读文件，有 frozen_at 字段标记冻结时间。</p>
+A：在 hl-scene-app/docs/design-packets/ 下提交 design-packet.yaml。这是机读文件，有 frozen_at 字段标记冻结时间。</p>
 <p><strong>Q：HPRD 和 Cap-Spec 冲突怎么办？</strong>
 A：以 Cap-Spec 为准。工程师修正 HPRD，你重新审批。Cap-Spec 是上游 SSOT，HPRD 只是工程师的理解确认。</p>
 <p><strong>Q：产品验收发现问题，但 QA 已经通过了？</strong>

@@ -87,7 +87,7 @@ body { min-width: 1200px; }
 
     <rect x="350" y="20" width="140" height="52" rx="8" fill="rgba(116,185,255,0.2)" stroke="#74B9FF" stroke-width="2"/>
     <text x="420" y="42" text-anchor="middle" font-size="12" fill="#74B9FF" font-weight="700">❸ 前端实现</text>
-    <text x="420" y="58" text-anchor="middle" font-size="9" fill="#9999B0">hl-app + design-system</text>
+    <text x="420" y="58" text-anchor="middle" font-size="9" fill="#9999B0">hl-scene-app + hl-scene-design-system</text>
     <text x="420" y="88" text-anchor="middle" font-size="9" fill="#74B9FF" font-weight="600">⬤ 前端主导</text>
     <path d="M490,46 L520,46" stroke="#FDCB6E" stroke-width="2" fill="none" marker-end="url(#fd-arr)"/>
 
@@ -106,11 +106,11 @@ body { min-width: 1200px; }
 </div>
 <h2 id="_1">一、你们是谁</h2>
 <h3 id="ui-solution-owner">前端工程师 — UI Solution Owner</h3>
-<p>5 人团队，全部转 Flutter。使用两个仓库：<a href="glossary.html#term-hl-design-system" class="term-link"><code>hl-design-system</code></a>（C-L2 设计系统，DTCG Token 真源）和 <a href="glossary.html#term-hl-console-native" class="term-link"><code>hl-app</code></a>（租户/消费者端多端应用）。</p>
+<p>5 人团队，全部转 Flutter。使用两个仓库：<a href="glossary.html#term-hl-scene-design-system" class="term-link"><code>hl-scene-design-system</code></a>（C-L2 设计系统，DTCG Token 真源）和 <a href="glossary.html#term-hl-scene-app" class="term-link"><code>hl-scene-app</code></a>（租户/消费者端多端应用）。</p>
 <div class="callout info" style="margin:12px 0;">
 <strong>前端分治（SAAC §4.1）</strong>：唤龙前端是双栈并行，不是单一 Flutter 技术栈。<br>
 — <strong>C-L1 平台控制台</strong> = <a href="glossary.html#term-hl-console-native" class="term-link"><code>hl-console-native</code></a>，SwiftUI + <strong>光合设计系统（GHKit）</strong>，原生 macOS / iOS 26（R-016 LOCKED），由创始人负责，与本页前端团队无关。<br>
-— <strong>C-L2 租户/消费者端</strong> = <a href="glossary.html#term-hl-console-native" class="term-link"><code>hl-app</code></a> + <a href="glossary.html#term-hl-design-system" class="term-link"><code>hl-design-system</code></a>，Flutter + Dart + DTCG，覆盖 Desktop / Mobile / Web，即本页所述前端团队的工作范围。<br>
+— <strong>C-L2 租户/消费者端</strong> = <a href="glossary.html#term-hl-scene-app" class="term-link"><code>hl-scene-app</code></a> + <a href="glossary.html#term-hl-scene-design-system" class="term-link"><code>hl-scene-design-system</code></a>，Flutter + Dart + DTCG，覆盖 Desktop / Mobile / Web，即本页所述前端团队的工作范围。<br>
 本页以下章节仅针对 C-L2。
 </div>
 <p><strong>胡杰威</strong>担任前端 Lead——不是因为 Flutter 经验最深，而是因为他在 AI 驱动上积极拥抱和实验，最适合带领团队完成转型。</p>
@@ -293,7 +293,7 @@ body { min-width: 1200px; }
 <hr />
 <h2 id="design-packet">四、Design Packet 详解（设计师必读）</h2>
 <p>Design Packet 是你的核心交付物。它不是 Figma 链接——它是仓库内的机读 YAML 文件。</p>
-<p>存放位置：<code>hl-app/docs/design-packets/{能力包}/design-packet.yaml</code></p>
+<p>存放位置：<code>hl-scene-app/docs/design-packets/{能力包}/design-packet.yaml</code></p>
 <h3 id="12">12 个必填字段</h3>
 <div class="table-wrapper"><table>
 <thead>
@@ -490,7 +490,7 @@ body { min-width: 1200px; }
 <hr />
 <h2 id="_3">七、仓库路径与权限</h2>
 <p>前端团队维护两个仓库，各有独立的 CODEOWNERS 规则：</p>
-<h3 id="hl-design-system">hl-design-system（设计系统仓库）</h3>
+<h3 id="hl-scene-design-system">hl-scene-design-system（设计系统仓库）</h3>
 <p>Token + 基础组件库 + 组件隔离工作台</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -518,7 +518,7 @@ body { min-width: 1200px; }
 </tr>
 </tbody>
 </table></div>
-<h3 id="hl-app">hl-app（租户端多端应用仓库）</h3>
+<h3 id="hl-scene-app">hl-scene-app（租户端多端应用仓库）</h3>
 <p>能力包实现、文档、测试、路由等</p>
 <div class="table-wrapper"><table>
 <thead>
@@ -601,8 +601,8 @@ A：类似 Storybook 的 Flutter 版工具（如 Widgetbook）。你在里面展
 <tr><td><strong>Flutter 3.x</strong></td><td>前端</td><td>一套代码三端复用；Widget 声明式编程与 AI 生成高度契合</td><td><a href="https://docs.flutter.dev/get-started/install" target="_blank" rel="noopener">Flutter 官方入门</a> · <a href="https://flutter.cn/" target="_blank" rel="noopener">中文站</a></td></tr>
 <tr><td><strong>Dart 3</strong></td><td>前端</td><td>Flutter 宿主语言；空安全 + 强类型对 AI 生成稳定性友好</td><td><a href="https://dart.cn/language" target="_blank" rel="noopener">Dart 语言导览</a></td></tr>
 <tr><td><strong>Figma</strong></td><td>设计</td><td>设计稿 SSOT + Design Token 导出；跨人协作成熟</td><td><a href="https://help.figma.com/hc/zh-cn" target="_blank" rel="noopener">Figma 帮助中心</a> · <a href="https://www.figma.com/community" target="_blank" rel="noopener">Community 模板</a></td></tr>
-<tr><td><strong>Design Tokens (DTCG)</strong></td><td>设计/前端</td><td>颜色/间距/字号以 JSON 结构化存储；规范由 Design Tokens Community Group 维护，从 Figma 自动同步到 hl-design-system</td><td><a href="https://tr.designtokens.org/format/" target="_blank" rel="noopener">DTCG Design Tokens 规范</a></td></tr>
-<tr><td><strong>hl-design-system</strong></td><td>前端/设计</td><td>组件库 + Token 的唯一真相源；所有 UI 组件由此引用</td><td><a href="repo-directory.html">本站：仓库目录</a></td></tr>
+<tr><td><strong>Design Tokens (DTCG)</strong></td><td>设计/前端</td><td>颜色/间距/字号以 JSON 结构化存储；规范由 Design Tokens Community Group 维护，从 Figma 自动同步到 hl-scene-design-system</td><td><a href="https://tr.designtokens.org/format/" target="_blank" rel="noopener">DTCG Design Tokens 规范</a></td></tr>
+<tr><td><strong>hl-scene-design-system</strong></td><td>前端/设计</td><td>组件库 + Token 的唯一真相源；所有 UI 组件由此引用</td><td><a href="repo-directory.html">本站：仓库目录</a></td></tr>
 <tr><td><strong>Widgetbook</strong></td><td>前端/QA</td><td>Flutter 版 Storybook——展示组件所有状态，供设计与 QA 验收</td><td><a href="https://docs.widgetbook.io/" target="_blank" rel="noopener">Widgetbook 官方文档</a></td></tr>
 <tr><td><strong>Material 3 / Cupertino</strong></td><td>设计</td><td>Flutter 内置组件基线；不重复造轮子，只做主题定制</td><td><a href="https://m3.material.io/" target="_blank" rel="noopener">Material 3 指南</a></td></tr>
 <tr><td><strong>Claude Code / Cursor</strong></td><td>前端/设计</td><td>从 Figma 截图 → Flutter Widget 代码；Design Token 差异自动检测</td><td><a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code 文档</a></td></tr>
@@ -611,7 +611,7 @@ A：类似 Storybook 的 Flutter 版工具（如 Widgetbook）。你在里面展
 <div class="callout info">
 <strong>学习路径建议</strong><br>
 <strong>前端工程师</strong>：第一周跟官方教程搭一个 Counter App；第二周在 Widgetbook 里复刻 3 个现有组件；第三周跟随老同事完成一个 UI-R1 的全流程交付。<br>
-<strong>UI 设计师</strong>：第一周熟悉 hl-design-system 的 Token 结构；第二周用 Claude 把一张 Figma 稿输出为 design-packet.yaml。
+<strong>UI 设计师</strong>：第一周熟悉 hl-scene-design-system 的 Token 结构；第二周用 Claude 把一张 Figma 稿输出为 design-packet.yaml。
 </div>
 
 </div>

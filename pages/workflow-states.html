@@ -344,11 +344,11 @@ const STATES = [
   },
   {
     name:'L1-L3 Running', owner:'CI 自动', color:'#FDCB6E',
-    desc:'CI 流水线自动执行三层 BLOCKING 门禁：L1 格式检查、L2 确定性测试、L3 行为验证。',
-    entry:'PR 创建或更新触发 GitHub Actions',
+    desc:'云效并行流水线自动执行三层 BLOCKING 门禁：L1 格式检查、L2 确定性测试、L3 行为验证；结果回推为 GitHub PR Status Check。',
+    entry:'PR 创建或更新触发云效流水线并回推 GitHub Status Check',
     exit:'L1-L3 全部 PASS（绿色）',
     guard:'三层均为 BLOCKING——任一失败即阻止合并；L4 哨兵同步执行但仅 ADVISORY',
-    output:'CI 检查报告 + L4 哨兵审阅意见',
+    output:'云效 CI 检查报告 + L4 哨兵审阅意见',
     roles:[{t:'CI ⬤自动执行',bg:'rgba(253,203,110,0.2)',c:'#FDCB6E'},{t:'哨兵 🤖ADVISORY',bg:'rgba(108,92,231,0.2)',c:'#A29BFE'},{t:'工程师 ⬤修复',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'}],
     fail:'任一门禁 FAIL → 工程师修复后重新触发',
     next:'Gates Passed'
@@ -356,7 +356,7 @@ const STATES = [
   {
     name:'Gates Passed', owner:'系统', color:'#00B894',
     desc:'L1-L3 全部通过，Required Status Checks 显示绿色。PR 已具备合并资格的技术前提。',
-    entry:'CI 报告 L1-L3 全 PASS',
+    entry:'云效回推 L1-L3 全 PASS',
     exit:'通知 QA 开始验收测试',
     guard:'GitHub Branch Protection 的 Required Status Checks 必须全绿；L4 哨兵报告已生成（ADVISORY）',
     output:'绿色合并状态 + 哨兵报告',

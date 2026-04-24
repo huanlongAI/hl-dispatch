@@ -253,7 +253,7 @@ body {
     </div>
     <div class="gate-item">
       <div class="check-name">dart format</div>
-      <div class="check-desc">Dart 代码格式检查（hl-app · hl-design-system）</div>
+      <div class="check-desc">Dart 代码格式检查（hl-scene-app · hl-scene-design-system）</div>
     </div>
     <div class="gate-item">
       <div class="check-name">yamllint</div>
@@ -285,11 +285,11 @@ body {
     </div>
     <div class="gate-item">
       <div class="check-name">token-sync</div>
-      <div class="check-desc">hl-app 中使用的设计令牌版本必须与 hl-design-system 一致</div>
+      <div class="check-desc">hl-scene-app 中使用的设计令牌版本必须与 hl-scene-design-system 一致</div>
     </div>
     <div class="gate-item">
       <div class="check-name">design-ready</div>
-      <div class="check-desc">UI 相关 PR 必须包含对应的 Design Packet（hl-app 专用）</div>
+      <div class="check-desc">UI 相关 PR 必须包含对应的 Design Packet（hl-scene-app 专用）</div>
     </div>
   </div>
 </div>
@@ -309,11 +309,11 @@ body {
     </div>
     <div class="gate-item">
       <div class="check-name">golden test</div>
-      <div class="check-desc">hl-app 的 widget tree 变更需要 golden 测试（视觉回归检查）</div>
+      <div class="check-desc">hl-scene-app 的 widget tree 变更需要 golden 测试（视觉回归检查）</div>
     </div>
     <div class="gate-item">
       <div class="check-name">a11y test</div>
-      <div class="check-desc">无障碍测试（屏幕阅读器、键盘导航）· hl-app 必须 WCAG 2.1 Level AA</div>
+      <div class="check-desc">无障碍测试（屏幕阅读器、键盘导航）· hl-scene-app 必须 WCAG 2.1 Level AA</div>
     </div>
     <div class="gate-item">
       <div class="check-name">acceptance test</div>
@@ -428,7 +428,7 @@ document.getElementById('L1-details').style.display = 'block';
     </tr>
     <tr>
       <td><strong>模块越界</strong></td>
-      <td>hl-app 直接导入内部 API 而非通过 service layer</td>
+      <td>hl-scene-app 直接导入内部 API 而非通过 service layer</td>
       <td>遵循分层架构，通过 service layer 中介</td>
     </tr>
     <tr>
@@ -508,7 +508,7 @@ document.getElementById('L1-details').style.display = 'block';
     <br><br>
     <strong>技术合伙人智能体的分析</strong>：
     <ul style="margin-left: 20px; margin-top: 8px;">
-      <li>新增的 3 个 reason_code 会被以下系统使用：hl-platform (订单服务) · hl-app (租户端) · hl-console-native (创始人后台)</li>
+      <li>新增的 3 个 reason_code 会被以下系统使用：hl-platform (订单服务) · hl-scene-app (租户端) · hl-console-native (创始人后台)</li>
       <li>这是一个<strong>后向兼容</strong>的变更，不会破坏现有客户端</li>
       <li>建议：创建对应的验收场景文档，PM 需补充测试用例</li>
       <li>审批清单：PM 自己检查清单 ✓ · 工程师 review ✓ · QA 生成验收场景 ✓ · 可以审批</li>
@@ -520,7 +520,7 @@ document.getElementById('L1-details').style.display = 'block';
 
 <h2 id="section4">✅ Section 4: Required Status Checks — 组织级规则</h2>
 
-<p>以下三个 Required Checks 是 GitHub 组织级别的强制规则，出现在所有 PR 的"Merge button"旁边。必须全部通过才能合并。</p>
+<p>Required Status Checks 的挂载位统一在 GitHub PR；L1-L3 由云效并行流水线执行并通过 GitHub App 回推红绿灯，QA / PM 的人工签字仍在 GitHub PR 上完成。以下是人工与流程检查的组织级口径。</p>
 
 <table class="status-checks-table">
   <thead>
@@ -537,7 +537,7 @@ document.getElementById('L1-details').style.display = 'block';
         <strong>qa-verdict</strong>
         <span class="check-tag">BLOCKING</span>
       </td>
-      <td>hl-platform, hl-app</td>
+      <td>hl-platform, hl-scene-app</td>
       <td>QA 团队必须在 PR 中显式批准（Approve review），验证功能符合验收场景</td>
       <td><span class="role-badge qa">@hl-qa-team</span></td>
     </tr>
@@ -546,7 +546,7 @@ document.getElementById('L1-details').style.display = 'block';
         <strong>pm-acceptance</strong>
         <span class="check-tag">BLOCKING</span>
       </td>
-      <td>hl-platform, hl-app</td>
+      <td>hl-platform, hl-scene-app</td>
       <td>PM 必须在 PR 中显式批准，确认代码实现与 Cap-Spec 一致</td>
       <td><span class="role-badge pm">@hl-pm-team</span></td>
     </tr>
@@ -568,7 +568,7 @@ document.getElementById('L1-details').style.display = 'block';
     <br>
     <a href="glossary.html#term-blocking-advisory" class="term-link"><code>qa-verdict</code></a> 和 <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-acceptance</code></a> 是 GitHub 组织级 Ruleset，强制所有 PR 通过。
     <br>
-    <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-hprd-pass</code></a> 是流程内检查（在 hl-factory 中定义），不是组织级，仅提示信息。
+    <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-hprd-pass</code></a> 是 GitHub PR 上的流程内检查，不是组织级 Ruleset；门禁规格仍由 hl-factory / TOOLCHAIN-GUIDE 定义。
   </p>
 </div>
 

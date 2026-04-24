@@ -280,7 +280,7 @@ Step 3: 工程师实现时，你同步编写验收测试套件
   └── pending → covered（更新 manifest）
     ↓
 Step 4: 门禁 + 验收（你是关键角色）
-  ├── CI 自动跑 L1-L3（含 G-026 manifest 检查 + G-023 验收回放）
+  ├── 云效自动跑 L1-L3，并回推 GitHub PR Status Check
   ├── 你独立执行验收测试套件
   ├── 验证通过 → 在 PR 上 approve → qa-verdict = PASS
   └── 验证失败 → 写明失败原因 → 打回
@@ -296,7 +296,7 @@ Post-Merge: staging 环境回归验证
 <p>qa-verdict 是 GitHub Required Status Check。你的操作方式：</p>
 <ol>
 <li>在 PR 的 Review 中选择 <strong>Approve</strong></li>
-<li>GitHub Actions 自动检测到 QA 团队成员 approve → qa-verdict = PASS</li>
+<li>GitHub PR 的检查服务识别 QA 团队成员 approve → qa-verdict = PASS</li>
 <li>如果你发现问题 → 选择 <strong>Request Changes</strong> → qa-verdict 保持 FAIL</li>
 </ol>
 <p><strong>出具标准</strong>：</p>
@@ -421,13 +421,13 @@ Post-Merge: staging 环境回归验证
 </tbody>
 </table></div>
 <p>你在前端仓库的 CODEOWNERS（涉及两个仓库）：</p>
-<p><strong>hl-design-system</strong>（设计系统）：</p>
+<p><strong>hl-scene-design-system</strong>（设计系统）：</p>
 <ul>
 <li><code>/widgetbook/**</code> → @hl-frontend-engineers + @hl-qa-team（你共审）</li>
 <li><code>/test/golden/**</code> → @hl-frontend-engineers + @hl-qa-team（你共审）</li>
 <li><code>/test/a11y/**</code> → @hl-qa-team（你独审）</li>
 </ul>
-<p><strong>hl-app</strong>（租户端应用）：</p>
+<p><strong>hl-scene-app</strong>（租户端应用）：</p>
 <ul>
 <li><code>/test/acceptance/**</code> → @hl-qa-team（你独审）</li>
 <li><code>/test/golden/**</code> → @hl-frontend-engineers + @hl-qa-team（你共审）</li>
@@ -485,7 +485,7 @@ Post-Merge: staging 环境回归验证
 <tr>
 <td>CI 报告解读</td>
 <td>高</td>
-<td>看懂 GitHub Actions 日志、门禁失败原因定位</td>
+<td>看懂云效流水线日志与 GitHub PR Status Check，定位门禁失败原因</td>
 </tr>
 <tr>
 <td>Testcontainers</td>

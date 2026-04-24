@@ -11,17 +11,17 @@ site:
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-24"
+    commit: "8f5b15c"
+    branch: gh-pages
+    url: "https://huanlongai.github.io/hl-dispatch/"
+    note: "S21：站点叙事页统一仓库命名为 hl-scene-* · 完整仓库地图页重构 · GitHub+云效流水线口径回收为 TEAM v2.1 / TOOLCHAIN v1.0 + R-065/R-067/R-070 · L1-L3 云效执行 + GitHub App 回推 Status Check · CI 5/5 PASS"
+  # 部署历史（倒数第二次 · 审计保留 · 站点内容变更语义）
+  previous_deploy:
+    date: "2026-04-24"
     commit: "12f14bf"
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
     note: "S20：流水线指南新增完整仓库地图 Tab · R-028 产品线七仓、R-070 平台附属、guanghe 创始人独家、hl-scene-* 规划位显式分层 · 系统架构图 §2 从六仓库拓扑更新为以 hl-contracts 为中心的完整仓库拓扑 · 重绘扩高星形拓扑画布 · Required Status Checks 表补 L1-L3 云效回推 + L4 sentinel-shared · CI 5/5 PASS"
-  # 部署历史（倒数第二次 · 审计保留 · 站点内容变更语义）
-  previous_deploy:
-    date: "2026-04-24"
-    commit: "9e7f2ca"
-    branch: gh-pages
-    url: "https://huanlongai.github.io/hl-dispatch/"
-    note: "S19：流水线指南 v2 双仓并行重写 · GitHub 永远主轨（PR + Required Status Checks + Merge + 审计）· 云效为 Step 5 feature 开发起的并行执行器（CI + 制品 + 阿里云部署）· GitHub App 席位回推 Status Check · 页面重规划为 6 个分页式 Tab（仓库流转图优先）· 核心图改为扩高三泳道仓库流转 SVG 动效图（上游契约仓 / GitHub 主控区与云效并行入口 / 云效副本与部署）· IL_STEPS 12 节点对齐能力包状态机 · 按钮权矩阵收敛为 6 桩 · QA 打回演示 idx=9 · 文档边界增补 R-070 与范围边界 · CI 5/5 PASS"
 
 pages:
   - page: index.html

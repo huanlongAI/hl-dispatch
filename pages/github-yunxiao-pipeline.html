@@ -521,7 +521,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ Yunxiao Parallel Executor ═══ -->
 <section class="tab-pane" id="yunxiao">
   <h2>§4 · 云效 · 并行执行器（INV-0 黑盒）</h2>
-  <p>云效的定位是 <strong>工程师接入起的并行执行器</strong>：从 Step 3（HPRD Passed）起与 GitHub 主仓开始双仓同步，跑 CI、生成制品、部署到阿里云，并通过 GitHub App 席位把结果回推为 GitHub PR 的 Status Check。<strong>INV-0 对云效完全黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
+  <p>云效的定位是 <strong>工程师接入后的并行执行器</strong>：Step 3 先把 HPRD / 开发设计 / 测试规格纳入 GitHub 主仓审计基线；从 Step 5 feature 分支开发起，云效副本才开始并行拉取代码、跑 CI、生成制品、部署到阿里云，并通过 GitHub App 席位把结果回推为 GitHub PR 的 Status Check。<strong>INV-0 对云效完全黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
 
   <h3>§4.1 · GitHub App 席位机制</h3>
   <div class="flow-steps-mini">

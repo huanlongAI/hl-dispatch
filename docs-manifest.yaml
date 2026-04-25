@@ -33,7 +33,7 @@ pages:
       - doc: UI-DELIVERY-SPEC
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21+减负：首页将详细目录压缩为关键锚点速跳，并把治理文档体系改成真源速览
+    last_verified: "2026-04-25"   # S23：全站术语漂移收口，首页统一 21 人编制、HPRD 理解确认件、后端 6 + 前端 5 口径
 
   - page: pages/architecture.html
     title: 系统架构图（v2.1 叙事图谱）
@@ -45,7 +45,10 @@ pages:
         version: "2.1"
         status: DRAFT
       - doc: TECH-STACK-SPEC
-        version: "3"
+        version: "3.1"
+        status: LOCKED
+      - doc: DD-FE-CLIENT
+        version: "1.0"
         status: LOCKED
       - doc: DD-TEST
         version: "1.1"
@@ -69,7 +72,7 @@ pages:
       - id: s6
         title: 文档 & Phase 0 禁区
         spec_status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：门禁执行泳道改为云效/哨兵，hl-factory 仓库卡改为 Spec Owner
+    last_verified: "2026-04-25"   # S23：组织图统一 21 人编制、工程 6+5、HPRD 理解确认件，补 DD-FE-CLIENT 真源
 
   - page: pages/global.html
     title: 全局团队分工与工作流
@@ -108,7 +111,7 @@ pages:
       - id: links
         title: 团队指南链接
         spec_status: DRAFT
-    last_verified: "2026-04-24"   # S21+导览增强：overview 顶部补建议阅读顺序，明确 tab 进入路径
+    last_verified: "2026-04-25"   # S23：全局页统一 21 人正式编制口径
 
   - page: pages/product.html
     title: 产品团队指南
@@ -130,7 +133,10 @@ pages:
       - doc: FRONTEND-REPO-SPEC
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：前端流程表终点改为 GitHub Merge 口径
+      - doc: DD-FE-CLIENT
+        version: "1.0"
+        status: LOCKED
+    last_verified: "2026-04-25"   # S23：C-L2 改为 Flutter 3.41 / Dart 3.x，Phase 1 iOS+Android，Desktop/Web 择期
 
   - page: pages/engineering.html
     title: 工程师团队指南
@@ -141,7 +147,10 @@ pages:
       - doc: FRONTEND-REPO-SPEC
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：工程师页 CI 执行体改为云效 + GitHub 执行身份回推
+      - doc: DD-FE-CLIENT
+        version: "1.0"
+        status: LOCKED
+    last_verified: "2026-04-25"   # S23：工程师页 C-L2 Flutter 3.41 / Dart 3.x 口径对齐
 
   - page: pages/qa.html
     title: 测试团队指南
@@ -184,7 +193,7 @@ pages:
       - id: signature-matrix
         title: Lead 签字边界 · 全平台矩阵
         spec_status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：Lead 页统一为 GitHub PR 挂载检查口径
+    last_verified: "2026-04-25"   # S23：Lead 页统一后端 6、HPRD 理解确认件口径
 
   # ── 深入专题二级页面 ──
 
@@ -260,7 +269,7 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：治理文档页补 TOOLCHAIN-GUIDE v1 + R-065/R-067 双仓流水线
+    last_verified: "2026-04-25"   # S23：治理文档页统一 PRD-REDEFINITION v3、HPRD、21 人编制口径
 
   - page: pages/qa-process.html
     title: 测试流程与分工详解
@@ -279,7 +288,10 @@ pages:
     title: 技术栈选型详解
     source_docs:
       - doc: TECH-STACK-SPEC
-        version: "3"
+        version: "3.1"
+        status: LOCKED
+      - doc: DD-FE-CLIENT
+        version: "1.0"
         status: LOCKED
       - doc: SAAC-HL-001
         version: "1.1"
@@ -287,7 +299,7 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：CI 执行体改为云效/GitHub 执行身份；C-L1 GHKit 归 guanghe，避免混入 hl-scene-design-system
+    last_verified: "2026-04-25"   # S23：交叉验证 TECH v3.1 / DD-FE-CLIENT v1 / TEAM v2.1；修正 C-L2 Flutter 3.41、21 人编制、HPRD 权责边界
 
   - page: pages/glossary.html
     title: 术语对照表
@@ -295,7 +307,13 @@ pages:
       - doc: TEAM-COLLABORATION-SPEC
         version: "2.1"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：12 状态机终态由 Merged 改为 Released；拆清 hl-scene-design-system 与 guanghe/GHKit
+      - doc: SAAC-HL-001
+        version: "1.1"
+        status: LOCKED
+      - doc: DD-FE-CLIENT
+        version: "1.0"
+        status: LOCKED
+    last_verified: "2026-04-25"   # S23：术语表交叉验证 SAAC 展开、HPRD、C-L2 场景前端、GHKit / hl-scene-design-system 边界
 
   - page: pages/workflow-states.html
     title: 工作流状态机详解（12 状态全景）

@@ -88,9 +88,9 @@
 <div class="glossary-grid">
 
   <div class="term-card" id="term-contract">
-    <div class="term-head"><span class="term-zh">契约</span><span class="term-en">Contract / SAAC</span><span class="term-tag core">核心概念</span></div>
+    <div class="term-head"><span class="term-zh">契约</span><span class="term-en">Contract / Charter</span><span class="term-tag core">核心概念</span></div>
     <div class="term-body">hl-contracts 仓库里由创始人维护的全局规则集合——包括数据结构、接口、命名、权限、分层约束等。所有能力包都必须在契约允许的范围内实现。契约是"宪法"，能力包是"立法"。</div>
-    <div class="term-alias">别名：SAAC（Semantic Architecture As Contract）｜全局契约</div>
+    <div class="term-alias">关联：SAAC-HL（Structural Advantage Architecture Charter — Huanlong）｜全局契约</div>
   </div>
 
   <div class="term-card" id="term-contract-boundary">
@@ -134,8 +134,9 @@
   </div>
 
   <div class="term-card" id="term-hprd">
-    <div class="term-head"><span class="term-zh">HPRD</span><span class="term-en">Huanlong PRD</span><span class="term-tag flow">流程</span></div>
-    <div class="term-body">唤龙风格的产品需求文档。在 Cap-Spec 冻结后由 PM + 设计共同完成，比传统 PRD 更强调"验收条件可机器校验"。</div>
+    <div class="term-head"><span class="term-zh">HPRD</span><span class="term-en">Human-readable Product Design</span><span class="term-tag flow">流程</span></div>
+    <div class="term-body">工程师阅读 PM 的 Cap-Spec 后产出的理解确认件，用来证明"工程师理解对了"。PM 审批 HPRD 只看业务语义是否忠于 Cap-Spec，不审技术方案；HPRD 不是第二份 PRD，也不是 PM + 设计共同产出的需求文档。</div>
+    <div class="term-alias">通俗说法：理解确认件｜上游 SSOT：Cap-Spec</div>
   </div>
 
   <div class="term-card" id="term-freeze">
@@ -185,12 +186,12 @@
 
   <div class="term-card" id="term-hl-scene-app">
     <div class="term-head"><span class="term-zh">hl-scene-app</span><span class="term-en">Scene App</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">C-L2 租户/消费者端应用：Flutter + Dart + DTCG，覆盖 Desktop / Mobile / Web；依赖 hl-scene-design-system，不依赖 C-L1 光合 GHKit。</div>
+    <div class="term-body">C-L2 / 场景前端应用：Flutter 3.41 + Dart 3.x。Phase 1 首要覆盖 iOS + Android；Desktop / Web 属 Q6.1 方案 B 加分场景，择期拓展。依赖 hl-scene-design-system，不依赖 C-L1 光合 GHKit。</div>
   </div>
 
   <div class="term-card" id="term-hl-scene-design-system">
     <div class="term-head"><span class="term-zh">hl-scene-design-system</span><span class="term-en">C-L2 Design System</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">C-L2 场景设计系统：Flutter + DTCG Token 真源，服务 <code>hl-scene-app</code>。它不承载 C-L1 光合 GHKit，不与 <code>hl-console-native</code> 共享 UI / token / 构建产物。</div>
+    <div class="term-body">C-L2 / S 域场景设计系统：Dart package · Flutter widgets · DTCG Token 真源，服务 <code>hl-scene-app</code>。它不承载 C-L1 光合 GHKit，不与 <code>hl-console-native</code> 共享 UI / token / 构建产物。</div>
   </div>
 
   <div class="term-card" id="term-guanghe-ghkit">

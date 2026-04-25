@@ -560,7 +560,7 @@
     <div class="sec-head">
       <div class="sec-num"><strong>01</strong>ORG · POWER</div>
       <div>
-        <h2 class="sec-h2">组织结构与四权分离<span class="sbadge">23 人 · 6 角色 · 1 创始</span></h2>
+        <h2 class="sec-h2">组织结构与四权分离<span class="sbadge">21 人 · 6 角色 · Founder 编制外</span></h2>
         <p class="sec-lead">唤龙采用「<b>四权分离 (Four-Power Separation)</b>」治理模型：将<code>语义主权</code>、<code>技术实现权</code>、<code>独立质量权</code>、<code>组织治理权</code>分别授予不同角色，任意单一角色均无法独立完成「需求 → 实现 → 验收」闭环。Founder（@tongzhenghui）保留组织治理权与最终合并权，但不直接参与功能编码。</p>
       </div>
     </div>
@@ -575,7 +575,7 @@
       <div class="org-cell">
         <div class="role">PRODUCT</div>
         <div class="name">PM 团队<span class="pill" data-r="pm">语义主权</span></div>
-        <div class="who">需求语义、HPRD、PM 验收（pm-acceptance）</div>
+        <div class="who">Cap-Spec 语义、HPRD 审批、PM 验收（pm-acceptance）</div>
         <div class="count">人数 · 3</div>
       </div>
       <div class="org-cell">
@@ -587,8 +587,8 @@
       <div class="org-cell">
         <div class="role">ENGINEERING</div>
         <div class="name">Engineer 团队<span class="pill" data-r="eng">技术实现权</span></div>
-        <div class="who">Backend Kotlin × 6 + PHP × 2 + Frontend × 5</div>
-        <div class="count">人数 · 13</div>
+        <div class="who">Backend Kotlin × 6 + Frontend Flutter × 5</div>
+        <div class="count">人数 · 11</div>
       </div>
       <div class="org-cell">
         <div class="role">QUALITY</div>
@@ -608,7 +608,7 @@
       <div class="quad q1">
         <div class="qhead"><div class="qname">语义主权 Semantic Sovereignty</div><div class="qowner">PM + Founder</div></div>
         <ul>
-          <li>定义「这个功能要解决什么问题」（HPRD ≥ Cap-Spec）</li>
+          <li>定义能力包业务语义（Cap-Spec 是上游 SSOT；HPRD 只做理解确认）</li>
           <li>独占 <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-acceptance</code></a> 与 <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-hprd-pass</code></a> Required Status Check</li>
           <li>禁止：编辑测试代码、绕过 QA、私自合并</li>
         </ul>
@@ -1017,8 +1017,8 @@
       <div class="step s2">
         <div class="sn">STEP 02</div>
         <div class="st">Design + HPRD</div>
-        <div class="so">Owner: <b>PM + Designer</b></div>
-        <div class="sd">PM 撰写 HPRD（高保真 PRD），Designer 产出 DTCG token 与 Widgetbook 组件，pm-hprd-pass 通过后冻结。</div>
+        <div class="so">Owner: <b>Engineer + Designer；PM 审批</b></div>
+        <div class="sd">Engineer 产出 HPRD（理解确认件）并交 PM 审业务理解；Designer 产出 DTCG token 与组件规格，pm-hprd-pass 通过后冻结。</div>
       </div>
       <div class="step s3">
         <div class="sn">STEP 03</div>

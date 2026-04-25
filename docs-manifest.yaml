@@ -1,27 +1,27 @@
 # 唤龙平台 · 团队协作指南站点 — 文档清单
 # 用途：统一控制每页的源文档、版本、状态、最后校验日期
 # CI 检查脚本会读取此文件做版本漂移检测
-# 更新时间：2026-04-25（S22：发布账本回写 · 魏鹏自动同步方案 + 云效消费副本口径）
+# 更新时间：2026-04-25（S23：技术选型与术语漂移收口 · GitHub+云效合并后部署流）
 
 site:
   name: 唤龙平台团队协作指南
   layer: guide          # guide | normative — 本站只是 guide layer
   deploy: internal      # internal | public
-  last_verified: "2026-04-25"   # S22：发布账本回写 · 魏鹏自动同步方案 + GitHub 执行身份回推 · 云效只消费同步副本；README / drafts 边界同步
+  last_verified: "2026-04-25"   # S23：技术选型与术语漂移收口 · 术语表 HPRD/SAAC 对齐 · GitHub 主轨 + 云效合并后部署流完成发布校验
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-25"
+    commit: "fb8b3ec"
+    branch: gh-pages
+    url: "https://huanlongai.github.io/hl-dispatch/"
+    note: "S23：发布 bab560d + fb8b3ec；流水线指南改为 GitHub 主轨 + 云效合并后执行；全站统一 21 人正式编制、HPRD 理解确认件、Flutter 3.41 / DD-FE-CLIENT v1；CI 5/5 PASS；GitHub Pages deploy success；线上抽检 PASS"
+  # 部署历史（倒数第二次 · 审计保留 · 站点内容变更语义）
+  previous_deploy:
+    date: "2026-04-24"
     commit: "8fd547e"
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
     note: "S22：流水线指南补魏鹏自动同步方案 · 明确 Codeup 不做远端自动同步、云效流水线不承担仓库同步、云效只消费同步后的代码副本 · README 回收为 hl-dispatch/gh-pages 发布事实 · CI 5/5 PASS · GitHub Pages deploy success"
-  # 部署历史（倒数第二次 · 审计保留 · 站点内容变更语义）
-  previous_deploy:
-    date: "2026-04-24"
-    commit: "8f5b15c"
-    branch: gh-pages
-    url: "https://huanlongai.github.io/hl-dispatch/"
-    note: "S21：站点叙事页统一仓库命名为 hl-scene-* · 完整仓库地图页重构 · GitHub+云效流水线口径回收为 TEAM v2.1 / TOOLCHAIN v1.0 + R-065/R-067/R-070 · L1-L3 云效执行 + GitHub 执行身份回推 Status Check · CI 5/5 PASS"
 
 pages:
   - page: index.html

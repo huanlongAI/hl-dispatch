@@ -518,9 +518,9 @@ document.getElementById('L1-details').style.display = 'block';
 
 <hr />
 
-<h2 id="section4">✅ Section 4: Required Status Checks — 组织级规则</h2>
+<h2 id="section4">✅ Section 4: Required Status Checks — GitHub PR 挂载规则</h2>
 
-<p>Required Status Checks 的挂载位统一在 GitHub PR；L1-L3 由云效并行流水线执行并通过 GitHub 执行身份回推红绿灯，QA / PM 的人工签字仍在 GitHub PR 上完成。以下是人工与流程检查的组织级口径。</p>
+<p>Required Status Checks 的挂载位统一在 GitHub PR；L1-L3 由云效并行流水线执行并通过 GitHub 执行身份回推红绿灯，QA / PM 的人工签字仍在 GitHub PR 上完成。以下是人工与流程检查的当前挂载口径。</p>
 
 <table class="status-checks-table">
   <thead>
@@ -556,7 +556,7 @@ document.getElementById('L1-details').style.display = 'block';
         <span class="check-tag advisory">ADVISORY</span>
       </td>
       <td>所有</td>
-      <td>流程内检查：验证 HPRD（工程师理解确认文档）是否已创建。非组织级 Ruleset，仅供参考</td>
+      <td>流程内检查：验证 HPRD（工程师理解确认文档）是否已创建。非 BLOCKING 人工门禁，仅供参考</td>
       <td><span class="role-badge pm">@hl-pm-team</span></td>
     </tr>
   </tbody>
@@ -566,9 +566,9 @@ document.getElementById('L1-details').style.display = 'block';
   <p style="margin: 0; color: var(--text); font-size: 0.9em;">
     <strong>⚠️ 重要区别</strong>：
     <br>
-    <a href="glossary.html#term-blocking-advisory" class="term-link"><code>qa-verdict</code></a> 和 <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-acceptance</code></a> 是 GitHub 组织级 Ruleset，强制所有 PR 通过。
+    <a href="glossary.html#term-blocking-advisory" class="term-link"><code>qa-verdict</code></a> 和 <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-acceptance</code></a> 是 GitHub PR 上的 BLOCKING 人工门禁，合并前必须转绿。
     <br>
-    <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-hprd-pass</code></a> 是 GitHub PR 上的流程内检查，不是组织级 Ruleset；门禁规格仍由 hl-factory / TOOLCHAIN-GUIDE 定义。
+    <a href="glossary.html#term-pm-acceptance" class="term-link"><code>pm-hprd-pass</code></a> 是 GitHub PR 上的流程内检查，不是 BLOCKING 人工门禁；门禁规格仍由 hl-factory / TOOLCHAIN-GUIDE 定义。
   </p>
 </div>
 
@@ -739,7 +739,7 @@ const GATE_STEPS = [
   { name:'人工审阅', time:'10+ 分钟', items:['CODEOWNERS review','qa-verdict 批准'], type:'BLOCKING', color:'#55EFC4', desc:'代码所有者审查 + QA 团队独立出具 Verdict。' },
   { name:'PM 验收', time:'10+ 分钟', items:['pm-acceptance 批准','Cap-Spec 一致性确认'], type:'BLOCKING', color:'#74B9FF', desc:'PM 检查能力实现与 Cap-Spec 是否一致。' },
   { name:'创始人审批', time:'可选', items:['技术合伙人 AI 分析','影响范围评估','最终决策'], type:'可选', color:'#A29BFE', desc:'仅 founder_required 标记的 PR 需要，智能体辅助分析。' },
-  { name:'合并 & 部署', time:'完成', items:['自动合并到 main','CI/CD 自动部署'], type:'✓', color:'#00B894', desc:'所有审批通过，PR 合并，自动触发部署。' }
+  { name:'合并 & 部署', time:'完成', items:['INV-0 GitHub PR Merge button','运维 staging / canary / prod'], type:'✓', color:'#00B894', desc:'所有审批通过后，由 INV-0 在 GitHub PR 执行 Merge，随后进入运维 post-merge 部署。' }
 ];
 
 function showGateDetail(idx) {

@@ -160,7 +160,7 @@
 
   <div class="term-card" id="term-state-machine-12">
     <div class="term-head"><span class="term-zh">12 状态机</span><span class="term-en">12-State Workflow</span><span class="term-tag flow">流程</span></div>
-    <div class="term-body">能力包从立项到合并的 12 个显式状态（Proposed → Cap-Spec Draft → … → Merged）。任何时候问"这个包到哪一步了"都能准确回答。详见 <a href="workflow-states.html">12 状态详解</a>。</div>
+    <div class="term-body">能力包从立项到 Released 的 12 个显式状态（Proposed → Cap-Spec Draft → … → Released）。其中终态含 INV-0 GitHub Merge 与运维 post-merge 部署。任何时候问"这个包到哪一步了"都能准确回答。详见 <a href="workflow-states.html">12 状态详解</a>。</div>
   </div>
 
 </div>
@@ -189,8 +189,13 @@
   </div>
 
   <div class="term-card" id="term-hl-scene-design-system">
-    <div class="term-head"><span class="term-zh">hl-scene-design-system / 光合 GHKit</span><span class="term-en">Design System</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">前端设计系统双线：<strong>hl-scene-design-system</strong> 服务 C-L2（Flutter + DTCG Token 真源）；<strong>光合设计系统（GHKit）</strong> 服务 C-L1（SwiftUI 组件库，随 hl-console-native 一起演进）。两者各自为本栈的 Token / 组件 / 规范单一真相源。</div>
+    <div class="term-head"><span class="term-zh">hl-scene-design-system</span><span class="term-en">C-L2 Design System</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">C-L2 场景设计系统：Flutter + DTCG Token 真源，服务 <code>hl-scene-app</code>。它不承载 C-L1 光合 GHKit，不与 <code>hl-console-native</code> 共享 UI / token / 构建产物。</div>
+  </div>
+
+  <div class="term-card" id="term-guanghe-ghkit">
+    <div class="term-head"><span class="term-zh">guanghe / 光合 GHKit</span><span class="term-en">C-L1 Design System</span><span class="term-tag std">标准</span></div>
+    <div class="term-body">C-L1 光合设计系统：SwiftUI 组件库与 GHKit / GHComponents，服务 <code>hl-console-native</code>。R-070 确认权威仓库为 <code>huanlongAI/guanghe</code>，由 Founder 独立维护。</div>
   </div>
 
 </div>

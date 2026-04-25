@@ -566,7 +566,7 @@
         </div>
       </div>
       <div style="margin-top:16px; padding:12px 16px; background:rgba(116,185,255,0.08); border:1px solid rgba(116,185,255,0.3); border-radius:8px; font-size:0.88em; color:var(--text-muted);">
-        <strong style="color:var(--pm);">与 pm-acceptance / pm-hprd-pass 按钮权的关系</strong>：邹骢作为 PM Lead 不独占 <code>pm-acceptance</code> / <code>pm-hprd-pass</code> 的 Required Status Check approve 按钮——这两个 GitHub 组织级强制检查仍按能力包的 PM Owner 走（同 §B）。PM Lead 身份主要体现在 <strong>团队协调 + 业务口径一致性守护 + PM 内部代签协调</strong>。任命背景：2026-04-22 INV-0 指派，对原"PM 团队不设单一 Lead"口径（HP-1.1 Q5=A 阶段定义）进行阶段性升级，改为 <strong>6 Lead 全覆盖模型</strong>，保持扁平 Owner 结构与 Lead 脚注式并存。
+        <strong style="color:var(--pm);">与 pm-acceptance / pm-hprd-pass 按钮权的关系</strong>：邹骢作为 PM Lead 不独占 <code>pm-acceptance</code> / <code>pm-hprd-pass</code> 的 Required Status Check approve 按钮——这两个 GitHub PR 挂载检查仍按能力包的 PM Owner 走（同 §B）。PM Lead 身份主要体现在 <strong>团队协调 + 业务口径一致性守护 + PM 内部代签协调</strong>。任命背景：2026-04-22 INV-0 指派，对原"PM 团队不设单一 Lead"口径（HP-1.1 Q5=A 阶段定义）进行阶段性升级，改为 <strong>6 Lead 全覆盖模型</strong>，保持扁平 Owner 结构与 Lead 脚注式并存。
       </div>
     </div>
   </section>
@@ -628,7 +628,7 @@
         <div class="rule-num">3</div>
         <div class="rule-body">
           <h4>Lead 签字体现在方案层，不体现在 Status Checks 层</h4>
-          <p>pm-hprd-pass / qa-verdict / pm-acceptance 这三个 GitHub 组织级 Required Status Checks <strong>不</strong>因 Lead 变化——Lead 签方案用飞书 / 卷宗 SIGN-OFF，不用 GitHub PR approve 动作（除非该 Lead 本身也是 CODEOWNERS）。详见 <a href="gate-levels.html#section4" style="color:var(--primary-light);">gate-levels.html §4 · 组织级规则</a>。</p>
+          <p>pm-hprd-pass / qa-verdict / pm-acceptance 这三个 GitHub PR 挂载的 Required Status Checks <strong>不</strong>因 Lead 变化——Lead 签方案用飞书 / 卷宗 SIGN-OFF，不用 GitHub PR approve 动作（除非该 Lead 本身也是 CODEOWNERS）。详见 <a href="gate-levels.html#section4" style="color:var(--primary-light);">gate-levels.html §4 · GitHub PR 挂载规则</a>。</p>
         </div>
       </div>
       <div class="rule">
@@ -701,9 +701,9 @@
     </div>
 
     <div class="faq-item">
-      <div class="faq-q">CI/CD 组织级流程和相关制度在哪里？</div>
+      <div class="faq-q">CI/CD 门禁流程和相关制度在哪里？</div>
       <div class="faq-a">
-        权威页：<a href="gate-levels.html" style="color:var(--primary-light);">gate-levels.html</a>，尤其是 <strong>§4 Required Status Checks · 组织级规则</strong>，定义了 qa-verdict / pm-acceptance / pm-hprd-pass 三个 GitHub 组织级强制规则。按钮权分工见 <a href="team-leads.html#signature-matrix">§4 矩阵</a>。2026-04-21 HP-1.1 Q7=A 裁定 ci-cd-batch-signoff.html 作废（与 gate-levels §4 重复），不入站点。
+        权威页：<a href="gate-levels.html" style="color:var(--primary-light);">gate-levels.html</a>，尤其是 <strong>§4 Required Status Checks · GitHub PR 挂载规则</strong>，定义了 qa-verdict / pm-acceptance / pm-hprd-pass 三个 GitHub PR 挂载检查。按钮权分工见 <a href="team-leads.html#signature-matrix">§4 矩阵</a>。2026-04-21 HP-1.1 Q7=A 裁定 ci-cd-batch-signoff.html 作废（与 gate-levels §4 重复），不入站点。
       </div>
     </div>
   </section>
@@ -738,7 +738,7 @@
         <div class="arrow">→ 阅读</div>
       </a>
       <a class="cross-ref-card" href="gate-levels.html">
-        <h4>🛡️ CI/CD 门禁与组织级规则</h4>
+        <h4>🛡️ CI/CD 门禁与挂载规则</h4>
         <p>Required Status Checks 权威定义页</p>
         <div class="arrow">→ 阅读</div>
       </a>

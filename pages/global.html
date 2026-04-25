@@ -244,6 +244,25 @@
   .metric-card .value { font-size: 2em; font-weight: 800; background: linear-gradient(135deg, var(--primary-light), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .metric-card .label { font-size: 0.82em; color: var(--text-muted); margin-top: 4px; }
 
+  /* ── Read Path ── */
+  .read-path {
+    margin: 0 0 24px; padding: 18px 20px; border-radius: 14px;
+    background: linear-gradient(180deg, rgba(108,92,231,0.1), rgba(108,92,231,0.04));
+    border: 1px solid rgba(108,92,231,0.22);
+  }
+  .read-path h3 { font-size: 0.96em; margin-bottom: 6px; color: var(--text); }
+  .read-path p { font-size: 0.84em; color: var(--text-muted); margin: 0 0 12px; line-height: 1.7; }
+  .read-path-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .read-step {
+    padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+    background: rgba(15,15,26,0.35); color: var(--text); cursor: pointer;
+    text-align: left; transition: all 0.25s;
+  }
+  .read-step:hover { border-color: var(--primary); transform: translateY(-1px); }
+  .read-step:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .read-step .num { display: block; font-size: 0.72em; color: var(--primary-light); margin-bottom: 3px; }
+  .read-step .label { display: block; font-size: 0.83em; font-weight: 700; }
+
   /* ── Footer ── */
   .footer { text-align: center; padding: 40px 24px; color: var(--text-muted); font-size: 0.85em; border-top: 1px solid var(--border); }
 
@@ -302,6 +321,18 @@
 <div id="overview" class="section active">
   <div class="section-title"><span class="icon">🌐</span> 全景总览<span style="margin-left:12px;padding:2px 10px;background:rgba(253,203,110,0.15);border:1px solid rgba(253,203,110,0.3);border-radius:12px;font-size:0.65em;font-weight:400;color:#FDCB6E;vertical-align:middle;">DRAFT</span></div>
   <p class="section-subtitle">一张图看懂唤龙的 AI 驱动协作模型</p>
+
+  <div class="read-path">
+    <h3>建议阅读顺序</h3>
+    <p>第一次读本站，建议先建立全局框架，再进入流程、门禁、仓库边界，最后回到团队专页。这样不会在 8 个 tab 之间来回跳。</p>
+    <div class="read-path-steps">
+      <button type="button" class="read-step" onclick="switchTab('overview')"><span class="num">STEP 1</span><span class="label">全景总览</span></button>
+      <button type="button" class="read-step" onclick="switchTab('flow')"><span class="num">STEP 2</span><span class="label">能力包流程</span></button>
+      <button type="button" class="read-step" onclick="switchTab('gates')"><span class="num">STEP 3</span><span class="label">门禁体系</span></button>
+      <button type="button" class="read-step" onclick="switchTab('repos')"><span class="num">STEP 4</span><span class="label">仓库与权限</span></button>
+      <button type="button" class="read-step" onclick="switchTab('links')"><span class="num">STEP 5</span><span class="label">团队指南</span></button>
+    </div>
+  </div>
 
   <div class="metric-grid">
     <div class="metric-card"><div class="value">23</div><div class="label">全职团队成员</div></div>
@@ -459,7 +490,7 @@
         </div>
       </div>
       <div style="margin-top: 12px; font-size: 0.78em; color: var(--text-muted);">
-        PM × 3 采用横向 PM-A/B/C 覆盖能力包，并由 <strong>PM Lead 邹骢</strong> 统筹团队对外协作与内部代审调度（2026-04-22 从"不设 Lead" 升级为 6 Lead 全覆盖）。详见 <a href="team-leads.html" style="color: #FDCB6E; text-decoration: underline;">团队代表（Lead）专页</a> · CI/CD 组织级规则见 <a href="gate-levels.html#section4" style="color: #FDCB6E; text-decoration: underline;">gate-levels.html §4</a>。
+        PM × 3 采用横向 PM-A/B/C 覆盖能力包，并由 <strong>PM Lead 邹骢</strong> 统筹团队对外协作与内部代审调度（2026-04-22 从"不设 Lead" 升级为 6 Lead 全覆盖）。详见 <a href="team-leads.html" style="color: #FDCB6E; text-decoration: underline;">团队代表（Lead）专页</a> · CI/CD GitHub PR 挂载规则见 <a href="gate-levels.html#section4" style="color: #FDCB6E; text-decoration: underline;">gate-levels.html §4</a>。
       </div>
     </div>
   </div>
@@ -570,7 +601,7 @@
       <div class="flow-line"></div>
       <div class="flow-content">
         <h3>PM Acceptance + Merge · 产品验收合并</h3>
-        <p>PM 在可交互版本上执行产品验收（pm-acceptance status check），验收通过后进入 Merge Queue。如涉及 founder-owned 路径，创始人额外审批。</p>
+        <p>PM 在可交互版本上执行产品验收（pm-acceptance status check），验收通过后等待 INV-0 在 GitHub PR 上按 Merge button。如涉及 founder-owned 路径，创始人额外审批。</p>
         <div class="flow-tags">
           <span class="flow-tag pm">PM 产品验收</span>
           <span class="flow-tag founder">创始人（如涉及核心路径）</span>

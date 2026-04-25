@@ -44,6 +44,16 @@ body { min-width:1200px; }
 }
 .guide-note strong { color:var(--accent); }
 
+.entry-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:0 0 24px; }
+.entry-card {
+  padding:16px 18px; border:1px solid var(--border); border-radius:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015));
+}
+.entry-card .label { font-size:0.74em; letter-spacing:0.08em; text-transform:uppercase; color:var(--primary-light); margin-bottom:8px; }
+.entry-card p { margin:0; font-size:0.83em; line-height:1.7; }
+.entry-card a { color:var(--secondary); text-decoration:none; }
+.entry-card a:hover { text-decoration:underline; }
+
 .summary-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0 24px; }
 .summary-card {
   padding:16px; border:1px solid var(--border); border-radius:14px;
@@ -190,6 +200,21 @@ td strong { color:var(--text); }
     <strong>Guide Layer</strong>：本页用于理解和导航，不替代治理真源。权威依据是 <code>hl-contracts/governance/RULINGS.md</code> 与 <code>hl-contracts/governance/REPO-OWNERSHIP-LOG.md</code>。
   </div>
 
+  <div class="entry-grid">
+    <div class="entry-card">
+      <div class="label">适合谁看</div>
+      <p>PM Lead、工程 Lead、新入场工程师、运维。尤其适合需要先判断“这次变更该落哪个仓”的场景。</p>
+    </div>
+    <div class="entry-card">
+      <div class="label">这页回答什么</div>
+      <p>产品线七仓怎么计数，R-070 附属仓有哪些，<code>guanghe</code> 和 <code>hl-scene-*</code> 为什么不混入产品线主轨。</p>
+    </div>
+    <div class="entry-card">
+      <div class="label">读完去哪</div>
+      <p>看按钮和挂载位去 <a href="gate-levels.html">门禁体系</a>；看 post-merge 部署去 <a href="github-yunxiao-pipeline.html">流水线指南</a>；看状态判断去 <a href="workflow-states.html">12 状态机</a>。</p>
+    </div>
+  </div>
+
   <section class="repo-section" id="overview">
     <h2>§1 · 分层总览</h2>
     <div class="summary-grid">
@@ -265,9 +290,9 @@ td strong { color:var(--text); }
         <div class="meta">已建 · R-028 · R-037<br>双仓并行</div>
       </div>
       <div class="topo-node topo-factory code">
-        <div class="head"><div class="name">hl-factory</div><div class="tag">CI/CD</div></div>
+        <div class="head"><div class="name">hl-factory</div><div class="tag">Spec Owner</div></div>
         <div class="desc">R-012 独立产品线；平台侧只保留门禁规格源与跨用工具身份。</div>
-        <div class="meta">已建 · spec owner<br>执行可迁云效</div>
+        <div class="meta">已建 · spec owner<br>执行体已迁云效</div>
       </div>
       <div class="topo-node topo-console-native code">
         <div class="head"><div class="name">hl-console-native</div><div class="tag">C-L1</div></div>

@@ -290,7 +290,7 @@ UI 设计师 补充视觉/交互设计
 </tr>
 </tbody>
 </table></div>
-<p>审批通过 → pm-hprd-pass（GitHub PR 上的流程内 Status Check，非组织级 Ruleset）= PASS → 工程师可以开始实现；Step 5 起云效再并行拉取代码跑 CI。</p>
+<p>审批通过 → pm-hprd-pass（GitHub PR 上的流程内 Status Check，非 BLOCKING 人工门禁）= PASS → 工程师可以开始实现；Step 5 起云效再并行拉取代码跑 CI。</p>
 <p><strong>流程规则：pm-hprd-pass 未通过前，工程师不得开始 Step 3 实现。</strong></p>
 <h3 id="step-5pm">Step 5：PM 产品验收 — 你是终审</h3>
 <p>工程师完成实现后，你在可交互演示版本上执行产品验收：</p>
@@ -299,7 +299,7 @@ UI 设计师 补充视觉/交互设计
 <li>确认用户可见行为符合预期</li>
 <li>UI 设计师协同参与视觉/交互维度验收</li>
 </ul>
-<p>验收通过 → 你在 GitHub PR 上 approve → pm-acceptance Required Status Check = PASS → 进入 merge queue；云效只提供环境与 CI 结果，不承载 PM 签字。</p>
+<p>验收通过 → 你在 GitHub PR 上 approve → pm-acceptance Required Status Check = PASS → 等待 INV-0 在 GitHub PR 上按 Merge button；云效只提供环境与 CI 结果，不承载 PM 签字。</p>
 <hr />
 <h2 id="_4" style="margin-bottom:24px; margin-top:32px;">四、你和其他团队的协作边界</h2>
 <div class="table-wrapper"><table>

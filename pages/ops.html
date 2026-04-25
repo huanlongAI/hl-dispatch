@@ -82,11 +82,11 @@ body { min-width: 1200px; }
     <div>· <strong style="color:#FDCB6E;">hl-dispatch@main 归档 push</strong>：童正辉（INV-0）</div>
     <div>· <strong style="color:#55EFC4;">verdict 总服务运行</strong>：魏鹏（工程师 Lead · 技术总监）</div>
     <div>· <strong style="color:#FFEAA7;">qa-verdict 出具</strong>：李云峰（QA Lead）· <strong style="color:#74B9FF;">pm-acceptance / pm-hprd-pass</strong>：能力包 PM Owner 按钮（团队统筹由邹骢 PM Lead 负责）</div>
-    <div style="margin-top: 8px; font-size: 0.88em; color:#7F8C9B;">↑ 以上为常态分工摘要。<strong style="color:#E8E8F0;">组织级 Required Status Checks 权威配置</strong>见 <a href="gate-levels.html#section4" style="color:#FDCB6E;text-decoration:underline;">gate-levels.html §4</a>；完整按钮权矩阵（含异常窗口、代签流程）见 <a href="team-leads.html#signature-matrix" style="color:#FDCB6E;text-decoration:underline;">团队代表专页 §4</a>。</div>
+    <div style="margin-top: 8px; font-size: 0.88em; color:#7F8C9B;">↑ 以上为常态分工摘要。<strong style="color:#E8E8F0;">GitHub PR Required Status Checks 权威配置</strong>见 <a href="gate-levels.html#section4" style="color:#FDCB6E;text-decoration:underline;">gate-levels.html §4</a>；完整按钮权矩阵（含异常窗口、代签流程）见 <a href="team-leads.html#signature-matrix" style="color:#FDCB6E;text-decoration:underline;">团队代表专页 §4</a>。</div>
   </div>
   <!-- H6 作废说明（Q7=A 要求显式提示） -->
   <div style="margin-top: 10px; padding: 8px 12px; background: rgba(255,107,107,0.05); border-left: 3px solid #FF6B6B; border-radius: 3px; font-size: 0.76em; color: #9999B0; line-height: 1.6;">
-    <strong style="color:#FF6B6B;">⚠ 作废提示</strong>：历史 <code>ci-cd-batch-signoff.html</code>（H6 · CI/CD 整包签批页）已于 HP-1.1 Q7=A 决议中作废，按钮权规则改由 <code>gate-levels.html §4</code> 作为唯一组织级真源管理。
+    <strong style="color:#FF6B6B;">⚠ 作废提示</strong>：历史 <code>ci-cd-batch-signoff.html</code>（H6 · CI/CD 整包签批页）已于 HP-1.1 Q7=A 决议中作废，按钮权规则改由 <code>gate-levels.html §4</code> 作为唯一 GitHub PR 挂载口径真源管理。
   </div>
 </div>
 
@@ -193,7 +193,7 @@ body { min-width: 1200px; }
 <hr />
 <h2 id="_3">三、你在能力包流中的角色</h2>
 <p>你在五步流中只出现在 <strong>Post-Merge</strong> 阶段：</p>
-<div class="codehilite"><pre><span></span><code>Step 1-5: PM / 工程师 / QA 完成能力包交付 → PR Merged
+<div class="codehilite"><pre><span></span><code>Step 1-5: PM / 工程师 / QA 完成能力包交付 → INV-0 GitHub Merge
     ↓
 Post-Merge: 你登场
     ↓
@@ -231,7 +231,7 @@ Post-Merge: 你登场
 <tbody>
 <tr>
 <td>常规发布</td>
-<td>跟随 merge queue 或固定窗口</td>
+<td>跟随 GitHub 合并后的常规窗口或固定窗口</td>
 <td>能力包完成、Bugfix P1-P3</td>
 </tr>
 <tr>
@@ -292,7 +292,7 @@ Post-Merge: 你登场
 </tbody>
 </table></div>
 <p><strong>关键时序对齐</strong>：</p>
-<div class="codehilite"><pre><span></span><code>工程师 PR merge → 你部署 staging → QA 回归 → 你部署 prod
+<div class="codehilite"><pre><span></span><code>INV-0 GitHub Merge → 你部署 staging → QA 回归 → 你部署 prod
                                   ↑
                           这个步骤不能跳过
 </code></pre></div>
@@ -456,8 +456,8 @@ Post-Merge: 你登场
 </ul>
 <hr />
 <h2 id="_7">十、常见问题</h2>
-<p><strong>Q：merge queue 满了怎么办？</strong>
-A：检查是否有 CI 门禁卡住的 PR。如果是 CI 基础设施问题（runner 不够、缓存失效），你负责解决。如果是 PR 本身的测试失败，通知工程师。</p>
+<p><strong>Q：待合并 PR 堆积怎么办？</strong>
+A：先看 GitHub PR 上是不是有 Required Status Checks 没绿，或者 INV-0 还没到合并窗口。如果是 CI 基础设施问题（runner 不够、缓存失效），你负责解决；如果是 PR 本身的测试失败，通知工程师。</p>
 <p><strong>Q：staging 回归发现问题但不确定是不是新引入的？</strong>
 A：和 QA 沟通确认。如果是历史遗留 Bug，记录但不阻塞本次发布。如果是本次变更引入的，阻塞并通知工程师修复。</p>
 <p><strong>Q：创始人定义的环境保护规则有哪些？</strong>

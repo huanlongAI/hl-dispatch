@@ -52,6 +52,17 @@ body { min-width:1200px; }
 .legend-item { display:flex; align-items:center; gap:5px; font-size:0.75em; color:var(--text-muted); }
 .legend-dot { width:10px; height:10px; border-radius:50%; }
 
+/* ── Entry Guide ── */
+.entry-grid { max-width:960px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.entry-card {
+  padding:14px 16px; background:var(--bg-card); border:1px solid var(--border);
+  border-radius:10px;
+}
+.entry-card .label { font-size:0.72em; letter-spacing:0.08em; text-transform:uppercase; color:var(--primary-light); margin-bottom:8px; }
+.entry-card p { margin:0; font-size:0.82em; color:var(--text-muted); line-height:1.7; }
+.entry-card a { color:var(--secondary); text-decoration:none; }
+.entry-card a:hover { text-decoration:underline; }
+
 /* ── Controls ── */
 .flow-controls { max-width:960px; margin:16px auto 0; display:flex; gap:10px; justify-content:center; }
 .fc-btn { padding:6px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:0.82em; cursor:pointer; transition:all 0.2s; }
@@ -98,6 +109,21 @@ body { min-width:1200px; }
   <p style="color:var(--text-muted);margin-top:6px;font-size:0.92em;">
     从 Proposed 到 Released，一个能力包经历 12 个关键状态。点击节点查看详情，或播放动画观看完整旅程。
   </p>
+</div>
+
+<div class="entry-grid">
+  <div class="entry-card">
+    <div class="label">这页回答什么</div>
+    <p>一个能力包现在在哪一步，什么时候能进入 PM 验收，什么时候只是合并、什么时候才算真正 Released。</p>
+  </div>
+  <div class="entry-card">
+    <div class="label">这页不回答什么</div>
+    <p>按钮具体挂在哪、云效怎么执行、部署链路怎么推进，不在这页展开；这些去 <a href="github-yunxiao-pipeline.html">流水线指南</a>。</p>
+  </div>
+  <div class="entry-card">
+    <div class="label">读完去哪</div>
+    <p>看步骤视角去 <a href="delivery-steps.html">五步交付流</a>；看门禁判定去 <a href="gate-levels.html">门禁体系</a>；看部署推进去 <a href="github-yunxiao-pipeline.html">GitHub + 云效</a>。</p>
+  </div>
 </div>
 
 <!-- ═══ Progress Bar ═══ -->
@@ -371,7 +397,7 @@ const STATES = [
     exit:'qa-verdict = PASS，通知 PM 进行最终验收',
     guard:'必须覆盖 acceptance-manifest 中全部场景；verdict 必须明确 PASS/FAIL，不允许 PARTIAL',
     output:'qa-verdict.yaml（PASS）',
-    roles:[{t:'QA ⬤verdict',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'},{t:'运维 ⬤staging',bg:'rgba(250,177,160,0.2)',c:'#FAB1A0'}],
+    roles:[{t:'QA ⬤verdict',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'},{t:'运维 ○待部署',bg:'rgba(250,177,160,0.1)',c:'rgba(250,177,160,0.6)'}],
     fail:'qa-verdict = FAIL → 返回工程师修复',
     next:'PM Accepted'
   },
@@ -379,22 +405,22 @@ const STATES = [
     name:'PM Accepted', owner:'PM', color:'#74B9FF',
     desc:'PM 最终验收能力包语义完整性——功能是否真正实现了 Cap-Spec 描述的用户价值。五步交付流 Step 5。',
     entry:'qa-verdict = PASS 后，PM 开始语义验收',
-    exit:'pm-acceptance = approved，授权合并',
+    exit:'pm-acceptance = approved，INV-0 获得 GitHub Merge 授权',
     guard:'PM 验收的是「语义」而非「技术」——功能是否达到了 Cap-Spec 定义的用户期望',
     output:'pm-acceptance 签字',
-    roles:[{t:'PM ⬤签字',bg:'rgba(116,185,255,0.2)',c:'#74B9FF'},{t:'工程师 ⬤待命',bg:'rgba(85,239,196,0.1)',c:'rgba(85,239,196,0.5)'}],
+    roles:[{t:'PM ⬤签字',bg:'rgba(116,185,255,0.2)',c:'#74B9FF'},{t:'INV-0 ○待合并',bg:'rgba(162,155,254,0.1)',c:'rgba(162,155,254,0.6)'}],
     fail:'PM 拒绝 → 返回工程师修复，严重偏离回到设计评审',
     next:'Released'
   },
   {
-    name:'Released', owner:'运维', color:'#00B894',
-    desc:'代码合并到 main，运维执行 prod 发布，能力包正式上线。流程闭环。',
-    entry:'PM 签字后，工程师合并 PR 到 main',
-    exit:'生产环境发布成功，监控无异常',
-    guard:'发布遵循 staging → QA 回归 → prod 路径；灰度发布策略按 DECISION-GRAYSCALE-STRATEGY 执行',
-    output:'生产发布记录 + 监控基线',
-    roles:[{t:'工程师 ⬤合并',bg:'rgba(85,239,196,0.2)',c:'#55EFC4'},{t:'运维 ⬤发布',bg:'rgba(250,177,160,0.2)',c:'#FAB1A0'},{t:'QA ⬤回归',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'}],
-    fail:'发布失败 → 运维执行回滚，重新排期',
+    name:'Released', owner:'INV-0 + 运维', color:'#00B894',
+    desc:'INV-0 在 GitHub PR 按 Merge button，代码进入 main；随后运维执行 staging → canary → prod，全部绿灯后能力包正式上线。流程闭环。',
+    entry:'PM 签字完成，INV-0 可执行 GitHub Merge',
+    exit:'staging → canary → prod 全绿，监控无异常',
+    guard:'发布遵循 staging → QA 回归 → canary → prod 路径；灰度发布策略按 DECISION-GRAYSCALE-STRATEGY 执行',
+    output:'main 合并记录 + 生产发布记录 + 监控基线',
+    roles:[{t:'INV-0 ⬤Merge',bg:'rgba(162,155,254,0.2)',c:'#A29BFE'},{t:'运维 ⬤部署',bg:'rgba(250,177,160,0.2)',c:'#FAB1A0'},{t:'QA ⬤staging回归',bg:'rgba(255,234,167,0.2)',c:'#FFEAA7'}],
+    fail:'发布失败 → 运维执行回滚，保持 main 不回退并重新排期',
     next:'——（终态）'
   }
 ];

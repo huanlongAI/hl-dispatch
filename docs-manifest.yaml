@@ -7,14 +7,14 @@ site:
   name: 唤龙平台团队协作指南
   layer: guide          # guide | normative — 本站只是 guide layer
   deploy: internal      # internal | public
-  last_verified: "2026-04-24"   # S21：全站仓库命名收敛为 hl-scene-* · L1-L3 云效执行 + GitHub App 回推口径同步 · 引用版本回收为 TEAM v2.1 / TOOLCHAIN v1.0 + R-065/R-067/R-070
+  last_verified: "2026-04-24"   # S21：全站仓库命名收敛为 hl-scene-* · L1-L3 云效执行 + GitHub 执行身份回推口径同步 · 引用版本回收为 TEAM v2.1 / TOOLCHAIN v1.0 + R-065/R-067/R-070；callout 标题样式收窄，避免正文 strong 被强制换行
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-24"
     commit: "8f5b15c"
     branch: gh-pages
     url: "https://huanlongai.github.io/hl-dispatch/"
-    note: "S21：站点叙事页统一仓库命名为 hl-scene-* · 完整仓库地图页重构 · GitHub+云效流水线口径回收为 TEAM v2.1 / TOOLCHAIN v1.0 + R-065/R-067/R-070 · L1-L3 云效执行 + GitHub App 回推 Status Check · CI 5/5 PASS"
+    note: "S21：站点叙事页统一仓库命名为 hl-scene-* · 完整仓库地图页重构 · GitHub+云效流水线口径回收为 TEAM v2.1 / TOOLCHAIN v1.0 + R-065/R-067/R-070 · L1-L3 云效执行 + GitHub 执行身份回推 Status Check · CI 5/5 PASS"
   # 部署历史（倒数第二次 · 审计保留 · 站点内容变更语义）
   previous_deploy:
     date: "2026-04-24"
@@ -33,7 +33,7 @@ pages:
       - doc: UI-DELIVERY-SPEC
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-16"     # 顶部导航新增"系统架构图"第三项
+    last_verified: "2026-04-24"   # S21+减负：首页将详细目录压缩为关键锚点速跳，并把治理文档体系改成真源速览
 
   - page: pages/architecture.html
     title: 系统架构图（v2.1 叙事图谱）
@@ -69,7 +69,7 @@ pages:
       - id: s6
         title: 文档 & Phase 0 禁区
         spec_status: DRAFT
-    last_verified: "2026-04-24"
+    last_verified: "2026-04-24"   # S21+收口：门禁执行泳道改为云效/哨兵，hl-factory 仓库卡改为 Spec Owner
 
   - page: pages/global.html
     title: 全局团队分工与工作流
@@ -108,7 +108,7 @@ pages:
       - id: links
         title: 团队指南链接
         spec_status: DRAFT
-    last_verified: "2026-04-24"   # S21：云效回推 + 完整仓库地图口径同步
+    last_verified: "2026-04-24"   # S21+导览增强：overview 顶部补建议阅读顺序，明确 tab 进入路径
 
   - page: pages/product.html
     title: 产品团队指南
@@ -116,7 +116,7 @@ pages:
       - doc: TEAM-COLLABORATION-SPEC
         version: "2.1"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：PM 签字位置保持 GitHub PR，补云效仅执行 CI/环境
+    last_verified: "2026-04-24"   # S21+收口：PM 验收终点改为 GitHub PR Merge button 口径
 
   - page: pages/frontend-design.html
     title: 前端与设计团队指南
@@ -130,7 +130,7 @@ pages:
       - doc: FRONTEND-REPO-SPEC
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：hl-scene-* 命名与 C-L2 仓库口径同步
+    last_verified: "2026-04-24"   # S21+收口：前端流程表终点改为 GitHub Merge 口径
 
   - page: pages/engineering.html
     title: 工程师团队指南
@@ -141,7 +141,7 @@ pages:
       - doc: FRONTEND-REPO-SPEC
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：工程师页 CI 执行体改为云效 + GitHub App 回推
+    last_verified: "2026-04-24"   # S21：工程师页 CI 执行体改为云效 + GitHub 执行身份回推
 
   - page: pages/qa.html
     title: 测试团队指南
@@ -152,7 +152,7 @@ pages:
       - doc: DD-TEST
         version: "1.1"
         status: LOCKED
-    last_verified: "2026-04-24"   # S21：QA verdict 保持 GitHub PR，CI 日志改云效口径
+    last_verified: "2026-04-24"   # S21+收口：Post-Merge 显式写为 INV-0 GitHub Merge 后的 staging 回归
 
   - page: pages/ops.html
     title: 运维人员指南
@@ -163,7 +163,7 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：运维页改为云效流水线 + GitHub App 席位维护口径
+    last_verified: "2026-04-24"   # S21+收口：Post-Merge 时序改为 INV-0 GitHub Merge → staging → prod
 
   - page: pages/team-leads.html
     title: 团队代表（6 Lead）专页
@@ -184,7 +184,7 @@ pages:
       - id: signature-matrix
         title: Lead 签字边界 · 全平台矩阵
         spec_status: DRAFT
-    last_verified: "2026-04-24"   # S21：补 B6 team-memory 治理文档 approve
+    last_verified: "2026-04-24"   # S21+收口：Lead 页统一为 GitHub PR 挂载检查口径
 
   # ── 深入专题二级页面 ──
 
@@ -194,7 +194,7 @@ pages:
       - doc: TEAM-COLLABORATION-SPEC
         version: "2.1"
         status: DRAFT
-    last_verified: "2026-04-13"
+    last_verified: "2026-04-24"   # S21：关联页摘要从"六仓协作"同步为"完整仓库地图"
 
   - page: pages/delivery-steps.html
     title: 五步交付流详解
@@ -205,7 +205,7 @@ pages:
     sections:
       - id: status-machine
         spec_status: PROPOSED
-    last_verified: "2026-04-24"   # S21：五步流补 Step 5 云效并行执行
+    last_verified: "2026-04-24"   # S21+收口：终态补 INV-0 Merge / Released 区分，移除 Merge to main 旧文案
 
   - page: pages/repo-directory.html
     title: 完整仓库地图详解
@@ -238,7 +238,7 @@ pages:
       - id: flow
         title: 能力包跨仓流动
         spec_status: DRAFT
-    last_verified: "2026-04-24"
+    last_verified: "2026-04-24"   # S21+导览增强：补适合谁看 / 这页回答什么 / 读完去哪
 
   - page: pages/gate-levels.html
     title: 门禁体系详解
@@ -249,7 +249,7 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：Required Checks 挂 GitHub PR，L1-L3 云效回推
+    last_verified: "2026-04-24"   # S21+收口：Section 4 与终态卡统一为 GitHub PR Merge + 运维 post-merge 部署
 
   - page: pages/governance-docs.html
     title: 治理文档体系详解
@@ -287,7 +287,7 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：CI 执行体改为云效/GitHub App，可替换原则保留
+    last_verified: "2026-04-24"   # S21+收口：CI 执行体改为云效/GitHub 执行身份；C-L1 GHKit 归 guanghe，避免混入 hl-scene-design-system
 
   - page: pages/glossary.html
     title: 术语对照表
@@ -295,7 +295,7 @@ pages:
       - doc: TEAM-COLLABORATION-SPEC
         version: "2.1"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21：补 hl-scene-app / Required Status Check / 哨兵术语
+    last_verified: "2026-04-24"   # S21+收口：12 状态机终态由 Merged 改为 Released；拆清 hl-scene-design-system 与 guanghe/GHKit
 
   - page: pages/workflow-states.html
     title: 工作流状态机详解（12 状态全景）
@@ -307,7 +307,7 @@ pages:
       - id: state-machine
         title: 12 状态流转图
         spec_status: PROPOSED       # v2.2 候选
-    last_verified: "2026-04-24"   # S21：12 状态机补云效触发与回推描述
+    last_verified: "2026-04-24"   # S21+导览增强：补“这页回答什么 / 不回答什么 / 下一跳”导航卡
 
   # ── 2026-04-23 S19 重写：GitHub + 云效 双仓并行 ──
 
@@ -342,7 +342,7 @@ pages:
       - id: boundary
         title: 失败路径与熔断
         spec_status: PROPOSED
-    last_verified: "2026-04-24"   # S21：仓库地图与全站 hl-scene-* 命名同步
+    last_verified: "2026-04-24"   # S21+导览增强：github / repo-map / yunxiao / buttons / boundary 段补阅读边界与下一跳导览卡；修正 callout 正文 strong 换行；默认页签改为 §1 一分钟读懂
 
 # 规范状态定义
 status_definitions:

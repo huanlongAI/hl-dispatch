@@ -139,7 +139,7 @@ body {
 .callout.danger { background: rgba(225,112,85,0.08); border-color: var(--danger); }
 .callout.info { background: rgba(116,185,255,0.08); border-color: var(--pm); }
 .callout.success { background: rgba(0,184,148,0.08); border-color: var(--secondary); }
-.callout strong { display: block; margin-bottom: 4px; }
+.callout > strong { display: block; margin-bottom: 4px; }
 
 /* ── Flow Steps ── */
 .flow-steps { position: relative; padding: 0; }

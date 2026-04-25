@@ -165,7 +165,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 .callout.info { background:rgba(116,185,255,0.08); border-color:var(--pm); }
 .callout.success { background:rgba(0,184,148,0.08); border-color:var(--secondary); }
 .callout.note { background:rgba(108,92,231,0.08); border-color:var(--primary); }
-.callout strong { display:block; margin-bottom:4px; }
+.callout > strong { display:block; margin-bottom:4px; }
 .callout p { margin:4px 0 0; font-size:0.9em; }
 
 .btn-matrix { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
@@ -218,6 +218,24 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 }
 .map-summary-card .num { font-size:1.45em; font-weight:900; color:var(--primary-light); margin-bottom:4px; }
 .map-summary-card .label { font-size:0.8em; color:var(--text-muted); line-height:1.55; }
+.map-entry-grid,
+.section-entry-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 18px; }
+.map-entry-card,
+.section-entry-card {
+  padding:15px 16px; border:1px solid var(--border); border-radius:12px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.012));
+}
+.map-entry-card .label,
+.section-entry-card .label {
+  font-size:0.72em; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--primary-light); margin-bottom:8px; font-weight:800;
+}
+.map-entry-card p,
+.section-entry-card p { margin:0; font-size:0.82em; color:var(--text-muted); line-height:1.7; }
+.map-entry-card a,
+.section-entry-card a { color:var(--secondary); text-decoration:none; }
+.map-entry-card a:hover,
+.section-entry-card a:hover { text-decoration:underline; }
 .repo-map-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0; }
 .repo-map-card {
   min-height:158px; padding:15px 16px; border:1px solid var(--border); border-left:4px solid var(--primary);
@@ -288,8 +306,8 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ Tab Pages Nav ═══ -->
 <div class="tabs-nav-wrap">
   <div class="tabs-nav">
-    <button class="tab-btn active" data-tab="flow">仓库流转图</button>
-    <button class="tab-btn" data-tab="overview">一分钟读懂</button>
+    <button class="tab-btn active" data-tab="overview">一分钟读懂</button>
+    <button class="tab-btn" data-tab="flow">仓库流转图</button>
     <button class="tab-btn" data-tab="repo-map">仓库地图</button>
     <button class="tab-btn" data-tab="github">GitHub 主轨</button>
     <button class="tab-btn" data-tab="yunxiao">云效执行器</button>
@@ -299,7 +317,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 </div>
 
 <!-- ═══ Overview ═══ -->
-<section class="tab-pane" id="overview">
+<section class="tab-pane active" id="overview">
   <h2>§1 · 一分钟读懂</h2>
 
   <div class="callout info">
@@ -368,7 +386,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 </section>
 
 <!-- ═══ Flow Diagram ═══ -->
-<section class="tab-pane active" id="flow">
+<section class="tab-pane" id="flow">
   <h2>§2 · 仓库流转图 · 12 步交互演示</h2>
   <p>本页的核心是下面这张仓库流转图：上游契约仓先定语义，GitHub 主控区承载 PR 和合并门禁；从 Step 5 feature 开发开始，云效副本并行拉取代码、执行 CI 与部署。动画线表示代码、HPRD、CI 结果和部署事件在各仓库/系统之间流动。</p>
 
@@ -496,6 +514,21 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <h2>§3 · 完整仓库地图 · R-028 + R-070</h2>
   <p>这张地图是 2026-04-23 整理确认后的口径：<strong>R-028 的产品线七仓仍是产品线定义</strong>，R-070 只是把仓库所有权和平台附属载体补登记清楚。不要把平台附属、创始人独家、规划仓全部混入“七仓”计数。</p>
 
+  <div class="map-entry-grid">
+    <div class="map-entry-card">
+      <div class="label">这段回答什么</div>
+      <p>回答“哪些仓进入流水线主叙事、哪些只是附属/独家/扩展位、为什么计数不能混用”。它解决的是流水线语境下的仓库边界，不是完整系统拓扑。</p>
+    </div>
+    <div class="map-entry-card">
+      <div class="label">和仓库地图页的区别</div>
+      <p><a href="repo-directory.html">完整仓库地图页</a>更偏治理全景，强调 SSOT、R-028 / R-070 和 C-L1 / C-L2 硬边界；本页只保留与 GitHub 主轨、云效执行器和按钮权有关的仓库视角。</p>
+    </div>
+    <div class="map-entry-card">
+      <div class="label">读完去哪</div>
+      <p>要看按钮归属去 <a href="#buttons">按钮权</a>；要看执行链路去 <a href="#yunxiao">云效执行器</a>；要看完整拓扑和所有权日志口径，回到 <a href="repo-directory.html">完整仓库地图</a>。</p>
+    </div>
+  </div>
+
   <div class="callout success">
     <strong>权威锚点</strong>
     <p><code>hl-contracts/governance/RULINGS.md</code>：R-006 / R-012 / R-016 / R-028 / R-036 / R-037 / <strong>R-070 LOCKED 2026-04-23</strong>。R-070 还引入 <code>governance/REPO-OWNERSHIP-LOG.md</code>，以后仓库 create / transfer / archive / rename 都先登记。</p>
@@ -608,6 +641,21 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <h2>§4 · GitHub 主轨 · 永远的合并门禁</h2>
   <p>GitHub 在唤龙流水线里是<strong>永远的主轨</strong>：契约、PR、Required Status Checks、Merge button 全部在此；云效的 CI 结果只是回推进来的 Status Check。所有治理证据汇聚在 GitHub。</p>
 
+  <div class="section-entry-grid">
+    <div class="section-entry-card">
+      <div class="label">这段回答什么</div>
+      <p>回答“哪些证据必须留在 GitHub”：契约、HPRD、代码 PR、Required Status Checks、QA / PM 签字和 INV-0 Merge button。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">和云效页的边界</div>
+      <p>GitHub 是主轨和审计面；云效是执行器和部署面。云效可以跑 CI、构建制品、推 staging，但最终治理信号必须回到 GitHub PR。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">读完去哪</div>
+      <p>看 CI 如何回推去 <a href="#yunxiao">云效执行器</a>；看状态检查挂载去 <a href="gate-levels.html#section4">门禁体系 §4</a>；看谁能按 Merge 去 <a href="#buttons">按钮权</a>。</p>
+    </div>
+  </div>
+
   <h3>§4.1 · 上游契约层</h3>
   <p>上游契约层<strong>纯 GitHub · 不碰云效</strong>。两仓：</p>
   <table class="spec-table">
@@ -680,6 +728,21 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <h2>§5 · 云效 · 并行执行器（INV-0 黑盒）</h2>
   <p>云效的定位是 <strong>工程师接入后的并行执行器</strong>：Step 3 先把 HPRD / 开发设计 / 测试规格纳入 GitHub 主仓审计基线；从 Step 5 feature 分支开发起，云效副本才开始并行拉取代码、跑 CI、生成制品、部署到阿里云，并通过 GitHub 执行身份把结果回推为 GitHub PR 的 Status Check。<strong>INV-0 对云效完全黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
 
+  <div class="section-entry-grid">
+    <div class="section-entry-card">
+      <div class="label">这段回答什么</div>
+      <p>回答“云效到底做什么”：拉取 GitHub 代码副本、跑 L1-L3、生成制品、推进 staging / canary / prod，并把结果回推 GitHub。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">接入时点</div>
+      <p>Step 3 仍是 GitHub 审计基线；Step 5 feature 分支开发时才进入云效并行。流水线资产在云效，不同步回 GitHub 仓库。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">读完去哪</div>
+      <p>看 GitHub 保留哪些治理信号去 <a href="#github">GitHub 主轨</a>；看部署按钮归属去 <a href="#buttons">按钮权</a>；看熔断和回滚去 <a href="#boundary">失败与边界</a>。</p>
+    </div>
+  </div>
+
   <h3>§5.1 · GitHub 执行身份机制</h3>
   <div class="callout warn">
     <strong>当前席位口径</strong>
@@ -735,7 +798,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <div class="flow-steps-mini">
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:var(--ops);">α</div>
-      <div class="fsm-body"><h4>staging 自动部署</h4><p>GitHub PR 合入 <code>main</code> 后，云效自动构建制品 + 推 staging 环境。QA 冒烟 ~30 min。</p></div>
+      <div class="fsm-body"><h4>staging 自动推送（运维 Owner 监护）</h4><p>GitHub PR 合入 <code>main</code> 后，云效自动构建制品并推送 staging；运维负责观察结果并决定是否继续 canary / prod。QA 冒烟 ~30 min。</p></div>
     </div>
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:var(--ops);">β</div>
@@ -761,6 +824,21 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ 6 Buttons ═══ -->
 <section class="tab-pane" id="buttons">
   <h2>§6 · 按钮权 6 桩矩阵</h2>
+
+  <div class="section-entry-grid">
+    <div class="section-entry-card">
+      <div class="label">这段回答什么</div>
+      <p>回答“谁能按哪个物理按钮、按钮落在 GitHub 还是云效、哪个按钮属于能力包主流程”。它不替代签字矩阵，只说明流水线上的操作位。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">先记住</div>
+      <p>Lead 不天然持按钮，Owner 才持按钮。INV-0 的 <code>B4</code> GitHub Merge 永远在前，运维 Owner 的 <code>B5</code> 云效部署永远在后。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">读完去哪</div>
+      <p>看签字责任去 <a href="team-leads.html#signature-matrix">团队代表签字矩阵</a>；看 Required Checks 去 <a href="gate-levels.html">门禁体系</a>；看打回与回滚去 <a href="#boundary">失败与边界</a>。</p>
+    </div>
+  </div>
 
   <h3>§6.0 · Lead 零桩原则</h3>
   <div class="callout info">
@@ -825,6 +903,22 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ Failure ═══ -->
 <section class="tab-pane" id="boundary">
   <h2>§7 · 失败路径与文档边界</h2>
+
+  <div class="section-entry-grid">
+    <div class="section-entry-card">
+      <div class="label">这段回答什么</div>
+      <p>回答“失败发生后回到哪里”：HPRD 审计打回回到 Review，Status Check 红灯回到 commit，部署熔断回到流量控制和事故复盘。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">分清两个边界</div>
+      <p>Merge 前失败影响 GitHub PR 状态，必须重新修复和过门禁；Merge 后部署失败不改 PR 合入事实，只回滚流量并进入运维复盘。</p>
+    </div>
+    <div class="section-entry-card">
+      <div class="label">读完去哪</div>
+      <p>看门禁红灯去 <a href="gate-levels.html">门禁体系</a>；看 QA 打回去 <a href="qa.html#qa-verdict">QA verdict</a>；看运维回滚去 <a href="ops.html#bugfix-p0">P0 / rollback 流程</a>。</p>
+    </div>
+  </div>
+
   <h3>§7.1 · 失败路径与熔断</h3>
   <p>流水线不是"一路绿灯到上线"的理想路径，60% 的能力包会在某个节点卡住。三类典型失败 + 演示按钮：</p>
 
@@ -1066,7 +1160,7 @@ function ilSimFail() {
 }
 
 ilRender();
-showTab(location.hash?.slice(1) || 'flow', false);
+showTab(location.hash?.slice(1) || 'overview', false);
 </script>
 </body>
 </html>

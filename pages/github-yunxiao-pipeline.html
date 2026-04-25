@@ -289,15 +289,15 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ Hero ═══ -->
 <section class="pl-hero">
   <div class="inner">
-    <div class="eyebrow"><span class="dot"></span>流水线全景 · v2 双仓并行 · 2026-04-24</div>
+    <div class="eyebrow"><span class="dot"></span>流水线全景 · v3 合并后同步 · 2026-04-25</div>
     <h1>GitHub + 云效 <span>双仓并行指南</span></h1>
     <p class="lead">
-      唤龙平台的流水线是一条 <strong>"双仓并行"</strong> 的协同轨道：<strong>GitHub 是永远的主轨</strong>，承载契约、PR、合并门禁与审计；<strong>云效是并行执行器</strong>，从工程师接入起跑 CI、生成制品、部署到阿里云，通过魏鹏自动同步方案与 GitHub 执行身份把结果回推为 GitHub PR 的 Status Check。当前不新增独立云效 Bot 席位，由魏鹏账号承接自动同步、拉取与回推；代码与 HPRD 以 GitHub 主仓为真源，云效只消费同步后的代码副本；INV-0 对云效黑盒，只看 GitHub PR 上的绿勾。
+      唤龙平台的流水线是一条 <strong>"GitHub 主轨 + 云效合并后执行"</strong> 的协同轨道：<strong>GitHub 是永远的主轨</strong>，承载契约、HPRD、PR、Review、合并门禁与审计；<strong>云效是部署执行器</strong>，在 GitHub PR 合并后消费魏鹏自动同步到云效代码仓的代码，构建制品并部署到各环境。当前不新增独立云效 Bot 席位，由魏鹏账号承接合并后同步；云效流水线只消费云效代码仓，不承担仓库同步，也不直接作为 GitHub PR 合并前 required check。
     </p>
     <div class="badges">
       <span class="hbadge b1">双仓并行模型</span>
       <span class="hbadge b2">6 桩按钮权</span>
-      <span class="hbadge b3">GitHub 执行身份机制</span>
+      <span class="hbadge b3">合并后自动同步</span>
       <span class="hbadge b1">Phase A 分支保护已生效</span>
     </div>
   </div>
@@ -322,17 +322,22 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
   <div class="callout info">
     <strong>模型一句话</strong>
-    <p><strong>GitHub 永远主轨</strong>承载 PR、合并门禁与审计；<strong>云效从工程师接入起并行执行</strong> CI、生成制品、部署到阿里云；两者通过 <strong>魏鹏自动同步方案 + GitHub 执行身份</strong> 双向沟通，云效把 CI 结果回推为 GitHub PR 的 Status Check；<strong>INV-0 对云效黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
+    <p><strong>GitHub 永远主轨</strong>承载 PR、合并门禁与审计；<strong>云效只接合并后的代码</strong>，从云效代码仓构建制品并部署到 staging / canary / prod；两者通过 <strong>魏鹏自动同步方案</strong> 单向衔接：GitHub PR 合并后同步到云效代码仓，再由云效流水线消费。<strong>这条云效部署流水线不是 PR 合并前 required check</strong>。</p>
   </div>
 
   <div class="callout success">
     <strong>当前落地状态 · 2026-04-24</strong>
-    <p><strong>Phase A 已生效</strong>：<code>hl-scene-design-system</code>、<code>hl-scene-app</code>、<code>hl-platform</code>、<code>hl-framework</code> 的 <code>main</code> 已强制 PR + 1 approval，禁止 force push / delete，要求 conversation resolution，管理员同样受保护规则约束。<strong>Phase B 未执行</strong>：等待云效在真实 PR 上回推首个稳定 check 名称后，再把 <code>yunxiao-ci</code> 或 L1/L2/L3 加为 required checks。</p>
+    <p><strong>Phase A 已生效</strong>：<code>hl-scene-design-system</code>、<code>hl-scene-app</code>、<code>hl-platform</code>、<code>hl-framework</code> 的 <code>main</code> 已强制 PR + 1 approval，禁止 force push / delete，要求 conversation resolution，管理员同样受保护规则约束。<strong>Phase B 暂停重评</strong>：曾正龙已确认云效流水线消费的是合并后同步到云效代码仓的代码，因此不能把这条 post-merge 部署流水线直接绑定为 GitHub PR required check。</p>
   </div>
 
   <div class="callout warn">
     <strong>同步机制约束 · 曾正龙反馈</strong>
-    <p>云效 Codeup 仓库不支持自动同步远端 GitHub 仓库；用云效流水线做仓库同步会显著增加费用。因此任务 2 只采用 <strong>魏鹏自动同步方案</strong>：同步独立完成，云效流水线只消费同步后的代码并执行 CI / 部署前置。</p>
+    <p>云效 Codeup 仓库不支持自动同步远端 GitHub 仓库；用云效流水线做仓库同步会显著增加费用。因此任务 2 只采用 <strong>魏鹏自动同步方案</strong>：GitHub PR 合并后，同步 GitHub <code>main</code> / merge commit 到云效代码仓；云效流水线只从云效代码仓消费代码、构建制品、部署环境。</p>
+  </div>
+
+  <div class="callout danger">
+    <strong>门禁边界</strong>
+    <p>合并后部署链路不能证明“合并前可通过”。如果后续仍要 Phase B required checks，必须另行定义 pre-merge 检查来源，例如 GitHub 侧 check、独立预合并校验服务，或经确认的云效 pre-merge 流水线；不能把当前 post-merge 云效部署流水线误挂为 required check。</p>
   </div>
 
   <h3>双仓并行模型</h3>
@@ -348,29 +353,29 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       <p style="margin-top:10px;"><strong>② 代码仓 PR 主战场</strong></p>
       <ul>
         <li>代码仓：<code>hl-platform</code> · <code>hl-framework</code> · <code>hl-console-native</code> · <code>hl-scene-app</code> · <code>hl-scene-design-system</code></li>
-        <li>PR 承载治理信号：当前已强制 PR + 1 approval；目标态承载 L1-L3 CI（BLOCKING · 云效回推）· <code>pm-hprd-pass</code>（ADVISORY）· <code>pm-acceptance</code>（BLOCKING）· <code>qa-verdict</code>（BLOCKING）</li>
+        <li>PR 承载治理信号：当前已强制 PR + 1 approval；<code>pm-hprd-pass</code>、<code>pm-acceptance</code>、<code>qa-verdict</code> 等合并前信号必须留在 GitHub PR。Phase B 技术 required checks 需另定义 pre-merge 来源。</li>
         <li>INV-0 Merge button = 最终合并门禁</li>
       </ul>
     </div>
 
-    <div class="fm-bridge">↕ 魏鹏自动同步方案 + GitHub 执行身份（同步代码副本 / 回推 Status Check）</div>
+    <div class="fm-bridge">↓ B4 Merge 后 · 魏鹏自动同步方案（GitHub main / merge commit → 云效代码仓）</div>
 
     <div class="fm-box parallel-rail">
-      <h4>云效 · 并行执行器（工程师接入起 · INV-0 黑盒）</h4>
+      <h4>云效 · 合并后部署执行器（INV-0 黑盒）</h4>
       <ul>
-        <li>同步机制：GitHub 主仓 → 魏鹏自动同步方案 → 云效可执行代码副本。Codeup 不做远端自动同步，云效流水线不承担仓库同步。</li>
+        <li>同步机制：GitHub PR Merge → 魏鹏自动同步方案 → 云效代码仓。Codeup 不做远端自动同步，云效流水线不承担仓库同步。</li>
         <li>HPRD 走代码仓 <code>/hprd/</code> 目录 · 受 Git 版本管理</li>
-        <li>工程师在云效创建流水线 · 消费同步后的代码 · 跑 L1-L4 CI · 生成制品 · 部署到阿里云（staging → canary → prod）</li>
-        <li>通过 GitHub 执行身份回推 GitHub PR Status Check</li>
+        <li>工程师可提前规划云效流水线 · 但正式执行消费的是合并后云效代码仓代码</li>
+        <li>云效流水线构建制品 · 部署到阿里云（staging → canary → prod）· 记录部署证据</li>
         <li>曾正龙按云效按钮：staging / canary / prod / rollback</li>
       </ul>
-      <p style="margin-top:8px;color:var(--text-muted);"><em>INV-0 不关心流水线细节 · 只看 GitHub PR 上的绿勾</em></p>
+      <p style="margin-top:8px;color:var(--text-muted);"><em>INV-0 不关心云效执行细节 · PR 合并前只看 GitHub 侧门禁</em></p>
     </div>
   </div>
 
   <div class="callout info">
-    <strong>与 gate-levels.html §4 一致</strong>
-    <p>本页与 <a href="gate-levels.html#section4" class="term-link">gate-levels.html §4</a> 完全一致：<strong>Required Status Checks 定位在 GitHub PR</strong>（不是云效 PR）· L1-L3 CI 的执行载体是云效 · 结果通过 GitHub 执行身份回推为 GitHub PR 的 Status Check。</p>
+    <strong>与 gate-levels.html §4 的边界</strong>
+    <p><a href="gate-levels.html#section4" class="term-link">gate-levels.html §4</a> 描述的是 GitHub PR required checks 的目标治理位。当前云效部署流水线是 <strong>post-merge</strong> 链路，不能直接填入这个治理位；Phase B 必须先补一个合并前检查来源。</p>
   </div>
 
   <h3>为什么选双仓并行</h3>
@@ -378,12 +383,12 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     <li><strong>GitHub 合并门禁统一可审计</strong>：所有 PR、Status Check、Review、Merge 事件都在 GitHub，审计平面单一，INV-0 和治理层永远看一个地方。</li>
     <li><strong>云效执行环境灵活</strong>：CI 跑批、制品库、阿里云部署按钮化、蓝绿 / 金丝雀发布工具链，云效更贴合国内云环境，且不与 GitHub Actions 配额争抢。</li>
     <li><strong>INV-0 不必关心流水线细节</strong>：云效对 INV-0 完全黑盒，创始人语义主权留在 GitHub 端，执行细节由工程师 + 运维 Owner 在云效内部协作。</li>
-    <li><strong>工程师在云效工作，所有决定都在 GitHub PR 上留痕</strong>：开发 commit 推 GitHub → 魏鹏自动同步方案生成云效可执行副本 → 云效跑 CI → 回推 GitHub PR Status Check → PM / QA 在 GitHub PR 上 approve → INV-0 按 GitHub Merge。每一个决定点都有 GitHub PR 事件作为审计证据。</li>
+    <li><strong>工程与部署职责拆开</strong>：开发 commit、PR、Review、PM/QA approve、INV-0 Merge 都在 GitHub；Merge 后魏鹏把 <code>main</code> / merge commit 同步到云效代码仓，云效再构建制品、部署环境并沉淀部署证据。</li>
   </ul>
 
   <h3>本页怎么读</h3>
   <ol>
-    <li>先看下面的 <strong>仓库流转图</strong>：它按仓库/副本/PR/部署面展示完整路径。</li>
+    <li>先看下面的 <strong>仓库流转图</strong>：它按仓库/PR/合并后同步/部署面展示完整路径。</li>
     <li>点击任意仓库节点，详情会在流程图下方展开。</li>
     <li>再看 <strong>仓库地图</strong>：它把 R-028 产品线七仓、R-070 平台附属仓、guanghe 创始人独家仓和规划仓分层拆开，避免把不同层级混成一个计数。</li>
     <li>后面按顺序补充 GitHub 主轨、云效执行器、按钮权、失败路径与文档边界。</li>
@@ -393,7 +398,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ Flow Diagram ═══ -->
 <section class="tab-pane" id="flow">
   <h2>§2 · 仓库流转图 · 12 步交互演示</h2>
-  <p>本页的核心是下面这张仓库流转图：上游契约仓先定语义，GitHub 主控区承载 PR 和合并门禁；从 Step 5 feature 开发开始，魏鹏自动同步方案生成云效可执行代码副本，云效只消费副本执行 CI 与部署。动画线表示代码、HPRD、CI 结果和部署事件在各仓库/系统之间流动。</p>
+  <p>本页的核心是下面这张仓库流转图：上游契约仓先定语义，GitHub 主控区承载 PR 和合并门禁；Step 5 起工程师可以规划云效流水线，但云效正式消费的是 B4 Merge 后由魏鹏同步到云效代码仓的代码。动画线表示代码、PR 合并、同步和部署事件在各仓库/系统之间流动。</p>
 
   <div class="il-wrap">
     <div class="il-ctrl">
@@ -403,9 +408,9 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
     <div class="repo-flow" aria-label="GitHub + 云效仓库流转 12 步流程图">
       <div class="repo-lane-label contract">上游契约仓 / 知识仓<span class="repo-lane-note">纯 GitHub：先锁语义与规格，云效不参与</span></div>
-      <div class="repo-lane-label github">GitHub 主控区 / 自动同步入口<span class="repo-lane-note">PR、Review、Status Check、Merge 留在 GitHub；Step 5 起由魏鹏自动同步方案提供副本</span></div>
-      <div class="repo-lane-label yunxiao">云效执行副本 / 阿里云部署<span class="repo-lane-note">只消费同步后的代码，执行 CI、生成制品、部署环境，结果回推 GitHub</span></div>
-      <div class="repo-stage-label gates">GitHub 合并门禁区 · Status Check / QA / PM 并排签字</div>
+      <div class="repo-lane-label github">GitHub 主控区 / 合并事实源<span class="repo-lane-note">PR、Review、Merge 留在 GitHub；B4 合并后才形成同步源</span></div>
+      <div class="repo-lane-label yunxiao">云效代码仓 / 阿里云部署<span class="repo-lane-note">只消费合并后同步的代码，构建制品，部署环境</span></div>
+      <div class="repo-stage-label gates">GitHub 合并门禁区 · PR / QA / PM 并排签字</div>
       <div class="repo-stage-label deploy">云效部署收束</div>
 
       <svg class="repo-lines" viewBox="0 0 1088 1100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -459,24 +464,24 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       </button>
       <button class="repo-node bridge n5" data-idx="5" onclick="ilJump(5)">
         <div class="rn-head"><span class="rn-idx">5</span><span class="rn-title">feature 开发 · 云效接入</span></div>
-        <p>GitHub 主仓提交；魏鹏自动同步方案开始提供云效可执行副本。</p>
-        <div class="rn-tags"><span>GitHub 主仓</span><span class="hot">云效并行起点</span></div>
+        <p>GitHub 主仓提交；同步源尚未形成，云效流水线可先规划。</p>
+        <div class="rn-tags"><span>GitHub 主仓</span><span class="hot">流水线规划</span></div>
       </button>
       <button class="repo-node github n6" data-idx="6" onclick="ilJump(6)">
         <div class="rn-head"><span class="rn-idx">6</span><span class="rn-title">Draft PR Open</span></div>
-        <p>GitHub PR 打开，Required Checks 进入 pending。</p>
-        <div class="rn-tags"><span>PR</span><span>GitHub 执行身份</span></div>
+        <p>GitHub PR 打开，Review / QA / PM 在 GitHub 完成。</p>
+        <div class="rn-tags"><span>PR</span><span>GitHub 门禁</span></div>
       </button>
 
       <button class="repo-node yunxiao n7" data-idx="7" onclick="ilJump(7)">
-        <div class="rn-head"><span class="rn-idx">7</span><span class="rn-title">云效消费副本跑 CI</span></div>
-        <p>拉代码，执行 L1-L3，生成 CI 结果。</p>
-        <div class="rn-tags"><span>云效镜像</span><span>CI</span></div>
+        <div class="rn-head"><span class="rn-idx">7</span><span class="rn-title">pre-merge 检查待定义</span></div>
+        <p>Phase B 不能直接使用合并后云效部署流水线。</p>
+        <div class="rn-tags"><span>Phase B</span><span>TBD</span></div>
       </button>
       <button class="repo-node status n8" data-idx="8" onclick="ilJump(8)">
-        <div class="rn-head"><span class="rn-idx">8</span><span class="rn-title">Status Check 回推</span></div>
-        <p>云效把结果写回 GitHub PR 绿灯。</p>
-        <div class="rn-tags"><span>Commit Status</span><span>B2 半桩</span></div>
+        <div class="rn-head"><span class="rn-idx">8</span><span class="rn-title">GitHub 门禁通过</span></div>
+        <p>当前 Phase A：PR + 1 approval；后续 pre-merge check 另补。</p>
+        <div class="rn-tags"><span>PR</span><span>B2 半桩</span></div>
       </button>
       <button class="repo-node qa n9" data-idx="9" onclick="ilJump(9)">
         <div class="rn-head"><span class="rn-idx">9</span><span class="rn-title">QA verdict</span></div>
@@ -490,15 +495,15 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
       </button>
       <button class="repo-node ops n11" data-idx="11" onclick="ilJump(11)">
         <div class="rn-head"><span class="rn-idx">11</span><span class="rn-title">main + 云效部署</span></div>
-        <p>INV-0 合并 main，曾正龙按 staging / canary / prod。</p>
-        <div class="rn-tags"><span>B4</span><span>B5</span><span>阿里云</span></div>
+        <p>INV-0 合并 main；魏鹏同步到云效代码仓，曾正龙部署。</p>
+        <div class="rn-tags"><span>B4</span><span>B5</span><span>云效代码仓</span></div>
       </button>
     </div>
 
     <div class="il-legend">
       <span><i style="background:#74B9FF;"></i> GitHub 主轨</span>
-      <span><i style="background:#FF6A00;"></i> 云效并行执行器</span>
-      <span><i style="background:#6C5CE7;"></i> 魏鹏自动同步 / GitHub 执行身份</span>
+      <span><i style="background:#FF6A00;"></i> 云效合并后执行</span>
+      <span><i style="background:#6C5CE7;"></i> 魏鹏合并后同步</span>
       <span><i style="background:#FFEAA7;"></i> QA</span>
       <span><i style="background:#FDCB6E;"></i> 发布部署</span>
     </div>
@@ -508,9 +513,9 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
   <div class="repo-caption">
     <div><strong>蓝线：GitHub 主轨</strong>契约、HPRD、代码分支、PR、签字、Merge 都在 GitHub 留痕。</div>
-    <div><strong>橙线：自动同步</strong>工程师接入后，魏鹏自动同步方案把 GitHub 代码送到云效可执行副本；云效流水线只消费副本并执行 CI。</div>
-    <div><strong>紫线：结果回推</strong>云效 CI 结果回到 GitHub PR，成为 Required Status Check。</div>
-    <div><strong>绿线：部署闭环</strong>GitHub main 合并后触发云效部署，失败时只回滚流量。</div>
+    <div><strong>橙线：合并后同步</strong>GitHub PR 合并后，魏鹏自动同步方案把 <code>main</code> / merge commit 送到云效代码仓。</div>
+    <div><strong>紫线：门禁缺口</strong>若需要 Phase B required checks，必须另补 pre-merge 检查来源，不能用合并后部署流水线替代。</div>
+    <div><strong>绿线：部署闭环</strong>云效从云效代码仓构建制品并部署，失败时只回滚流量。</div>
   </div>
 </section>
 
@@ -627,7 +632,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </div>
     <div class="scope-box">
       <h4>双仓并行</h4>
-      <p><code>hl-platform</code>、<code>hl-framework</code>、<code>hl-console-native</code>、<code>hl-scene-app</code>、<code>hl-scene-design-system</code>。GitHub 发 PR，Step 5 起经魏鹏自动同步方案生成云效可执行副本，再由云效并行执行。</p>
+      <p><code>hl-platform</code>、<code>hl-framework</code>、<code>hl-console-native</code>、<code>hl-scene-app</code>、<code>hl-scene-design-system</code>。GitHub 发 PR 并完成合并；合并后经魏鹏自动同步方案进入云效代码仓，再由云效构建和部署。</p>
     </div>
     <div class="scope-box">
       <h4>背景/辅助</h4>
@@ -644,20 +649,20 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ GitHub Main Rail ═══ -->
 <section class="tab-pane" id="github">
   <h2>§4 · GitHub 主轨 · 永远的合并门禁</h2>
-  <p>GitHub 在唤龙流水线里是<strong>永远的主轨</strong>：契约、PR、Required Status Checks、Merge button 全部在此；云效的 CI 结果只是回推进来的 Status Check。所有治理证据汇聚在 GitHub。</p>
+  <p>GitHub 在唤龙流水线里是<strong>永远的主轨</strong>：契约、PR、Review、PM/QA 签字、Merge button 全部在此。当前云效流水线定位为合并后部署链路，不再被描述为 PR 合并前 Status Check 来源。</p>
 
   <div class="section-entry-grid">
     <div class="section-entry-card">
       <div class="label">这段回答什么</div>
-      <p>回答“哪些证据必须留在 GitHub”：契约、HPRD、代码 PR、Required Status Checks、QA / PM 签字和 INV-0 Merge button。</p>
+      <p>回答“哪些证据必须留在 GitHub”：契约、HPRD、代码 PR、QA / PM 签字和 INV-0 Merge button。若后续启用 required checks，也必须是合并前证据。</p>
     </div>
     <div class="section-entry-card">
       <div class="label">和云效页的边界</div>
-      <p>GitHub 是主轨和审计面；云效是执行器和部署面。云效可以跑 CI、构建制品、推 staging，但最终治理信号必须回到 GitHub PR。</p>
+      <p>GitHub 是主轨和审计面；云效是合并后执行器和部署面。云效可以构建制品、推 staging / canary / prod，但不能替代 GitHub PR 的合并前治理信号。</p>
     </div>
     <div class="section-entry-card">
       <div class="label">读完去哪</div>
-      <p>看 CI 如何回推去 <a href="#yunxiao">云效执行器</a>；看状态检查挂载去 <a href="gate-levels.html#section4">门禁体系 §4</a>；看谁能按 Merge 去 <a href="#buttons">按钮权</a>。</p>
+      <p>看合并后如何同步和部署去 <a href="#yunxiao">云效执行器</a>；看状态检查挂载去 <a href="gate-levels.html#section4">门禁体系 §4</a>；看谁能按 Merge 去 <a href="#buttons">按钮权</a>。</p>
     </div>
   </div>
 
@@ -674,7 +679,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </table>
 
   <h3>§4.2 · 代码仓 PR 主战场</h3>
-  <p>双仓流水线作用域 = 产品线七仓中的协作代码仓。PR 全部在 GitHub 主仓发起，云效仅作执行器，代码副本由魏鹏自动同步方案提供：</p>
+  <p>双仓流水线作用域 = 产品线七仓中的协作代码仓。PR 全部在 GitHub 主仓发起并合并；云效仅作合并后构建/部署执行器，云效代码仓内容由魏鹏自动同步方案提供：</p>
   <table class="spec-table">
     <thead>
       <tr><th>仓库</th><th>角色</th><th>CODEOWNERS 亮点</th><th>建仓状态</th></tr>
@@ -696,17 +701,17 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </div>
 
   <h3>§4.3 · Required Status Checks（挂 GitHub PR）</h3>
-  <p>Required Status Checks 全部定位在 <strong>GitHub PR</strong>，与 <a href="gate-levels.html#section4" class="term-link">gate-levels.html §4</a> 一致：</p>
+  <p>Required Status Checks 如启用，必须定位在 <strong>GitHub PR 合并前</strong>，与 <a href="gate-levels.html#section4" class="term-link">gate-levels.html §4</a> 的治理位一致：</p>
   <div class="callout warn">
     <strong>实施状态</strong>
-    <p>当前 GitHub 侧已完成 Phase A：强制 PR + 1 approval，先堵住 direct push main。下表是目标态门禁矩阵；L1-L3 只有在云效回推首个稳定 check 后，才会进入 Phase B 并写入 GitHub required checks。</p>
+    <p>当前 GitHub 侧已完成 Phase A：强制 PR + 1 approval，先堵住 direct push main。曾正龙确认云效流水线只消费合并后同步到云效代码仓的代码，因此不能把该流水线写入 Phase B required checks。下表保留目标态治理位，但执行来源需要重新定义为 pre-merge 检查。</p>
   </div>
   <table class="spec-table">
     <thead>
       <tr><th>Status Check</th><th>级别</th><th>执行载体</th><th>挂载位</th><th>签字人</th></tr>
     </thead>
     <tbody>
-      <tr><td>L1 格式 / L2 确定性 / L3 行为</td><td><span class="chip blocking">BLOCKING</span></td><td>云效执行</td><td>GitHub PR（GitHub 执行身份回推）</td><td>CI 自动</td></tr>
+      <tr><td>L1 格式 / L2 确定性 / L3 行为</td><td><span class="chip blocking">BLOCKING</span></td><td>pre-merge 来源待定</td><td>GitHub PR</td><td>CI 自动</td></tr>
       <tr><td>L4 语义哨兵</td><td><span class="chip advisory">ADVISORY</span></td><td>sentinel-shared reusable</td><td>GitHub PR</td><td>哨兵自动</td></tr>
       <tr><td><code>pm-hprd-pass</code></td><td><span class="chip advisory">ADVISORY</span></td><td>hl-factory 流程内</td><td>GitHub PR</td><td>PM Owner · 机器可核</td></tr>
       <tr><td><code>qa-verdict</code></td><td><span class="chip blocking">BLOCKING</span></td><td>GitHub PR approve</td><td>GitHub PR</td><td>李云峰（QA Owner）</td></tr>
@@ -715,14 +720,14 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </table>
 
   <h3>§4.4 · INV-0 Merge button · 最终合并门禁</h3>
-  <p>目标态下，所有 Required Status Checks 全绿后，<strong>INV-0 童正辉</strong> 在 GitHub PR 页面按 Merge button（<code>B4</code>），代码合入 <code>main</code>。当前已先落地 Phase A：直推、force-push、删除分支、未解决 conversation 合并被 GitHub 分支保护规则禁止；云效 required check 等 Phase B 再启用。</p>
+  <p>目标态下，所有合并前门禁全绿后，<strong>INV-0 童正辉</strong> 在 GitHub PR 页面按 Merge button（<code>B4</code>），代码合入 <code>main</code>。当前已先落地 Phase A：直推、force-push、删除分支、未解决 conversation 合并被 GitHub 分支保护规则禁止；Phase B required checks 等 pre-merge 检查来源确定后再启用。</p>
 
   <table class="spec-table">
     <thead>
       <tr><th>分支</th><th>允许谁推送</th><th>保护规则</th><th>用途</th></tr>
     </thead>
     <tbody>
-      <tr><td><code>main</code></td><td>禁止直推（仅通过 PR 合入）</td><td>Phase A：PR + 1 approval；Phase B：Required Checks 全绿 + INV-0 按 Merge</td><td>发布基线 · 下一轮能力包契约起点</td></tr>
+      <tr><td><code>main</code></td><td>禁止直推（仅通过 PR 合入）</td><td>Phase A：PR + 1 approval；Phase B：pre-merge checks 定义后再绑定</td><td>发布基线 · 下一轮能力包契约起点</td></tr>
       <tr><td><code>release/*</code></td><td>运维 Owner（曾正龙）cherry-pick</td><td>补丁专用</td><td>稳定版回归 · hotfix</td></tr>
     </tbody>
   </table>
@@ -731,16 +736,16 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 <!-- ═══ Yunxiao Parallel Executor ═══ -->
 <section class="tab-pane" id="yunxiao">
   <h2>§5 · 云效 · 并行执行器（INV-0 黑盒）</h2>
-  <p>云效的定位是 <strong>工程师接入后的并行执行器</strong>：Step 3 先把 HPRD / 开发设计 / 测试规格纳入 GitHub 主仓审计基线；从 Step 5 feature 分支开发起，魏鹏自动同步方案提供云效可执行代码副本，云效只消费副本跑 CI、生成制品、部署到阿里云，并通过 GitHub 执行身份把结果回推为 GitHub PR 的 Status Check。<strong>INV-0 对云效完全黑盒，只看 GitHub PR 上的绿勾</strong>。</p>
+  <p>云效的定位是 <strong>GitHub 合并后的构建/部署执行器</strong>：Step 3 先把 HPRD / 开发设计 / 测试规格纳入 GitHub 主仓审计基线；Step 5 起可以规划云效流水线；真正执行时，魏鹏自动同步方案把 GitHub <code>main</code> / merge commit 同步到云效代码仓，云效只从云效代码仓消费代码、生成制品、部署到阿里云。<strong>INV-0 对云效完全黑盒，合并前只看 GitHub PR 门禁</strong>。</p>
 
   <div class="section-entry-grid">
     <div class="section-entry-card">
       <div class="label">这段回答什么</div>
-      <p>回答“云效到底做什么”：拉取 GitHub 代码副本、跑 L1-L3、生成制品、推进 staging / canary / prod，并把结果回推 GitHub。</p>
+      <p>回答“云效到底做什么”：消费云效代码仓中的合并后代码、构建制品、推进 staging / canary / prod，并沉淀部署证据。</p>
     </div>
     <div class="section-entry-card">
       <div class="label">接入时点</div>
-      <p>Step 3 仍是 GitHub 审计基线；Step 5 feature 分支开发时才进入云效并行。流水线资产在云效，不同步回 GitHub 仓库。</p>
+      <p>Step 3 仍是 GitHub 审计基线；Step 5 可以规划流水线；B4 Merge 后才由魏鹏同步到云效代码仓并触发执行。流水线资产在云效，不同步回 GitHub 仓库。</p>
     </div>
     <div class="section-entry-card">
       <div class="label">读完去哪</div>
@@ -751,29 +756,29 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <h3>§5.1 · 魏鹏自动同步 + GitHub 执行身份机制</h3>
   <div class="callout warn">
     <strong>当前席位口径</strong>
-    <p>GitHub Team 席位当前为 7/7，暂不新增独立云效 Bot。云效侧 GitHub 拉取与 Status Check 回推由魏鹏账号承接；云效侧凭证和执行账号后续单独在云效控制台验证。</p>
+    <p>GitHub Team 席位当前为 7/7，暂不新增独立云效 Bot。GitHub 合并后同步由魏鹏账号承接；云效侧凭证和执行账号后续单独在云效控制台验证。</p>
   </div>
   <div class="callout danger">
     <strong>禁止的同步方案</strong>
-    <p>不使用 Codeup 远端自动同步（当前不支持），也不使用云效流水线做 GitHub → 云效仓库同步（费用不可接受）。同步由魏鹏自动同步方案完成；云效流水线只负责消费同步结果、执行 CI / 部署前置和回推 check。</p>
+    <p>不使用 Codeup 远端自动同步（当前不支持），也不使用云效流水线做 GitHub → 云效仓库同步（费用不可接受）。同步由魏鹏自动同步方案完成；云效流水线只负责消费云效代码仓、构建制品、部署各环境。</p>
   </div>
   <div class="flow-steps-mini">
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#6C5CE7;">1</div>
-      <div class="fsm-body"><h4>魏鹏自动同步</h4><p>由魏鹏方案监听或响应 PR open / push / manual trigger，将 GitHub PR branch / feature branch / commit SHA 同步为云效可消费代码副本。</p></div>
+      <div class="fsm-body"><h4>魏鹏自动同步</h4><p>由魏鹏方案监听或响应 GitHub PR merge，将 GitHub <code>main</code> / merge commit SHA 同步到云效代码仓。</p></div>
     </div>
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#6C5CE7;">2</div>
-      <div class="fsm-body"><h4>OAuth / GitHub 执行凭证</h4><p>同步与回推使用受控 GitHub 执行身份 · 权限边界含：仓库 read / PR write comments / Commit statuses write / Workflow read。现阶段由魏鹏账号承接自动同步与回推，凭证由 INV-0 一次性配置，运维（曾正龙）日常维护。</p></div>
+      <div class="fsm-body"><h4>OAuth / GitHub 执行凭证</h4><p>同步使用受控 GitHub 执行身份 · 权限边界以读取 GitHub 主仓、写入云效代码仓、记录同步证据为主。现阶段由魏鹏账号承接自动同步，凭证由 INV-0 一次性配置，运维（曾正龙）日常维护。</p></div>
     </div>
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#6C5CE7;">3</div>
-      <div class="fsm-body"><h4>Status Check 回推</h4><p>云效流水线跑完 L1-L4 CI 后，通过 GitHub Commit Status API 把结果（success / failure / pending）写回 GitHub PR 对应 commit，PR 页面 Required Checks 列表即时变色。</p></div>
+      <div class="fsm-body"><h4>部署证据回填</h4><p>云效流水线完成构建和部署后，回填构建号、commit SHA、环境 URL 和部署结果。该证据用于发布追踪，不等同于合并前 required check。</p></div>
     </div>
   </div>
 
-  <h3>§5.2 · 工程师接入点（Step 5 云效并行起）</h3>
-  <p>工程师的云效接入时点 = 能力包 Step 5（feature 分支开发），Step 3 只是 HPRD / 开发设计 / 测试规格进入 GitHub 主仓：</p>
+  <h3>§5.2 · 工程师接入点（Step 5 规划，B4 后执行）</h3>
+  <p>工程师在 Step 5 可以准备云效流水线配置，但流水线正式消费的是 B4 Merge 后同步到云效代码仓的代码；Step 3 只是 HPRD / 开发设计 / 测试规格进入 GitHub 主仓：</p>
   <div class="flow-steps-mini">
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#FF6A00;">A</div>
@@ -781,27 +786,27 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
     </div>
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#FF6A00;">B</div>
-      <div class="fsm-body"><h4>Step 5：云效创建流水线</h4><p>工程师进入 feature 分支开发时，在云效控制台创建对应流水线：定义 stage · 绑定阿里云部署目标 · 配置熔断阈值。流水线本身是云效的资产，不同步到 GitHub。</p></div>
+      <div class="fsm-body"><h4>Step 5：云效流水线规划</h4><p>工程师进入 feature 分支开发时，可以在云效控制台准备对应流水线：定义 stage · 绑定阿里云部署目标 · 配置熔断阈值。流水线本身是云效的资产，不同步到 GitHub。</p></div>
     </div>
     <div class="flow-step-mini">
       <div class="fsm-num" style="background:#FF6A00;">C</div>
-      <div class="fsm-body"><h4>Step 5：feature 分支开发 + 自动同步</h4><p>工程师 commit 推 GitHub feature 分支 · 魏鹏自动同步方案从这一刻提供云效可消费代码副本 · 云效侧触发 CI · CI 结果通过 Status Check 回推到 GitHub PR。</p></div>
+      <div class="fsm-body"><h4>B4 后：合并后自动同步</h4><p>INV-0 合并 PR 后，魏鹏自动同步方案把 GitHub <code>main</code> / merge commit 同步到云效代码仓；云效流水线从云效代码仓构建制品并部署环境。</p></div>
     </div>
   </div>
 
-  <h3>§5.3 · L1-L4 CI 执行</h3>
+  <h3>§5.3 · Phase B pre-merge 检查位</h3>
   <table class="spec-table">
     <thead>
       <tr><th>层级</th><th>内容</th><th>执行载体</th><th>典型耗时</th><th>级别</th></tr>
     </thead>
     <tbody>
-      <tr><td>L1 格式</td><td>lint · format · basic syntax</td><td>云效</td><td>30 s</td><td><span class="chip blocking">BLOCKING</span></td></tr>
-      <tr><td>L2 确定性</td><td>构建 · 单测 · 集成测试</td><td>云效</td><td>3-6 min</td><td><span class="chip blocking">BLOCKING</span></td></tr>
-      <tr><td>L3 行为</td><td>契约测试 · 行为一致性</td><td>云效</td><td>2-5 min</td><td><span class="chip blocking">BLOCKING</span></td></tr>
+      <tr><td>L1 格式</td><td>lint · format · basic syntax</td><td>pre-merge 来源待定</td><td>30 s</td><td><span class="chip blocking">BLOCKING</span></td></tr>
+      <tr><td>L2 确定性</td><td>构建 · 单测 · 集成测试</td><td>pre-merge 来源待定</td><td>3-6 min</td><td><span class="chip blocking">BLOCKING</span></td></tr>
+      <tr><td>L3 行为</td><td>契约测试 · 行为一致性</td><td>pre-merge 来源待定</td><td>2-5 min</td><td><span class="chip blocking">BLOCKING</span></td></tr>
       <tr><td>L4 语义哨兵</td><td>语义飘移 · 规约一致性</td><td>sentinel-shared reusable workflow</td><td>1-2 min</td><td><span class="chip advisory">ADVISORY</span></td></tr>
     </tbody>
   </table>
-  <p style="color:var(--text-muted); font-size:0.85em;">原本 <code>hl-factory</code> 侧的 GitHub Actions L1-L3 执行能力，v2 迁到云效集中执行；<code>hl-factory</code> 仍持有门禁规格源（spec owner），CI 执行体迁移与规格权柄解耦。</p>
+  <p style="color:var(--text-muted); font-size:0.85em;">曾正龙最新口径下，当前云效流水线只消费合并后代码，不承担 PR 合并前 L1-L3 required checks。<code>hl-factory</code> 仍持有门禁规格源（spec owner）；pre-merge 执行体需另行确认后再进入 Phase B。</p>
 
   <h3>§5.4 · 制品 + 部署验证</h3>
   <div class="flow-steps-mini">
@@ -826,7 +831,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <h3>§5.5 · INV-0 黑盒边界</h3>
   <div class="callout note">
     <strong>INV-0 对云效黑盒</strong>
-    <p>INV-0 不登录云效 · 不查看云效流水线日志 · 不直接按云效按钮。曾正龙（运维 Owner）的 <code>B5</code> 按钮由云效承载，与 GitHub 无关；INV-0 的 <code>B4</code> GitHub Merge 永远前置于 <code>B5</code> 云效部署。流水线的治理视图对 INV-0 仅是一个东西：<strong>GitHub PR 上的 Required Status Checks 和 Merge button</strong>。</p>
+    <p>INV-0 不登录云效 · 不查看云效流水线日志 · 不直接按云效按钮。曾正龙（运维 Owner）的 <code>B5</code> 按钮由云效承载，与 GitHub 无关；INV-0 的 <code>B4</code> GitHub Merge 永远前置于 <code>B5</code> 云效部署。流水线的治理视图对 INV-0 只看两件事：<strong>GitHub PR 合并前门禁</strong>和 <strong>B4 Merge button</strong>。</p>
   </div>
 </section>
 
@@ -898,10 +903,10 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <ol>
     <li><strong>B1 · 契约冻结</strong>：INV-0 在 GitHub 合入 <code>hl-contracts</code> PR · PM 冻结 Cap-Spec。</li>
     <li><strong>B2 半桩 · pm-hprd-pass</strong>：PM Owner 在 GitHub PR 上核对 HPRD 与 Cap-Spec 一致（ADVISORY）。</li>
-    <li><strong>CI 执行</strong>：云效侧跑 L1-L3 · 回推 GitHub PR Status Check（BLOCKING）。</li>
+    <li><strong>pre-merge 检查</strong>：Phase B 来源待定；不能把合并后云效部署流水线直接当作 GitHub PR required check。</li>
     <li><strong>B3 · qa-verdict</strong>：李云峰在 GitHub PR approve <code>qa-verdict</code>（BLOCKING）。</li>
     <li><strong>B2 · pm-acceptance</strong>：PM Owner 在 GitHub PR approve <code>pm-acceptance</code>（BLOCKING）。</li>
-    <li><strong>B4 · INV-0 GitHub Merge</strong>：所有 Required Checks 全绿 → INV-0 按 Merge button · 代码进入 <code>main</code>。</li>
+    <li><strong>B4 · INV-0 GitHub Merge</strong>：GitHub PR 合并前门禁通过 → INV-0 按 Merge button · 代码进入 <code>main</code>。</li>
     <li><strong>B5 · staging</strong>：云效自动推 staging 环境 · QA 冒烟。</li>
     <li><strong>B5 · canary</strong>：曾正龙按"进 canary"5% · 观察 30 min。</li>
     <li><strong>B5 · prod</strong>：canary 绿 → 曾正龙按"切 prod"100% · 能力包 → Released。</li>
@@ -916,7 +921,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <div class="section-entry-grid">
     <div class="section-entry-card">
       <div class="label">这段回答什么</div>
-      <p>回答“失败发生后回到哪里”：HPRD 审计打回回到 Review，Status Check 红灯回到 commit，部署熔断回到流量控制和事故复盘。</p>
+      <p>回答“失败发生后回到哪里”：HPRD 审计打回回到 Review，pre-merge 检查失败回到 commit，部署熔断回到流量控制和事故复盘。</p>
     </div>
     <div class="section-entry-card">
       <div class="label">分清两个边界</div>
@@ -933,15 +938,15 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
 
   <h3>HPRD 审计打回</h3>
   <ul>
-    <li><strong>PM 审 HPRD 与 Cap-Spec 不一致</strong> → 工程师修 HPRD，push 到代码仓 <code>/hprd/</code> 目录 · 双仓同步 · 重新 request review。</li>
-    <li><strong>QA 审测试规格书不完整</strong> → 工程师补测试场景 · push · 同步。</li>
-    <li><strong>设计审视觉规范缺失</strong> → 工程师补设计 spec · push · 同步。</li>
+    <li><strong>PM 审 HPRD 与 Cap-Spec 不一致</strong> → 工程师修 HPRD，push 到代码仓 <code>/hprd/</code> 目录 · 重新 request review。</li>
+    <li><strong>QA 审测试规格书不完整</strong> → 工程师补测试场景 · push。</li>
+    <li><strong>设计审视觉规范缺失</strong> → 工程师补设计 spec · push。</li>
   </ul>
   <p>HPRD 文档本身不直接跑 CI，但 HPRD 的 PR diff 会在 GitHub PR 上被 PM / QA / 设计通过 Review Comments + <code>pm-hprd-pass</code> ADVISORY 审计。打回 = Request Changes · 工程师修改后重走 Review。</p>
 
-  <h3>GitHub PR Status Check 红灯</h3>
+  <h3>GitHub PR 合并前检查失败</h3>
   <ul>
-    <li><strong>L1-L3 CI 红</strong>（云效回推 failure）· 工程师修 + push 新 commit · 云效重跑 · 回推新 Status Check。</li>
+    <li><strong>Phase B pre-merge check 红</strong> · 工程师修 + push 新 commit · 检查来源重跑 · GitHub PR 状态更新。</li>
     <li><strong>qa-verdict Request Changes</strong>（李云峰在 GitHub PR 上打回）· 工程师修 + QA 复测 + 重新 approve。</li>
     <li><strong>pm-acceptance Request Changes</strong>（PM Owner 认为实现与 Cap-Spec 不一致）· 工程师与 PM 对齐 · 必要时修 Cap-Spec 走 B1 治理流程。</li>
   </ul>
@@ -958,7 +963,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   </div>
 
   <h3>在流程图里模拟</h3>
-  <p>回到 <a href="#flow" class="term-link">§2 仓库流转图</a>，点击 <strong>⚠ 演示 QA 打回</strong> 按钮 · 观察 Step 9（QA Passed）处标红 · 流程回到"工程师修 + QA 复测"循环 · Status Check 重新走一遍。</p>
+  <p>回到 <a href="#flow" class="term-link">§2 仓库流转图</a>，点击 <strong>⚠ 演示 QA 打回</strong> 按钮 · 观察 Step 9（QA Passed）处标红 · 流程回到“工程师修 + QA 复测”循环。该演示只表达 GitHub PR 打回，不代表云效 post-merge 部署会参与合并前门禁。</p>
 
   <h3>§7.2 · 与其他页面的关系</h3>
   <p>本页定位是 <strong>"GitHub + 云效 双仓并行的流水线说明"</strong>。具体细节见：</p>
@@ -966,7 +971,7 @@ table.spec-table code { font-size:0.86em; color:var(--eng); background:rgba(85,2
   <div class="relate-grid">
     <a class="relate-card" href="gate-levels.html#section4">
       <h4>🛡️ 门禁体系详解 · §4</h4>
-      <p>Required Status Checks 在 GitHub PR 上的挂载细则。本页与 §4 完全一致 · Required Checks 定位 = GitHub PR。</p>
+      <p>Required Status Checks 在 GitHub PR 上的挂载细则。当前云效 post-merge 部署流水线不能直接填入该位置。</p>
       <span class="rc-tag" style="background:rgba(0,184,148,0.15);color:var(--secondary);">权威</span>
     </a>
     <a class="relate-card" href="workflow-states.html#state-machine">
@@ -1065,7 +1070,7 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-// ─── Interactive Pipeline (v2 · 双仓并行 · 12 状态机) ───
+// ─── Interactive Pipeline (v3 · GitHub 主轨 + 合并后同步 · 12 状态机) ───
 const IL_STEPS = [
   { idx:0, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(116,185,255,0.18)', laneFg:'#74B9FF',
     title:'Proposed · PM 提出能力包', icon:'💡', actor:'PM', dur:'数小时 – 1 天',
@@ -1081,28 +1086,28 @@ const IL_STEPS = [
     desc:'PM 最终冻结 <a href="glossary.html#term-cap-spec" class="term-link">Cap-Spec</a> · scope 不可再追加 · 后续所有工程改动必须与 Cap-Spec 一致。' },
   { idx:3, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(108,92,231,0.22)', laneFg:'#A29BFE',
     title:'HPRD Passed · GitHub 规格入仓', icon:'📐', actor:'工程师', key:'B2 半桩', dur:'2–5 天',
-    output:'HPRD / 开发设计 / 测试规格书 三件套落在代码仓 /hprd/', next:'设计冻结 + Step 5 云效接入',
-    desc:'工程师产 HPRD · 落在代码仓 <code>/hprd/</code> 目录 · 受 Git 版本管理。这里仍是 GitHub 主轨准备阶段；<strong>云效并行从 Step 5 feature 分支开发时接入</strong>。<code>pm-hprd-pass</code> ADVISORY Status Check 在 GitHub PR 上生效。' },
+    output:'HPRD / 开发设计 / 测试规格书 三件套落在代码仓 /hprd/', next:'设计冻结 + Step 5 流水线规划',
+    desc:'工程师产 HPRD · 落在代码仓 <code>/hprd/</code> 目录 · 受 Git 版本管理。这里仍是 GitHub 主轨准备阶段；云效正式消费发生在 B4 Merge 后。<code>pm-hprd-pass</code> ADVISORY 信号在 GitHub PR 上生效。' },
   { idx:4, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(223,230,233,0.18)', laneFg:'#DFE6E9',
     title:'Design Approved · 设计冻结', icon:'🎨', actor:'设计师', dur:'2–4 天',
     output:'Design Packet · DTCG Token · 交互规范', next:'工程师进入编码',
     desc:'设计师在 <code>guanghe</code>（C-L1 · 创始人独家）或 <code>hl-scene-design-system</code>（C-L2 · 已建）的 PR 完成 Design Packet · 前端引用 DTCG Token。' },
-  { idx:5, lane:'bridge', laneLabel:'GitHub 主仓 + 云效并行起点', laneColor:'rgba(255,106,0,0.22)', laneFg:'#FF6A00',
-    title:'In Development · feature 开发 + 云效接入', icon:'⚙️', actor:'工程师', dur:'1 – 数周',
-    output:'GitHub feature commit · 魏鹏自动同步提供副本 · 云效流水线定义', next:'发起 GitHub Draft PR',
-    desc:'从这一步开始进入<strong>双仓并行</strong>：工程师仍以 GitHub 主仓 feature 分支提交代码，同时由魏鹏自动同步方案向云效提供可执行代码副本，云效创建流水线（定义 stage · 绑定阿里云部署目标）。代码 + HPRD + 设计 + 测试规格仍以 GitHub 版本管理为审计基线。' },
-  { idx:6, lane:'bridge', laneLabel:'GitHub + 云效 并行', laneColor:'rgba(85,239,196,0.18)', laneFg:'#55EFC4',
-    title:'Draft PR Open · GitHub PR + 云效触发', icon:'📬', actor:'工程师', dur:'即时',
-    output:'GitHub Draft PR · 云效 CI 首次触发', next:'L1-L3 CI 执行',
-    desc:'工程师在 GitHub 主轨开 Draft PR · 同时魏鹏自动同步方案提供最新代码副本，云效消费副本并触发 CI 流水线。Required Status Checks 列表在 GitHub PR 上即时出现（pending 状态）。' },
-  { idx:7, lane:'yunxiao', laneLabel:'云效并行执行器', laneColor:'rgba(255,106,0,0.22)', laneFg:'#FF6A00',
-    title:'L1-L3 Running · 云效 CI 执行', icon:'🔧', actor:'CI 自动', dur:'5–10 min',
-    output:'L1 格式 / L2 确定性 / L3 行为 三层结果', next:'回推 GitHub Status Check',
-    desc:'L1 格式 / L2 确定性 / L3 行为 三层 BLOCKING · 在<strong>云效侧执行</strong>。结果通过 GitHub Commit Status API 回推为 <strong>GitHub PR 的 Status Check</strong>。L4 语义哨兵由 <code>sentinel-shared</code> reusable workflow 并行跑 ADVISORY。' },
+  { idx:5, lane:'bridge', laneLabel:'GitHub 主仓 + 云效规划', laneColor:'rgba(255,106,0,0.22)', laneFg:'#FF6A00',
+    title:'In Development · feature 开发 + 流水线规划', icon:'⚙️', actor:'工程师', dur:'1 – 数周',
+    output:'GitHub feature commit · 云效流水线定义草案', next:'发起 GitHub Draft PR',
+    desc:'工程师仍以 GitHub 主仓 feature 分支提交代码；云效侧可以提前准备流水线 stage、阿里云部署目标和熔断阈值，但不从 feature 分支消费为合并前门禁。代码 + HPRD + 设计 + 测试规格仍以 GitHub 版本管理为审计基线。' },
+  { idx:6, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(85,239,196,0.18)', laneFg:'#55EFC4',
+    title:'Draft PR Open · GitHub PR 审查', icon:'📬', actor:'工程师', dur:'即时',
+    output:'GitHub Draft PR · Review / PM / QA 协作', next:'pre-merge 检查来源待定',
+    desc:'工程师在 GitHub 主轨开 Draft PR。曾正龙最新口径下，云效部署流水线只消费合并后的云效代码仓代码，因此不能在这里假设云效 PR check 自动出现。' },
+  { idx:7, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(255,106,0,0.22)', laneFg:'#FF6A00',
+    title:'Phase B TBD · pre-merge 检查待定义', icon:'🔧', actor:'CI 自动', dur:'待定',
+    output:'合并前检查来源待定', next:'GitHub 门禁汇总',
+    desc:'如果后续仍要 L1/L2/L3 成为 BLOCKING required checks，必须另定义 pre-merge 检查来源。当前 post-merge 云效部署流水线不能被误挂为 GitHub PR required check。' },
   { idx:8, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(0,184,148,0.18)', laneFg:'#00B894',
-    title:'Gates Passed · L1-L3 全绿 + pm-hprd-pass', icon:'✅', actor:'系统', key:'B2 半桩', dur:'即时',
-    output:'GitHub PR Required Checks 技术层全绿', next:'QA approve',
-    desc:'GitHub PR 上 Required Status Checks 显绿：L1-L3 BLOCKING + <code>pm-hprd-pass</code> ADVISORY（PM 已在 Step 3 确认）· 具备合并资格的技术前提。' },
+    title:'Gates Passed · GitHub 门禁通过', icon:'✅', actor:'系统', key:'B2 半桩', dur:'即时',
+    output:'GitHub PR 合并前门禁通过', next:'QA approve',
+    desc:'当前 Phase A 已生效：PR + 1 approval、禁止 force push / delete、要求 conversation resolution。Phase B required checks 需等 pre-merge 来源确定后再绑定。' },
   { idx:9, lane:'github', laneLabel:'GitHub 主轨', laneColor:'rgba(255,234,167,0.18)', laneFg:'#FFEAA7',
     title:'QA Passed · qa-verdict Approved', icon:'🔍', actor:'李云峰（QA Owner）', key:'B3', dur:'数小时 – 1 天',
     output:'GitHub PR 上 qa-verdict 绿', next:'PM 最终验收',
@@ -1113,8 +1118,8 @@ const IL_STEPS = [
     desc:'PM Owner 在 <strong>GitHub PR</strong> 上 approve <code>pm-acceptance</code>（<strong>B2</strong>）· BLOCKING Required Check 转绿 · HPRD 与 Cap-Spec 一致性最终确认。' },
   { idx:11, lane:'bridge', laneLabel:'GitHub + 云效 收束', laneColor:'rgba(162,155,254,0.22)', laneFg:'#A29BFE',
     title:'Released · INV-0 Merge + 云效部署', icon:'🚀', actor:'INV-0 + 曾正龙', key:'B4 + B5', dur:'约 1 天',
-    output:'main 前进 · staging → canary → prod 全绿', next:'能力包 Released 终态',
-    desc:'INV-0 在 GitHub 按 Merge button（<strong>B4</strong>）· 代码进入 <code>main</code>。同步触发云效部署流水线 · 曾正龙按 staging → canary → prod（<strong>B5</strong>）· 能力包自动回写 <a href="workflow-states.html#state-machine" class="term-link">Released</a> 终态。' },
+    output:'main 前进 · 同步到云效代码仓 · staging → canary → prod', next:'能力包 Released 终态',
+    desc:'INV-0 在 GitHub 按 Merge button（<strong>B4</strong>）· 代码进入 <code>main</code>。魏鹏自动同步方案把 merge commit 同步到云效代码仓 · 云效流水线从云效代码仓构建制品 · 曾正龙按 staging → canary → prod（<strong>B5</strong>）· 能力包自动回写 <a href="workflow-states.html#state-machine" class="term-link">Released</a> 终态。' },
 ];
 
 let ilCurrent = 0;
@@ -1138,7 +1143,7 @@ function ilUpdateDetail() {
   if (!step) return;
   let failBanner = '';
   if (ilFailMode && ilCurrent === IL_FAIL_IDX) {
-    failBanner = '<div class="callout danger" style="margin-bottom:10px;"><strong>🛑 QA 打回演示</strong><p>李云峰在 GitHub PR 上对 <code>qa-verdict</code> 打 Request Changes · BLOCKING Required Check 保持红灯 · INV-0 无法按 Merge。工程师修 + push 新 commit · 云效重跑 CI · 回推新 Status Check · QA 复测后重新 approve。</p></div>';
+    failBanner = '<div class="callout danger" style="margin-bottom:10px;"><strong>🛑 QA 打回演示</strong><p>李云峰在 GitHub PR 上对 <code>qa-verdict</code> 打 Request Changes · INV-0 无法按 Merge。工程师修 + push 新 commit · QA 复测后重新 approve。该演示不代表云效 post-merge 部署流水线会参与合并前门禁。</p></div>';
   }
   document.getElementById('ilDetail').innerHTML = `
     ${failBanner}

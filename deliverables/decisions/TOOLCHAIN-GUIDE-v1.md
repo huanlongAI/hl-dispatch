@@ -56,7 +56,8 @@
 ├─────────────────────────────────────────────────────────┤
 │                  Execution 舱（代码实现）                  │
 │  hl-platform 源代码                                      │
-│  hl-console-native Flutter 前端                          │
+│  hl-console-native SwiftUI 治理控制台                     │
+│  hl-scene-app Flutter 场景前端                            │
 │                                                          │
 │  工具：见 §3 开发工具栈                                    │
 ├─────────────────────────────────────────────────────────┤
@@ -84,7 +85,8 @@
 | Spring Modulith | 1.3.4 | TECH-STACK-SPEC v3 | 模块边界验证 |
 | PostgreSQL | 18.x | TECH-STACK-SPEC v3 | 数据库 |
 | Gradle | 8.12 | TECH-STACK-SPEC v3 | 构建工具 |
-| Flutter | (版本见 hl-console-native) | R-TEAM-007 | 前端统一技术栈 |
+| SwiftUI / GHKit | (见 hl-console-native) | R-016 / R-052 | 治理/运营/审计客户端 |
+| Flutter / Dart | Flutter 3.41 / Dart 3.x | R-FE-CLIENT-001 / DD-FE-CLIENT-v1 | 场景前端 App（hl-scene-app） |
 
 ### 3.2 团队自选（无约束）
 

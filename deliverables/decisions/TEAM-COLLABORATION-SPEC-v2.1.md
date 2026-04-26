@@ -7,7 +7,7 @@
 **文档编号**：TEAM-COLLAB-SPEC-001
 **版本**：v2.1
 **日期**：2026-04-11
-**状态**：DRAFT / Pilot-Locked for Capability Flow（创始人 2026-04-11 裁决：按试运行基线执行能力包流，Bugfix/技术改动/治理流另见 WORKFLOW-GUIDE）
+**状态**：DRAFT / Pilot-Locked for Capability Flow（创始人 2026-04-11 裁决：按试运行基线执行能力包流，缺陷修复/技术改动/治理流另见 WORKFLOW-GUIDE）
 **替代文档**：TEAM-COLLABORATION-SPEC v1.2（SUPERSEDED）；v2.0（SUPERSEDED by v2.1 审计修正）
 **派生链**：SAAC-HL-001 v1.1 §1.3 → BRIDGE-DERIVATION v1 → PRD-REDEFINITION-SPEC v2.0 → DD-TEST v1.1 → 创始人 2026-04-11 组织裁决 → v2.0 → 双独立审计仲裁 → 创始人 2026-04-11 Pilot-Lock 裁决 → 本文档
 
@@ -73,7 +73,7 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 | F-7 | 语义主权分层：PM = 能力包语义 SSOT；创始人 = 全局契约语义 SSOT | 审计 B#1 |
 | F-8 | HPRD 缩薄为理解确认件 + 最小模板 | 审计 B#2 |
 | F-9 | "AI 生成 100% 代码"→"AI-first，人工可补，统一过 gate" | 审计 B#6 |
-| F-10 | §5 加流程分类声明：Bugfix/技术改动/治理流另见 WORKFLOW-GUIDE | 审计 B#5 |
+| F-10 | §5 加流程分类声明：缺陷修复/技术改动/治理流另见 WORKFLOW-GUIDE | 审计 B#5 |
 
 **未纳入 v2.1 的候选项（记录备查）**：
 
@@ -81,8 +81,16 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 |------|------|------|
 | capability-packet.yaml | 机读能力包包络 | T1 试运行后评估，v2.2 候选 |
 | 完整状态机 | 流程状态机 + 异常回退 | 基于试运行数据设计，v2.2 候选 |
-| 4 类流程详细定义 | 能力包/Bugfix/技术改动/治理流 | WORKFLOW-GUIDE 附属文件 |
+| 4 类流程详细定义 | 能力包/缺陷修复/技术改动/治理流 | WORKFLOW-GUIDE 附属文件 |
 | post-release writeback | 发布后回写机制 | WORKFLOW-GUIDE 附属文件 |
+
+### 0.5.1 R-TEAM-007 scope erratum（2026-04-25）
+
+`R-TEAM-007` 原全域措辞按 2026-04-23 `R-FE-CLIENT-001 amend-001` 澄清为：**场景前端线转 Flutter**，覆盖 C 端消费者、B 端客户、门店员工等非治理后台业务前端；不覆盖治理/运营/审计人员客户端。
+
+`hl-console-native` 仍属于 C 域治理客户端，技术方向为 SwiftUI / GHKit。
+
+场景前端 App 为 `huanlongAI/hl-scene-app`，技术方向为 Flutter 3.41 / Dart 3.x。组织协作上的“前端转型”不得反向解释为 C 域客户端技术栈切换。
 
 ### 0.5 与 v1.2 的关键变更
 
@@ -407,7 +415,8 @@ merge
 - PM 全覆盖：3 PM 各负责 3-4 个包，T1 阶段 PM-A/PM-B 压力最大
 - QA 横向覆盖：4 QA 不按能力包分配，按测试类型分工（1 架构师 + 3 工程师）
 - UI 设计师 2 人横向支持所有有 UI 界面的能力包
-- 前端 5 人统一使用 Flutter 技术栈（hl-console-native），web 前端全部计划转 Flutter
+- 前端 5 人按场景前端线统一转向 Flutter / Dart（`huanlongAI/hl-scene-app`）
+- `hl-console-native` 不在本转型范围内，继续按 SwiftUI / GHKit 治理客户端口径执行
 
 ### 3.3 QA 团队内部分工
 
@@ -447,7 +456,7 @@ merge
 | 流程类型 | 适用场景 | 定义文档 |
 |---------|---------|---------|
 | **能力包流** | 新功能、用户可见能力变化 | 本文档 §5.2 |
-| Bugfix 流 | 缺陷修复、回归修复 | WORKFLOW-GUIDE v1 |
+| 缺陷修复流 | 缺陷修复、回归修复 | WORKFLOW-GUIDE v1 |
 | 技术改动流 | 重构、性能、可观测性、工程性改动 | WORKFLOW-GUIDE v1 |
 | 治理/内核流 | HK、contracts、gates、framework | WORKFLOW-GUIDE v1 |
 
@@ -529,7 +538,7 @@ Post-Merge: 发布
 | Writeback Pending | 多 owner | 发布后 | 回写完成（v2.2 定义） | — |
 
 **状态机使用说明**：
-- 本状态机仅覆盖**能力包流**（Capability Flow）。Bugfix、技术改动、治理/内核流的状态机另见 WORKFLOW-GUIDE。
+- 本状态机仅覆盖**能力包流**（Capability Flow）。缺陷修复、技术改动、治理/内核流的状态机另见 WORKFLOW-GUIDE。
 - 回退时必须清理下游产物（如从 HPRD Passed 回退到 Cap-Spec Frozen，已有的 HPRD 标记为 INVALIDATED）。
 - Contract Envelope Locked 阶段使用 PR 分类模板（§5.3）判定。
 
@@ -539,7 +548,7 @@ Post-Merge: 发布
 
 ```yaml
 # PR Classification（必填）
-change_class: capability    # capability | bugfix | tech-improvement | governance
+change_class: capability    # capability | defect-fix | tech-improvement | governance
 contract_touch: false       # true | false — 是否触碰 hl-contracts 核心路径
 founder_required: false     # true | false — 是否需要创始人审批
 
@@ -694,7 +703,7 @@ settings.gradle.kts                       @founder
 | R-TEAM-004 | PM 不审 design.md | 2026-04-11 | 创始人 |
 | R-TEAM-005 | 测试团队 4 人定位为 QA / Acceptance Owner（1 架构师 + 3 工程师） | 2026-04-11 | 创始人 |
 | R-TEAM-006 | 工具链选型作为附属文件（TOOLCHAIN-GUIDE），不在治理文件中锁死具体产品 | 2026-04-11 | 创始人 |
-| R-TEAM-007 | 前端全线转 Flutter，web 前端 4 人 + Flutter 1 人统一技术栈 | 2026-04-11 | 创始人 |
+| R-TEAM-007 | 场景前端线转 Flutter；web 前端 4 人 + Flutter 1 人统一到 `hl-scene-app` / Flutter / Dart。scope erratum 2026-04-25：不覆盖 C 域治理客户端，治理客户端仍为 SwiftUI / GHKit。 | 2026-04-11 | 创始人 |
 | R-TEAM-008 | 语义主权分层：PM = 能力包 SSOT；创始人 = 全局契约 SSOT | 2026-04-11 | 审计仲裁 |
 | R-TEAM-009 | QA verdict / PM acceptance 必须为 required status checks，不接受口头放行 | 2026-04-11 | 审计仲裁 |
 | R-TEAM-010 | AI-first 编码：默认 AI 生成，人工可补，统一过 gate | 2026-04-11 | 审计仲裁 |
@@ -727,9 +736,9 @@ settings.gradle.kts                       @founder
 | QA Lead Time | QA 是否成为主瓶颈 | qa-verdict 从 PR 开始到 PASS 的时间 |
 | PM Acceptance Rework Rate | PM 产品验收打回轮数 | pm-acceptance 打回次数 / 总提交次数 |
 | Founder Queue Load | 创始人是否真的退出 feature PR 队列 | 创始人 review 的能力包 PR 数 |
-| Non-Capability Misroute Count | Bugfix/技术改动是否被迫走能力包流 | change_class 字段回溯 |
+| Non-Capability Misroute Count | 缺陷修复/技术改动是否被迫走能力包流 | change_class 字段回溯 |
 | Gate Bypass Count | 有没有绕过 rulesets/checks 的情况 | GitHub audit log |
-| Escape Defect Rate | QA/PM 通过后仍逃逸的问题比例 | 发布后 bug 追溯 |
+| Escape Defect Rate | QA/PM 通过后仍逃逸的问题比例 | 发布后缺陷追溯 |
 
 ### 9.3 版本演进触发条件
 

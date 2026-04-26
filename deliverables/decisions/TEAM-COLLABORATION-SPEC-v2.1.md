@@ -7,7 +7,7 @@
 **文档编号**：TEAM-COLLAB-SPEC-001
 **版本**：v2.1
 **日期**：2026-04-11
-**状态**：DRAFT / Pilot-Locked for Capability Flow（创始人 2026-04-11 裁决：按试运行基线执行能力包流，Bugfix/技术改动/治理流另见 WORKFLOW-GUIDE）
+**状态**：DRAFT / Pilot-Locked for Capability Flow（创始人 2026-04-11 裁决：按试运行基线执行能力包流，缺陷修复/技术改动/治理流另见 WORKFLOW-GUIDE）
 **替代文档**：TEAM-COLLABORATION-SPEC v1.2（SUPERSEDED）；v2.0（SUPERSEDED by v2.1 审计修正）
 **派生链**：SAAC-HL-001 v1.1 §1.3 → BRIDGE-DERIVATION v1 → PRD-REDEFINITION-SPEC v2.0 → DD-TEST v1.1 → 创始人 2026-04-11 组织裁决 → v2.0 → 双独立审计仲裁 → 创始人 2026-04-11 Pilot-Lock 裁决 → 本文档
 
@@ -73,7 +73,7 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 | F-7 | 语义主权分层：PM = 能力包语义 SSOT；创始人 = 全局契约语义 SSOT | 审计 B#1 |
 | F-8 | HPRD 缩薄为理解确认件 + 最小模板 | 审计 B#2 |
 | F-9 | "AI 生成 100% 代码"→"AI-first，人工可补，统一过 gate" | 审计 B#6 |
-| F-10 | §5 加流程分类声明：Bugfix/技术改动/治理流另见 WORKFLOW-GUIDE | 审计 B#5 |
+| F-10 | §5 加流程分类声明：缺陷修复/技术改动/治理流另见 WORKFLOW-GUIDE | 审计 B#5 |
 
 **未纳入 v2.1 的候选项（记录备查）**：
 
@@ -81,7 +81,7 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 |------|------|------|
 | capability-packet.yaml | 机读能力包包络 | T1 试运行后评估，v2.2 候选 |
 | 完整状态机 | 流程状态机 + 异常回退 | 基于试运行数据设计，v2.2 候选 |
-| 4 类流程详细定义 | 能力包/Bugfix/技术改动/治理流 | WORKFLOW-GUIDE 附属文件 |
+| 4 类流程详细定义 | 能力包/缺陷修复/技术改动/治理流 | WORKFLOW-GUIDE 附属文件 |
 | post-release writeback | 发布后回写机制 | WORKFLOW-GUIDE 附属文件 |
 
 ### 0.5.1 R-TEAM-007 scope erratum（2026-04-25）
@@ -456,7 +456,7 @@ merge
 | 流程类型 | 适用场景 | 定义文档 |
 |---------|---------|---------|
 | **能力包流** | 新功能、用户可见能力变化 | 本文档 §5.2 |
-| Bugfix 流 | 缺陷修复、回归修复 | WORKFLOW-GUIDE v1 |
+| 缺陷修复流 | 缺陷修复、回归修复 | WORKFLOW-GUIDE v1 |
 | 技术改动流 | 重构、性能、可观测性、工程性改动 | WORKFLOW-GUIDE v1 |
 | 治理/内核流 | HK、contracts、gates、framework | WORKFLOW-GUIDE v1 |
 
@@ -538,7 +538,7 @@ Post-Merge: 发布
 | Writeback Pending | 多 owner | 发布后 | 回写完成（v2.2 定义） | — |
 
 **状态机使用说明**：
-- 本状态机仅覆盖**能力包流**（Capability Flow）。Bugfix、技术改动、治理/内核流的状态机另见 WORKFLOW-GUIDE。
+- 本状态机仅覆盖**能力包流**（Capability Flow）。缺陷修复、技术改动、治理/内核流的状态机另见 WORKFLOW-GUIDE。
 - 回退时必须清理下游产物（如从 HPRD Passed 回退到 Cap-Spec Frozen，已有的 HPRD 标记为 INVALIDATED）。
 - Contract Envelope Locked 阶段使用 PR 分类模板（§5.3）判定。
 
@@ -548,7 +548,7 @@ Post-Merge: 发布
 
 ```yaml
 # PR Classification（必填）
-change_class: capability    # capability | bugfix | tech-improvement | governance
+change_class: capability    # capability | defect-fix | tech-improvement | governance
 contract_touch: false       # true | false — 是否触碰 hl-contracts 核心路径
 founder_required: false     # true | false — 是否需要创始人审批
 
@@ -736,9 +736,9 @@ settings.gradle.kts                       @founder
 | QA Lead Time | QA 是否成为主瓶颈 | qa-verdict 从 PR 开始到 PASS 的时间 |
 | PM Acceptance Rework Rate | PM 产品验收打回轮数 | pm-acceptance 打回次数 / 总提交次数 |
 | Founder Queue Load | 创始人是否真的退出 feature PR 队列 | 创始人 review 的能力包 PR 数 |
-| Non-Capability Misroute Count | Bugfix/技术改动是否被迫走能力包流 | change_class 字段回溯 |
+| Non-Capability Misroute Count | 缺陷修复/技术改动是否被迫走能力包流 | change_class 字段回溯 |
 | Gate Bypass Count | 有没有绕过 rulesets/checks 的情况 | GitHub audit log |
-| Escape Defect Rate | QA/PM 通过后仍逃逸的问题比例 | 发布后 bug 追溯 |
+| Escape Defect Rate | QA/PM 通过后仍逃逸的问题比例 | 发布后缺陷追溯 |
 
 ### 9.3 版本演进触发条件
 

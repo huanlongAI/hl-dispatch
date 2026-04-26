@@ -84,6 +84,14 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 | 4 类流程详细定义 | 能力包/Bugfix/技术改动/治理流 | WORKFLOW-GUIDE 附属文件 |
 | post-release writeback | 发布后回写机制 | WORKFLOW-GUIDE 附属文件 |
 
+### 0.5.1 R-TEAM-007 scope erratum（2026-04-25）
+
+`R-TEAM-007` 原全域措辞按 2026-04-23 `R-FE-CLIENT-001 amend-001` 澄清为：**场景前端线转 Flutter**，覆盖 C 端消费者、B 端客户、门店员工等非治理后台业务前端；不覆盖治理/运营/审计人员客户端。
+
+`hl-console-native` 仍属于 C 域治理客户端，技术方向为 SwiftUI / GHKit。
+
+场景前端 App 为 `huanlongAI/hl-scene-app`，技术方向为 Flutter 3.41 / Dart 3.x。组织协作上的“前端转型”不得反向解释为 C 域客户端技术栈切换。
+
 ### 0.5 与 v1.2 的关键变更
 
 | 维度 | v1.2 | v2.1 | 变更原因 |
@@ -407,7 +415,8 @@ merge
 - PM 全覆盖：3 PM 各负责 3-4 个包，T1 阶段 PM-A/PM-B 压力最大
 - QA 横向覆盖：4 QA 不按能力包分配，按测试类型分工（1 架构师 + 3 工程师）
 - UI 设计师 2 人横向支持所有有 UI 界面的能力包
-- 前端 5 人统一使用 Flutter 技术栈（hl-console-native），web 前端全部计划转 Flutter
+- 前端 5 人按场景前端线统一转向 Flutter / Dart（`huanlongAI/hl-scene-app`）
+- `hl-console-native` 不在本转型范围内，继续按 SwiftUI / GHKit 治理客户端口径执行
 
 ### 3.3 QA 团队内部分工
 
@@ -694,7 +703,7 @@ settings.gradle.kts                       @founder
 | R-TEAM-004 | PM 不审 design.md | 2026-04-11 | 创始人 |
 | R-TEAM-005 | 测试团队 4 人定位为 QA / Acceptance Owner（1 架构师 + 3 工程师） | 2026-04-11 | 创始人 |
 | R-TEAM-006 | 工具链选型作为附属文件（TOOLCHAIN-GUIDE），不在治理文件中锁死具体产品 | 2026-04-11 | 创始人 |
-| R-TEAM-007 | 前端全线转 Flutter，web 前端 4 人 + Flutter 1 人统一技术栈 | 2026-04-11 | 创始人 |
+| R-TEAM-007 | 场景前端线转 Flutter；web 前端 4 人 + Flutter 1 人统一到 `hl-scene-app` / Flutter / Dart。scope erratum 2026-04-25：不覆盖 C 域治理客户端，治理客户端仍为 SwiftUI / GHKit。 | 2026-04-11 | 创始人 |
 | R-TEAM-008 | 语义主权分层：PM = 能力包 SSOT；创始人 = 全局契约 SSOT | 2026-04-11 | 审计仲裁 |
 | R-TEAM-009 | QA verdict / PM acceptance 必须为 required status checks，不接受口头放行 | 2026-04-11 | 审计仲裁 |
 | R-TEAM-010 | AI-first 编码：默认 AI 生成，人工可补，统一过 gate | 2026-04-11 | 审计仲裁 |

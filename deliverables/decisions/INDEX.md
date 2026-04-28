@@ -81,6 +81,7 @@
 | PM-CLAUDE-MD-TEMPLATE-ZOUCONG.md | 🧭 | PM-A 的 CLAUDE.md 模板 |
 | LAUNCH-PRODUCT-CENTER.md | 🧭 | 产品中心启动文档 |
 | HL-FIRST-CAPABILITY-PACKS-UPSTREAM-v0.6.md | 🔒 Founder Signed 2026-04-28 | 首批 4 个能力包上游任务书与 PM 分工（朱阳：供给侧；邹骢：客户与预约履约）。PM 可接入 Cap-Spec，工程不可直接开工。 |
+| PM-CODEX-START-GUIDE-FIRST-CAPABILITY-PACKS-v0.1.md | 🧭 GUIDE 2026-04-28 | PM 首次打开 Codex 启动首批能力包 Cap-Spec 的操作引导，含朱阳 / 邹骢启动 prompt、工作流和禁区。 |
 
 ## 7 · 回复与咨询（Reply / Inquiry）
 

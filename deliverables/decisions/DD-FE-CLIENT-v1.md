@@ -2,15 +2,16 @@
 
 **文档编号**：DD-FE-CLIENT
 **议题编号**：J-A2（场景前端裁决 · M5 组 2）
-**版本**：v1.0（2026-04-20 裁决归档）
+**版本**：v1.1（2026-04-28 amend · 原 v1.0 为 2026-04-20 裁决归档）
 **裁决人**：L0-Founder（创始人 · cat）· Cowork 对话信道
 **接收人**：Gate-H（架构）、前端团队、SRE、QA、PM
 **状态**：🔒 LOCKED — 与 R-FE-CLIENT-001 同步入库（R-FE-CLIENT-001 LOCKED + amend-001 已入 `hl-contracts` main · PR #13 + PR #16 · 2026-04-23）
 **关联**：
 - 上位真源：R-FE-CLIENT-001 LOCKED + amend-001（`hl-contracts/governance/RULINGS.md`）
+- 最新 amend：R-FE-CLIENT-001 amend-002 + R-036 amend-002 + R-052 amend-001（2026-04-28 · 微信小程序 UniApp runtime + DS 多 runtime adapter）
 - 宪法锚：R-060 amend-001 · R-036 amend-001 · R-044 · R-052 · R-016（`hl-contracts/governance/RULINGS.md`）
 - SAAC 立宪：SAAC-HL-EP-001 v1.2 amend-001 · §0.3 + P1-FE-1~5（计划中 · 后续 PR · 方案 3）
-- 总规：TECH-STACK-SPEC v3.2 §8 amend（计划中 · 后续 PR · 方案 4）
+- 总规：TECH-STACK-SPEC v3.3 §8 amend（2026-04-28 · 已补微信小程序 runtime 投影）
 - 推导链：`team-memory/03-approved/decisions/DEC-20260420-002-frontend-flutter-derivation-chain.md`
 - BRIDGE 模板：`09_Staging/drift-elimination-2026-04-18/j-a2-frontend-saac/04-bridge-layer-template.md §2.1.M5-FOUNDER`（M5 阶段推导起点 · 2026-04-23 已归档）
 
@@ -197,14 +198,22 @@
 
 ---
 
-### 5.1 DS 形态交叉引用（承接 R-036 amend-001 + R-FE-CLIENT-001 amend-001 scope）
+### 5.1 DS 形态交叉引用（承接 R-036 amend-002 + R-FE-CLIENT-001 amend-002 scope）
 
-**DS 形态**：Dart package（pub.dev 发布形态 · `huanlongAI/hl-scene-design-system` 仓 · 属 S 域 Scene Design System）
+**DS 形态**：`token-core + 多 runtime adapter`（`huanlongAI/hl-scene-design-system` 仓 · 属 S 域 Scene Design System）
+
+| 层级 | 目录/形态 | 责任 | 消费方 |
+|---|---|---|---|
+| token-core | `packages/token-core/` | 设计 token、语义色、字号、间距、圆角、动效 token 的唯一 SSOT | Flutter / UniApp runtime adapter |
+| Flutter adapter | `packages/flutter/rdesign_component/` | Flutter widgets / Dart package | `hl-scene-app` 原生 App runtime |
+| UniApp adapter | `packages/uniapp/rdesign_uniapp/` | UniApp 组件源码 | 微信小程序 runtime |
+| docs | `docs/design-system/` | 跨 runtime 共享规范、组件 parity、使用说明 | PM / 设计 / 工程 |
 
 **权威源**：
 - `04-bridge-layer-template.md §2.1.M5-FOUNDER` 表 "DS 包形态 · Dart package（pub.dev 发布形态 · hl-scene-design-system 仓）" 行
-- R-FE-CLIENT-001 框架链派生（Flutter widgets → Dart package DS · 非 R-FE-CLIENT-001 13 字段之一 · 独立仓独立治理）
 - R-036 amend-001（scope 限定 · C 域 HLDesignKit 作废 · S 域 `huanlongAI/hl-scene-design-system` 新建 · 两者不共享命运）
+- R-036 amend-002（DS 发布形态从单一 Flutter DS 扩展为 token-core + Flutter adapter + UniApp adapter）
+- R-FE-CLIENT-001 amend-002（Flutter 锁定原生 App runtime；微信小程序 runtime 由 DD-FE-MINIPROGRAM v1 独立治理）
 
 **C 域 / S 域边界**：
 
@@ -212,17 +221,31 @@
 |---|---|---|
 | 域归属 | C 域 HLConsole 运营后台 | S 域 Scene 场景前端 |
 | 仓 | `huanlongAI/hl-design-system` | `huanlongAI/hl-scene-design-system` |
-| 技术栈 | React / TypeScript | Dart package · Flutter widgets |
+| 技术栈 | React / TypeScript | token-core + Flutter widgets + UniApp components |
 | 生命周期 | 随 hl-console-native 迁移完成即删 | 与场景前端 App `hl-scene-app` 同生命周期 |
-| 治理 | R-036 LOCKED（迁移完成即删纪律）| 本 DD §5.1 + R-036 amend-001 scope 限定 |
+| 治理 | R-036 LOCKED（迁移完成即删纪律）| 本 DD §5.1 + R-036 amend-002 多 runtime 形态 |
 
 **为何 DS 形态不作 R-FE-CLIENT-001 13 字段之一**：
-- R-FE-CLIENT-001 范围 = **场景前端 App 技术栈**（即 `hl-scene-app` 仓内部依赖）
-- DS 包形态 = **场景前端 DS 独立仓**（即 `hl-scene-design-system` 仓的发布形态）· 两个仓独立治理
+- R-FE-CLIENT-001 范围 = **场景前端原生 App runtime 技术栈**（即 `hl-scene-app` iOS / Android Flutter runtime）
+- DS 包形态 = **场景前端 DS 独立仓**（即 `hl-scene-design-system` 仓的发布形态）· 包含 token-core 与多 runtime adapter
 - 若把 DS 形态塞进 R-FE-CLIENT-001 13 字段 · 会导致 "R-FE-CLIENT-001 条目混入 DS 独立仓约束" · scope 污染
-- 现分工：R-FE-CLIENT-001 锁 App 仓 13 字段；R-036 amend-001 锁 DS 仓的 scope 边界；DD-FE-CLIENT v1 §5.1（本小节）补 DS 形态交叉引用
+- 现分工：R-FE-CLIENT-001 锁 App runtime 13 字段；R-036 amend-002 锁 DS 仓多 runtime 形态；DD-FE-MINIPROGRAM v1 锁微信小程序 UniApp runtime
 
-**审计纪律**：未来 DS 仓变更（如改发布形态 / 改仓名）触发的是 **R-036 amend-002** + **DD-FE-CLIENT v1.x amend**（增补 §5.1）· 不触发 R-FE-CLIENT-001 重评。
+**审计纪律**：
+- DS 仓必须先落治理骨架：`AGENTS.md`、`.github/gate-policy.yaml`、`REPO-LAYOUT.md`、token drift check、runtime parity matrix。
+- UniApp 源码不得通过 Flutter baseline PR 直接混入；应在 R-036 amend-002 + DD-FE-MINIPROGRAM v1 生效后，以独立 PR 进入 `packages/uniapp/rdesign_uniapp/`。
+- 未来 DS 仓再改发布形态 / 改仓名，仍触发 **R-036 后续 amend** + **DD-FE-CLIENT v1.x amend** 或新 DD。
+
+### 5.2 微信小程序 runtime 边界（DD-FE-MINIPROGRAM v1 交叉引用）
+
+**边界**：微信小程序是 S 域场景前端渠道之一，但不是本 DD 直接治理的原生 App runtime。
+
+| 项 | 原生 App runtime | 微信小程序 runtime |
+|---|---|---|
+| 技术真源 | R-FE-CLIENT-001 + DD-FE-CLIENT v1 | DD-FE-MINIPROGRAM v1 |
+| UI adapter | `packages/flutter/rdesign_component/` | `packages/uniapp/rdesign_uniapp/` |
+| 共同真源 | hl-contracts 契约、HK.Audit trace 纪律、DS token-core | 同左 |
+| 不得做 | 让 Flutter App DD 直接裁定小程序工具链 | 让 UniApp 反向修改 token-core 或污染 App runtime |
 
 ---
 
@@ -231,3 +254,4 @@
 | 日期 | 版本 | 变更 | 签批 |
 |---|---|---|---|
 | 2026-04-20 | v1.0 | 初版 · 与 R-FE-CLIENT-001 LOCKED 同步入库 | L0-Founder cat（Cowork 信道 · PR #13 合入真源） |
+| 2026-04-28 | v1.1 | amend · DS 形态升级为 token-core + Flutter adapter + UniApp adapter；微信小程序 runtime 改由 DD-FE-MINIPROGRAM v1 独立治理 | L0-Founder cat（Codex 信道 · 明示"批准"） |

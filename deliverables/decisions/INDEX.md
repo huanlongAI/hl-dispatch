@@ -38,7 +38,8 @@
 | 文件 | 状态 | 议题 ID | 说明 |
 |---|---|---|---|
 | DD-DB-MIGRATION-FLYWAY-2026-04-14.md | 🔒 LOCKED 2026-04-14 | J-04 | Flyway 10.x LTS 为 Phase 0 起 DB Schema 治理唯一方案。结项 GREENFIELD T-05。 |
-| DD-FE-CLIENT-v1.md | 🔒 LOCKED 2026-04-20 | J-A2 | 场景前端 App（`huanlongAI/hl-scene-app`）技术决策派生（Flutter 3.41 / Dart 3.x / 13 字段 + 性能 SLO + 依赖审计约束）· 承接 R-FE-CLIENT-001 LOCKED + amend-001（`hl-contracts/governance/RULINGS.md`）|
+| DD-FE-CLIENT-v1.md | 🔒 LOCKED 2026-04-28 v1.1 | J-A2 | 场景前端原生 App runtime（`huanlongAI/hl-scene-app`）技术决策派生（Flutter 3.41 / Dart 3.x / 13 字段 + 性能 SLO + 依赖审计约束）· v1.1 补 DS 多 runtime adapter 边界 |
+| DD-FE-MINIPROGRAM-v1.md | 🔒 LOCKED 2026-04-28 | J-A2-MP | 微信小程序 runtime 技术决策派生（UniApp + Vue 3 + TypeScript）· 承接 R-036 amend-002 / R-052 amend-001 / R-FE-CLIENT-001 amend-002 |
 
 *（注：DD-ORM / DD-AUTH / DD-CACHE / DD-TEST v1.2 / BRIDGE-DERIVATION v1 等上游 DD 原则上存于 hl-contracts 仓，本目录仅收录本地产出的 DD）*
 
@@ -80,8 +81,6 @@
 | PM-CLAUDE-MD-TEMPLATE-ZHUYANG.md | 🧭 | PM-B 的 CLAUDE.md 模板 |
 | PM-CLAUDE-MD-TEMPLATE-ZOUCONG.md | 🧭 | PM-A 的 CLAUDE.md 模板 |
 | LAUNCH-PRODUCT-CENTER.md | 🧭 | 产品中心启动文档 |
-| HL-FIRST-CAPABILITY-PACKS-UPSTREAM-v0.6.md | 🔒 Founder Signed 2026-04-28 | 首批 4 个能力包上游任务书与 PM 分工（朱阳：供给侧；邹骢：客户与预约履约）。PM 可接入 Cap-Spec，工程不可直接开工。 |
-| PM-CODEX-START-GUIDE-FIRST-CAPABILITY-PACKS-v0.1.md | 🧭 GUIDE 2026-04-28 | PM 首次打开 Codex 启动首批能力包 Cap-Spec 的操作引导，含朱阳 / 邹骢启动 prompt、工作流和禁区。 |
 
 ## 7 · 回复与咨询（Reply / Inquiry）
 

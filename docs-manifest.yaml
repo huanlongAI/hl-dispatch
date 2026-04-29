@@ -1,13 +1,13 @@
 # 唤龙平台 · 团队协作指南站点 — 文档清单
 # 用途：统一控制每页的源文档、版本、状态、最后校验日期
 # CI 检查脚本会读取此文件做版本漂移检测
-# 更新时间：2026-04-25（S24：流水线指南双层主轨口径发布 · GitHub 产品治理 + Codeup 开发执行）
+# 更新时间：2026-04-29（S25：补入新美业 AI 老板总助 P0 进展页，并把首页 / 产品 / 前端 / 工程入口对齐到 2026-04-28 真源）
 
 site:
   name: 唤龙平台团队协作指南
   layer: guide          # guide | normative — 本站只是 guide layer
   deploy: internal      # internal | public
-  last_verified: "2026-04-25"   # S24：流水线指南修订为 GitHub 产品治理主轨 + Codeup 开发执行主入口 · 线上发布校验
+  last_verified: "2026-04-29"   # S25：本地补入新美业 AI 老板总助 P0 进展线；站点内容与 hl-dispatch 2026-04-28 新文档族完成人工对齐，尚未更新 deploy 记录
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-25"
@@ -33,7 +33,7 @@ pages:
       - doc: UI-DELIVERY-SPEC
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-25"   # S23：全站术语漂移收口，首页统一 21 人编制、HPRD 理解确认件、后端 6 + 前端 5 口径
+    last_verified: "2026-04-29"   # S25：首页新增新美业 AI 老板总助 P0 入口卡与扩展阅读入口
 
   - page: pages/architecture.html
     title: 系统架构图（v2.1 叙事图谱）
@@ -45,9 +45,12 @@ pages:
         version: "2.1"
         status: DRAFT
       - doc: TECH-STACK-SPEC
-        version: "3.1"
+        version: "3.3"
         status: LOCKED
       - doc: DD-FE-CLIENT
+        version: "1.1"
+        status: LOCKED
+      - doc: DD-FE-MINIPROGRAM
         version: "1.0"
         status: LOCKED
       - doc: DD-TEST
@@ -72,7 +75,7 @@ pages:
       - id: s6
         title: 文档 & Phase 0 禁区
         spec_status: DRAFT
-    last_verified: "2026-04-25"   # S23：组织图统一 21 人编制、工程 6+5、HPRD 理解确认件，补 DD-FE-CLIENT 真源
+    last_verified: "2026-04-29"   # S25：补 C-L2 双 runtime、TECH v3.3、DD-FE-CLIENT v1.1 与 DD-FE-MINIPROGRAM v1 投影
 
   - page: pages/global.html
     title: 全局团队分工与工作流
@@ -119,7 +122,7 @@ pages:
       - doc: TEAM-COLLABORATION-SPEC
         version: "2.1"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：PM 验收终点改为 GitHub PR Merge button 口径
+    last_verified: "2026-04-29"   # S25：新增新美业 AI 老板总助 P0 样板段，补 PM 边界冻结实例
 
   - page: pages/frontend-design.html
     title: 前端与设计团队指南
@@ -134,9 +137,12 @@ pages:
         version: "1.0"
         status: DRAFT
       - doc: DD-FE-CLIENT
+        version: "1.1"
+        status: LOCKED
+      - doc: DD-FE-MINIPROGRAM
         version: "1.0"
         status: LOCKED
-    last_verified: "2026-04-25"   # S23：C-L2 改为 Flutter 3.41 / Dart 3.x，Phase 1 iOS+Android，Desktop/Web 择期
+    last_verified: "2026-04-29"   # S25：新增 P0 UI 样板段，并补 C-L2 双 runtime / DS 多 adapter 口径
 
   - page: pages/engineering.html
     title: 工程师团队指南
@@ -148,9 +154,63 @@ pages:
         version: "1.0"
         status: DRAFT
       - doc: DD-FE-CLIENT
+        version: "1.1"
+        status: LOCKED
+      - doc: DD-FE-MINIPROGRAM
         version: "1.0"
         status: LOCKED
-    last_verified: "2026-04-25"   # S23：工程师页 C-L2 Flutter 3.41 / Dart 3.x 口径对齐
+    last_verified: "2026-04-29"   # S25：新增 P0 工程边界样板段，并补 C-L2 双 runtime / DS 多 adapter 口径
+
+  - page: pages/beauty-ai-p0.html
+    title: 新美业 AI 老板总助 P0 最新进展
+    source_docs:
+      - doc: NEW-BEAUTY-AI-P0-PRODUCT-SPEC
+        version: "0.1"
+        status: DRAFT
+      - doc: NEW-BEAUTY-AI-P0-UI-DESIGN-SPEC
+        version: "0.1"
+        status: DRAFT
+      - doc: NEW-BEAUTY-AI-P0-SYSTEM-ARCH
+        version: "0.1"
+        status: DRAFT
+      - doc: NEW-BEAUTY-AI-P0-MODEL-PROMPT-STRATEGY
+        version: "0.1"
+        status: DRAFT
+      - doc: NEW-BEAUTY-AI-P0-DEVELOPMENT-PLAN
+        version: "0.1"
+        status: DRAFT
+      - doc: NEW-BEAUTY-AI-P0-ACCEPTANCE-OBSERVATION
+        version: "0.1"
+        status: DRAFT
+      - doc: NEW-BEAUTY-AI-P0-EVAL-SET
+        version: "0.1"
+        status: DRAFT
+      - doc: DD-FE-CLIENT
+        version: "1.1"
+        status: LOCKED
+      - doc: DD-FE-MINIPROGRAM
+        version: "1.0"
+        status: LOCKED
+    sections:
+      - id: delta
+        title: 2026-04-28 新增了什么
+        spec_status: DRAFT
+      - id: boundary
+        title: P0 产品边界
+        spec_status: DRAFT
+      - id: ui
+        title: UI 与交互要点
+        spec_status: DRAFT
+      - id: arch
+        title: 系统与模型策略
+        spec_status: DRAFT
+      - id: plan
+        title: 开发计划与验收观察
+        spec_status: DRAFT
+      - id: next
+        title: 这对站点意味着什么
+        spec_status: DRAFT
+    last_verified: "2026-04-29"   # S25：根据 hl-dispatch 2026-04-28 新文档族新建的进展导览页
 
   - page: pages/qa.html
     title: 测试团队指南
@@ -288,9 +348,12 @@ pages:
     title: 技术栈选型详解
     source_docs:
       - doc: TECH-STACK-SPEC
-        version: "3.1"
+        version: "3.3"
         status: LOCKED
       - doc: DD-FE-CLIENT
+        version: "1.1"
+        status: LOCKED
+      - doc: DD-FE-MINIPROGRAM
         version: "1.0"
         status: LOCKED
       - doc: SAAC-HL-001
@@ -299,7 +362,7 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-25"   # S23：交叉验证 TECH v3.1 / DD-FE-CLIENT v1 / TEAM v2.1；修正 C-L2 Flutter 3.41、21 人编制、HPRD 权责边界
+    last_verified: "2026-04-29"   # S25：交叉验证 TECH v3.3 / DD-FE-CLIENT v1.1 / DD-FE-MINIPROGRAM v1；修正 C-L2 双 runtime 与 hl-scene-design-system 多 adapter 口径
 
   - page: pages/glossary.html
     title: 术语对照表
@@ -311,9 +374,12 @@ pages:
         version: "1.1"
         status: LOCKED
       - doc: DD-FE-CLIENT
+        version: "1.1"
+        status: LOCKED
+      - doc: DD-FE-MINIPROGRAM
         version: "1.0"
         status: LOCKED
-    last_verified: "2026-04-25"   # S23：术语表交叉验证 SAAC 展开、HPRD、C-L2 场景前端、GHKit / hl-scene-design-system 边界
+    last_verified: "2026-04-29"   # S25：术语表补 DD-FE-CLIENT v1.1 / DD-FE-MINIPROGRAM v1 与 hl-scene-design-system 多 adapter 口径
 
   - page: pages/workflow-states.html
     title: 工作流状态机详解（12 状态全景）

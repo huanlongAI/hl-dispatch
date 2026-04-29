@@ -581,13 +581,13 @@
       <div class="org-cell">
         <div class="role">DESIGN</div>
         <div class="name">Designer 团队<span class="pill" data-r="design">设计实现</span></div>
-        <div class="who">DTCG token、Widgetbook、视觉规范、设计评审</div>
+        <div class="who">token-core、adapter parity、视觉规范、设计评审</div>
         <div class="count">人数 · 2</div>
       </div>
       <div class="org-cell">
         <div class="role">ENGINEERING</div>
         <div class="name">Engineer 团队<span class="pill" data-r="eng">技术实现权</span></div>
-        <div class="who">Backend Kotlin × 6 + Frontend Flutter × 5</div>
+        <div class="who">Backend Kotlin × 6 + Frontend Flutter/UniApp × 5</div>
         <div class="count">人数 · 11</div>
       </div>
       <div class="org-cell">
@@ -710,13 +710,13 @@
       </div>
       <div class="repo app">
         <div class="rh"><div class="rname">hl-scene-app</div><div class="rrole">C-L2</div></div>
-        <div class="rdesc">客户场景 App，承接 C-L2 App 概念；Flutter 3.41 技术栈锁定</div>
+        <div class="rdesc">场景前端原生 App runtime；Flutter 3.41 + Dart 3.x 技术栈锁定</div>
         <div class="rmeta">已建 · 2026-04-24<br>胡杰威 write</div>
       </div>
       <div class="repo design">
         <div class="rh"><div class="rname">hl-scene-design-system</div><div class="rrole">C-L2 DS</div></div>
-        <div class="rdesc">C-L2 场景设计系统，DTCG token + Flutter 组件库 + Widgetbook</div>
-        <div class="rmeta">已建 · 2026-04-24<br>仅服务 hl-scene-app</div>
+        <div class="rdesc">S 域场景设计系统：token-core + Flutter adapter + UniApp adapter</div>
+        <div class="rmeta">已建 · 2026-04-24<br>服务 App + 小程序 runtime</div>
       </div>
       <div class="repo dispatch">
         <div class="rh"><div class="rname">hl-dispatch</div><div class="rrole">Pages</div></div>
@@ -797,11 +797,11 @@
       </div>
       <div class="wall">硬边界 · NO SHARING</div>
       <div class="side l2">
-        <h4>C-L2 · 客户端 App</h4>
-        <div class="stack">FLUTTER 3 · DART · DTCG · RIVERPOD · GO_ROUTER · WIDGETBOOK · PATROL</div>
+        <h4>C-L2 · 场景前端</h4>
+        <div class="stack">APP: FLUTTER 3.41 · DART 3.x · FLUTTER_BLOC · GO_ROUTER / MINIAPP: UNIAPP · VUE 3 · TYPESCRIPT</div>
         <ul>
-          <li>受众：终端客户（6 平台分发）</li>
-          <li>仅消费 hl-scene-design-system 的 DTCG token + 组件</li>
+          <li>受众：B/C 双边 + 门店员工的非治理后台业务前端</li>
+          <li>原生 App 消费 Flutter adapter，小程序消费 UniApp adapter，共享 token-core</li>
           <li>不引用 GHKit / SwiftUI 组件</li>
           <li>独立的 release-train 与版本号</li>
         </ul>
@@ -890,14 +890,15 @@
         <div class="row"><div class="k">分发</div><div class="v">TestFlight 内部组（不上架）</div></div>
       </div>
       <div class="fe-card l2">
-        <h4>C-L2 · 客户端 App 栈</h4>
-        <div class="audience">End-User · 6 平台分发</div>
-        <div class="row"><div class="k">语言</div><div class="v">Dart 3.6</div></div>
-        <div class="row"><div class="k">UI 框架</div><div class="v">Flutter 3.27</div></div>
-        <div class="row"><div class="k">设计系统</div><div class="v">DTCG token (W3C) + Widgetbook</div></div>
-        <div class="row"><div class="k">状态管理</div><div class="v"><code>Riverpod 2.x</code> <span style="color:var(--text-muted);font-size:0.7rem">(J-03 PENDING)</span></div></div>
-        <div class="row"><div class="k">路由</div><div class="v"><code>go_router 14.x</code></div></div>
-        <div class="row"><div class="k">E2E 测试</div><div class="v"><code>patrol</code> · 真机回归</div></div>
+        <h4>C-L2 · 场景前端栈</h4>
+        <div class="audience">Scene Frontend · App + MiniProgram runtime</div>
+        <div class="row"><div class="k">App 语言</div><div class="v">Dart 3.x（随 Flutter 3.41）</div></div>
+        <div class="row"><div class="k">App 框架</div><div class="v">Flutter 3.41 稳定通道</div></div>
+        <div class="row"><div class="k">小程序 runtime</div><div class="v">UniApp + Vue 3 + TypeScript</div></div>
+        <div class="row"><div class="k">设计系统</div><div class="v">token-core + Flutter adapter + UniApp adapter</div></div>
+        <div class="row"><div class="k">App 状态管理</div><div class="v"><code>flutter_bloc</code></div></div>
+        <div class="row"><div class="k">App 路由</div><div class="v"><code>go_router</code></div></div>
+        <div class="row"><div class="k">测试</div><div class="v"><code>integration_test</code> · <code>miniprogram-ci</code>；patrol 仍属 J-03 候选</div></div>
       </div>
     </div>
   </section>
@@ -949,8 +950,8 @@
         <div class="gate-num"><div class="lvl">L3</div><div class="tm">5–10min · BLOCKING</div></div>
         <div class="gate-body">
           <h4>行为层 — Behavior & QA Verdict</h4>
-          <div class="desc">基于 DD-TEST v1.1 设计的端到端行为用例，由 QA 团队（独立质量权）签发 <a href="glossary.html#term-blocking-advisory" class="term-link"><code>qa-verdict</code></a>。包含 patrol E2E、API 黑盒回归、性能基线（p95/p99 latency）。</div>
-          <div class="tools">tools: <b>patrol · k6 · Cypress · QA-designed scenarios</b></div>
+          <div class="desc">基于 DD-TEST 设计的端到端行为用例，由 QA 团队（独立质量权）签发 <a href="glossary.html#term-blocking-advisory" class="term-link"><code>qa-verdict</code></a>。当前锁定绿线包含 Flutter <code>integration_test</code>、小程序 build smoke / <code>miniprogram-ci</code>、API 黑盒回归、性能基线（p95/p99 latency）。</div>
+          <div class="tools">tools: <b>integration_test · miniprogram-ci · k6 · QA-designed scenarios</b></div>
         </div>
         <div class="gate-side">
           <div class="label">规则源（hl-factory）</div>
@@ -1018,7 +1019,7 @@
         <div class="sn">STEP 02</div>
         <div class="st">Design + HPRD</div>
         <div class="so">Owner: <b>Engineer + Designer；PM 审批</b></div>
-        <div class="sd">Engineer 产出 HPRD（理解确认件）并交 PM 审业务理解；Designer 产出 DTCG token 与组件规格，pm-hprd-pass 通过后冻结。</div>
+        <div class="sd">Engineer 产出 HPRD（理解确认件）并交 PM 审业务理解；Designer 产出 token-core 与跨 runtime 组件规格，pm-hprd-pass 通过后冻结。</div>
       </div>
       <div class="step s3">
         <div class="sn">STEP 03</div>
@@ -1169,9 +1170,9 @@
         <div class="unlock">解锁条件：<b>RULING J-01 签发</b></div>
       </div>
       <div class="fb-card warn">
-        <div class="head"><div class="name">⚠ Riverpod (J-03)</div><div class="icon">⏳</div></div>
-        <div class="why">PENDING（J-03）— 客户端状态管理拟定 Riverpod，但等待 J-03 Ruling 最终签发，期间默认使用 Provider 简化实现。</div>
-        <div class="unlock">解锁条件：<b>RULING J-03 签发</b></div>
+        <div class="head"><div class="name">⚠ Widgetbook / patrol / Riverpod (J-03)</div><div class="icon">⏳</div></div>
+        <div class="why">PENDING（J-03）— Widgetbook / patrol 未进入 R-FE-CLIENT-001 13 字段；Riverpod 已降为 flutter_bloc 的 Phase 1 spike 备选，当前 App 状态管理锁定为 flutter_bloc。</div>
+        <div class="unlock">解锁条件：<b>DD-FE-CLIENT v1.x amend 或 RULING J-03 签发</b></div>
       </div>
     </div>
   </section>

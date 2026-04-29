@@ -186,12 +186,12 @@
 
   <div class="term-card" id="term-hl-scene-app">
     <div class="term-head"><span class="term-zh">hl-scene-app</span><span class="term-en">Scene App</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">C-L2 / 场景前端应用：Flutter 3.41 + Dart 3.x。Phase 1 首要覆盖 iOS + Android；Desktop / Web 属 Q6.1 方案 B 加分场景，择期拓展。依赖 hl-scene-design-system，不依赖 C-L1 光合 GHKit。</div>
+    <div class="term-body">C-L2 / 场景前端原生 App runtime：Flutter 3.41 + Dart 3.x。Phase 1 首要覆盖 iOS + Android；Desktop / Web 属 Q6.1 方案 B 加分场景，择期拓展。依赖 hl-scene-design-system 的 Flutter adapter，不依赖 C-L1 光合 GHKit。</div>
   </div>
 
   <div class="term-card" id="term-hl-scene-design-system">
     <div class="term-head"><span class="term-zh">hl-scene-design-system</span><span class="term-en">C-L2 Design System</span><span class="term-tag std">标准</span></div>
-    <div class="term-body">C-L2 / S 域场景设计系统：Dart package · Flutter widgets · DTCG Token 真源，服务 <code>hl-scene-app</code>。它不承载 C-L1 光合 GHKit，不与 <code>hl-console-native</code> 共享 UI / token / 构建产物。</div>
+    <div class="term-body">C-L2 / S 域场景设计系统：<code>packages/token-core/</code> 是 token SSOT，<code>packages/flutter/rdesign_component/</code> 服务原生 App runtime，<code>packages/uniapp/rdesign_uniapp/</code> 服务微信小程序 runtime。它不承载 C-L1 光合 GHKit，不与 <code>hl-console-native</code> 共享 UI / token / 构建产物。</div>
   </div>
 
   <div class="term-card" id="term-guanghe-ghkit">

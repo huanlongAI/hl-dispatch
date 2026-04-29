@@ -106,11 +106,11 @@ body { min-width: 1200px; }
 </div>
 <h2 id="_1">一、你们是谁</h2>
 <h3 id="ui-solution-owner">前端工程师 — UI Solution Owner</h3>
-<p>5 人团队，全部转 Flutter。使用两个仓库：<a href="glossary.html#term-hl-scene-design-system" class="term-link"><code>hl-scene-design-system</code></a>（C-L2 设计系统，DTCG Token 真源）和 <a href="glossary.html#term-hl-scene-app" class="term-link"><code>hl-scene-app</code></a>（租户/消费者端多端应用）。</p>
+<p>5 人团队，主线承接场景前端原生 App runtime（Flutter 3.41 + Dart 3.x），同时要按同一套 <a href="glossary.html#term-hl-scene-design-system" class="term-link"><code>hl-scene-design-system</code></a> 维护微信小程序 runtime 的 UniApp adapter。当前关键仓/包：<a href="glossary.html#term-hl-scene-app" class="term-link"><code>hl-scene-app</code></a>（原生 App 应用）与 <code>hl-scene-design-system</code>（token-core + Flutter adapter + UniApp adapter）。</p>
 <div class="callout info" style="margin:12px 0;">
 <strong>前端分治（SAAC §4.1）</strong>：唤龙前端是双栈并行，不是单一 Flutter 技术栈。<br>
 — <strong>C-L1 平台控制台</strong> = <a href="glossary.html#term-hl-console-native" class="term-link"><code>hl-console-native</code></a>，SwiftUI + <strong>光合设计系统（GHKit）</strong>，原生 macOS / iOS 26（R-016 LOCKED），由创始人负责，与本页前端团队无关。<br>
-— <strong>C-L2 场景前端</strong> = <a href="glossary.html#term-hl-scene-app" class="term-link"><code>hl-scene-app</code></a> + <a href="glossary.html#term-hl-scene-design-system" class="term-link"><code>hl-scene-design-system</code></a>，Flutter 3.41 + Dart 3.x + DTCG；Phase 1 首要覆盖 iOS + Android，Desktop / Web 择期拓展，即本页所述前端团队的工作范围。<br>
+— <strong>C-L2 场景前端</strong> = 原生 App runtime（<a href="glossary.html#term-hl-scene-app" class="term-link"><code>hl-scene-app</code></a>，Flutter 3.41 + Dart 3.x）+ 微信小程序 runtime（UniApp + Vue 3 + TypeScript）+ <a href="glossary.html#term-hl-scene-design-system" class="term-link"><code>hl-scene-design-system</code></a>（token-core + Flutter adapter + UniApp adapter）。Phase 1 原生 App 首要覆盖 iOS + Android，Desktop / Web 择期拓展；小程序 runtime 独立治理。<br>
 本页以下章节仅针对 C-L2。
 </div>
 <p><strong>胡杰威</strong>担任前端 Lead——不是因为 Flutter 经验最深，而是因为他在 AI 驱动上积极拥抱和实验，最适合带领团队完成转型。</p>
@@ -355,6 +355,24 @@ body { min-width: 1200px; }
 </table></div>
 <p><strong>版本钉死</strong>：冻结后前端按这个版本实现。要改就要解冻 → 修改 → 重新冻结。</p>
 <hr />
+<h2 id="beauty-ai-p0-ui">四点五、最新样板：P0 UI 该具体到什么程度</h2>
+<div class="callout info">
+<strong>站点新增样板页</strong>：<a href="beauty-ai-p0.html">新美业 AI 老板总助 P0 最新进展</a><br>
+这不是另起一套前端规则，而是给当前规则补一个真实样板：你要写到什么页面、什么状态、什么边界提示，那里已经有了更具体的例子。
+</div>
+<div class="table-wrapper"><table>
+<thead>
+<tr><th>UI 输入</th><th>这次样板要求</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>页面清单</strong></td><td>启动/登录/首次引导/首页/对话页/模板中心/草稿详情/收藏历史/用量订阅/设置/合规提示，一个都不能只靠口头补充。</td></tr>
+<tr><td><strong>状态清单</strong></td><td>录音中、转写中、生成中、生成失败、用量不足、网络异常、合规拒答、未登录、账号异常，都要提前画出来。</td></tr>
+<tr><td><strong>设计系统约束</strong></td><td>P0 原生 App 继续只消费 <code>hl-scene-design-system</code> Flutter adapter；微信小程序 runtime 只消费 UniApp adapter；两者都不得绕过 <code>token-core</code> 自造颜色或复制 token 真源。</td></tr>
+<tr><td><strong>视觉边界</strong></td><td>页面文案和视觉都不能暗示“已接入真实门店数据 / 已接硬件 / 已自动执行动作”。</td></tr>
+</tbody>
+</table></div>
+<p><strong>这页最该吸收的一点</strong>：Design Packet 不只是“画默认态”，而是把失败态、拒答态、语音态、用量态全部冻结进去。否则前端和 QA 后面一定靠猜。</p>
+<hr />
 <h2 id="ui">五、UI 变更风险分层</h2>
 <p>不同变更走不同门禁，小修不被重流程拖死。</p>
 <div class="table-wrapper"><table>
@@ -491,7 +509,7 @@ body { min-width: 1200px; }
 <h2 id="_3">七、仓库路径与权限</h2>
 <p>前端团队维护两个仓库，各有独立的 CODEOWNERS 规则：</p>
 <h3 id="hl-scene-design-system">hl-scene-design-system（设计系统仓库）</h3>
-<p>Token + 基础组件库 + 组件隔离工作台</p>
+<p><code>token-core</code> + Flutter adapter + UniApp adapter + 组件 parity 文档</p>
 <div class="table-wrapper"><table>
 <thead>
 <tr>
@@ -507,9 +525,9 @@ body { min-width: 1200px; }
 <td>前端负责人审</td>
 </tr>
 <tr>
-<td><code>/tokens/**</code></td>
+<td><code>/packages/token-core/**</code></td>
 <td>@hl-design-lead + @hl-frontend-lead</td>
-<td>Token：设计 + 前端负责人双审</td>
+<td>Token 真源：设计 + 前端负责人双审；runtime adapter 只消费，不反写</td>
 </tr>
 <tr>
 <td><code>/.github/**</code></td>
@@ -561,15 +579,15 @@ body { min-width: 1200px; }
 <p>4 名 web 前端全部转 Flutter。在 AI-first 模式下：</p>
 <ul>
 <li>AI 生成 Flutter/Dart 代码，你负责定义组件接口、状态结构、路由规划</li>
-<li>你需要读懂 Dart 语法、理解 Flutter Widget 树、Provider/Riverpod 状态管理</li>
+<li>你需要读懂 Dart 语法、理解 Flutter Widget 树、flutter_bloc 状态管理；小程序 runtime 另走 UniApp + Vue 3 + TypeScript</li>
 <li>Web 前端对组件化、状态管理、响应式布局的理解可以直接复用</li>
 <li>通过实际能力包开发在 AI 编码过程中自然习得 Flutter</li>
 </ul>
 <p><strong>Figma 约束</strong>：Figma（当前工具选型）Code Connect 当前不支持 Flutter。所以：</p>
 <ul>
 <li>Figma MCP 作为上下文输入（AI 读取设计信息），不作为权威绑定</li>
-<li>Token 通过 DTCG 标准格式定义，使用 token 编译工具生成 Flutter ThemeData</li>
-<li>组件通过组件隔离工作台（如 Widgetbook（当前工具选型））进行隔离展示和测试</li>
+<li>Token 通过 DTCG 格式定义，使用 token 编译工具分别生成 Flutter ThemeData 与 UniApp adapter 可消费的 token 产物</li>
+<li>组件通过组件隔离工作台（如 Widgetbook，当前仍属 J-03 候选）和 parity matrix 进行隔离展示、跨 runtime 对齐与测试</li>
 </ul>
 <hr />
 <h2 id="_4">九、四种最大失败模式（请警惕）</h2>
@@ -593,16 +611,17 @@ A：不需要。UI-R0 只需要 design-review-note（Advisory），设计 review
 A：类似 Storybook 的 Flutter 版工具（如 Widgetbook）。你在里面展示每个公共组件的所有状态（default/loading/error/empty/disabled），用于 QA 验收和设计师确认。</p>
 
 <h2 id="tech-stack">🛠 技术选型与学习入口</h2>
-<p>本页所述前端（C-L2 场景前端）统一 <strong>Flutter 3.41 + Dart 3.x</strong> 技术栈；Phase 1 首要覆盖 iOS + Android，Desktop / Web 择期拓展。设计师以 <strong>Figma + DTCG Design Tokens</strong> 为交付物。AI 辅助以 Claude 将 Figma 转 Widget 代码。C-L1 平台控制台（hl-console-native）采用 <strong>SwiftUI + 光合设计系统（GHKit）</strong>，不在本表范围。</p>
+<p>本页所述前端（C-L2 场景前端）按 runtime 分治：原生 App runtime 统一 <strong>Flutter 3.41 + Dart 3.x</strong>；微信小程序 runtime 锁为 <strong>UniApp + Vue 3 + TypeScript</strong>。设计师以 <strong>Figma + DTCG Design Tokens</strong> 为交付物，token-core 是跨 runtime SSOT。C-L1 平台控制台（hl-console-native）采用 <strong>SwiftUI + 光合设计系统（GHKit）</strong>，不在本表范围。</p>
 <div class="table-wrapper">
 <table>
 <thead><tr><th style="width:24%">工具</th><th style="width:14%">角色</th><th style="width:32%">选型理由</th><th>学习入口</th></tr></thead>
 <tbody>
 <tr><td><strong>Flutter 3.41</strong></td><td>前端</td><td>Phase 1 一套代码覆盖 iOS + Android；Widget 声明式编程与 AI 生成高度契合</td><td><a href="https://docs.flutter.dev/get-started/install" target="_blank" rel="noopener">Flutter 官方入门</a> · <a href="https://flutter.cn/" target="_blank" rel="noopener">中文站</a></td></tr>
 <tr><td><strong>Dart 3.x</strong></td><td>前端</td><td>随 Flutter 3.41 自带；空安全 + 强类型对 AI 生成稳定性友好</td><td><a href="https://dart.cn/language" target="_blank" rel="noopener">Dart 语言导览</a></td></tr>
+<tr><td><strong>UniApp + Vue 3 + TypeScript</strong></td><td>前端</td><td>微信小程序 runtime 锁定路线；共享 token-core，不改变 Flutter 原生 App runtime 的 LOCKED 状态</td><td><a href="https://uniapp.dcloud.net.cn/" target="_blank" rel="noopener">UniApp 文档</a> · <a href="https://cn.vuejs.org/" target="_blank" rel="noopener">Vue 3 文档</a></td></tr>
 <tr><td><strong>Figma</strong></td><td>设计</td><td>设计稿 SSOT + Design Token 导出；跨人协作成熟</td><td><a href="https://help.figma.com/hc/zh-cn" target="_blank" rel="noopener">Figma 帮助中心</a> · <a href="https://www.figma.com/community" target="_blank" rel="noopener">Community 模板</a></td></tr>
 <tr><td><strong>Design Tokens (DTCG)</strong></td><td>设计/前端</td><td>颜色/间距/字号以 JSON 结构化存储；规范由 Design Tokens Community Group 维护，从 Figma 自动同步到 hl-scene-design-system</td><td><a href="https://tr.designtokens.org/format/" target="_blank" rel="noopener">DTCG Design Tokens 规范</a></td></tr>
-<tr><td><strong>hl-scene-design-system</strong></td><td>前端/设计</td><td>组件库 + Token 的唯一真相源；所有 UI 组件由此引用</td><td><a href="repo-directory.html">本站：仓库目录</a></td></tr>
+<tr><td><strong>hl-scene-design-system</strong></td><td>前端/设计</td><td>token-core + Flutter adapter + UniApp adapter；所有场景前端 UI 组件由此引用</td><td><a href="repo-directory.html">本站：仓库目录</a></td></tr>
 <tr><td><strong>Widgetbook</strong></td><td>前端/QA</td><td>Flutter 版 Storybook——展示组件所有状态，供设计与 QA 验收</td><td><a href="https://docs.widgetbook.io/" target="_blank" rel="noopener">Widgetbook 官方文档</a></td></tr>
 <tr><td><strong>Material 3 / Cupertino</strong></td><td>设计</td><td>Flutter 内置组件基线；不重复造轮子，只做主题定制</td><td><a href="https://m3.material.io/" target="_blank" rel="noopener">Material 3 指南</a></td></tr>
 <tr><td><strong>Claude Code / Cursor</strong></td><td>前端/设计</td><td>从 Figma 截图 → Flutter Widget 代码；Design Token 差异自动检测</td><td><a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code 文档</a></td></tr>
@@ -637,6 +656,7 @@ A：类似 Storybook 的 Flutter 版工具（如 Widgetbook）。你在里面展
     <a href="#foundation-capability" class="h2">三、Foundation 与 Capability 的依赖握手</a>
     <a href="#design-packet" class="h2">四、Design Packet 详解（设计师必读）</a>
     <a href="#12" class="h3">12 个必填字段</a>
+    <a href="#beauty-ai-p0-ui" class="h2">四点五、最新样板：P0 UI 该具体到什么程度</a>
     <a href="#ui" class="h2">五、UI 变更风险分层</a>
     <a href="#ui_1" class="h2">六、前端的 UI 门禁体系</a>
     <a href="#_3" class="h2">七、仓库路径与权限</a>

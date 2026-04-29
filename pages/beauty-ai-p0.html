@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新美业 AI 老板总助 P0 · 最新进展 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+body { min-width: 1200px; }
+.toc-toggle { position:fixed; right:20px; bottom:20px; width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; border:none; cursor:pointer; font-size:1.3em; z-index:200; box-shadow:0 4px 16px rgba(108,92,231,0.4); display:flex; align-items:center; justify-content:center; transition:transform 0.3s; }
+.toc-toggle:hover { transform:scale(1.08); }
+.toc-sidebar { position:fixed; right:0; top:0; bottom:0; width:320px; max-width:85vw; background:var(--bg-card); border-left:1px solid var(--border); z-index:199; transform:translateX(100%); transition:transform 0.3s; overflow-y:auto; padding:60px 20px 40px; }
+.toc-sidebar.open { transform:translateX(0); }
+.toc-sidebar h3 { font-size:0.95em; color:var(--primary-light); margin-bottom:16px; }
+.toc-sidebar .toc-close { position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:1.4em; cursor:pointer; }
+.toc-sidebar a { display:block; padding:5px 0; color:var(--text-muted); text-decoration:none; font-size:0.88rem; border-left:2px solid transparent; transition:all 0.2s; cursor:pointer; }
+.toc-sidebar a:hover { color:var(--text); border-left-color:var(--primary); padding-left:8px; }
+.toc-sidebar a.h2 { font-weight:600; color:var(--text); margin-top:8px; }
+.toc-sidebar a.h3 { padding-left:16px; font-size:0.88rem; }
+.toc-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:198; display:none; }
+.toc-overlay.open { display:block; }
+.snapshot-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:22px 0; }
+.snapshot-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:12px;
+  padding:16px 18px;
+}
+.snapshot-card .label { color:var(--primary-light); font-size:0.75em; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px; }
+.snapshot-card p { margin:0; color:var(--text-muted); font-size:0.84em; line-height:1.7; }
+.check-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:18px 0 24px; }
+.check-card {
+  background:rgba(255,255,255,0.025); border:1px solid var(--border); border-radius:12px;
+  padding:16px 18px;
+}
+.check-card h3 { margin:0 0 10px; font-size:1em; color:var(--text); }
+.check-card ul { margin:0; padding-left:18px; color:var(--text-muted); line-height:1.75; font-size:0.84em; }
+.flow-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0 24px; }
+.flow-card {
+  background:linear-gradient(180deg,rgba(108,92,231,0.06),rgba(255,255,255,0.02));
+  border:1px solid var(--border); border-radius:12px; padding:16px;
+}
+.flow-card .step { width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center; background:rgba(108,92,231,0.22); color:#fff; font-weight:900; margin-bottom:10px; }
+.flow-card h3 { margin:0 0 8px; font-size:0.95em; color:var(--text); }
+.flow-card p { margin:0; color:var(--text-muted); font-size:0.82em; line-height:1.65; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="architecture.html">系统架构图</a>
+    <a href="github-yunxiao-pipeline.html">流水线指南</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="team-leads.html">团队代表</a>
+    <a href="tech-selection.html">技术选型</a>
+    <a href="glossary.html">术语表</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+  本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
+
+<div style="max-width:980px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本页为<strong>最新进展导览</strong>（Guide Layer），用于把 <code>hl-dispatch</code> 2026-04-28 新增的 P0 文档族接入站点；它不是锁定治理规则，也不等价于工程已实现。
+</div>
+
+<div class="page-header">
+  <h1>💄 <span>新美业 AI 老板总助 P0</span></h1>
+  <div class="meta">Latest Progress Snapshot · 2026-04-28 真源对齐</div>
+  <div class="badge">Guide Layer · 中国大陆 · Mode B · Flutter App</div>
+</div>
+
+<div class="content">
+<blockquote>
+<p><strong>本页目的</strong>：把 <code>hl-dispatch</code> 最新 P0 文档集转成站点内可快速浏览的“进展入口”，方便 PM、前端、工程、QA 在同一页对齐范围。<br>
+<strong>真源文档</strong>：<code>NEW-BEAUTY-AI-P0-PRODUCT-SPEC</code> / <code>UI-DESIGN-SPEC</code> / <code>SYSTEM-ARCH</code> / <code>MODEL-PROMPT-STRATEGY</code> / <code>DEVELOPMENT-PLAN</code> / <code>ACCEPTANCE-OBSERVATION</code> / <code>EVAL-SET</code>（均为 v0.1 · DRAFT，日期 2026-04-28）。</p>
+</blockquote>
+
+<div class="snapshot-grid">
+  <div class="snapshot-card">
+    <div class="label">当前阶段</div>
+    <p>站点此前停在 2026-04-25；本页补入 2026-04-28 新增的 P0 规格族，先解决“站点看不到最新样板”的问题。</p>
+  </div>
+  <div class="snapshot-card">
+    <div class="label">承载边界</div>
+    <p>产品与规格真源仍在 <code>hl-dispatch</code>；后续工程承载仓是 <code>hl-scene-app</code>，但这一轮不写入工程仓。</p>
+  </div>
+  <div class="snapshot-card">
+    <div class="label">治理语义</div>
+    <p>这里展示的是已成文的最新产品样板，不是已 LOCKED 的制度真源；涉及治理升级仍要回到 <code>hl-contracts</code> / RULINGS / DD。</p>
+  </div>
+</div>
+
+<hr />
+<h2 id="delta">一、2026-04-28 新增了什么</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr><th>文档</th><th>作用</th><th>当前状态</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>PRODUCT-SPEC</strong></td><td>定义 ICP、输入方式、P0 非目标、中国区发布边界、P1 隔离</td><td>DRAFT v0.1</td></tr>
+<tr><td><strong>UI-DESIGN-SPEC</strong></td><td>页面清单、状态清单、语音转写与合规拒答的 UI 要求</td><td>DRAFT v0.1</td></tr>
+<tr><td><strong>SYSTEM-ARCH</strong></td><td>App Shell → Gateway → Policy → Model Router → Audit 的总链路</td><td>DRAFT v0.1</td></tr>
+<tr><td><strong>MODEL-PROMPT-STRATEGY</strong></td><td>中国区生产白名单、Prompt Registry、route classifier、安全改写</td><td>DRAFT v0.1</td></tr>
+<tr><td><strong>DEVELOPMENT-PLAN</strong></td><td>P0-A 到 P0-H 的阶段划分、依赖与验收门</td><td>DRAFT v0.1</td></tr>
+<tr><td><strong>ACCEPTANCE-OBSERVATION</strong></td><td>产品 / 技术 / 合规 / UI 验收，以及 24h / 72h / 7d 观察协议</td><td>DRAFT v0.1</td></tr>
+<tr><td><strong>EVAL-SET</strong></td><td>回归样例与场景评测输入</td><td>DRAFT v0.1</td></tr>
+</tbody>
+</table></div>
+
+<div class="callout info">
+<strong>站点层解读</strong><br>
+这批文档首次把“场景前端样板”从抽象治理规则，推进到一个可执行的 P0 产品组合：谁是用户、能输入什么、哪些事不能做、UI 该怎么长、模型怎么路由、验收怎么观察，全部有了成套文档。
+</div>
+
+<hr />
+<h2 id="boundary">二、P0 产品边界</h2>
+<div class="check-grid">
+  <div class="check-card">
+    <h3>这次明确支持</h3>
+    <ul>
+      <li>中国大陆市场的新美业老板，首版 ICP 是 1-3 家门店的单店/小连锁经营者。</li>
+      <li>文字输入 + App 内主动语音转写。</li>
+      <li>活动方案、私域文案、客诉回复、员工培训 SOP、复盘提纲等草稿型输出。</li>
+      <li>收藏、历史、复制、分享、用量/订阅入口等 App 壳能力。</li>
+    </ul>
+  </div>
+  <div class="check-card">
+    <h3>这次明确不做</h3>
+    <ul>
+      <li>不接真实预约、客户、排班、库存、营销、财务系统。</li>
+      <li>不接智能眼镜、录音卡、持续录音、后台录音。</li>
+      <li>不自动群发、不自动改价、不自动改库存、不自主执行。</li>
+      <li>不提供医疗诊断、治疗建议、处方、疗效承诺。</li>
+    </ul>
+  </div>
+</div>
+
+<div class="callout warn">
+<strong>P0 / P1 隔离是这批文档的核心</strong><br>
+P1 可评估多角色协作、真实门店数据接入、硬件输入、自动化执行，但这些都不能反向污染 P0 验收口径。站点在描述时必须继续保留这种“能力可想象，当前不承诺”的边界。
+</div>
+
+<hr />
+<h2 id="ui">三、UI 与交互要点</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr><th>维度</th><th>P0 要点</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>承载栈</strong></td><td>P0 原生 App 承载在 <code>hl-scene-app</code>，只消费 <code>hl-scene-design-system</code> Flutter adapter；若后续切小程序入口，则走 UniApp adapter。两条 runtime 都不得复制或绕开 <code>token-core</code>。</td></tr>
+<tr><td><strong>核心页面</strong></td><td>启动/加载、登录/授权、首次引导、首页、AI 对话页、模板中心、草稿详情、收藏/历史、用量/订阅、设置、合规提示页。</td></tr>
+<tr><td><strong>关键状态</strong></td><td>录音中、转写中、生成中、生成失败、用量不足、网络异常、合规拒答、未登录、账号异常。</td></tr>
+<tr><td><strong>交互重点</strong></td><td>语音只在用户主动触发时录入；转写文本必须可编辑后再发送；输出强调“人工复核”，不暗示系统已执行动作。</td></tr>
+<tr><td><strong>视觉边界</strong></td><td>专业、清晰、轻运营工具感；遵循 Design System token，不新增未登记品牌色，不制造“已接入真实系统/硬件”的视觉暗示。</td></tr>
+</tbody>
+</table></div>
+
+<p>如果你只看一条：<strong>No manual magic</strong>。这版 UI 不是“更炫的聊天页”，而是“低输入门槛 + 可复制草稿 + 明确边界提示”的经营助理工作台。</p>
+
+<hr />
+<h2 id="arch">四、系统与模型策略</h2>
+<div class="flow-grid">
+  <div class="flow-card">
+    <div class="step">1</div>
+    <h3>App Shell</h3>
+    <p>Flutter App 承载登录、对话、模板、草稿与本地缓存，不直接绑定门店经营系统。</p>
+  </div>
+  <div class="flow-card">
+    <div class="step">2</div>
+    <h3>Input Layer</h3>
+    <p>文字输入与主动语音转写进入同一请求流；原始音频默认不作为长期业务数据。</p>
+  </div>
+  <div class="flow-card">
+    <div class="step">3</div>
+    <h3>Policy Layer</h3>
+    <p>Prompt Registry、知识包、合规边界、澄清问题、安全改写都在服务端策略层统一编排。</p>
+  </div>
+  <div class="flow-card">
+    <div class="step">4</div>
+    <h3>Model Router</h3>
+    <p>生产只走中国区合规白名单；OpenAI / Claude / Gemini 仅用于内部 benchmark，不进公开生产链路。</p>
+  </div>
+</div>
+
+<div class="check-grid">
+  <div class="check-card">
+    <h3>Prompt Registry 最少需要的层</h3>
+    <ul>
+      <li><code>global_guardrail</code></li>
+      <li><code>role_prompt/&lt;entry&gt;</code> 四类入口</li>
+      <li><code>safety_rewrite</code></li>
+      <li><code>clarifying_question</code></li>
+      <li><code>output_formatter</code></li>
+      <li><code>route_classifier</code></li>
+    </ul>
+  </div>
+  <div class="check-card">
+    <h3>审计必须保留的字段</h3>
+    <ul>
+      <li><code>trace_id</code>、场景类型、模型版本、提示词版本、知识包版本</li>
+      <li>风险标签、token 用量、模型供应商、创建时间</li>
+      <li>审核态与生产态需走同一路径，便于抽样核验</li>
+      <li>禁止长期明文保留用户粘贴的敏感个人信息</li>
+    </ul>
+  </div>
+</div>
+
+<hr />
+<h2 id="plan">五、开发计划与验收观察</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr><th>阶段</th><th>站点层关键信息</th><th>当前含义</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>P0-A ~ P0-D</strong></td><td>冻结产品边界、UI 规格、模型策略、系统边界</td><td>这批 2026-04-28 文档的主体，已经成文但还未进入工程仓</td></tr>
+<tr><td><strong>P0-E</strong></td><td>模板与内容准备</td><td>需要把活动、私域、客诉、培训、复盘模板做成可版本化资产</td></tr>
+<tr><td><strong>P0-F</strong></td><td>工程实施准备</td><td>必须先确认目标仓、分支、写权限、CI 门禁；本站这轮不跨到工程实现</td></tr>
+<tr><td><strong>P0-G ~ P0-H</strong></td><td>灰度观察与发布决策</td><td>24h / 72h / 7d 指标已经定义，方便后续从“做出 demo”过渡到“可观察验证”</td></tr>
+</tbody>
+</table></div>
+
+<p><strong>验收最重要的四条硬边界</strong>：</p>
+<ul>
+  <li>不依赖真实门店经营系统数据。</li>
+  <li>不依赖智能眼镜、录音卡、持续录音或后台录音。</li>
+  <li>不出现自主执行能力。</li>
+  <li>中国区生产态与审核态必须使用同一白名单模型路径。</li>
+</ul>
+
+<hr />
+<h2 id="next">六、这对站点意味着什么</h2>
+<ul>
+  <li><a href="product.html">产品团队页</a> 现在可以用一个具体样板解释 Cap-Spec、边界冻结和 pm-acceptance，而不只停留在抽象流程。</li>
+  <li><a href="frontend-design.html">前端与设计页</a> 可以把语音转写、生成失败、合规拒答、用量不足这些状态说得更具体。</li>
+  <li><a href="engineering.html">工程师页</a> 可以明确“这轮先到架构与实现准备，不直接写工程仓”，避免站点把规划误读为已开工。</li>
+  <li>后续若继续推进，应优先补充该样板与 <code>hl-scene-app</code> / <code>hl-scene-design-system</code> / 合规模型清单之间的实际落地链路。</li>
+</ul>
+
+</div>
+
+<footer class="site-footer">
+  唤龙平台 · Latest Progress Guide · NEW-BEAUTY-AI-P0 docs v0.1 · 2026-04-29<br>
+  <a href="../index.html" style="color:var(--primary-light);text-decoration:none;">← 返回首页</a>
+</footer>
+
+<script src="../js/main.js"></script>
+
+<button class="toc-toggle" title="目录">☰</button>
+<div class="toc-overlay"></div>
+<div class="toc-sidebar">
+  <button class="toc-close">✕</button>
+  <h3>💄 目录</h3>
+    <a href="#delta" class="h2">一、2026-04-28 新增了什么</a>
+    <a href="#boundary" class="h2">二、P0 产品边界</a>
+    <a href="#ui" class="h2">三、UI 与交互要点</a>
+    <a href="#arch" class="h2">四、系统与模型策略</a>
+    <a href="#plan" class="h2">五、开发计划与验收观察</a>
+    <a href="#next" class="h2">六、这对站点意味着什么</a>
+</div>
+
+<script>
+const tocBtn = document.querySelector('.toc-toggle');
+const tocBar = document.querySelector('.toc-sidebar');
+const tocOverlay = document.querySelector('.toc-overlay');
+const tocClose = document.querySelector('.toc-close');
+function openToc() { tocBar.classList.add('open'); tocOverlay.classList.add('open'); }
+function closeToc() { tocBar.classList.remove('open'); tocOverlay.classList.remove('open'); }
+tocBtn.addEventListener('click', openToc);
+tocClose.addEventListener('click', closeToc);
+tocOverlay.addEventListener('click', closeToc);
+tocBar.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', function() {
+    setTimeout(closeToc, 200);
+    const href = this.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const target = document.querySelector(href);
+      if (target) {
+        setTimeout(() => target.scrollIntoView({behavior:'smooth', block:'nearest'}), 250);
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

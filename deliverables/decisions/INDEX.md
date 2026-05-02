@@ -50,6 +50,7 @@
 | DECISION-2026-03-13-GREENFIELD-TECH-OPS-AUDIT.md | 🔒 (T-01~T-36) | Phase 0 绿地技术 + 运维审计 · 36 个 T-项的主锁定文件 |
 | DECISION-DATA-ISOLATION-STRATEGY.md | 🔒 v2.0 | Phase 1 X-C 混合方案（映射区迁移 + 能力包保持 MySQL） |
 | DECISION-GRAYSCALE-STRATEGY.md | 🔒 | 灰度策略 |
+| NEW-BEAUTY-AI-P0-GOVERNANCE-RULING-v0.1.md | 🔒 LOCKED 2026-05-02 | 新美业 AI App 创始人建设范围与能力包团队合并流程边界裁决 |
 
 ## 4 · 审计报告（Audit）
 

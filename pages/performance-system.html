@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公司产研团队绩效考核制度 · 正式版</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+body { min-width: 1200px; background: #0b1020; }
+.perf-hero { position: relative; overflow: hidden; padding: 72px 24px 54px; background:
+  radial-gradient(circle at 15% 20%, rgba(85,239,196,0.20), transparent 30%),
+  radial-gradient(circle at 80% 10%, rgba(253,203,110,0.20), transparent 28%),
+  linear-gradient(135deg, #101827 0%, #111827 45%, #192138 100%); }
+.perf-hero::after { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px); background-size: 34px 34px; mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
+.perf-hero-inner { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; }
+.perf-kicker { display: inline-flex; gap: 8px; align-items: center; padding: 7px 12px; border: 1px solid rgba(85,239,196,0.38); border-radius: 999px; color: #55EFC4; background: rgba(85,239,196,0.08); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; }
+.perf-hero h1 { margin: 18px 0 12px; font-size: 3.1rem; line-height: 1.12; letter-spacing: -0.04em; max-width: 820px; }
+.perf-hero h1 span { color: #FDCB6E; }
+.perf-hero p { max-width: 780px; color: #b9bfd8; font-size: 1.02rem; line-height: 1.9; margin: 0; }
+.perf-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px; max-width: 920px; }
+.metric { padding: 18px; border: 1px solid rgba(255,255,255,0.10); border-radius: 16px; background: rgba(255,255,255,0.055); backdrop-filter: blur(12px); }
+.metric strong { display: block; font-size: 1.7rem; color: #fff; letter-spacing: -0.03em; }
+.metric span { display: block; margin-top: 5px; color: #9ca3af; font-size: 0.82rem; line-height: 1.5; }
+.perf-wrap { max-width: 1040px; margin: 0 auto; padding: 34px 24px 70px; }
+.notice { border: 1px solid rgba(253,203,110,0.35); background: rgba(253,203,110,0.08); color: #FDCB6E; border-radius: 14px; padding: 16px 18px; line-height: 1.75; margin-bottom: 22px; }
+.toc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 22px 0 30px; }
+.toc-card { display: block; padding: 16px 16px 14px; border: 1px solid var(--border); border-radius: 14px; background: rgba(255,255,255,0.035); text-decoration: none; color: var(--text); transition: all 0.22s; }
+.toc-card:hover { transform: translateY(-2px); border-color: #55EFC4; box-shadow: 0 12px 26px rgba(85,239,196,0.10); }
+.toc-card b { display: block; color: #55EFC4; margin-bottom: 4px; }
+.toc-card span { color: #9ca3af; font-size: 0.84rem; line-height: 1.6; }
+.section { margin: 26px 0; padding: 24px; border: 1px solid var(--border); border-radius: 18px; background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02)); }
+.section h2 { margin: 0 0 14px; font-size: 1.35rem; color: #fff; border: none; padding: 0; }
+.section h3 { margin: 22px 0 10px; font-size: 1.02rem; color: #FDCB6E; }
+.section p, .section li { color: #c7ccdd; line-height: 1.9; font-size: 0.94rem; }
+.section ul, .section ol { padding-left: 1.25rem; margin: 10px 0; }
+.section table { width: 100%; border-collapse: collapse; margin: 14px 0; overflow: hidden; border-radius: 12px; }
+.section th, .section td { border: 1px solid rgba(255,255,255,0.10); padding: 10px 12px; text-align: left; vertical-align: top; line-height: 1.65; }
+.section th { color: #fff; background: rgba(85,239,196,0.10); }
+.section td { color: #c7ccdd; background: rgba(255,255,255,0.025); }
+.formula { padding: 14px 16px; border-radius: 12px; background: #080d18; border: 1px solid rgba(85,239,196,0.25); color: #A7F3D0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; line-height: 1.8; white-space: pre-wrap; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.callout-good { border-left: 4px solid #55EFC4; background: rgba(85,239,196,0.07); padding: 14px 16px; border-radius: 10px; color: #c7fff0; line-height: 1.8; }
+.callout-warn { border-left: 4px solid #FDCB6E; background: rgba(253,203,110,0.08); padding: 14px 16px; border-radius: 10px; color: #ffe8af; line-height: 1.8; }
+@media (max-width: 900px) {
+  body { min-width: 0; }
+  .perf-hero h1 { font-size: 2.2rem; }
+  .perf-metrics, .toc-grid, .split { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a class="logo" href="../index.html">团队协作指南</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="architecture.html">系统架构图</a>
+    <a href="github-yunxiao-pipeline.html">流水线指南</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="team-leads.html">团队代表</a>
+    <a href="tech-selection.html">技术选型</a>
+    <a href="performance-system.html" class="active">绩效制度</a>
+  </div>
+</nav>
+
+<section class="perf-hero">
+  <div class="perf-hero-inner">
+    <div class="perf-kicker">Formal Policy · Effective 2026-05</div>
+    <h1>公司产研团队绩效考核制度 <span>正式版</span></h1>
+    <p>2026 年 4 月为 AI-first 工作方式缓冲期。自 2026 年 5 月起，绩效考核正式实施：以 5 倍提效为基本门槛，以角色 owner 结果、工程证据、质量门禁、LTC-Endpoint 合规和 AI-first 组织资产为核心依据。</p>
+    <div class="perf-metrics">
+      <div class="metric"><strong>5x</strong><span>正式实施基本门槛，不是优秀线。</span></div>
+      <div class="metric"><strong>30%</strong><span>绩效工资基数占目标月薪比例。</span></div>
+      <div class="metric"><strong>70%</strong><span>固定工资占目标月薪比例。</span></div>
+      <div class="metric"><strong>100</strong><span>评分满分：结果、提效、流程、资产。</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="perf-wrap">
+  <div class="notice">本页是站点可读投影，用于让团队快速理解制度。正式制度文件和 AI 后续填写的绩效台账保留在飞书；如网页表述与飞书正式制度不一致，以飞书正式制度和台账为准。</div>
+
+  <div class="toc-grid">
+    <a class="toc-card" href="#decision"><b>制度裁决</b><span>5x 门槛、正式实施、证据优先。</span></a>
+    <a class="toc-card" href="#score"><b>评分与评级</b><span>R1/R2/R3/R4、A+ 到 D、封顶和否决。</span></a>
+    <a class="toc-card" href="#wage"><b>绩效工资</b><span>43% 调整为 30%，公式和示例。</span></a>
+    <a class="toc-card" href="#ltc"><b>LTC-Endpoint</b><span>全员安装、元数据边界、合规履约。</span></a>
+    <a class="toc-card" href="#ledger"><b>台账与证据</b><span>Evidence Pack、AI 填写字段、审批留痕。</span></a>
+    <a class="toc-card" href="#examples"><b>快速示例</b><span>B 档、A 档、C 档、D 档如何算。</span></a>
+  </div>
+
+  <section class="section" id="decision">
+    <h2>1. 制度裁决</h2>
+    <p>自 2026 年 5 月绩效周期起，公司产研团队进入正式绩效实施。4 月已经是缓冲期，后续不得再以“仍在试点”为低产出、低质量或低协作密度的免责理由。</p>
+    <ol>
+      <li>对比 AI 转型前的历史产出质量和效率，提效 5 倍为基本门槛。</li>
+      <li>绩效考核以角色 owner 结果、机读门禁、流程证据、交付质量、AI-first 资产沉淀为主要依据。</li>
+      <li>不以代码行数、在线时长、消息数量、AI prompt 数量、token 数量作为绩效依据。</li>
+      <li>流程问题与个人问题必须通过归因机制区分，但流程问题不得成为无限期免责项。</li>
+    </ol>
+    <div class="callout-good">通俗理解：正式实施后，团队不再只看“有没有忙”，而是看“是否用 AI-first 方法稳定交付更多、更好、可验证的结果”。</div>
+  </section>
+
+  <section class="section" id="roles">
+    <h2>2. 适用范围与角色责任</h2>
+    <table>
+      <thead><tr><th>角色族</th><th>组织定位</th><th>核心绩效责任</th></tr></thead>
+      <tbody>
+        <tr><td>PM / Capability Owner</td><td>能力包业务语义、验收场景、产品验收 owner</td><td>需求边界清楚、验收场景可测、业务价值闭环。</td></tr>
+        <tr><td>工程师 / Solution Owner</td><td>技术方案、AI-first 实现、单元和集成测试 owner</td><td>方案正确、代码质量稳定、测试和门禁通过、交付可维护。</td></tr>
+        <tr><td>QA / Acceptance Owner</td><td>验收测试、质量判定、Evidence Pack owner</td><td>验收标准清晰、证据完整、质量风险能被提前发现。</td></tr>
+        <tr><td>运维 / Release & Infra Owner</td><td>发布稳定、可观测、可回滚、基础设施 owner</td><td>发布稳定、事故可追踪、回滚和观测机制可靠。</td></tr>
+        <tr><td>UI / Design Owner</td><td>用户路径、交互视觉、设计资产、工程交付一致性 owner</td><td>设计资产可复用、交互清晰、工程实现一致。</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section" id="score">
+    <h2>3. 评分结构与评级制度</h2>
+    <div class="formula">绩效总分 S = 角色结果分 R1 + 5x 提效分 R2 + 角色流程责任分 R3 + AI 转型资产分 R4</div>
+    <table>
+      <thead><tr><th>模块</th><th>上限</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>R1 角色结果分</td><td>55</td><td>角色 owner 的实际产出、质量、闭环和业务价值。</td></tr>
+        <tr><td>R2 5x 提效分</td><td>20</td><td>相对历史基线的有效提效倍数。</td></tr>
+        <tr><td>R3 角色流程责任分</td><td>15</td><td>证据、评审、测试、验收、发布、协作等流程责任。</td></tr>
+        <tr><td>R4 AI 转型资产分</td><td>10</td><td>可复用 prompt、自动化、模板、方法论、治理规则等组织资产。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>评级与绩效工资系数</h3>
+    <table>
+      <thead><tr><th>评级</th><th>分数区间</th><th>必要条件</th><th>系数 K</th></tr></thead>
+      <tbody>
+        <tr><td>A+</td><td>95-100</td><td>M >= 8.0；质量稳定；有团队级复用资产；无重大负面事件。</td><td>1.50</td></tr>
+        <tr><td>A</td><td>90-94</td><td>M >= 6.5；质量稳定；能显著改善团队流程或资产。</td><td>1.30</td></tr>
+        <tr><td>B+</td><td>85-89</td><td>M >= 5.5；交付质量好；证据完整；流程责任稳定。</td><td>1.15</td></tr>
+        <tr><td>B</td><td>75-84</td><td>M >= 5.0；达到正式实施基本门槛；质量合格。</td><td>1.00</td></tr>
+        <tr><td>C</td><td>60-74</td><td>未达到 5x 或存在明显短板，但有可信改进路径。</td><td>0.60-0.80</td></tr>
+        <tr><td>D</td><td>&lt; 60</td><td>明显不适配正式实施节奏，或触发严重否决项。</td><td>0</td></tr>
+      </tbody>
+    </table>
+
+    <h3>封顶和硬性否决</h3>
+    <p>封顶规则优先于分数区间。未达到 5x、Evidence Pack 缺关键证据、LTC-Endpoint 未安装或长期断链且无合理说明，原则上不得评为 B 及以上。伪造证据、篡改端点、未经授权绕过 required status checks 并造成后果、重大安全 / 数据 / 合规事故责任成立，进入硬性否决。</p>
+  </section>
+
+  <section class="section" id="wage">
+    <h2>4. 绩效工资规则</h2>
+    <p>历史薪酬制度已经公司全员阅读同意并生效，历史绩效工资比例为目标月薪的 43%。本次绩效制度发布时，同步将绩效工资占比调整为 30%，固定工资占比调整为 70%。本次调整不是新增绩效工资，而是降低浮动比例、提高固定工资保障。</p>
+    <div class="split">
+      <div>
+        <h3>月薪拆分</h3>
+        <div class="formula">目标月薪 T = 固定工资 F + 绩效工资基数 B
+固定工资 F = 目标月薪 T × 70%
+绩效工资基数 B = 目标月薪 T × 30%</div>
+      </div>
+      <div>
+        <h3>绩效工资计算</h3>
+        <div class="formula">实际绩效工资 = B × K × P × C ± A
+实际月度收入 = 固定工资 F + 实际绩效工资</div>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>项目</th><th>历史制度</th><th>本次调整后</th></tr></thead>
+      <tbody>
+        <tr><td>固定工资部分</td><td>57%</td><td>70%</td></tr>
+        <tr><td>绩效工资部分</td><td>43%</td><td>30%</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-warn">合规边界：该拆分随制度一并发布并签署确认；不得单方追溯降低已产生或已约定应付工资；员工提供正常劳动时，固定工资和实际发放工资均不得低于当地最低工资及国家 / 地方工资支付规则要求；加班工资、法定津贴、福利待遇不得被 30% 绩效工资吸收或替代。</div>
+  </section>
+
+  <section class="section" id="examples">
+    <h2>5. 计算示例：目标月薪 20,000 元</h2>
+    <table>
+      <thead><tr><th>场景</th><th>计算</th><th>实际月度收入</th><th>解释</th></tr></thead>
+      <tbody>
+        <tr><td>历史 43% 调整为 30%</td><td>固定工资 11,400 -> 14,000；绩效基数 8,600 -> 6,000</td><td>20,000</td><td>目标月薪不变，浮动部分降低，固定保障提高。</td></tr>
+        <tr><td>B 档达标</td><td>14,000 + 6,000 × 1.00</td><td>20,000</td><td>达到 5x 基本门槛，绩效工资按 100% 发放。</td></tr>
+        <tr><td>A 档上浮</td><td>14,000 + 6,000 × 1.30</td><td>21,800</td><td>只对 30% 绩效工资部分上浮。</td></tr>
+        <tr><td>C 档下调</td><td>14,000 + 6,000 × 0.60</td><td>17,600</td><td>未达到 5x 或存在明显短板，但有改进路径。</td></tr>
+        <tr><td>D 档</td><td>14,000 + 6,000 × 0</td><td>14,000</td><td>适用于严重不适配或触发硬性否决。</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section" id="ltc">
+    <h2>6. LTC-Endpoint 安装与合规签署</h2>
+    <p>LTC-Endpoint 是公司产研团队绩效制度的工程证据与合规基础设施。制度正式发布后，公司将组织纳入绩效制度的产研成员完成全员安装、知情确认、制度签署与合规承诺。</p>
+    <table>
+      <thead><tr><th>要求</th><th>规则</th></tr></thead>
+      <tbody>
+        <tr><td>全员安装</td><td>纳入绩效制度的产研成员必须在指定期限内完成安装。</td></tr>
+        <tr><td>设备确认</td><td>每名成员至少绑定一台主要工作机器，机器标识应采用假名化或哈希处理。</td></tr>
+        <tr><td>运行状态</td><td>工作期间应保持端点处于正常、降级或已说明断链状态，不得无说明长期中断。</td></tr>
+        <tr><td>断链说明</td><td>端点停止或不可用应记录为断链事件，并补充原因。</td></tr>
+        <tr><td>故障处理</td><td>系统故障、兼容性问题、网络问题导致断链的，进入修复和归因流程，不自动认定为个人违规。</td></tr>
+      </tbody>
+    </table>
+    <p>LTC-Endpoint 只允许收集经批准的工程过程元数据，例如 AI 工具名称、工具版本、粗粒度时间桶、请求数、token 聚合计数、假名化机器 ID、agent 版本、降级状态和断链事件。</p>
+    <p>禁止收集提示词文本、模型输出文本、源文件内容、完整命令行参数、shell history、窗口标题、浏览器 URL、文档路径、剪贴板、按键、截图、屏幕录制、非工程软件清单、员工排名、绩效分或 HR 标签。</p>
+  </section>
+
+  <section class="section" id="ledger">
+    <h2>7. Evidence Pack 与绩效台账</h2>
+    <p>每个绩效周期必须在飞书绩效台账中形成可由 AI 后续填写和复核的结构化记录。AI 可以填字段、补链接、计算公式、做一致性检查，但最终评级和审批结论必须经过授权负责人确认。</p>
+    <table>
+      <thead><tr><th>字段组</th><th>用途</th></tr></thead>
+      <tbody>
+        <tr><td>周期、姓名、角色、团队 / 项目</td><td>确认评价对象和责任范围。</td></tr>
+        <tr><td>制度签署、LTC 状态、Evidence Pack</td><td>判断前置条件是否完成。</td></tr>
+        <tr><td>R1/R2/R3/R4、总分 S、有效提效倍数 M</td><td>支撑评分与评级。</td></tr>
+        <tr><td>评级前置结论、硬性否决、评级封顶、最终评级</td><td>支撑评级校准。</td></tr>
+        <tr><td>目标月薪、固定工资、绩效基数、系数、周期折算、合规调整、特殊调整</td><td>支撑绩效工资计算。</td></tr>
+        <tr><td>应发绩效工资、实际月度收入、负面事件归因、审批状态</td><td>形成薪酬计算结果和审批留痕。</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section" id="process">
+    <h2>8. 周期计算步骤</h2>
+    <ol>
+      <li>确认人员是否在本制度适用范围内。</li>
+      <li>确认周期内有效在岗天数，计算周期折算 P。</li>
+      <li>确认制度签署、LTC-Endpoint 安装与 Evidence Pack 前置条件。</li>
+      <li>计算 R1、R2、R3、R4 和总分 S。</li>
+      <li>检查硬性否决和评级封顶。</li>
+      <li>按评级区间得出初始评级。</li>
+      <li>经公司治理负责人或授权负责人校准后确定最终评级。</li>
+      <li>按最终评级确定绩效工资系数 K，计算实际绩效工资。</li>
+      <li>将评分、评级、系数、证据链接、审批结论写入飞书绩效台账。</li>
+    </ol>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>公司产研团队绩效考核制度 · 正式版 · 2026-05-05</p>
+  <p>Formal source: Feishu policy document and Feishu performance ledger.</p>
+</footer>
+</body>
+</html>

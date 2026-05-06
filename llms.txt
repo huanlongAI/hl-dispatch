@@ -6,7 +6,7 @@
 
 ## Core Pages
 
-- [美人计GEO首页](https://huanlongai.github.io/hl-dispatch/): GEO 内部学习路径、开源资料雷达、美业分账系统 GEO 首阶段任务、4 人全职分工矩阵、基础设施就绪检查清单、周作战节奏与评分卡。
+- [美人计GEO首页](https://huanlongai.github.io/hl-dispatch/): GEO 内部学习路径、开源资料雷达、任务大纲、美业分账 GEO、美业智能体 GEO、2 个 GEO 专题站/栏目、首月 40 条发布计划、基础设施就绪检查清单、周作战节奏与评分卡。
 - [产研团队指南](https://huanlongai.github.io/hl-dispatch/pages/global.html): 原唤龙平台产研协作与交付工作流导览。
 - [新美业 AI 老板总助 P0](https://huanlongai.github.io/hl-dispatch/pages/beauty-ai-p0.html): 新美业 AI 老板总助 P0 规格族的站点导览。
 
@@ -14,8 +14,10 @@
 
 - GEO means Generative Engine Optimization. The operational goal is not only traditional search ranking, but inclusion, citation, ranking order and accuracy inside generated AI answers.
 - 美人计GEO uses new beauty operations as the first practical field for the operations team's AI transformation.
-- The first-stage mission is 美业分账系统 GEO: build answer assets and AI visibility around beauty revenue sharing, commission settlement, multi-store reconciliation and implementation readiness.
-- Roles are organized as one 4 人全职 team, also described as 全职4人 in the page. The team does not need subgrouping; each person has a primary role while the full team closes the loop from research and production to technical coordination, evaluation, review and next-week task assignment.
+- There are two GEO domains. Domain 1 is 美业分账 GEO, promoting the cash register and revenue-sharing system for 连锁分账, 供应链分账, 会销收银分账 and 招商收银分账. Domain 2 is 美业智能体 GEO, promoting the 咨询师智能体.
+- Site plan: create 2 GEO topic sites or official-site sections, not separate domains at first. Publish to the official/product site as the primary source, then distribute to WeChat Official Account, Channels, Xiaohongshu, Zhihu, Douyin and Bilibili with links back to the topic sites.
+- First-month publishing target: 首月发布 40 条 effective content items. 美业分账 gets 28 items: 12 official-site assets and 16 platform distribution posts. 美业智能体 gets 12 items: 6 official-site assets and 6 platform distribution posts.
+- 美业分账 team: 张勇 is group lead, with 吕君, 洪浩东 and 罗锐. 美业智能体 team: 周鸿亮 and 钱芷馨.
 - The internal workflow is: query map, answer assets, technical readability, cross-model evaluation, weekly iteration.
 - Primary assets include question banks, citation-ready answer blocks, case libraries, glossaries, comparison pages and machine-readable site guides.
 - Infrastructure readiness requires product and engineering team cooperation for public URLs, sitemap, robots.txt, llms.txt, schema markup, product evidence, observability and compliance boundaries.

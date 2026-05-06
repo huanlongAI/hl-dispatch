@@ -532,9 +532,9 @@
       <div><div class="k">阶段</div><div class="v">Phase 0 · Pilot Locked</div></div>
     </div>
     <div class="arch-chips">
-      <span class="arch-chip locked">TECH-STACK v3 🔒 LOCKED</span>
+      <span class="arch-chip locked">TECH-STACK v3.4 🔒 LOCKED</span>
       <span class="arch-chip locked">SAAC-HL-001 v1.1 🔒 LOCKED</span>
-      <span class="arch-chip locked">DD-TEST v1.1 🔒 LOCKED</span>
+      <span class="arch-chip locked">DD-TEST v1.2 🔒 LOCKED</span>
       <span class="arch-chip draft">TEAM-COLLAB v2.1 📝 DRAFT</span>
       <span class="arch-chip draft">UI-DELIVERY v1.0 📝 DRAFT</span>
       <span class="arch-chip draft">FRONTEND-REPO v1 📝 DRAFT</span>
@@ -815,7 +815,7 @@
     <div class="sec-head">
       <div class="sec-num"><strong>03</strong>TECH · STACK</div>
       <div>
-        <h2 class="sec-h2">技术栈选型：LOCKED 基线<span class="sbadge">TECH-STACK v3 🔒 · RULINGS H-001 H-002 BLOCKING</span></h2>
+        <h2 class="sec-h2">技术栈选型：LOCKED 基线<span class="sbadge">TECH-STACK v3.4 🔒 · RULINGS H-001 H-002 BLOCKING</span></h2>
         <p class="sec-lead">后端选型一律「<b>JVM + Spring 原生</b>」，禁止外部 MQ / Cache / 配置中心；ORM 唯一允许 <code>JPA + Hibernate</code>（H-002）；事件总线由 Spring Modulith 的 <b>Event Publication Log + Outbox</b> 替代；身份验证使用 Spring Security 内置 JWT（禁 Keycloak）。前端 C-L1 与 C-L2 严格分栈。</p>
       </div>
     </div>
@@ -1113,7 +1113,7 @@
       <div class="sec-num"><strong>06</strong>DOCS · FORBIDDEN</div>
       <div>
         <h2 class="sec-h2">文档体系 + Phase 0 禁区<span class="sbadge">SSOT 优先级链 · 6 项禁用</span></h2>
-        <p class="sec-lead">所有治理决策需遵循 <b>飞书公告 ≻ TEAM-COLLAB v2.1 Pilot ≻ TECH-STACK v3 ≻ RULINGS ≻ SAAC-HL-EP-001 ≻ SAAC-HL-001</b> 优先级链。Phase 0 阶段为降低复杂度，明令禁用以下 6 类组件，待具备明确需求 + Ruling 解锁后方可引入。</p>
+        <p class="sec-lead">所有治理决策需遵循 <b>飞书公告 ≻ TEAM-COLLAB v2.1 Pilot ≻ TECH-STACK v3.4 ≻ RULINGS ≻ SAAC-HL-EP-001 ≻ SAAC-HL-001</b> 优先级链。Phase 0 阶段为降低复杂度，明令禁用以下 6 类组件，待具备明确需求 + Ruling 解锁后方可引入。</p>
       </div>
     </div>
 
@@ -1122,8 +1122,8 @@
       <span class="br">├──</span> <span class="doc"><b>SAAC-HL-001</b> 顶层架构与原则</span> <span class="ver">v1.1</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/cap-specs/saac-hl-001.md</span><br>
       <span class="br">├──</span> <span class="doc"><b>SAAC-HL-EP-001</b> 工程实践扩展提案</span> <span class="ver">v0.3</span> <span class="stat proposed">⚙ PROPOSED</span> <span class="src">/proposals/saac-hl-ep-001.md</span><br>
       <span class="br">├──</span> <span class="doc"><b>TEAM-COLLABORATION-SPEC</b> 团队协作规范</span> <span class="ver">v2.1</span> <span class="stat draft">📝 DRAFT · Pilot</span> <span class="src">huanlongai.github.io/hl-dispatch</span><br>
-      <span class="br">├──</span> <span class="doc"><b>TECH-STACK-SPEC</b> 技术栈选型</span> <span class="ver">v3</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/cap-specs/tech-stack-v3.md</span><br>
-      <span class="br">├──</span> <span class="doc"><b>DD-TEST</b> 设计驱动测试规范</span> <span class="ver">v1.1</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/cap-specs/dd-test-v1.1.md</span><br>
+      <span class="br">├──</span> <span class="doc"><b>TECH-STACK-SPEC</b> 技术栈选型</span> <span class="ver">v3.4</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/cap-specs/tech-stack-v3.md</span><br>
+      <span class="br">├──</span> <span class="doc"><b>DD-TEST</b> 设计驱动测试规范</span> <span class="ver">v1.2</span> <span class="stat locked">🔒 LOCKED</span> <span class="src">/governance/DD-TEST-v1.md</span><br>
       <span class="br">├──</span> <span class="doc"><b>UI-DELIVERY-SPEC</b> 设计交付规范</span> <span class="ver">v1.0</span> <span class="stat draft">📝 DRAFT</span> <span class="src">/proposals/ui-delivery-v1.md</span><br>
       <span class="br">├──</span> <span class="doc"><b>FRONTEND-REPO-SPEC</b> 前端仓库结构</span> <span class="ver">v1</span> <span class="stat draft">📝 DRAFT</span> <span class="src">/proposals/frontend-repo-v1.md</span><br>
       <span class="br">└──</span> <span class="doc"><b>RULINGS / 裁决索引</b></span> <span class="ver">live</span> <span class="stat locked">🔒 BLOCKING</span> <span class="src">H-001 (no implicit Spring scan) · H-002 (JPA only) · J-01 ⏳ · J-03 ⏳</span>

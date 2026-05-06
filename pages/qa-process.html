@@ -601,17 +601,17 @@
                         <div class="step-item">
                             <strong>自动化门禁（L2/L3）：</strong>
                             <ul style="margin-top: 0.5rem; margin-left: 1rem;">
-                                <li>L2：acceptance-manifest 覆盖率检查（G-026）</li>
-                                <li>L3：自动运行验收测试，所有 status=covered 的场景必须 PASS</li>
+                                <li>L2：G-026 manifest-based YAML 校验</li>
+                                <li>L3：自动运行验收测试，所有 COVERED 自动化场景必须 PASS</li>
                             </ul>
                         </div>
                         <div class="step-item">
                             <strong>QA 人工验收：</strong>
-                            <p style="margin-top: 0.5rem;">出具 <strong>qa-verdict</strong>（Required Status Check），condition：所有 acceptance-manifest 中标记为 covered 的场景测试通过</p>
+                            <p style="margin-top: 0.5rem;">出具 <strong>qa-verdict</strong>（Required Status Check），condition：所有 acceptance-manifest 中标记为 COVERED 的自动化场景测试通过</p>
                         </div>
                         <div class="step-item" style="background: rgba(0, 184, 148, 0.1); border-left-color: var(--secondary);">
                             <strong style="color: var(--secondary);">✅ 关键规则：</strong>
-                            <p style="margin-top: 0.5rem;">qa-verdict = PASS 的充要条件是 acceptance-manifest 中所有 covered 场景的测试通过，与 PM 需求是否满意无关</p>
+                            <p style="margin-top: 0.5rem;">qa-verdict = PASS 的充要条件是 acceptance-manifest 中所有 COVERED 自动化场景的测试通过，与 PM 需求是否满意无关</p>
                         </div>
                     </div>
                 </div>

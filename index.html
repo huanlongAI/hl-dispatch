@@ -3,1102 +3,686 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="美人计GEO是唤龙运营团队AI转型的内部学习与分工指南，聚焦生成式搜索可见性、内容可引用性、AI爬取基础设施与跨模型评测。">
-<title>美人计GEO · 内部学习与分工指南</title>
+<title>唤龙平台 · 团队协作指南</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
-:root {
-  --geo-ink:#20251f;
-  --geo-muted:#5f675f;
-  --geo-paper:#fffaf3;
-  --geo-wash:#f3ebdf;
-  --geo-line:#ded2c2;
-  --geo-rose:#b84f67;
-  --geo-forest:#2f7568;
-  --geo-amber:#c9892d;
-  --geo-blue:#315f7d;
-  --geo-plum:#5a4d74;
-  --geo-white:#fffdf8;
-}
+  body { min-width: 1200px; }
 
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-html,
-body {
-  width:100%;
-  max-width:100%;
-}
-body {
-  min-width:0;
-  margin:0;
-  background:var(--geo-paper);
-  color:var(--geo-ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  line-height:1.72;
-  overflow-x:hidden;
-  overflow-wrap:break-word;
-}
-a { color:inherit; }
+  /* ── Hero: compact intro ── */
+  .hero { text-align:center; padding:60px 24px 36px; background:linear-gradient(135deg,#1A1A2E 0%,#16213E 50%,#0F3460 100%); position:relative; }
+  .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 50%,rgba(108,92,231,0.15) 0%,transparent 50%),radial-gradient(circle at 70% 50%,rgba(0,184,148,0.1) 0%,transparent 50%); }
+  .hero h1 { font-size:2.4em; font-weight:900; position:relative; z-index:1; line-height:1.3; margin:0; }
+  .hero h1 span { background:linear-gradient(135deg,var(--primary-light),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero .intro { max-width:720px; margin:14px auto 0; font-size:0.95em; color:var(--text-muted); position:relative; z-index:1; line-height:1.7; }
+  .hero .intro strong { color:var(--text); font-weight:600; }
+  .hero .badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:16px; position:relative; z-index:1; }
+  .hero .badge { padding:4px 14px; background:rgba(108,92,231,0.15); border:1px solid var(--primary); border-radius:20px; font-size:0.82rem; color:var(--primary-light); }
+  .hero .badge.draft { background:rgba(253,203,110,0.15); border-color:#FDCB6E; color:#FDCB6E; }
 
-.geo-nav {
-  position:sticky;
-  top:0;
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:18px;
-  padding:12px clamp(18px,4vw,44px);
-  background:rgba(255,250,243,0.92);
-  border-bottom:1px solid var(--geo-line);
-  backdrop-filter:blur(14px);
-  width:100%;
-  max-width:100vw;
-}
-.geo-logo {
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  color:var(--geo-ink);
-  text-decoration:none;
-  font-weight:850;
-  white-space:nowrap;
-}
-.geo-logo-mark {
-  width:30px;
-  height:30px;
-  border-radius:8px;
-  background:linear-gradient(135deg,var(--geo-rose),var(--geo-amber));
-  box-shadow:0 8px 24px rgba(184,79,103,0.22);
-}
-.geo-links {
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:6px;
-  flex-wrap:wrap;
-  min-width:0;
-  max-width:100%;
-}
-.geo-links a {
-  padding:7px 10px;
-  border-radius:999px;
-  color:var(--geo-muted);
-  text-decoration:none;
-  font-size:0.84rem;
-  line-height:1.1;
-  border:1px solid transparent;
-  min-width:0;
-}
-.geo-links a:hover,
-.geo-links a:focus-visible {
-  color:var(--geo-ink);
-  border-color:var(--geo-line);
-  background:rgba(255,255,255,0.62);
-  outline:none;
-}
+  /* ── Workflow Engine ── */
+  .workflow-engine { max-width:960px; margin:32px auto 0; padding:0 24px; }
+  .workflow-engine h2 { font-size:1.4em; font-weight:700; text-align:center; margin-bottom:6px; }
+  .workflow-engine .sub { text-align:center; font-size:0.85em; color:var(--text-muted); margin-bottom:20px; }
 
-.guide-note {
-  padding:9px clamp(18px,4vw,44px);
-  background:#273c35;
-  color:#f7efe5;
-  font-size:0.84rem;
-  text-align:center;
-}
-.guide-note span {
-  display:block;
-  max-width:1120px;
-  margin:0 auto;
-}
+  .pipeline-wrap { position:relative; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:28px 24px 20px; overflow:hidden; }
+  .pipeline-wrap::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--primary),var(--secondary),var(--accent),var(--primary)); background-size:300% 100%; animation:shimmer 4s linear infinite; }
+  @keyframes shimmer { 0%{background-position:300% 0} 100%{background-position:0 0} }
 
-.hero {
-  position:relative;
-  min-height:560px;
-  display:grid;
-  align-items:end;
-  padding:92px clamp(20px,5vw,70px) 42px;
-  overflow:hidden;
-  color:#fffaf3;
-}
-.hero-media {
-  position:absolute;
-  inset:0;
-  z-index:0;
-}
-.hero-media img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  filter:saturate(0.9) contrast(1.03);
-}
-.hero::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:1;
-  background:
-    linear-gradient(90deg,rgba(27,35,31,0.88) 0%,rgba(27,35,31,0.62) 48%,rgba(27,35,31,0.24) 100%),
-    linear-gradient(0deg,rgba(32,37,31,0.76) 0%,rgba(32,37,31,0.06) 44%);
-}
-.hero-inner {
-  position:relative;
-  z-index:2;
-  max-width:980px;
-  width:100%;
-}
-.eyebrow {
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 11px;
-  border-radius:999px;
-  background:rgba(255,250,243,0.14);
-  border:1px solid rgba(255,250,243,0.22);
-  color:#f8e7d2;
-  font-size:0.82rem;
-  font-weight:700;
-}
-.hero h1 {
-  margin:18px 0 12px;
-  font-size:clamp(3rem,8vw,6.2rem);
-  line-height:0.96;
-  font-weight:900;
-  letter-spacing:0;
-}
-.hero p {
-  max-width:780px;
-  margin:0;
-  color:#f2e8db;
-  font-size:clamp(1rem,1.9vw,1.22rem);
-  overflow-wrap:anywhere;
-}
-.hero-actions {
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:26px;
-}
-.hero-actions a,
-.action-link {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:42px;
-  padding:10px 15px;
-  border-radius:999px;
-  text-decoration:none;
-  font-weight:800;
-  font-size:0.9rem;
-  border:1px solid rgba(255,250,243,0.35);
-  color:#fffaf3;
-  background:rgba(255,250,243,0.13);
-}
-.hero-actions a.primary {
-  color:#20251f;
-  background:#f5c36c;
-  border-color:#f5c36c;
-}
-.hero-actions a:hover,
-.hero-actions a:focus-visible {
-  transform:translateY(-1px);
-  outline:none;
-  box-shadow:0 12px 30px rgba(0,0,0,0.2);
-}
-.hero-stats {
-  display:grid;
-  grid-template-columns:repeat(4,minmax(120px,1fr));
-  gap:10px;
-  max-width:900px;
-  width:100%;
-  margin-top:34px;
-}
-.stat {
-  min-height:92px;
-  padding:13px 14px;
-  border:1px solid rgba(255,250,243,0.2);
-  background:rgba(255,250,243,0.1);
-  border-radius:8px;
-}
-.stat strong {
-  display:block;
-  color:#fffdf8;
-  font-size:1.28rem;
-  line-height:1.25;
-}
-.stat span {
-  color:#e7d9c8;
-  font-size:0.82rem;
-}
+  /* 5 steps row */
+  .pipeline { display:flex; align-items:stretch; gap:0; position:relative; }
+  .pipe-step { flex:1; text-align:center; padding:14px 8px; cursor:pointer; position:relative; transition:all 0.3s; border-radius:10px; }
+  .pipe-step:hover { background:rgba(108,92,231,0.08); }
+  .pipe-step.active { background:rgba(108,92,231,0.12); }
+  .pipe-step .step-num { width:36px; height:36px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:1em; margin-bottom:6px; border:2px solid var(--border); color:var(--text-muted); transition:all 0.4s; }
+  .pipe-step.active .step-num { border-color:var(--primary); color:#fff; background:var(--primary); box-shadow:0 0 16px rgba(108,92,231,0.4); }
+  .pipe-step .step-label { font-size:0.82em; font-weight:600; color:var(--text-muted); transition:color 0.3s; }
+  .pipe-step.active .step-label { color:var(--text); }
 
-main { padding:34px clamp(18px,4vw,52px) 72px; }
-.section {
-  max-width:1120px;
-  margin:0 auto 42px;
-}
-.section-header {
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-between;
-  gap:22px;
-  margin-bottom:18px;
-}
-.section-kicker {
-  color:var(--geo-rose);
-  font-size:0.78rem;
-  font-weight:850;
-  text-transform:uppercase;
-}
-.section h2 {
-  margin:4px 0 0;
-  color:var(--geo-ink);
-  font-size:clamp(1.55rem,3vw,2.3rem);
-  line-height:1.18;
-  letter-spacing:0;
-}
-.section-header p {
-  max-width:440px;
-  margin:0;
-  color:var(--geo-muted);
-  font-size:0.94rem;
-}
+  /* connector arrows between steps */
+  .pipe-arrow { display:flex; align-items:center; padding:0; color:var(--border); font-size:1.1em; flex-shrink:0; }
+  .pipe-arrow.lit { color:var(--primary); }
 
-.principle-grid {
-  display:grid;
-  grid-template-columns:1.05fr 0.95fr 0.95fr;
-  gap:14px;
-}
-.panel,
-.resource-card,
-.role-card,
-.score-card,
-.week-card,
-.learning-card {
-  background:var(--geo-white);
-  border:1px solid var(--geo-line);
-  border-radius:8px;
-  box-shadow:0 16px 34px rgba(70,50,25,0.06);
-}
-.panel { padding:22px; }
-.panel h3,
-.resource-card h3,
-.role-card h3,
-.score-card h3,
-.week-card h3,
-.learning-card h3 {
-  margin:0 0 8px;
-  color:var(--geo-ink);
-  font-size:1.02rem;
-  line-height:1.35;
-}
-.panel p,
-.resource-card p,
-.role-card p,
-.score-card p,
-.week-card p,
-.learning-card p {
-  margin:0;
-  color:var(--geo-muted);
-  font-size:0.9rem;
-}
-.panel.feature {
-  background:#263d35;
-  color:#fffaf3;
-}
-.panel.feature h3 { color:#fffdf8; }
-.panel.feature p { color:#eadfce; }
+  /* role dots under each step */
+  .role-dots { display:flex; gap:4px; justify-content:center; margin-top:6px; }
+  .role-dot { width:8px; height:8px; border-radius:50%; opacity:0.3; }
+  .role-dot.on { opacity:1; box-shadow:0 0 6px currentColor; }
 
-.flow {
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:10px;
-  margin-top:18px;
-}
-.flow-step {
-  position:relative;
-  min-height:142px;
-  padding:16px;
-  background:var(--geo-white);
-  border:1px solid var(--geo-line);
-  border-radius:8px;
-}
-.flow-step b {
-  display:inline-flex;
-  width:30px;
-  height:30px;
-  align-items:center;
-  justify-content:center;
-  border-radius:8px;
-  background:var(--geo-wash);
-  color:var(--geo-forest);
-  font-size:0.9rem;
-}
-.flow-step h3 {
-  margin:12px 0 6px;
-  font-size:0.98rem;
-}
-.flow-step p {
-  margin:0;
-  color:var(--geo-muted);
-  font-size:0.84rem;
-}
+  /* step detail panel */
+  .step-detail { margin-top:20px; padding:18px 20px; background:rgba(108,92,231,0.06); border:1px solid rgba(108,92,231,0.2); border-radius:10px; display:none; animation:fadeSlide 0.3s ease; }
+  .step-detail.show { display:block; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .step-detail h3 { font-size:1.05em; margin:0 0 8px; }
+  .step-detail .detail-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .detail-cell { padding:10px; background:rgba(15,15,26,0.5); border-radius:8px; }
+  .detail-cell .cell-label { font-size:0.72em; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; margin-bottom:4px; }
+  .detail-cell .cell-value { font-size:0.88em; color:var(--text); line-height:1.5; }
+  .detail-cell .role-tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.78em; margin:2px 2px 0 0; font-weight:600; }
 
-.resource-grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-.resource-card {
-  display:flex;
-  flex-direction:column;
-  min-height:224px;
-  padding:18px;
-}
-.resource-card .type {
-  display:inline-flex;
-  width:max-content;
-  margin-bottom:12px;
-  padding:4px 9px;
-  border-radius:999px;
-  color:#fffaf3;
-  font-size:0.74rem;
-  font-weight:850;
-}
-.type.paper { background:var(--geo-blue); }
-.type.tool { background:var(--geo-forest); }
-.type.standard { background:var(--geo-amber); color:#231b10; }
-.type.practice { background:var(--geo-rose); }
-.resource-card a {
-  margin-top:auto;
-  padding-top:14px;
-  color:var(--geo-forest);
-  text-decoration:none;
-  font-weight:850;
-  font-size:0.88rem;
-}
-.resource-card a:hover,
-.resource-card a:focus-visible {
-  text-decoration:underline;
-  outline:none;
-}
+  /* live pulse indicator */
+  .pulse-ring { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--secondary); margin-right:6px; animation:pulse 2s ease infinite; vertical-align:middle; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,184,148,0.4)} 50%{box-shadow:0 0 0 6px rgba(0,184,148,0)} }
 
-.learning-grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-.learning-card { padding:18px; }
-.learning-card ol,
-.learning-card ul {
-  margin:10px 0 0 18px;
-  padding:0;
-  color:var(--geo-muted);
-  font-size:0.88rem;
-}
-.learning-card li { margin-bottom:7px; }
+  /* ── Role Legend ── */
+  .role-legend { display:flex; gap:16px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+  .role-legend-item { display:flex; align-items:center; gap:5px; font-size:0.78em; color:var(--text-muted); }
+  .role-legend-dot { width:10px; height:10px; border-radius:50%; }
 
-.task-grid {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-}
-.task-card {
-  padding:18px;
-  background:var(--geo-white);
-  border:1px solid var(--geo-line);
-  border-radius:8px;
-  box-shadow:0 16px 34px rgba(70,50,25,0.06);
-}
-.task-card h3 {
-  margin:0 0 8px;
-  color:var(--geo-ink);
-  font-size:1.02rem;
-}
-.task-card ol,
-.task-card ul {
-  margin:10px 0 0 18px;
-  padding:0;
-  color:var(--geo-muted);
-  font-size:0.86rem;
-}
-.task-card li { margin-bottom:7px; }
+  /* ── Gate overlay bar ── */
+  .gate-bar { margin-top:16px; display:flex; gap:4px; border-radius:8px; overflow:hidden; }
+  .gate-seg { flex:1; padding:8px 6px; text-align:center; font-size:0.72em; font-weight:700; color:rgba(255,255,255,0.85); cursor:default; transition:all 0.3s; position:relative; }
+  .gate-seg:hover { filter:brightness(1.2); }
+  .gate-seg .gate-tag { font-size:0.65em; display:block; font-weight:400; opacity:0.7; margin-top:2px; }
 
-.roles {
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
-.role-card {
-  min-height:218px;
-  padding:18px;
-  border-top:5px solid var(--geo-forest);
-}
-.role-card:nth-child(2) { border-top-color:var(--geo-rose); }
-.role-card:nth-child(3) { border-top-color:var(--geo-amber); }
-.role-card:nth-child(4) { border-top-color:var(--geo-blue); }
-.role-card:nth-child(5) { border-top-color:var(--geo-plum); }
-.role-card:nth-child(6) { border-top-color:#7a5f31; }
-.role-card ul {
-  margin:10px 0 0 18px;
-  padding:0;
-  color:var(--geo-muted);
-  font-size:0.86rem;
-}
-.role-card li { margin-bottom:6px; }
-
-.week-grid {
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:10px;
-}
-.week-card {
-  min-height:176px;
-  padding:15px;
-}
-.week-card .day {
-  color:var(--geo-rose);
-  font-size:0.78rem;
-  font-weight:900;
-  margin-bottom:6px;
-}
-
-.score-grid {
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
-.score-card {
-  min-height:170px;
-  padding:18px;
-}
-.score-card .weight {
-  display:block;
-  margin-bottom:10px;
-  color:var(--geo-forest);
-  font-size:1.45rem;
-  font-weight:900;
-}
-
-.checklist-grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-.checklist-card {
-  padding:18px;
-  background:var(--geo-white);
-  border:1px solid var(--geo-line);
-  border-radius:8px;
-  box-shadow:0 16px 34px rgba(70,50,25,0.06);
-}
-.checklist-card h3 {
-  margin:0 0 10px;
-  color:var(--geo-ink);
-  font-size:1rem;
-}
-.checklist-card ul {
-  margin:0 0 0 18px;
-  padding:0;
-  color:var(--geo-muted);
-  font-size:0.86rem;
-}
-.checklist-card li { margin-bottom:7px; }
-.checklist-card .owner {
-  display:inline-flex;
-  margin-bottom:10px;
-  padding:4px 9px;
-  border-radius:999px;
-  background:var(--geo-wash);
-  color:var(--geo-forest);
-  font-size:0.74rem;
-  font-weight:850;
-}
-
-.asset-map {
-  display:grid;
-  grid-template-columns:1.2fr 0.8fr;
-  gap:14px;
-}
-.asset-list {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-.asset-chip {
-  padding:13px 14px;
-  border-radius:8px;
-  border:1px solid var(--geo-line);
-  background:var(--geo-white);
-  color:var(--geo-muted);
-  font-size:0.9rem;
-}
-.asset-chip strong {
-  display:block;
-  color:var(--geo-ink);
-  margin-bottom:3px;
-}
-
-.rules {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-.rule {
-  padding:18px;
-  border-radius:8px;
-  color:#fffaf3;
-  background:#263d35;
-}
-.rule:nth-child(2) { background:#7d3d4d; }
-.rule:nth-child(3) { background:#315f7d; }
-.rule h3 {
-  margin:0 0 8px;
-  color:#fffdf8;
-  font-size:1rem;
-}
-.rule p {
-  margin:0;
-  color:#f1e7dc;
-  font-size:0.88rem;
-}
-
-.source-strip {
-  display:flex;
-  justify-content:space-between;
-  gap:16px;
-  align-items:center;
-  max-width:1120px;
-  margin:0 auto 32px;
-  padding:14px 16px;
-  border:1px solid var(--geo-line);
-  border-radius:8px;
-  background:var(--geo-white);
-  color:var(--geo-muted);
-  font-size:0.84rem;
-}
-.source-strip a {
-  color:var(--geo-forest);
-  text-decoration:none;
-  font-weight:800;
-}
-.source-strip a:hover,
-.source-strip a:focus-visible {
-  text-decoration:underline;
-  outline:none;
-}
-
-.footer {
-  padding:28px clamp(18px,4vw,52px);
-  border-top:1px solid var(--geo-line);
-  color:var(--geo-muted);
-  background:#f7efe5;
-  text-align:center;
-  font-size:0.84rem;
-}
-
-@media (max-width: 980px) {
-  .geo-nav { align-items:flex-start; flex-direction:column; }
-  .hero { min-height:640px; }
-  .hero-stats,
-  .principle-grid,
-  .resource-grid,
-  .learning-grid,
-  .task-grid,
-  .roles,
-  .score-grid,
-  .checklist-grid,
-  .asset-map,
-  .rules { grid-template-columns:1fr 1fr; }
-  .flow,
-  .week-grid { grid-template-columns:1fr; }
-}
-@media (max-width: 640px) {
-  .geo-nav {
-    display:block;
-    padding:12px 20px;
+  /* ── Task Quickstart ── */
+  .quickstart { max-width:960px; margin:28px auto 0; padding:0 24px; }
+  .quickstart h2 { font-size:1.35em; font-weight:700; text-align:center; margin-bottom:6px; }
+  .quickstart .sub { text-align:center; color:var(--text-muted); font-size:0.84em; margin-bottom:16px; }
+  .quickstart-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .quick-card {
+    display:block; padding:18px 18px 16px; text-decoration:none; color:var(--text);
+    background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));
+    border:1px solid var(--border); border-radius:12px; transition:all 0.25s;
   }
-  .geo-logo { margin-bottom:12px; }
-  .geo-links { justify-content:flex-start; }
-  .geo-links {
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    width:100%;
-    max-width:342px;
+  .quick-card:hover { border-color:var(--primary); transform:translateY(-2px); box-shadow:0 8px 28px rgba(108,92,231,0.16); }
+  .quick-card:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  .quick-card .kicker { display:inline-block; font-size:0.72em; letter-spacing:0.08em; text-transform:uppercase; color:var(--primary-light); margin-bottom:8px; }
+  .quick-card h3 { font-size:0.98em; margin:0 0 6px; }
+  .quick-card p { font-size:0.82em; color:var(--text-muted); margin:0; line-height:1.7; min-height:56px; }
+  .quick-card .jump { display:inline-block; margin-top:10px; font-size:0.8em; color:var(--secondary); font-weight:700; }
+
+  /* ── Guides ── */
+  .guides { max-width:960px; margin:40px auto; padding:0 24px; }
+  .guides h2 { font-size:1.4em; font-weight:700; margin-bottom:20px; text-align:center; }
+
+  .guide-card {
+    display:flex; gap:18px; align-items:center; padding:18px 20px;
+    background:var(--bg-card); border:1px solid var(--border); border-radius:12px;
+    margin-bottom:10px; text-decoration:none; color:var(--text);
+    transition:all 0.3s; cursor:pointer;
   }
-  .geo-links a {
-    padding:8px 6px;
-    text-align:center;
-    white-space:normal;
+  .guide-card:hover { border-color:var(--primary); transform:translateX(4px); box-shadow:0 4px 24px rgba(108,92,231,0.15); }
+  .guide-card:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  .guide-icon { font-size:1.8em; flex-shrink:0; width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+  .guide-info { flex:1; }
+  .guide-info h3 { font-size:1em; margin-bottom:3px; }
+  .guide-info p { font-size:0.82em; color:var(--text-muted); margin:0; }
+  .guide-info .for { font-size:0.82rem; margin-top:4px; padding:2px 10px; border-radius:10px; display:inline-block; }
+  .guide-arrow { color:var(--text-muted); font-size:1.3em; transition:transform 0.3s; }
+  .guide-card:hover .guide-arrow { transform:translateX(4px); color:var(--primary-light); }
+
+  /* deep-dive grid */
+  .deep-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .deep-grid .guide-card { padding:14px 16px; margin-bottom:0; }
+  .deep-grid .guide-icon { font-size:1.4em; width:40px; height:40px; }
+  .deep-grid .guide-info h3 { font-size:0.92em; }
+  .deep-grid .guide-info p { font-size:0.78em; }
+
+  /* ── Supplement Links ── */
+  .mini-links { max-width:960px; margin:24px auto 0; padding:0 24px; }
+  .mini-links h2 { font-size:1.12em; font-weight:700; margin-bottom:8px; text-align:center; }
+  .mini-links p { text-align:center; color:#9999B0; margin:0 0 14px; font-size:0.84em; }
+  .pill-links { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .pill-link {
+    display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px;
+    border:1px solid var(--border); background:rgba(255,255,255,0.03); text-decoration:none;
+    color:var(--text-muted); font-size:0.82em; transition:all 0.2s;
   }
-  .hero { min-height:650px; padding:58px 24px 26px; }
-  .hero-inner { max-width:342px; }
-  .hero h1 { font-size:3rem; }
-  .hero p { font-size:0.98rem; line-height:1.66; }
-  .hero-actions a { min-height:40px; padding:9px 12px; }
-  .hero-stats { grid-template-columns:1fr 1fr; gap:8px; margin-top:24px; max-width:342px; }
-  .stat { min-height:78px; padding:10px 11px; }
-  .stat strong { font-size:1.08rem; }
-  .stat span { font-size:0.78rem; line-height:1.45; }
-  .principle-grid,
-  .resource-grid,
-  .learning-grid,
-  .task-grid,
-  .roles,
-  .score-grid,
-  .checklist-grid,
-  .asset-map,
-  .rules,
-  .asset-list { grid-template-columns:1fr; }
-  .section-header { display:block; }
-  .section-header p { margin-top:10px; }
-  .guide-note span,
-  .source-strip { max-width:342px; }
-  .guide-note span,
-  .source-strip {
-    margin-left:0;
-    margin-right:auto;
+  .pill-link:hover { border-color:var(--primary); color:var(--text); background:rgba(108,92,231,0.08); }
+  .pill-link:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+
+  /* ── Quick Jump ── */
+  .toc-section { max-width:960px; margin:40px auto 0; padding:0 24px; }
+  .toc-section > h2 { font-size:1.4em; font-weight:700; margin-bottom:6px; text-align:center; }
+  .toc-section > p { text-align:center; color:#9999B0; margin-bottom:20px; font-size:0.88em; }
+  .jump-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .jump-card {
+    padding:18px; border:1px solid var(--border); border-radius:12px; background:#1A1A2E;
+    box-shadow:0 10px 30px rgba(0,0,0,0.12);
   }
-  .source-strip { display:block; }
-}
+  .jump-card h3 { font-size:0.98em; margin-bottom:6px; }
+  .jump-card p { color:#9999B0; font-size:0.82em; line-height:1.7; margin:0 0 12px; }
+  .jump-links { display:grid; gap:8px; }
+  .jump-links a {
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:9px 10px; border-radius:8px; text-decoration:none; color:var(--text-muted);
+    background:rgba(255,255,255,0.025); border:1px solid rgba(45,45,74,0.7); transition:all 0.2s;
+  }
+  .jump-links a:hover { color:var(--text); border-color:var(--primary); background:rgba(108,92,231,0.08); }
+  .jump-links a:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+  .jump-links a::after { content:'→'; color:var(--primary-light); flex-shrink:0; }
+
+  /* doc cards */
+  .doc-section { max-width:960px; margin:40px auto; padding:0 24px; }
+  .doc-section h2 { font-size:1.2em; margin-bottom:8px; color:var(--text-muted); text-align:center; }
+  .doc-section p { text-align:center; color:#9999B0; margin:0 0 14px; font-size:0.84em; }
+  .doc-strip {
+    padding:16px 18px; border:1px solid var(--border); border-radius:12px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.015));
+  }
+  .doc-pills { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .doc-pill {
+    display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+    background:rgba(255,255,255,0.03); border:1px solid rgba(45,45,74,0.8); color:var(--text-muted);
+    font-size:0.8em;
+  }
+  .doc-pill strong { color:var(--accent); font-weight:800; }
+  .doc-cta { display:flex; justify-content:center; margin-top:14px; }
+  .doc-cta a {
+    display:inline-flex; align-items:center; gap:6px; padding:9px 14px; border-radius:999px;
+    border:1px solid var(--primary); color:var(--primary-light); text-decoration:none; font-size:0.82em;
+    transition:all 0.2s;
+  }
+  .doc-cta a:hover { background:rgba(108,92,231,0.08); color:var(--text); }
+  .doc-cta a:focus-visible { outline:2px solid var(--primary); outline-offset:2px; }
+
+  .top-nav a { cursor:pointer; }
+  .nav-links a:hover { text-decoration:underline; }
+  .nav-links a:focus-visible { outline:2px solid var(--primary); outline-offset:4px; }
 </style>
 </head>
 <body>
-<nav class="geo-nav" aria-label="美人计GEO导航">
-  <a class="geo-logo" href="index.html" aria-label="美人计GEO首页">
-    <span class="geo-logo-mark" aria-hidden="true"></span>
-    <span>美人计GEO</span>
-  </a>
-  <div class="geo-links">
-    <a href="#map">认知地图</a>
-    <a href="#radar">开源雷达</a>
-    <a href="#learn">学习路径</a>
-    <a href="#first-stage">任务大纲</a>
-    <a href="#roles">分工矩阵</a>
-    <a href="#infra">基础设施</a>
-    <a href="#score">评分卡</a>
-    <a href="pages/global.html">产研团队指南</a>
+
+<nav class="top-nav">
+  <a class="logo" href="index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="index.html" class="active">首页</a>
+    <a href="pages/global.html">全局工作流</a>
+    <a href="pages/architecture.html">系统架构图</a>
+    <a href="pages/github-yunxiao-pipeline.html">流水线指南</a>
+    <a href="pages/product.html">产品团队</a>
+    <a href="pages/frontend-design.html">前端与设计</a>
+    <a href="pages/engineering.html">工程师</a>
+    <a href="pages/qa.html">测试团队</a>
+    <a href="pages/ops.html">运维</a>
+    <a href="pages/team-leads.html">团队代表</a>
+    <a href="pages/tech-selection.html">技术选型</a>
+    <a href="pages/performance-system.html">绩效制度</a>
+    <a href="pages/glossary.html">术语表</a>
   </div>
 </nav>
 
-<div class="guide-note">
-  <span>Guide Layer：本站用于内部学习、运营分工和首轮实战，不替代正式制度、业务承诺或合规审查。</span>
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.5rem 1rem; text-align:center; font-size:0.82rem; color:rgba(232,232,240,0.6);">
+    本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
 </div>
 
-<header class="hero">
-  <div class="hero-media" aria-hidden="true">
-    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1800&q=80" alt="">
+<!-- ═══════ Hero ═══════ -->
+<div class="hero">
+  <h1><span>唤龙平台</span><br>团队协作指南</h1>
+  <p class="intro">
+    <strong>21 人</strong>正式编制 AI 驱动协作模型 —
+    以<strong>四权分离</strong>（语义·技术·质量·治理）为制衡骨架，
+    <strong>五步交付流</strong>驱动每个能力包从构思到上线，
+    <strong>完整仓库地图</strong>分层承载代码与治理，
+    <strong>四层门禁</strong>自动化守护质量底线。
+  </p>
+  <div class="badges">
+    <span class="badge">TEAM-COLLAB-SPEC v2.1</span>
+    <span class="badge">UI-DELIVERY-SPEC v1.0</span>
+    <span class="badge draft">Internal Guide · DRAFT</span>
+    <span class="badge" style="background:rgba(0,184,148,0.15);border-color:var(--secondary);color:var(--secondary);">站点发布规范 v1.3 SEALED · 2026-04-22</span>
   </div>
-  <div class="hero-inner">
-    <div class="eyebrow">运营团队 AI 转型首个实战领域</div>
-    <h1>美人计GEO</h1>
-    <p>
-      目标不是把传统 SEO 换个名字，而是让美业分账系统与美业咨询师智能体的产品定义、场景价值、技术边界和实施路径在 ChatGPT、Claude、Gemini、Perplexity、Google AI Overviews 等生成式答案里被理解、被引用、被推荐。
-    </p>
-    <div class="hero-actions">
-      <a class="primary" href="#learn">进入学习路径</a>
-      <a href="#roles">查看分工</a>
-      <a href="#radar">看开源资料</a>
+</div>
+
+<div style="max-width:960px;margin:12px auto;padding:10px 16px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.82em;color:#FDCB6E;text-align:center;">
+  ⚠️ 本站为<strong>理解导览层</strong>（Guide Layer），不是制度真源层。权威依据以 hl-contracts 仓库中的正式规范文档为准。
+</div>
+
+<!-- ═══════ Workflow Engine ═══════ -->
+<div class="workflow-engine">
+  <h2><span class="pulse-ring"></span>全局交付工作流</h2>
+  <div class="sub">点击任意步骤查看角色参与详情 · 动画展示能力包从构思到上线的完整旅程</div>
+
+  <div class="pipeline-wrap">
+    <!-- 5-step pipeline -->
+    <div class="pipeline">
+      <div class="pipe-step active" onclick="showStep(0)">
+        <div class="step-num">1</div>
+        <div class="step-label">Cap-Spec 冻结</div>
+        <div class="role-dots">
+          <span class="role-dot on" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(1)">
+        <div class="step-num">2</div>
+        <div class="step-label">Design + HPRD</div>
+        <div class="role-dots">
+          <span class="role-dot on" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot on" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot on" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(2)">
+        <div class="step-num">3</div>
+        <div class="step-label">AI-first 实现</div>
+        <div class="role-dots">
+          <span class="role-dot" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot on" style="background:#DFE6E9" title="前端"></span>
+          <span class="role-dot" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(3)">
+        <div class="step-num">4</div>
+        <div class="step-label">门禁 + 验收</div>
+        <div class="role-dots">
+          <span class="role-dot" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot on" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot on" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showStep(4)">
+        <div class="step-num">5</div>
+        <div class="step-label">PM 验收 + 合并</div>
+        <div class="role-dots">
+          <span class="role-dot on" style="background:#74B9FF" title="PM"></span>
+          <span class="role-dot on" style="background:#55EFC4" title="工程师"></span>
+          <span class="role-dot" style="background:#DFE6E9" title="设计师"></span>
+          <span class="role-dot on" style="background:#FFEAA7" title="QA"></span>
+          <span class="role-dot on" style="background:#FAB1A0" title="运维"></span>
+        </div>
+      </div>
     </div>
-    <div class="hero-stats" aria-label="GEO学习站点核心指标">
-      <div class="stat"><strong>双领域</strong><span>分账系统 + 咨询师智能体</span></div>
-      <div class="stat"><strong>2 个站</strong><span>两个 GEO 专题站/栏目</span></div>
-      <div class="stat"><strong>首月40条</strong><span>官网资产 + 平台分发内容</span></div>
-      <div class="stat"><strong>周循环</strong><span>每周用真实 AI 答案校验可见性</span></div>
+
+    <!-- role legend -->
+    <div class="role-legend">
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#74B9FF;"></span>PM</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#55EFC4;"></span>工程师</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#DFE6E9;"></span>前端/设计</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#FFEAA7;"></span>QA</div>
+      <div class="role-legend-item"><span class="role-legend-dot" style="background:#FAB1A0;"></span>运维</div>
+      <div class="role-legend-item" style="margin-left:12px; opacity:0.6;">●亮=主导/参与 ○暗=待命</div>
+    </div>
+
+    <!-- gate bar -->
+    <div class="gate-bar">
+      <div class="gate-seg" style="background:rgba(253,203,110,0.3);">L1 格式<span class="gate-tag">BLOCKING</span></div>
+      <div class="gate-seg" style="background:rgba(255,234,167,0.3);">L2 确定性<span class="gate-tag">BLOCKING</span></div>
+      <div class="gate-seg" style="background:rgba(85,239,196,0.25);">L3 行为<span class="gate-tag">BLOCKING</span></div>
+      <div class="gate-seg" style="background:rgba(108,92,231,0.3);">L4 语义 · 哨兵<span class="gate-tag">ADVISORY</span></div>
+    </div>
+
+    <!-- step detail (shows on click) -->
+    <div class="step-detail show" id="stepDetail"></div>
+  </div>
+</div>
+
+<!-- ═══════ Task Quickstart ═══════ -->
+<div class="quickstart">
+  <h2>先按任务起步</h2>
+  <div class="sub">如果你不是按角色阅读，先按手头问题选入口。</div>
+  <div class="quickstart-grid">
+    <a class="quick-card" href="pages/global.html">
+      <span class="kicker">第一次进入</span>
+      <h3>先看全局框架</h3>
+      <p>先建立共同语境：四权分离、五步交付、门禁、仓库边界。看完再进入各角色页，理解成本最低。</p>
+      <span class="jump">全局工作流 →</span>
+    </a>
+    <a class="quick-card" href="pages/gate-levels.html">
+      <span class="kicker">准备提 PR</span>
+      <h3>先看门禁和挂载位</h3>
+      <p>确认 L1-L4 谁执行、哪些是 BLOCKING、哪些审批留在 GitHub PR，避免把“环境结果”和“人类签字”混成一件事。</p>
+      <span class="jump">门禁体系详解 →</span>
+    </a>
+    <a class="quick-card" href="pages/repo-directory.html">
+      <span class="kicker">判断归属</span>
+      <h3>先看仓库边界</h3>
+      <p>需要回答“这件事落哪个仓”“是不是平台附属”“是不是 C-L1/C-L2 特殊边界”时，直接从完整仓库地图进入。</p>
+      <span class="jump">完整仓库地图 →</span>
+    </a>
+    <a class="quick-card" href="pages/workflow-states.html">
+      <span class="kicker">验收 / 发布前</span>
+      <h3>先看状态判断</h3>
+      <p>想知道当前 PR 到了哪一步、什么时候能进 PM 验收、什么时候才算 Released，就先看 12 状态机，再决定是否去流水线页。</p>
+      <span class="jump">12 状态机 →</span>
+    </a>
+    <a class="quick-card" href="pages/performance-system.html">
+      <span class="kicker">2026 年 5 月起</span>
+      <h3>先看绩效制度</h3>
+      <p>正式实施后的 5x 提效门槛、评级规则、45% 绩效工资、LTC-Endpoint 合规和飞书台账填写口径。</p>
+      <span class="jump">绩效制度正式版 →</span>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════ Role Guides ═══════ -->
+<div class="guides">
+  <h2>选择你的角色指南</h2>
+
+  <a class="guide-card" href="pages/global.html">
+    <div class="guide-icon" style="background:linear-gradient(135deg,rgba(108,92,231,0.2),rgba(0,184,148,0.2));">🌐</div>
+    <div class="guide-info">
+      <h3>全局团队分工与工作流</h3>
+      <p>交互式全景——组织架构、四权分离、五步流程、门禁体系、仓库权限、产物矩阵</p>
+      <span class="for" style="background:rgba(108,92,231,0.15);color:var(--primary-light);">全员必读</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/product.html">
+    <div class="guide-icon" style="background:rgba(116,185,255,0.15);">📘</div>
+    <div class="guide-info">
+      <h3>产品团队指南</h3>
+      <p>Cap-Spec（能力包规格）编写、HPRD（理解确认件）审批、Design Packet（设计交付包）冻结、产品验收（pm-acceptance）</p>
+      <span class="for" style="background:rgba(116,185,255,0.15);color:var(--pm);">PM 3 人 + UI 设计师 2 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/frontend-design.html">
+    <div class="guide-icon" style="background:rgba(223,230,233,0.15);">🎨</div>
+    <div class="guide-info">
+      <h3>前端与设计团队指南</h3>
+      <p>双线交付模型、Design Packet（设计交付包）12 字段、UI 风险分层 R0-R3、Token（设计令牌）体系、Flutter 转型</p>
+      <span class="for" style="background:rgba(223,230,233,0.15);color:var(--design);">前端 5 人 + UI 设计师 2 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/engineering.html">
+    <div class="guide-icon" style="background:rgba(85,239,196,0.15);">💻</div>
+    <div class="guide-info">
+      <h3>工程师团队指南</h3>
+      <p>HPRD（Human-readable Product Design）编写、design.md 互审、PR（合并请求）分类、CI（持续集成）四层门禁、AI-first（AI 优先）编码、Kotlin 适配</p>
+      <span class="for" style="background:rgba(85,239,196,0.15);color:var(--eng);">后端 6 人 + 前端 5 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/qa.html">
+    <div class="guide-icon" style="background:rgba(255,234,167,0.15);">🧪</div>
+    <div class="guide-info">
+      <h3>测试团队指南</h3>
+      <p>acceptance-manifest（验收场景清单）编写、G-026 门禁、qa-verdict（质量判决）出具、验收自动化、回归基线</p>
+      <span class="for" style="background:rgba(255,234,167,0.15);color:var(--qa);">QA 架构师 1 人 + QA 工程师 3 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+
+  <a class="guide-card" href="pages/ops.html">
+    <div class="guide-icon" style="background:rgba(250,177,160,0.15);">🚀</div>
+    <div class="guide-info">
+      <h3>运维人员指南</h3>
+      <p>CI/CD 流水线、staging/prod 发布、环境管理、监控告警、回滚策略、P0 紧急流程</p>
+      <span class="for" style="background:rgba(250,177,160,0.15);color:var(--ops);">运维工程师 1 人</span>
+    </div>
+    <span class="guide-arrow">&rarr;</span>
+  </a>
+</div>
+
+<!-- ═══════ Deep Dive ═══════ -->
+<div class="guides" style="margin-top:20px;">
+  <h2>高频专题</h2>
+  <div class="deep-grid">
+    <a class="guide-card" href="pages/beauty-ai-p0.html">
+      <div class="guide-icon" style="background:rgba(250,177,160,0.15);">💄</div>
+      <div class="guide-info">
+        <h3>新美业 AI 老板总助 P0</h3>
+        <p>2026-04-28 最新样板：产品边界、UI 状态、模型白名单、验收观察一页对齐</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/power-separation.html">
+      <div class="guide-icon" style="background:rgba(162,155,254,0.15);">⚖️</div>
+      <div class="guide-info">
+        <h3>四权分离详解</h3>
+        <p>语义主权 · 技术实现权 · 独立质量权 · 组织治理权</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/delivery-steps.html">
+      <div class="guide-icon" style="background:rgba(0,184,148,0.15);">🔄</div>
+      <div class="guide-info">
+        <h3>五步交付流详解</h3>
+        <p>Cap-Spec → Design+HPRD → 实现 → 门禁 → PM验收</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/workflow-states.html">
+      <div class="guide-icon" style="background:rgba(108,92,231,0.15);">⚡</div>
+      <div class="guide-info">
+        <h3>12 状态机详解</h3>
+        <p>Proposed → Released 全流程动画 · 入口/出口/守卫规则</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/repo-directory.html">
+      <div class="guide-icon" style="background:rgba(85,239,196,0.15);">📂</div>
+      <div class="guide-info">
+        <h3>完整仓库地图详解</h3>
+        <p>产品线七仓 + 平台附属载体 · CODEOWNERS · 能力包流转</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/gate-levels.html">
+      <div class="guide-icon" style="background:rgba(253,203,110,0.15);">🛡️</div>
+      <div class="guide-info">
+        <h3>门禁体系详解</h3>
+        <p>L1-L4 四层金字塔 · 哨兵 · PR 全流程</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+    <a class="guide-card" href="pages/github-yunxiao-pipeline.html">
+      <div class="guide-icon" style="background:rgba(255,106,0,0.15);">🚀</div>
+      <div class="guide-info">
+        <h3>GitHub + 云效 流水线指南</h3>
+        <p>GitHub PR 挂载 Required Checks · 云效并行执行 + Status Check 回推 · 按钮权落位 · 失败路径与熔断</p>
+      </div>
+      <span class="guide-arrow">&rarr;</span>
+    </a>
+  </div>
+</div>
+
+<div class="mini-links">
+  <h2>补充专题与扩展阅读</h2>
+  <p>这些不是第一次阅读的主路径，但遇到对应问题时，直接跳过去更快。</p>
+  <div class="pill-links">
+    <a class="pill-link" href="pages/beauty-ai-p0.html">新美业 AI 老板总助 P0</a>
+    <a class="pill-link" href="pages/architecture.html">系统架构图</a>
+    <a class="pill-link" href="pages/governance-docs.html">治理文档体系</a>
+    <a class="pill-link" href="pages/qa-process.html">测试流程与分工</a>
+    <a class="pill-link" href="pages/tech-selection.html">技术选型图谱</a>
+    <a class="pill-link" href="pages/team-leads.html">团队代表（6 Lead）</a>
+    <a class="pill-link" href="pages/glossary.html">术语表</a>
+  </div>
+</div>
+
+<!-- ═══════ Quick Jump ═══════ -->
+<div class="toc-section">
+  <h2>关键锚点速跳</h2>
+  <p>首页只保留最常用的跳转；更完整的章节结构，放在各页自己的目录里。</p>
+  <div class="jump-grid">
+    <div class="jump-card">
+      <h3>🌐 先建立全局语境</h3>
+      <p>第一次进入时，先看协作模型本身，再去角色页，不要一上来就钻局部流程。</p>
+      <div class="jump-links">
+        <a href="pages/global.html">全局工作流总览</a>
+        <a href="pages/power-separation.html">四权分离详解</a>
+        <a href="pages/repo-directory.html">完整仓库地图</a>
+      </div>
+    </div>
+    <div class="jump-card">
+      <h3>🛡️ 提 PR 前后最常看</h3>
+      <p>当你需要判断“现在能不能提、提了会卡在哪、卡的是状态还是门禁”时，从这里进。</p>
+      <div class="jump-links">
+        <a href="pages/engineering.html#pr">工程师 PR 提交规范</a>
+        <a href="pages/gate-levels.html">门禁体系详解</a>
+        <a href="pages/workflow-states.html">12 状态机详解</a>
+        <a href="pages/delivery-steps.html">五步交付流详解</a>
+      </div>
+    </div>
+    <div class="jump-card">
+      <h3>✅ 验收与发布链路</h3>
+      <p>涉及 QA verdict、PM acceptance、merge 和 post-merge 部署时，不要把角色判断、状态判断和执行链路混成一页看。</p>
+      <div class="jump-links">
+        <a href="pages/qa.html#qa-verdict">QA verdict 与放行</a>
+        <a href="pages/product.html">PM 验收与语义签字</a>
+        <a href="pages/github-yunxiao-pipeline.html">GitHub + 云效 流水线</a>
+        <a href="pages/ops.html#_4">运维发布策略</a>
+      </div>
+    </div>
+    <div class="jump-card">
+      <h3>📚 权限、治理与裁决</h3>
+      <p>需要判断谁能签字、规则真源在哪、术语到底指什么时，从这组页面解决，不要只看团队经验口径。</p>
+      <div class="jump-links">
+        <a href="pages/governance-docs.html">治理文档体系</a>
+        <a href="pages/team-leads.html">团队代表（6 Lead）</a>
+        <a href="pages/tech-selection.html">技术选型图谱</a>
+        <a href="pages/glossary.html">术语表</a>
+      </div>
     </div>
   </div>
-</header>
+</div>
 
-<main>
-  <div class="source-strip">
-    <span>研究快照：2026-05-06。GEO 仍是早期领域，内部方法以可验证、可复盘、可合规为先。</span>
-    <a href="llms.txt">查看本站 llms.txt</a>
+<div class="doc-section">
+  <h2>治理文档体系</h2>
+  <p>首页只做真源速览；文档层级、状态定义和变更流程，统一去治理页查看。</p>
+  <div class="doc-strip">
+    <div class="doc-pills">
+      <span class="doc-pill"><strong>TEAM-COLLAB-SPEC v2.1</strong><span>核心协作规格</span></span>
+      <span class="doc-pill"><strong>UI-DELIVERY-SPEC v1.0</strong><span>前端/设计双线交付模型</span></span>
+      <span class="doc-pill"><strong>WORKFLOW-GUIDE v1</strong><span>Bugfix / 技术改动 / 治理流程</span></span>
+      <span class="doc-pill"><strong>TOOLCHAIN-GUIDE v1</strong><span>工具链选型与流程映射</span></span>
+      <span class="doc-pill"><strong>PERFORMANCE-SYSTEM v1.0</strong><span>产研绩效考核制度投影</span></span>
+    </div>
+    <div class="doc-cta">
+      <a href="pages/governance-docs.html">治理文档体系详解 →</a>
+    </div>
   </div>
+</div>
 
-  <section class="section" id="map">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">01 / Mental Model</div>
-        <h2>GEO 的工作对象是“答案”，不是排名页</h2>
-      </div>
-      <p>运营团队要先学会把内容做成可被模型检索、摘取、交叉验证和推荐的证据资产。</p>
-    </div>
-    <div class="principle-grid">
-      <div class="panel feature">
-        <h3>一句话定义</h3>
-        <p>GEO，Generative Engine Optimization，是面向生成式搜索引擎和 AI 答案系统的可见性优化。核心指标从“搜索结果第几名”转向“是否被答案纳入、引用、排序靠前、描述准确”。</p>
-      </div>
-      <div class="panel">
-        <h3>和 SEO 的关系</h3>
-        <p>SEO 仍然是地基。GEO 叠加了自然语言问题、语义清晰度、结构化数据、权威证据、AI 爬虫访问、跨模型输出漂移监控。</p>
-      </div>
-      <div class="panel">
-        <h3>运营团队的机会</h3>
-        <p>新美业大量问题仍缺少高质量、结构化、可引用的中文答案。谁能持续产出可验证的一手内容，谁就有机会成为模型默认参考源。</p>
-      </div>
-    </div>
-    <div class="flow" aria-label="GEO五步作战链路">
-      <div class="flow-step"><b>1</b><h3>问题地图</h3><p>收集用户真实问法，区分认知、比较、决策、执行和复盘问题。</p></div>
-      <div class="flow-step"><b>2</b><h3>答案资产</h3><p>把内容写成自包含、事实密集、可摘取、可链接的答案块。</p></div>
-      <div class="flow-step"><b>3</b><h3>技术可读</h3><p>静态 HTML、清晰标题、结构化数据、sitemap、robots 与 llms.txt。</p></div>
-      <div class="flow-step"><b>4</b><h3>模型评测</h3><p>同一问题跨模型、跨轮次跑答案，记录引用、推荐、误读和竞品。</p></div>
-      <div class="flow-step"><b>5</b><h3>复盘迭代</h3><p>按分数回写内容、补证据、改结构，避免只凭主观感觉优化。</p></div>
-    </div>
-  </section>
-
-  <section class="section" id="radar">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">02 / Open Source Radar</div>
-        <h2>当前值得跟的开源项目与快速材料</h2>
-      </div>
-      <p>这里不是书单堆砌，而是按内部可转化动作筛选：能帮助学习、审计、评测或搭建基础设施。</p>
-    </div>
-    <div class="resource-grid">
-      <article class="resource-card">
-        <span class="type paper">论文与基准</span>
-        <h3>GEO-optim/GEO</h3>
-        <p>KDD 2024 论文代码与 GEO-Bench。适合用来理解 visibility、citation order 等评测指标，以及为什么不同领域需要不同优化策略。</p>
-        <a href="https://github.com/GEO-optim/GEO" target="_blank" rel="noopener">打开项目</a>
-      </article>
-      <article class="resource-card">
-        <span class="type paper">前沿研究</span>
-        <h3>AgenticGEO</h3>
-        <p>2026 年提出的自进化 agentic GEO 框架，强调内容条件化、少量反馈和多轮重写。内部定位为进阶研发参考，不作为运营首周必学。</p>
-        <a href="https://github.com/AIcling/agentic_geo" target="_blank" rel="noopener">打开项目</a>
-      </article>
-      <article class="resource-card">
-        <span class="type tool">实操工具</span>
-        <h3>geo-seo-claude</h3>
-        <p>Claude Code 的 GEO-first SEO skill，覆盖 citability scoring、AI crawler analysis、brand authority、schema markup 和报告输出，适合拆成内部审计清单。</p>
-        <a href="https://github.com/zubair-trabzada/geo-seo-claude" target="_blank" rel="noopener">打开项目</a>
-      </article>
-      <article class="resource-card">
-        <span class="type tool">监控样板</span>
-        <h3>GEO/AEO Tracker</h3>
-        <p>本地优先的 AI visibility dashboard，追踪品牌在多个 AI 模型中的出现情况。适合作为内部“周评测看板”的产品形态参考。</p>
-        <a href="https://github.com/danishashko/geo-aeo-tracker" target="_blank" rel="noopener">打开项目</a>
-      </article>
-      <article class="resource-card">
-        <span class="type standard">站点协议</span>
-        <h3>llms.txt</h3>
-        <p>面向 LLM 推理时读取的站点说明文件提案。内部先用它做“机器可读导览”，把关键页面、术语和证据源整理给模型。</p>
-        <a href="https://llmstxt.org/" target="_blank" rel="noopener">阅读规范</a>
-      </article>
-      <article class="resource-card">
-        <span class="type practice">行业实践</span>
-        <h3>Vercel LLM SEO 实践</h3>
-        <p>把 LLM SEO 解释为“成为答案”的内容策略：清晰概念、原始证据、结构化页面、自包含片段和持续更新。适合运营快速入门。</p>
-        <a href="https://vercel.com/blog/how-were-adapting-seo-for-llms-and-ai-search" target="_blank" rel="noopener">阅读文章</a>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="learn">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">03 / Learning Path</div>
-        <h2>14 天内部速成路径</h2>
-      </div>
-      <p>学习目标不是把术语背熟，而是围绕“美业分账系统 GEO”和“美业智能体 GEO”各跑完一次从用户问题、内容资产、基础设施到跨模型评测的闭环。</p>
-    </div>
-    <div class="learning-grid">
-      <div class="learning-card">
-        <h3>第 1 到 3 天：锁定分账问题地图</h3>
-        <ol>
-          <li>分账团队列出 30 个问题，智能体团队列出 20 个问题，来源包括销售问答、客户访谈、竞品页面、客服记录。</li>
-          <li>按“概念解释、方案比较、实施步骤、风险合规、系统选型”五类标注意图。</li>
-          <li>跨 ChatGPT、Claude、Gemini、Perplexity 查询核心问题，记录当前答案缺口和竞品引用。</li>
-        </ol>
-      </div>
-      <div class="learning-card">
-        <h3>第 4 到 7 天：生产首批答案资产</h3>
-        <ol>
-          <li>分账团队写 12 个自包含答案块，覆盖连锁分账、供应链分账、会销收银分账、招商收银分账。</li>
-          <li>智能体团队写 6 个自包含答案块，覆盖咨询师接待、项目推荐、成交跟进、复购提醒。</li>
-          <li>把术语、FAQ、案例、对比页和实施清单互链，补充证据、边界和适用条件。</li>
-        </ol>
-      </div>
-      <div class="learning-card">
-        <h3>第 8 到 14 天：完成评测与改版</h3>
-        <ol>
-          <li>用固定 prompt bank 跨模型跑 3 轮，记录是否引用、是否推荐、是否误读两个领域的产品能力。</li>
-          <li>把低分问题回写到内容 backlog，明确要补产品截图、接口说明、案例证据还是合规边界。</li>
-          <li>产出一页周报：新增资产、AI 答案变化、基础设施缺口、下周 owner。</li>
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="first-stage">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">04 / Task Outline</div>
-        <h2>任务大纲：两个领域、两个专题站、首月 40 条</h2>
-      </div>
-      <p>先不要铺很多零散账号。先把两个可被 AI 抓取和引用的公开专题站/栏目建起来，再按周分发到外部平台。</p>
-    </div>
-    <div class="task-grid">
-      <article class="task-card">
-        <h3>是否需要新建站点</h3>
-        <ol>
-          <li>需要新建 2 个 GEO 专题站/栏目，不建议先新开独立域名。</li>
-          <li>专题 1：美业分账 GEO，承载收银分账系统、连锁分账、供应链分账、会销收银分账、招商收银分账。</li>
-          <li>专题 2：美业智能体 GEO，承载咨询师智能体、顾客咨询、项目推荐、到店转化、复购跟进。</li>
-        </ol>
-      </article>
-      <article class="task-card">
-        <h3>发布到什么平台</h3>
-        <ol>
-          <li>主阵地：公司官网或产品官网公开目录，优先使用主站权重和统一品牌信任。</li>
-          <li>机器层：sitemap.xml、robots.txt、llms.txt、FAQ/HowTo/Product schema。</li>
-          <li>分发层：微信公众号、视频号、小红书、知乎、抖音、B 站；每条外发内容必须回链到专题站。</li>
-        </ol>
-      </article>
-      <article class="task-card">
-        <h3>首月发布多少条</h3>
-        <ol>
-          <li>首月发布 40 条有效内容：官网专题资产 18 条，外部分发内容 22 条。</li>
-          <li>美业分账 28 条：12 条官网资产 + 16 条平台分发。</li>
-          <li>美业智能体 12 条：6 条官网资产 + 6 条平台分发。</li>
-        </ol>
-      </article>
-      <article class="task-card">
-        <h3>美业分账 GEO 内容包</h3>
-        <ol>
-          <li>核心页：总览、连锁分账、供应链分账、会销收银分账、招商收银分账、实施步骤、FAQ、对比页。</li>
-          <li>案例页：多门店技师提成、合伙人分润、平台佣金与门店结算、退款冲正与对账闭环。</li>
-          <li>每页必须写清：适用对象、业务痛点、系统解法、前置条件、风险边界、下一步咨询入口。</li>
-        </ol>
-      </article>
-      <article class="task-card">
-        <h3>美业智能体 GEO 内容包</h3>
-        <ol>
-          <li>核心页：咨询师智能体总览、顾客咨询接待、项目推荐、成交跟进、复购提醒、FAQ。</li>
-          <li>场景页：新客到店咨询、皮肤/项目问答、疗程方案沟通、老客复购唤醒。</li>
-          <li>每页必须写清：智能体能做什么、不能做什么、人工复核点、门店如何接入。</li>
-        </ol>
-      </article>
-      <article class="task-card">
-        <h3>每周执行节奏</h3>
-        <ol>
-          <li>周一锁问题和发布选题；周二写官网资产；周三做技术可读检查。</li>
-          <li>周四做外部平台分发和跨模型评测；周五复盘 AI 答案变化和下周 backlog。</li>
-          <li>每周至少新增 10 条内容，其中分账 7 条、智能体 3 条。</li>
-        </ol>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="roles">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">05 / Operating Model</div>
-        <h2>分工指南：美业分账 4 人，美业智能体 2 人</h2>
-      </div>
-      <p>两个领域分别闭环。美业分账由张勇任组长，吕君、洪浩东、罗锐参与；美业智能体由周鸿亮、钱芷馨负责。</p>
-    </div>
-    <div class="roles">
-      <article class="role-card">
-        <h3>张勇 · 美业分账组长</h3>
-        <p>负责美业分账 GEO 的目标、节奏、选题裁决、产研协调和最终交付。</p>
-        <ul>
-          <li>维护分账 prompt bank、周 OKR、发布排期</li>
-          <li>锁定连锁分账、供应链分账、会销收银分账、招商收银分账优先级</li>
-          <li>验收：每周分账低分项进入明确 backlog</li>
-        </ul>
-      </article>
-      <article class="role-card">
-        <h3>吕君 · 分账内容资产</h3>
-        <p>负责美业分账专题站页面、FAQ、案例和外部分发内容的初稿。</p>
-        <ul>
-          <li>交付总览页、场景页、FAQ、对比页、案例页</li>
-          <li>每页补适用对象、分账规则、前置条件、风险边界</li>
-          <li>验收：无虚假案例、无医疗/财税越界承诺</li>
-        </ul>
-      </article>
-      <article class="role-card">
-        <h3>洪浩东 · 分账技术可读</h3>
-        <p>负责分账专题的机器可读层、产研需求清单和页面可抓取验收。</p>
-        <ul>
-          <li>交付 sitemap、robots、llms.txt、schema、页面访问检查表</li>
-          <li>确认公开 URL、跳转、登录墙、响应码、页面性能</li>
-          <li>验收：关键页面无登录可读，机器导览文件可访问</li>
-        </ul>
-      </article>
-      <article class="role-card">
-        <h3>罗锐 · 分账评测增长</h3>
-        <p>负责跨模型评测、外部分发、销售承接和分账线索反馈。</p>
-        <ul>
-          <li>交付 prompt bank、跨模型记录、截图、评分表</li>
-          <li>交付落地页 CTA、咨询话术、常见异议反馈</li>
-          <li>验收：评测结论能转成下周页面、证据或基础设施任务</li>
-        </ul>
-      </article>
-      <article class="role-card">
-        <h3>周鸿亮 · 咨询师智能体负责人</h3>
-        <p>负责美业智能体 GEO 的问题地图、产品口径、内容结构和产研协调。</p>
-        <ul>
-          <li>维护咨询师智能体 prompt bank 与发布排期</li>
-          <li>锁定顾客咨询、项目推荐、成交跟进、复购提醒场景</li>
-          <li>验收：智能体内容不夸大自动诊断、疗效或替代人工</li>
-        </ul>
-      </article>
-      <article class="role-card">
-        <h3>钱芷馨 · 智能体内容评测</h3>
-        <p>负责咨询师智能体页面初稿、外部分发、跨模型评测和复盘报告。</p>
-        <ul>
-          <li>交付 6 条官网资产与 6 条平台分发内容</li>
-          <li>记录模型是否准确理解“咨询师智能体”能力边界</li>
-          <li>验收：每周智能体低分项进入下周 backlog</li>
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="cadence">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">06 / Weekly Cadence</div>
-        <h2>一周一个 GEO 作战循环</h2>
-      </div>
-      <p>运营 AI 转型不能停在培训。每周都要有可发布资产、可复现评测和明确的下周改版任务。</p>
-    </div>
-    <div class="week-grid">
-      <div class="week-card"><div class="day">Monday</div><h3>锁问题</h3><p>GEO 负责人锁定本周 10 个分账系统 prompt，产研确认能力边界。</p></div>
-      <div class="week-card"><div class="day">Tuesday</div><h3>写资产</h3><p>内容资产负责人写页面与 FAQ，补案例、边界、证据和下一步行动。</p></div>
-      <div class="week-card"><div class="day">Wednesday</div><h3>查基础设施</h3><p>技术与基础设施负责人检查标题、schema、sitemap、robots、llms.txt 和公开访问。</p></div>
-      <div class="week-card"><div class="day">Thursday</div><h3>跑评测</h3><p>AI 评测与增长负责人用固定 prompt 跑多模型答案，记录引用、竞品、误读和漂移。</p></div>
-      <div class="week-card"><div class="day">Friday</div><h3>闭环派工</h3><p>4 人全职团队一起复盘，低分项必须落到下周 owner 与验收口径。</p></div>
-    </div>
-  </section>
-
-  <section class="section" id="assets">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">07 / Asset System</div>
-        <h2>美业分账系统 GEO 的首批内容资产</h2>
-      </div>
-      <p>从新美业老板最容易问的问题开始，不追求铺量，先追求“模型愿意引用、用户看得懂、合规能放行”。</p>
-    </div>
-    <div class="asset-map">
-      <div class="asset-list">
-        <div class="asset-chip"><strong>问题库</strong>真实问法、同义变体、地域与门店规模上下文。</div>
-        <div class="asset-chip"><strong>答案块</strong>134 到 200 词左右的自包含解释、步骤和边界。</div>
-        <div class="asset-chip"><strong>案例库</strong>门店场景、行动、结果、限制条件和可复用模板。</div>
-        <div class="asset-chip"><strong>术语表</strong>新美业、私域、到店、转化、老板总助等统一定义。</div>
-        <div class="asset-chip"><strong>比较页</strong>不同方案、工具、流程的取舍，不做单向夸张宣传。</div>
-        <div class="asset-chip"><strong>机器导览</strong>llms.txt、sitemap、结构化数据和关键页面索引。</div>
-      </div>
-      <div class="panel feature">
-        <h3>P0 实战场域</h3>
-        <p>优先覆盖“美业分账系统”的经营问题：技师提成、合伙人分润、多门店结算、平台佣金、退款冲正、对账闭环、支付合规、实施前置条件。每条内容都要能回答一个真实老板或财务负责人会问的问题。</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="infra">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">08 / Infrastructure Readiness</div>
-        <h2>基础设施就绪检查清单</h2>
-      </div>
-      <p>以下项目需要产研团队配合。运营可以提出需求、验收可见性，但不能擅自承诺系统能力或绕过工程发布链路。</p>
-    </div>
-    <div class="checklist-grid">
-      <article class="checklist-card">
-        <span class="owner">产研团队配合</span>
-        <h3>公开页面与访问</h3>
-        <ul>
-          <li>确认分账系统总览页、场景页、FAQ 页的公开 URL。</li>
-          <li>关键页面返回 200，不依赖登录态，不被临时跳转吞掉。</li>
-          <li>移动端与桌面端首屏都能看到主题、价值和下一步行动。</li>
-        </ul>
-      </article>
-      <article class="checklist-card">
-        <span class="owner">产研团队配合</span>
-        <h3>机器可读文件</h3>
-        <ul>
-          <li>提供 sitemap.xml，覆盖本轮 GEO 页面。</li>
-          <li>robots.txt 不误封 Googlebot、GPTBot、ClaudeBot、PerplexityBot 等合规访问。</li>
-          <li>llms.txt 列出核心页面、概念、边界和证据源。</li>
-        </ul>
-      </article>
-      <article class="checklist-card">
-        <span class="owner">产研团队配合</span>
-        <h3>结构化数据</h3>
-        <ul>
-          <li>FAQ、HowTo、Article、Product/SoftwareApplication schema 由研发确认可实现范围。</li>
-          <li>页面标题、H1/H2、摘要段与内部链接符合内容结构。</li>
-          <li>禁止用结构化数据标注页面里不存在的能力、价格或评价。</li>
-        </ul>
-      </article>
-      <article class="checklist-card">
-        <span class="owner">产研团队配合</span>
-        <h3>产品证据素材</h3>
-        <ul>
-          <li>提供可公开的流程截图、字段示意、角色权限说明或 Demo 数据。</li>
-          <li>标注哪些能力已实现、试运行、规划中，运营按状态分层表达。</li>
-          <li>提供分账规则、对账、退款、异常处理的边界说明。</li>
-        </ul>
-      </article>
-      <article class="checklist-card">
-        <span class="owner">产研团队配合</span>
-        <h3>观测与评测</h3>
-        <ul>
-          <li>提供页面访问、来源、转化事件和咨询入口的最小埋点。</li>
-          <li>运营维护 AI prompt bank；研发协助保留版本、URL 和发布时间。</li>
-          <li>每周评测记录必须能追溯到具体页面版本。</li>
-        </ul>
-      </article>
-      <article class="checklist-card">
-        <span class="owner">产研团队配合</span>
-        <h3>合规与安全</h3>
-        <ul>
-          <li>财税、支付、资金流相关表述先过产品与合规边界确认。</li>
-          <li>页面不展示真实商户敏感数据、个人信息、银行卡或支付凭证。</li>
-          <li>所有“自动分账、资金结算、对账准确率”承诺必须有产品依据。</li>
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="score">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">09 / Scorecard</div>
-        <h2>每周只看能驱动行动的分数</h2>
-      </div>
-      <p>分数不是为了好看，而是为了决定下周要补哪类内容、改哪个页面、修哪个技术入口。</p>
-    </div>
-    <div class="score-grid">
-      <div class="score-card"><span class="weight">30%</span><h3>答案纳入</h3><p>目标品牌或页面是否进入模型答案，是否被推荐为解决方案。</p></div>
-      <div class="score-card"><span class="weight">25%</span><h3>引用质量</h3><p>是否出现链接、引用顺序、引用段落是否准确且能支撑结论。</p></div>
-      <div class="score-card"><span class="weight">20%</span><h3>内容证据</h3><p>答案资产是否具备事实、案例、结构、边界和可摘取片段。</p></div>
-      <div class="score-card"><span class="weight">15%</span><h3>技术可读</h3><p>AI crawler、静态 HTML、结构化数据、sitemap、robots、llms.txt 是否可用。</p></div>
-      <div class="score-card"><span class="weight">10%</span><h3>转化承接</h3><p>AI 答案带来的访问是否能落到清晰、可信、可继续行动的页面。</p></div>
-      <div class="score-card"><span class="weight">Guard</span><h3>合规门禁</h3><p>医疗、美容功效、价格、隐私和自动化承诺只要越界，本条资产不得发布。</p></div>
-      <div class="score-card"><span class="weight">Delta</span><h3>漂移记录</h3><p>同一问题不同模型、不同轮次是否改变答案，是否出现竞品或事实误读。</p></div>
-      <div class="score-card"><span class="weight">Backlog</span><h3>改版任务</h3><p>每个低分项必须落到具体 owner、页面、证据需求和下次复测日期。</p></div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section-header">
-      <div>
-        <div class="section-kicker">10 / Guardrails</div>
-        <h2>三条底线</h2>
-      </div>
-      <p>GEO 如果变成伪造权威、内容农场或黑盒刷屏，会直接伤害品牌和长期可见性。</p>
-    </div>
-    <div class="rules">
-      <div class="rule"><h3>不伪造证据</h3><p>不编造引用、客户、数据、认证、媒体报道。没有证据就写成判断或假设。</p></div>
-      <div class="rule"><h3>不牺牲用户体验</h3><p>给模型读的内容也必须给人读得懂。不要堆关键词，不隐藏文本，不制造无价值页面。</p></div>
-      <div class="rule"><h3>不越过合规边界</h3><p>新美业相关内容必须避开医疗诊断、疗效承诺、误导性价格和未经授权的个人信息。</p></div>
-    </div>
-  </section>
-</main>
-
-<footer class="footer">
-  美人计GEO · Internal Guide Layer · 2026-05-06 · 部署于 huanlongAI/hl-dispatch GitHub Pages
+<footer class="site-footer">
+  唤龙平台 · TEAM-COLLABORATION-SPEC v2.1 + UI-DELIVERY-SPEC v1.0 · Internal Guide<br>
+  2026-04-13 生成 · 治理来源：SAAC-HL-001 v1.1 → BRIDGE-DERIVATION → PRD-REDEFINITION-SPEC v2.0 → 创始人裁决
 </footer>
+
+<script src="js/main.js"></script>
+<script>
+// ── Step data ──
+const STEPS = [
+  {
+    title: '❶ Cap-Spec 冻结',
+    desc: 'PM 主导编写能力包说明书并冻结语义边界，其他角色待命或了解需求。',
+    cols: [
+      { label: '核心产出', value: 'cap-spec.yaml<br>scope-boundary.md<br>acceptance-criteria' },
+      { label: '参与角色', tags: [
+        { text:'PM ⬤主导', bg:'rgba(116,185,255,0.2)', color:'#74B9FF' },
+        { text:'创始人 审批', bg:'rgba(162,155,254,0.2)', color:'#A29BFE' }
+      ]},
+      { label: '关键门控', value: '创始人签字冻结<br>scope 不可追加<br>→ 触发 Step 2' }
+    ]
+  },
+  {
+    title: '❷ Design + HPRD',
+    desc: '设计师产出 Design Packet，工程师编写 HPRD，QA 准备验收场景。多角色并行。',
+    cols: [
+      { label: '核心产出', value: 'Design Packet 12字段<br>HPRD 6字段<br>acceptance-manifest.yaml' },
+      { label: '参与角色', tags: [
+        { text:'PM ⬤审阅', bg:'rgba(116,185,255,0.2)', color:'#74B9FF' },
+        { text:'工程师 ⬤HPRD', bg:'rgba(85,239,196,0.2)', color:'#55EFC4' },
+        { text:'设计师 ⬤Packet', bg:'rgba(223,230,233,0.2)', color:'#DFE6E9' },
+        { text:'QA ⬤manifest', bg:'rgba(255,234,167,0.2)', color:'#FFEAA7' }
+      ]},
+      { label: '关键门控', value: 'HPRD 互审通过<br>Design Packet 冻结<br>→ 触发 Step 3' }
+    ]
+  },
+  {
+    title: '❸ AI-first 实现',
+    desc: '工程师和前端以 AI 辅助方式编码实现，遵循 HPRD 和 Design Packet。',
+    cols: [
+      { label: '核心产出', value: '功能代码 + 单元测试<br>design.md 互审<br>PR (feature/cap-xxx)' },
+      { label: '参与角色', tags: [
+        { text:'工程师 ⬤编码', bg:'rgba(85,239,196,0.2)', color:'#55EFC4' },
+        { text:'前端 ⬤UI实现', bg:'rgba(223,230,233,0.2)', color:'#DFE6E9' },
+        { text:'PM ○待命', bg:'rgba(116,185,255,0.1)', color:'rgba(116,185,255,0.5)' }
+      ]},
+      { label: '关键门控', value: 'AI 生成代码审阅<br>design.md 双人互审<br>→ PR 提交触发 CI' }
+    ]
+  },
+  {
+    title: '❹ 门禁 + QA 验收',
+    desc: 'CI 自动执行 L1-L4 门禁，QA 出具 qa-verdict，运维进入待部署准备。',
+    cols: [
+      { label: '核心产出', value: 'L1-L3 全绿 (BLOCKING)<br>L4 哨兵报告 (ADVISORY)<br>qa-verdict PASS/FAIL' },
+      { label: '参与角色', tags: [
+        { text:'工程师 ⬤修复', bg:'rgba(85,239,196,0.2)', color:'#55EFC4' },
+        { text:'QA ⬤verdict', bg:'rgba(255,234,167,0.2)', color:'#FFEAA7' },
+        { text:'运维 ○待部署', bg:'rgba(250,177,160,0.1)', color:'rgba(250,177,160,0.6)' },
+        { text:'哨兵 🤖自动', bg:'rgba(108,92,231,0.2)', color:'#A29BFE' }
+      ]},
+      { label: '关键门控', value: 'L1-L3 BLOCKING 必过<br>qa-verdict = PASS<br>→ 解锁 Step 5' }
+    ]
+  },
+  {
+    title: '❺ PM 验收 + 合并',
+    desc: 'PM 最终验收语义完整性，确认后由 INV-0 在 GitHub 合并到 main，运维执行 staging → canary → prod。',
+    cols: [
+      { label: '核心产出', value: 'pm-acceptance 签字<br>INV-0 GitHub Merge<br>staging → canary → prod' },
+      { label: '参与角色', tags: [
+        { text:'PM ⬤签字', bg:'rgba(116,185,255,0.2)', color:'#74B9FF' },
+        { text:'INV-0 ⬤Merge', bg:'rgba(162,155,254,0.2)', color:'#A29BFE' },
+        { text:'QA ⬤staging回归', bg:'rgba(255,234,167,0.2)', color:'#FFEAA7' },
+        { text:'运维 ⬤发布', bg:'rgba(250,177,160,0.2)', color:'#FAB1A0' }
+      ]},
+      { label: '关键门控', value: 'pm-acceptance = approved<br>Required Status Checks 全绿<br>→ 能力包上线 ✓' }
+    ]
+  }
+];
+
+let currentStep = 0;
+let autoTimer = null;
+
+function showStep(idx) {
+  currentStep = idx;
+  // update pipeline UI
+  document.querySelectorAll('.pipe-step').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.pipe-arrow').forEach((el, i) => {
+    el.classList.toggle('lit', i < idx);
+  });
+  // render detail
+  const s = STEPS[idx];
+  let html = '<h3>' + s.title + '</h3><p style="font-size:0.88em;color:var(--text-muted);margin:0 0 12px;">' + s.desc + '</p><div class="detail-grid">';
+  s.cols.forEach(c => {
+    html += '<div class="detail-cell"><div class="cell-label">' + c.label + '</div><div class="cell-value">';
+    if (c.tags) {
+      c.tags.forEach(t => {
+        html += '<span class="role-tag" style="background:' + t.bg + ';color:' + t.color + ';">' + t.text + '</span>';
+      });
+    } else {
+      html += c.value;
+    }
+    html += '</div></div>';
+  });
+  html += '</div>';
+  const detail = document.getElementById('stepDetail');
+  detail.innerHTML = html;
+  detail.className = 'step-detail show';
+  // restart auto
+  clearInterval(autoTimer);
+  autoTimer = setInterval(autoAdvance, 5000);
+}
+
+function autoAdvance() {
+  showStep((currentStep + 1) % 5);
+}
+
+// init
+showStep(0);
+autoTimer = setInterval(autoAdvance, 5000);
+</script>
 </body>
 </html>

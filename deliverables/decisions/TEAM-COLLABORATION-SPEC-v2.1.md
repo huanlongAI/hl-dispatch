@@ -9,7 +9,7 @@
 **日期**：2026-04-11
 **状态**：DRAFT / Pilot-Locked for Capability Flow（创始人 2026-04-11 裁决：按试运行基线执行能力包流，缺陷修复/技术改动/治理流另见 WORKFLOW-GUIDE）
 **替代文档**：TEAM-COLLABORATION-SPEC v1.2（SUPERSEDED）；v2.0（SUPERSEDED by v2.1 审计修正）
-**派生链**：SAAC-HL-001 v1.1 §1.3 → BRIDGE-DERIVATION v1 → PRD-REDEFINITION-SPEC v2.0 → DD-TEST v1.1 → 创始人 2026-04-11 组织裁决 → v2.0 → 双独立审计仲裁 → 创始人 2026-04-11 Pilot-Lock 裁决 → 本文档
+**派生链**：SAAC-HL-001 v1.1 §1.3 → BRIDGE-DERIVATION v1 → PRD-REDEFINITION-SPEC v2.0 → DD-TEST v1.2 → 创始人 2026-04-11 组织裁决 → v2.0 → 双独立审计仲裁 → 创始人 2026-04-11 Pilot-Lock 裁决 → 本文档
 
 ---
 
@@ -26,9 +26,9 @@
 | I-1 | SAAC-HL §1.3 | AI 驱动基本运行前提 |
 | I-2 | R-045 LOCKED | 全新构建，无旧系统适配 |
 | I-3 | R-055 LOCKED | Phase 0-2 单 JVM Modulith |
-| I-4 | TECH-STACK-SPEC v3 | Kotlin 2.1.10 / Spring Boot 3.5.11 / Spring Modulith 1.3.4 |
+| I-4 | TECH-STACK-SPEC v3.4 | Kotlin 2.1.10 / Spring Boot 3.5.11 / Spring Modulith 1.3.4 / JUnit 5.10.2 / Kotest Property 5.9.1 / Testcontainers 1.20.4 |
 | I-5 | PRD-REDEFINITION-SPEC v2.0 | PM = 产线责任人，Cap-Spec 替代 PRD |
-| I-6 | DD-TEST v1.1 | 测试工程推导（JUnit 5 / Kotest Property / Testcontainers / acceptance-manifest.yaml）；G-026 = L2 manifest-based 覆盖率；G-023 = L3 验收场景回放 |
+| I-6 | DD-TEST v1.2 | 测试工程推导（JUnit 5 / Kotest Property / Testcontainers / acceptance-manifest.yaml）；G-026 = L2 manifest-based YAML 校验；G-023 = L3 验收场景回放 |
 | I-7 | 创始人 2026-04-11 裁决 | 全组织 21 人 AI 驱动，不再分批过渡 |
 | I-8 | 创始人 2026-04-11 裁决 | path-based CODEOWNERS + CI 门禁自动放行，创始人退出能力包 feature PR 人工审批 |
 | I-9 | 创始人 2026-04-11 裁决 | HPRD（Human-readable Product Design）替代 Impl-Semantics 术语 |
@@ -101,7 +101,7 @@ I-8（path-based gate）+ I-11（审计修正：机读化）
 | PR 审批 | 创始人审所有 PR | path-based CODEOWNERS + CI 门禁 + required status checks | 创始人裁决 + 审计修正 |
 | 组织结构 | 三环模型 | 四角色模型（治理/能力/方案/质量） | 从"守护什么"改为"拥有什么" |
 | 语义主权 | 未明确分层 | 双层：全局契约（创始人）+ 能力包（PM） | 审计修正 F-7 |
-| 测试团队 | 未定义 | QA/Acceptance Owner × 4 人 | DD-TEST v1.1 + 创始人确认 |
+| 测试团队 | 未定义 | QA/Acceptance Owner × 4 人 | DD-TEST v1.2 + 创始人确认 |
 | PM 职责 | PM 驱动 AI 编码 | PM 驱动 Cap-Spec + 产品验收 | 创始人裁决 |
 | 门禁机读化 | 无 | QA/PM verdict 为 required status checks | 审计修正 F-4 |
 
@@ -495,7 +495,7 @@ Step 3: Implementation + Tests
 Step 4: 门禁 + 验收（并行）（v2.1 修正 F-6：对齐 DD-TEST）
   ┌── CI 门禁（自动，BLOCKING）
   │     L1: 编译、类型检查、格式
-  │     L2: 契约一致性、模块边界、ReasonCode 对齐、G-026 验收覆盖率（manifest-based）
+  │     L2: 契约一致性、模块边界、ReasonCode 对齐、G-026 manifest-based YAML 校验
   │     L3: 单元测试、集成测试、G-023 验收场景回放
   ├── AI 审计（L4，ADVISORY）
   │     NODE-D 异源模型交叉审计

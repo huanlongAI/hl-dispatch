@@ -755,13 +755,13 @@
   </div>
 
   <h2 style="margin: 32px 0 16px; font-size: 1.3em;">Required Status Checks（人工门禁机读化）</h2>
-  <p style="color:var(--text-muted);margin-top:-8px;">GitHub PR 是统一挂载位：PM / QA 在 PR approve，云效 L1-L3 结果通过 GitHub 执行身份回推，INV-0 只看 GitHub 红绿灯。</p>
+  <p style="color:var(--text-muted);margin-top:-8px;">GitHub PR 是统一挂载位：PM Owner / QA Owner 在 PR approve，QA 团队提交验收 evidence，云效 L1-L3 结果通过 GitHub 执行身份回推，INV-0 只看 GitHub 红绿灯。</p>
   <div class="table-wrapper">
     <table>
       <thead><tr><th>Check</th><th>含义</th><th>通过条件</th><th>适用仓库</th></tr></thead>
       <tbody>
         <tr><td style="color:var(--pm);font-weight:600">pm-hprd-pass <span style="font-size:0.7em;font-weight:400;color:var(--accent);">[流程内检查]</span></td><td>PM 确认 HPRD 理解正确</td><td>PM 团队成员 approve PR</td><td>hl-platform, hl-scene-app</td></tr>
-        <tr><td style="color:var(--qa);font-weight:600">qa-verdict</td><td>QA 验收通过</td><td>QA 团队成员 approve PR</td><td>hl-platform, hl-scene-app</td></tr>
+        <tr><td style="color:var(--qa);font-weight:600">qa-verdict</td><td>QA 验收通过</td><td>QA Owner 基于 QA 团队 evidence approve PR</td><td>hl-platform, hl-scene-app</td></tr>
         <tr><td style="color:var(--pm);font-weight:600">pm-acceptance</td><td>PM 产品验收通过</td><td>PM 团队成员 approve PR</td><td>hl-platform, hl-scene-app</td></tr>
       </tbody>
     </table>
@@ -896,7 +896,7 @@ founder_required: false     # true | false</pre>
     </a>
     <a href="qa.html" class="power-card p4" style="text-decoration:none;color:inherit;">
       <h3>🧪 测试团队指南</h3>
-      <p>QA 架构师 + QA 工程师的验收操作手册：acceptance-manifest 编写、qa-verdict 出具、回归基线维护。</p>
+      <p>QA 架构师 + QA 工程师的验收操作手册：acceptance-manifest 编写、验收 evidence、回归基线维护；qa-verdict 由 QA Owner 签发。</p>
       <div style="margin-top:8px;font-size:0.8em;color:var(--qa)">→ 测试团队指南</div>
     </a>
     <a href="ops.html" class="power-card" style="text-decoration:none;color:inherit;border-color:var(--ops);">
@@ -915,7 +915,7 @@ founder_required: false     # true | false</pre>
         <tr><td>UI-DELIVERY-SPEC v1.0</td><td>前端/设计双线交付模型</td><td style="color:var(--accent)">DRAFT</td></tr>
         <tr><td>WORKFLOW-GUIDE v1</td><td>非能力包流程（Bugfix/技术改动/治理）</td><td style="color:var(--accent)">DRAFT</td></tr>
         <tr><td>TOOLCHAIN-GUIDE v1</td><td>工具链选型与流程映射</td><td style="color:var(--accent)">DRAFT</td></tr>
-        <tr><td>DD-TEST v1.1</td><td>测试工程推导</td><td style="color:var(--secondary)">Locked</td></tr>
+        <tr><td>DD-TEST v1.2</td><td>测试工程推导</td><td style="color:var(--secondary)">Locked</td></tr>
         <tr><td>TECH-STACK-SPEC v3</td><td>技术栈锁定</td><td style="color:var(--secondary)">Locked</td></tr>
       </tbody>
     </table>

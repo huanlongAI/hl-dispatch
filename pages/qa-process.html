@@ -461,7 +461,7 @@
 </div>
 
     <div class="guide-warning">
-        ⚠️ Guide Layer — 内部指南，非规范性文件。具体规范请查阅 DD-TEST v1.1 和相关文档
+        ⚠️ Guide Layer — 内部指南，非规范性文件。具体规范请查阅 DD-TEST v1.2 和相关文档
     </div>
 
     <main>
@@ -559,7 +559,7 @@
                             <strong>关键产出：</strong>
                             <ul style="margin-top: 0.5rem; margin-left: 1rem;">
                                 <li>acceptance-manifest.yaml — 所有测试场景定义</li>
-                                <li>G-026 覆盖率检查 ≥ 60%（Pilot 阈值）</li>
+                                <li>G-026 manifest-based YAML 校验</li>
                                 <li>Widgetbook 审核（UI 组件库评审）</li>
                             </ul>
                         </div>
@@ -642,26 +642,36 @@
         <!-- Section 3: acceptance-manifest Schema -->
         <section>
             <h2>第三部分：acceptance-manifest.yaml 规范</h2>
-            <p>QA 定义验收场景的标准格式和各字段含义</p>
+            <p>QA 将 PM 的 Cap-Spec-2 Case-ID 映射到可执行验收测试和里程碑验收状态。</p>
 
-            <div class="code-block">
-<span class="code-key">capability_id:</span> <span class="code-string">biz.flow.sales</span>
-<span class="code-key">version:</span> <span class="code-string">"1.0"</span>
-<span class="code-key">scenarios:</span>
-  - <span class="code-key">id:</span> <span class="code-string">SC-001</span>
-    <span class="code-key">title:</span> <span class="code-string">正常下单流程</span>
-    <span class="code-key">steps:</span> [打开商品页, 点击购买, 确认支付]
-    <span class="code-key">expected:</span> <span class="code-string">订单创建成功，状态为 PENDING</span>
-    <span class="code-key">test_class:</span> <span class="code-string">integration</span>
-    <span class="code-key">status:</span> <span class="code-string">covered</span>    <span class="code-comment"># covered | deferred | not-applicable</span>
+            <pre class="code-block">manifest_version: "1.0"
+capability_id: "biz.flow.sales"
+cap_spec_version: "Cap-Spec-Biz.Flow.Sales.v1.0"
 
-  - <span class="code-key">id:</span> <span class="code-string">SC-002</span>
-    <span class="code-key">title:</span> <span class="code-string">库存不足场景</span>
-    <span class="code-key">steps:</span> [打开商品页, 商品已售罄, 点击购买]
-    <span class="code-key">expected:</span> <span class="code-string">系统提示"库存不足"，订单创建失败</span>
-    <span class="code-key">test_class:</span> <span class="code-string">integration</span>
-    <span class="code-key">status:</span> <span class="code-string">deferred</span>  <span class="code-comment"># Pilot 后续迭代处理</span>
-            </div>
+cases:
+  - caseId: "SC-001"
+    name: "正常下单流程"
+    mode: API_EXEC
+    gate: G-023
+    testClass: "SalesFlowAcceptanceTest"
+    testMethod: "normalOrderFlow"
+    status: COVERED
+
+  - caseId: "SC-002"
+    name: "库存不足场景"
+    mode: AUDIT_EXEC
+    gate: G-023
+    testClass: "SalesFlowEdgeCaseTest"
+    testMethod: "insufficientStockDeniedWithAudit"
+    status: COVERED
+
+  - caseId: "SC-003"
+    name: "视觉走查场景"
+    mode: UI_MANUAL
+    gate: null
+    testClass: null
+    testMethod: null
+    status: UAT_MILESTONE</pre>
 
             <h3>字段说明</h3>
             <div class="matrix-table-wrapper">
@@ -676,40 +686,34 @@
                     </thead>
                 <tbody>
                     <tr>
-                        <td><strong>id</strong></td>
-                        <td>场景唯一标识</td>
+                        <td><strong>caseId</strong></td>
+                        <td>Cap-Spec-2 中的 Case-ID</td>
                         <td>SC-001</td>
-                        <td>格式：SC-{3位数字}</td>
+                        <td>必须能回溯到 PM 冻结的验收场景</td>
                     </tr>
                     <tr>
-                        <td><strong>title</strong></td>
-                        <td>场景的人类可读标题</td>
-                        <td>正常下单流程</td>
-                        <td>简洁明了，体现核心行为</td>
+                        <td><strong>mode</strong></td>
+                        <td>验收执行模式</td>
+                        <td>API_EXEC / AUDIT_EXEC / UI_AUTO / UI_MANUAL</td>
+                        <td>决定是否进入 G-023 PR 门禁</td>
                     </tr>
                     <tr>
-                        <td><strong>steps</strong></td>
-                        <td>操作步骤序列</td>
-                        <td>[打开页面, 点击按钮, 确认]</td>
-                        <td>按执行顺序列出</td>
+                        <td><strong>gate</strong></td>
+                        <td>自动化门禁归属</td>
+                        <td>G-023 / null</td>
+                        <td>UI_MANUAL 不进 PR 门禁</td>
                     </tr>
                     <tr>
-                        <td><strong>expected</strong></td>
-                        <td>期望结果</td>
-                        <td>订单创建成功</td>
-                        <td>必须可断言</td>
-                    </tr>
-                    <tr>
-                        <td><strong>test_class</strong></td>
-                        <td>测试分类</td>
-                        <td>integration / unit / e2e</td>
-                        <td>影响自动化框架选择</td>
+                        <td><strong>testClass / testMethod</strong></td>
+                        <td>可执行验收测试映射</td>
+                        <td>SalesFlowAcceptanceTest / normalOrderFlow</td>
+                        <td>自动化场景必填</td>
                     </tr>
                     <tr>
                         <td><strong>status</strong></td>
                         <td>场景覆盖状态</td>
-                        <td>covered | deferred | not-applicable</td>
-                        <td>见下方详解</td>
+                        <td>COVERED / PENDING / EXCLUDED / UAT_MILESTONE</td>
+                        <td>G-026 校验自动化场景是否 COVERED</td>
                     </tr>
                 </tbody>
                 </table>
@@ -717,19 +721,22 @@
 
             <h3>Status 字段详解</h3>
             <div class="info-box">
-                <strong>covered</strong>
-                <p style="margin-top: 0.5rem;">此场景在本能力包中实现且需要自动化测试覆盖。CI 运行时必须 PASS，qa-verdict 的前提条件。</p>
+                <strong>COVERED</strong>
+                <p style="margin-top: 0.5rem;">此可自动化场景已经映射到验收测试。CI 运行时必须 PASS，是 qa-verdict 的前提条件。</p>
 
-                <strong style="margin-top: 1rem;">deferred</strong>
-                <p style="margin-top: 0.5rem;">此场景在本能力包中实现，但由于复杂性、依赖问题等原因，暂不做自动化覆盖，后续迭代处理。QA 人工验证过即可。</p>
+                <strong style="margin-top: 1rem;">PENDING</strong>
+                <p style="margin-top: 0.5rem;">此可自动化场景尚未完成测试映射。进入 PR 门禁前必须转为 COVERED，否则 G-026 阻断。</p>
 
-                <strong style="margin-top: 1rem;">not-applicable</strong>
-                <p style="margin-top: 0.5rem;">该场景不适用于本能力包（例如：边界条件、特殊场景、前置条件不满足等），可以在 manifest 中标记但不参与覆盖率计算。</p>
+                <strong style="margin-top: 1rem;">EXCLUDED</strong>
+                <p style="margin-top: 0.5rem;">该 Case-ID 经 PM / QA 明确确认不适用于当前能力包自动化范围，必须能解释排除理由。</p>
+
+                <strong style="margin-top: 1rem;">UAT_MILESTONE</strong>
+                <p style="margin-top: 0.5rem;">该场景是 UI_MANUAL，人类操作判断后进入 PM/UAT 里程碑验收，不伪装成 PR 自动化覆盖。</p>
             </div>
 
             <div class="info-box" style="background: rgba(255, 234, 167, 0.1); border-color: var(--qa);">
-                <strong>📊 覆盖率计算（G-026）</strong>
-                <p style="margin-top: 0.5rem;">覆盖率 = covered 场景数 / (covered + deferred) 场景数。Pilot 阶段需要 ≥ 60%，后续版本可根据项目成熟度提升。</p>
+                <strong>G-026 校验</strong>
+                <p style="margin-top: 0.5rem;">G-026 对比 Cap-Spec-2 Case-ID 与 acceptance-manifest.yaml；所有 <code>mode != UI_MANUAL</code> 的可自动化场景必须是 <code>COVERED</code> 且 <code>testClass</code> 非空。它只解析 YAML，不读取 JaCoCo / Codecov。</p>
             </div>
         </section>
 
@@ -998,7 +1005,7 @@
         <section style="background: var(--bg-card); border: 1px solid var(--primary); border-radius: 8px; padding: 2rem; margin-top: 3rem;">
             <h3>更多资源</h3>
             <ul class="responsibility-list">
-                <li><strong>DD-TEST v1.1</strong> — 完整的测试工程推导文档</li>
+                <li><strong>DD-TEST v1.2</strong> — 完整的测试工程推导文档</li>
                 <li><strong>TEAM-COLLABORATION-SPEC v2.1</strong> — 四权分离和协作规范</li>
                 <li><strong>5步流工作指南</strong> — 每个步骤的详细检查清单</li>
                 <li><strong>CI/CD 门禁配置</strong> — 云效流水线、GitHub 执行身份回推和 PR Status Check 设置</li>

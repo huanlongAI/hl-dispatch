@@ -56,6 +56,7 @@
 
 | 文件 | 状态 | 说明 |
 |---|---|---|
+| AUDIT-QA-TEAM-WORKFLOW-REMEDIATION-2026-05-06.md | 📝 DRAFT 2026-05-06 | 测试团队技术选型、分工指南与工作流修订清单 · P0/P1/P2 remediation backlog |
 | AUDIT-HL-DOCS-TECH-SELECTION-vs-SAAC-2026-04-14.md | ✅ CLOSED 2026-04-14 | hl-docs 站点 vs SAAC 技术选型审计 · F-01~F-10 + 延伸 J-04~J-07 · §6 结项记录 |
 | AUDIT-TEAM-COLLABORATION-SPEC-2026-03-17.md | 🗄️ | v2.0 团队协作规范审计（已被 v2.1 超越） |
 | AUDIT-TECH-SELECTION-SAAC-CONTAMINATION-2026-03-17.md | 🗄️ | 3 月技术选型污染审计（旧） |

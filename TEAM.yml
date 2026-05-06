@@ -6,7 +6,8 @@
 ## 成员接受邀请后，回填 github 用户名
 ## 本文件仅保留公开安全的角色代号，不存放实名或邮箱
 
-## R-034 核心团队（4 人）+ Java 技术验收 / 后端核心开发
+## 当前能力包流参考 TEAM-COLLAB-SPEC v2.1。
+## R-034 / Gate-3 条目仅保留为 legacy 派发兼容，不代表独立 QA 团队。
 roles:
   founder:
     name: L0-Founder
@@ -37,10 +38,22 @@ roles:
     responsibility: 产品经理（暂不参与旧系统改造，后续另行分工）
     labels: [doc-review, decision-request]
 
+  qa-owner:
+    name: QA-Owner
+    github: ""
+    responsibility: QA 独立质量 Owner · qa-verdict required status check 按钮权；GitHub handle 待身份映射确认
+    labels: [doc-review, task-assign]
+
+  qa-team:
+    name: QA-Team
+    github: ""
+    responsibility: QA 验收执行团队 · acceptance-manifest / 验收测试 / Evidence Pack / 回归基线维护；成员 handles 待补齐
+    labels: [doc-review, task-assign]
+
   java-qa:
     name: Gate-3
     github: LUXBYA
-    responsibility: Java 工程师 · 技术验收官（WS-C 能力包适配 + 端到端验收）
+    responsibility: LEGACY R-034 Gate-3 · Java 工程师 / 技术验收官；不得作为 TEAM-COLLAB v2.1 QA 团队或 qa-verdict Owner 的默认派发目标
     labels: [doc-review, task-assign]
 
   backend:

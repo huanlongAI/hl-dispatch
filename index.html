@@ -396,6 +396,32 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
 }
 .learning-card li { margin-bottom:7px; }
 
+.task-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.task-card {
+  padding:18px;
+  background:var(--geo-white);
+  border:1px solid var(--geo-line);
+  border-radius:8px;
+  box-shadow:0 16px 34px rgba(70,50,25,0.06);
+}
+.task-card h3 {
+  margin:0 0 8px;
+  color:var(--geo-ink);
+  font-size:1.02rem;
+}
+.task-card ol,
+.task-card ul {
+  margin:10px 0 0 18px;
+  padding:0;
+  color:var(--geo-muted);
+  font-size:0.86rem;
+}
+.task-card li { margin-bottom:7px; }
+
 .roles {
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -450,6 +476,41 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
   color:var(--geo-forest);
   font-size:1.45rem;
   font-weight:900;
+}
+
+.checklist-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+.checklist-card {
+  padding:18px;
+  background:var(--geo-white);
+  border:1px solid var(--geo-line);
+  border-radius:8px;
+  box-shadow:0 16px 34px rgba(70,50,25,0.06);
+}
+.checklist-card h3 {
+  margin:0 0 10px;
+  color:var(--geo-ink);
+  font-size:1rem;
+}
+.checklist-card ul {
+  margin:0 0 0 18px;
+  padding:0;
+  color:var(--geo-muted);
+  font-size:0.86rem;
+}
+.checklist-card li { margin-bottom:7px; }
+.checklist-card .owner {
+  display:inline-flex;
+  margin-bottom:10px;
+  padding:4px 9px;
+  border-radius:999px;
+  background:var(--geo-wash);
+  color:var(--geo-forest);
+  font-size:0.74rem;
+  font-weight:850;
 }
 
 .asset-map {
@@ -541,8 +602,10 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
   .principle-grid,
   .resource-grid,
   .learning-grid,
+  .task-grid,
   .roles,
   .score-grid,
+  .checklist-grid,
   .asset-map,
   .rules { grid-template-columns:1fr 1fr; }
   .flow,
@@ -578,8 +641,10 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
   .principle-grid,
   .resource-grid,
   .learning-grid,
+  .task-grid,
   .roles,
   .score-grid,
+  .checklist-grid,
   .asset-map,
   .rules,
   .asset-list { grid-template-columns:1fr; }
@@ -606,10 +671,11 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
     <a href="#map">认知地图</a>
     <a href="#radar">开源雷达</a>
     <a href="#learn">学习路径</a>
+    <a href="#first-stage">首阶段任务</a>
     <a href="#roles">分工矩阵</a>
-    <a href="#cadence">作战节奏</a>
+    <a href="#infra">基础设施</a>
     <a href="#score">评分卡</a>
-    <a href="pages/global.html">平台旧指南</a>
+    <a href="pages/global.html">产研团队指南</a>
   </div>
 </nav>
 
@@ -625,7 +691,7 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
     <div class="eyebrow">运营团队 AI 转型首个实战领域</div>
     <h1>美人计GEO</h1>
     <p>
-      目标不是把传统 SEO 换个名字，而是让新美业品牌、知识、案例和产品入口在 ChatGPT、Claude、Gemini、Perplexity、Google AI Overviews 等生成式答案里被理解、被引用、被推荐。
+      目标不是把传统 SEO 换个名字，而是让美业分账系统的产品定义、场景价值、技术边界和实施路径在 ChatGPT、Claude、Gemini、Perplexity、Google AI Overviews 等生成式答案里被理解、被引用、被推荐。
     </p>
     <div class="hero-actions">
       <a class="primary" href="#learn">进入学习路径</a>
@@ -633,8 +699,8 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
       <a href="#radar">看开源资料</a>
     </div>
     <div class="hero-stats" aria-label="GEO学习站点核心指标">
-      <div class="stat"><strong>14 天</strong><span>运营团队从概念到首轮评测</span></div>
-      <div class="stat"><strong>5 条线</strong><span>内容、技术、评测、分发、复盘</span></div>
+      <div class="stat"><strong>首阶段</strong><span>美业分账系统 GEO</span></div>
+      <div class="stat"><strong>2 人组</strong><span>每组从研究到交付全闭环</span></div>
       <div class="stat"><strong>6 类资产</strong><span>问答页、案例、FAQ、术语、证据、llms.txt</span></div>
       <div class="stat"><strong>周循环</strong><span>每周用真实 AI 答案校验可见性</span></div>
     </div>
@@ -732,97 +798,157 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
         <div class="section-kicker">03 / Learning Path</div>
         <h2>14 天内部速成路径</h2>
       </div>
-      <p>学习目标不是把术语背熟，而是能独立完成一次问题地图、答案资产、AI 评测和复盘改版。</p>
+      <p>学习目标不是把术语背熟，而是围绕“美业分账系统 GEO”跑完一次从用户问题、内容资产、基础设施到跨模型评测的闭环。</p>
     </div>
     <div class="learning-grid">
       <div class="learning-card">
-        <h3>第 1 到 3 天：建立认知</h3>
+        <h3>第 1 到 3 天：锁定分账问题地图</h3>
         <ol>
-          <li>读 GEO 论文摘要和 Vercel 实践，理解从排名到答案纳入的变化。</li>
-          <li>拆 20 个新美业老板真实问题，标注用户意图和决策阶段。</li>
-          <li>比较 ChatGPT、Claude、Gemini、Perplexity 的回答结构。</li>
+          <li>列出 30 个美业老板、门店财务、店长、合伙人会问的分账问题。</li>
+          <li>按“概念解释、方案比较、实施步骤、风险合规、系统选型”五类标注意图。</li>
+          <li>跨 ChatGPT、Claude、Gemini、Perplexity 查询 10 个核心问题，记录当前答案缺口和竞品引用。</li>
         </ol>
       </div>
       <div class="learning-card">
-        <h3>第 4 到 7 天：做第一批资产</h3>
+        <h3>第 4 到 7 天：生产首批答案资产</h3>
         <ol>
-          <li>为 10 个高意图问题写自包含答案块，每块配来源、案例或判断边界。</li>
-          <li>把术语、FAQ、案例、对比和清单做成交叉链接。</li>
-          <li>检查页面标题层级、结构化数据、sitemap、robots 和 llms.txt。</li>
+          <li>写 12 个自包含答案块：什么是分账、为什么美业需要、怎么落地、常见失败点。</li>
+          <li>沉淀 3 个场景案例：多门店技师提成、合伙人分润、平台佣金与门店结算。</li>
+          <li>把术语、FAQ、案例、对比页和实施清单互链，补充证据、边界和适用条件。</li>
         </ol>
       </div>
       <div class="learning-card">
-        <h3>第 8 到 14 天：跑评测闭环</h3>
+        <h3>第 8 到 14 天：完成评测与改版</h3>
         <ol>
-          <li>同一批 prompt 每周跨模型跑 3 次，记录是否引用、是否推荐、是否误读。</li>
-          <li>对竞品和替代方案做并排比较，找出模型偏爱的证据类型。</li>
-          <li>把分数最低的问题回写到内容 backlog，形成下周任务。</li>
+          <li>用固定 prompt bank 跨模型跑 3 轮，记录是否引用、是否推荐、是否误读分账系统能力。</li>
+          <li>把低分问题回写到内容 backlog，明确要补产品截图、接口说明、案例证据还是合规边界。</li>
+          <li>产出一页周报：新增资产、AI 答案变化、基础设施缺口、下周 owner。</li>
         </ol>
       </div>
+    </div>
+  </section>
+
+  <section class="section" id="first-stage">
+    <div class="section-header">
+      <div>
+        <div class="section-kicker">04 / First Mission</div>
+        <h2>首阶段任务：美业分账系统 GEO</h2>
+      </div>
+      <p>这不是泛泛做“美业 AI”内容，而是把一个可售卖、可解释、可实施的分账系统打成生成式搜索里的清晰答案。</p>
+    </div>
+    <div class="task-grid">
+      <article class="task-card">
+        <h3>步骤 1：定义目标问题包</h3>
+        <ol>
+          <li>收集 30 个真实问题，来源包括销售问答、门店访谈、竞品页面、客服记录。</li>
+          <li>筛出 10 个 P0 prompt：每个 prompt 必须能触发“分账系统是否适合我”的决策。</li>
+          <li>给每个 prompt 标注业务阶段：认知、比较、选型、实施、复盘。</li>
+        </ol>
+      </article>
+      <article class="task-card">
+        <h3>步骤 2：建立术语与边界</h3>
+        <ol>
+          <li>统一“分账、分润、提成、结算、对账、商户号、资金流、订单流”的定义。</li>
+          <li>明确系统不承诺的边界：不代替财税审计、不绕开支付合规、不自动生成违法分账规则。</li>
+          <li>产研团队确认产品能力口径，运营不得自行扩写未实现能力。</li>
+        </ol>
+      </article>
+      <article class="task-card">
+        <h3>步骤 3：制作内容资产</h3>
+        <ol>
+          <li>产出 1 页总览、1 页场景页、1 页实施步骤、1 页 FAQ、1 页对比页。</li>
+          <li>每页必须包含：适用对象、核心收益、前置条件、实施步骤、风险提示、下一步行动。</li>
+          <li>所有页面补充真实例子或假设样例，假设样例必须标注为示例。</li>
+        </ol>
+      </article>
+      <article class="task-card">
+        <h3>步骤 4：接入机器可读层</h3>
+        <ol>
+          <li>为关键页面补标题层级、摘要段、FAQ 结构和内部链接。</li>
+          <li>补 sitemap、robots、llms.txt、schema 需求清单，交给产研团队确认实现方式。</li>
+          <li>检查页面能被无登录访问；需要登录的产品截图必须有公开替代说明。</li>
+        </ol>
+      </article>
+      <article class="task-card">
+        <h3>步骤 5：跑跨模型评测</h3>
+        <ol>
+          <li>同一 prompt 在 ChatGPT、Claude、Gemini、Perplexity 各跑 3 次。</li>
+          <li>记录是否出现“唤龙 / 美人计 / 分账系统”相关描述、引用链接、竞品名、错误事实。</li>
+          <li>按答案纳入、引用质量、事实准确、转化承接四项打分。</li>
+        </ol>
+      </article>
+      <article class="task-card">
+        <h3>步骤 6：复盘并派发改版</h3>
+        <ol>
+          <li>把每个低分项归因到内容、产品证据、技术可读、品牌权威或合规边界。</li>
+          <li>两人小组给出下周改版任务，每项任务必须有 owner、验收命令或人工验收口径。</li>
+          <li>周五沉淀一个模板：prompt 模板、页面模板、评测表或基础设施检查表。</li>
+        </ol>
+      </article>
     </div>
   </section>
 
   <section class="section" id="roles">
     <div class="section-header">
       <div>
-        <div class="section-kicker">04 / Operating Model</div>
-        <h2>运营团队分工矩阵</h2>
+        <div class="section-kicker">05 / Operating Model</div>
+        <h2>两人小组分工矩阵：每组全闭环</h2>
       </div>
-      <p>首轮不需要大团队。关键是每条职责有 owner、产物和验收口径，避免“大家都在学 AI，但没人对结果负责”。</p>
+      <p>角色按 2 人一个小组配置。每组必须覆盖研究、产出、技术协同、评测、复盘，不把未闭环工作甩给下游。</p>
     </div>
     <div class="roles">
       <article class="role-card">
-        <h3>GEO Owner</h3>
-        <p>对学习进度、周评测、任务优先级和跨团队协调负责。</p>
+        <h3>A 组：问题地图 + 产品口径</h3>
+        <p>1 名运营负责人 + 1 名产品接口人，负责把市场问题翻译成产品可回答的问题包。</p>
         <ul>
-          <li>维护问题地图与周 OKR</li>
-          <li>主持周五复盘</li>
-          <li>裁决内容优先级</li>
+          <li>交付 30 个问题、10 个 P0 prompt、意图标签</li>
+          <li>确认分账系统能力边界、禁用承诺、可公开证据</li>
+          <li>验收：问题包能驱动页面标题和 FAQ</li>
         </ul>
       </article>
       <article class="role-card">
-        <h3>内容资产官</h3>
-        <p>把运营经验、客户案例和行业判断转成可引用的页面资产。</p>
+        <h3>B 组：内容资产 + 证据库</h3>
+        <p>1 名内容运营 + 1 名行业/合规审查，负责可引用页面和案例证据。</p>
         <ul>
-          <li>产出答案块、FAQ、案例库</li>
-          <li>补充证据、表格、步骤清单</li>
-          <li>维护术语一致性</li>
+          <li>交付总览页、场景页、FAQ、对比页、案例样例</li>
+          <li>每页补适用对象、前置条件、风险边界</li>
+          <li>验收：无虚假案例、无医疗/财税越界承诺</li>
         </ul>
       </article>
       <article class="role-card">
-        <h3>站点技术伙伴</h3>
-        <p>确保模型能读取内容，也确保传统搜索基础不被破坏。</p>
+        <h3>C 组：技术可读 + 基础设施</h3>
+        <p>1 名运营技术伙伴 + 1 名研发接口人，负责让页面可访问、可抓取、可结构化。</p>
         <ul>
-          <li>检查 HTML、schema、sitemap</li>
-          <li>维护 robots 与 llms.txt</li>
-          <li>排查 AI crawler 访问问题</li>
+          <li>交付 sitemap、robots、llms.txt、schema、页面访问检查</li>
+          <li>确认公开 URL、跳转、登录墙、响应码、页面性能</li>
+          <li>验收：关键页面无登录可读，机器导览文件可访问</li>
         </ul>
       </article>
       <article class="role-card">
-        <h3>AI 评测官</h3>
-        <p>把“感觉变好”改造成可复现的跨模型评测记录。</p>
+        <h3>D 组：AI 评测 + 复盘派工</h3>
+        <p>1 名 AI 评测官 + 1 名项目推进，负责把答案变化转成下周任务。</p>
         <ul>
-          <li>维护 prompt bank</li>
-          <li>保存答案、引用和截图</li>
-          <li>输出周评测报告</li>
+          <li>交付 prompt bank、跨模型记录、截图、评分表</li>
+          <li>标注引用、竞品、误读、未纳入原因</li>
+          <li>验收：低分项全部回写到 backlog 并分配 owner</li>
         </ul>
       </article>
       <article class="role-card">
-        <h3>行业与合规审查</h3>
-        <p>负责新美业语境的事实、边界和风险表达。</p>
+        <h3>E 组：销售承接 + 线索反馈</h3>
+        <p>1 名销售/增长接口 + 1 名运营，负责把 GEO 流量接到可跟进线索。</p>
         <ul>
-          <li>检查医疗、美容功效、价格承诺</li>
-          <li>补真实经营场景</li>
-          <li>标注不可发布内容</li>
+          <li>交付落地页 CTA、咨询话术、常见异议反馈</li>
+          <li>收集用户看完页面后的真实追问</li>
+          <li>验收：每个高意图页面有下一步行动</li>
         </ul>
       </article>
       <article class="role-card">
-        <h3>AI 工具教练</h3>
-        <p>把外部开源工具拆成内部模板、命令和 SOP。</p>
+        <h3>F 组：模板沉淀 + 内训复制</h3>
+        <p>1 名 AI 工具教练 + 1 名团队代表，负责把本周方法沉淀成可复制 SOP。</p>
         <ul>
-          <li>沉淀 audit prompt</li>
-          <li>训练运营使用评测表</li>
-          <li>推动自动化但不替代人工判断</li>
+          <li>交付页面模板、评测模板、基础设施检查模板</li>
+          <li>组织 30 分钟复盘内训</li>
+          <li>验收：下一个业务主题能照模板开工</li>
         </ul>
       </article>
     </div>
@@ -831,25 +957,25 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
   <section class="section" id="cadence">
     <div class="section-header">
       <div>
-        <div class="section-kicker">05 / Weekly Cadence</div>
+        <div class="section-kicker">06 / Weekly Cadence</div>
         <h2>一周一个 GEO 作战循环</h2>
       </div>
       <p>运营 AI 转型不能停在培训。每周都要有可发布资产、可复现评测和明确的下周改版任务。</p>
     </div>
     <div class="week-grid">
-      <div class="week-card"><div class="day">Monday</div><h3>问题地图</h3><p>新增真实问法，按搜索意图和转化阶段排序，锁定本周 10 个问题。</p></div>
-      <div class="week-card"><div class="day">Tuesday</div><h3>答案生产</h3><p>写答案块、FAQ、案例、对比表，所有关键判断必须带证据或边界。</p></div>
-      <div class="week-card"><div class="day">Wednesday</div><h3>技术检查</h3><p>检查标题、语义结构、内部链接、schema、sitemap、robots 和 llms.txt。</p></div>
-      <div class="week-card"><div class="day">Thursday</div><h3>跨模评测</h3><p>用固定 prompt 在多模型跑答案，记录引用、推荐、误读、竞品和漂移。</p></div>
-      <div class="week-card"><div class="day">Friday</div><h3>复盘派工</h3><p>按评分卡确定下周 backlog，沉淀一个可复用模板或 SOP。</p></div>
+      <div class="week-card"><div class="day">Monday</div><h3>锁问题</h3><p>A 组锁定本周 10 个分账系统 prompt，产研确认能力边界。</p></div>
+      <div class="week-card"><div class="day">Tuesday</div><h3>写资产</h3><p>B 组写页面与 FAQ，补案例、边界、证据和下一步行动。</p></div>
+      <div class="week-card"><div class="day">Wednesday</div><h3>查基础设施</h3><p>C 组检查标题、结构、schema、sitemap、robots、llms.txt 和公开访问。</p></div>
+      <div class="week-card"><div class="day">Thursday</div><h3>跑评测</h3><p>D 组用固定 prompt 在多模型跑答案，记录引用、竞品、误读和漂移。</p></div>
+      <div class="week-card"><div class="day">Friday</div><h3>闭环派工</h3><p>全部两人小组一起复盘，低分项必须落到下周 owner 与验收口径。</p></div>
     </div>
   </section>
 
   <section class="section" id="assets">
     <div class="section-header">
       <div>
-        <div class="section-kicker">06 / Asset System</div>
-        <h2>美人计 GEO 的首批内容资产</h2>
+        <div class="section-kicker">07 / Asset System</div>
+        <h2>美业分账系统 GEO 的首批内容资产</h2>
       </div>
       <p>从新美业老板最容易问的问题开始，不追求铺量，先追求“模型愿意引用、用户看得懂、合规能放行”。</p>
     </div>
@@ -864,15 +990,81 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
       </div>
       <div class="panel feature">
         <h3>P0 实战场域</h3>
-        <p>优先覆盖“新美业 AI 老板总助”的经营问题：活动方案、私域文案、客诉回复、员工培训 SOP、复盘提纲、合规边界。每条内容都要能回答一个真实老板会问的问题。</p>
+        <p>优先覆盖“美业分账系统”的经营问题：技师提成、合伙人分润、多门店结算、平台佣金、退款冲正、对账闭环、支付合规、实施前置条件。每条内容都要能回答一个真实老板或财务负责人会问的问题。</p>
       </div>
+    </div>
+  </section>
+
+  <section class="section" id="infra">
+    <div class="section-header">
+      <div>
+        <div class="section-kicker">08 / Infrastructure Readiness</div>
+        <h2>基础设施就绪检查清单</h2>
+      </div>
+      <p>以下项目需要产研团队配合。运营可以提出需求、验收可见性，但不能擅自承诺系统能力或绕过工程发布链路。</p>
+    </div>
+    <div class="checklist-grid">
+      <article class="checklist-card">
+        <span class="owner">产研团队配合</span>
+        <h3>公开页面与访问</h3>
+        <ul>
+          <li>确认分账系统总览页、场景页、FAQ 页的公开 URL。</li>
+          <li>关键页面返回 200，不依赖登录态，不被临时跳转吞掉。</li>
+          <li>移动端与桌面端首屏都能看到主题、价值和下一步行动。</li>
+        </ul>
+      </article>
+      <article class="checklist-card">
+        <span class="owner">产研团队配合</span>
+        <h3>机器可读文件</h3>
+        <ul>
+          <li>提供 sitemap.xml，覆盖本轮 GEO 页面。</li>
+          <li>robots.txt 不误封 Googlebot、GPTBot、ClaudeBot、PerplexityBot 等合规访问。</li>
+          <li>llms.txt 列出核心页面、概念、边界和证据源。</li>
+        </ul>
+      </article>
+      <article class="checklist-card">
+        <span class="owner">产研团队配合</span>
+        <h3>结构化数据</h3>
+        <ul>
+          <li>FAQ、HowTo、Article、Product/SoftwareApplication schema 由研发确认可实现范围。</li>
+          <li>页面标题、H1/H2、摘要段与内部链接符合内容结构。</li>
+          <li>禁止用结构化数据标注页面里不存在的能力、价格或评价。</li>
+        </ul>
+      </article>
+      <article class="checklist-card">
+        <span class="owner">产研团队配合</span>
+        <h3>产品证据素材</h3>
+        <ul>
+          <li>提供可公开的流程截图、字段示意、角色权限说明或 Demo 数据。</li>
+          <li>标注哪些能力已实现、试运行、规划中，运营按状态分层表达。</li>
+          <li>提供分账规则、对账、退款、异常处理的边界说明。</li>
+        </ul>
+      </article>
+      <article class="checklist-card">
+        <span class="owner">产研团队配合</span>
+        <h3>观测与评测</h3>
+        <ul>
+          <li>提供页面访问、来源、转化事件和咨询入口的最小埋点。</li>
+          <li>运营维护 AI prompt bank；研发协助保留版本、URL 和发布时间。</li>
+          <li>每周评测记录必须能追溯到具体页面版本。</li>
+        </ul>
+      </article>
+      <article class="checklist-card">
+        <span class="owner">产研团队配合</span>
+        <h3>合规与安全</h3>
+        <ul>
+          <li>财税、支付、资金流相关表述先过产品与合规边界确认。</li>
+          <li>页面不展示真实商户敏感数据、个人信息、银行卡或支付凭证。</li>
+          <li>所有“自动分账、资金结算、对账准确率”承诺必须有产品依据。</li>
+        </ul>
+      </article>
     </div>
   </section>
 
   <section class="section" id="score">
     <div class="section-header">
       <div>
-        <div class="section-kicker">07 / Scorecard</div>
+        <div class="section-kicker">09 / Scorecard</div>
         <h2>每周只看能驱动行动的分数</h2>
       </div>
       <p>分数不是为了好看，而是为了决定下周要补哪类内容、改哪个页面、修哪个技术入口。</p>
@@ -892,7 +1084,7 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
   <section class="section">
     <div class="section-header">
       <div>
-        <div class="section-kicker">08 / Guardrails</div>
+        <div class="section-kicker">10 / Guardrails</div>
         <h2>三条底线</h2>
       </div>
       <p>GEO 如果变成伪造权威、内容农场或黑盒刷屏，会直接伤害品牌和长期可见性。</p>

@@ -1,0 +1,39 @@
+# 美人计GEO
+
+> 美人计GEO是唤龙运营团队AI转型的内部学习与分工指南，聚焦 Generative Engine Optimization、AI 搜索可见性、内容可引用性、AI crawler 基础设施与跨模型评测。
+
+本文件用于帮助 LLM 和 AI agent 快速理解本站。本站是 Guide Layer，不是正式制度真源，不替代业务承诺、合规审查或工程规格。
+
+## Core Pages
+
+- [美人计GEO首页](https://huanlongai.github.io/hl-dispatch/): GEO 内部学习路径、开源资料雷达、运营分工矩阵、周作战节奏与评分卡。
+- [唤龙平台旧团队协作指南](https://huanlongai.github.io/hl-dispatch/pages/global.html): 原唤龙平台团队协作与交付工作流导览。
+- [新美业 AI 老板总助 P0](https://huanlongai.github.io/hl-dispatch/pages/beauty-ai-p0.html): 新美业 AI 老板总助 P0 规格族的站点导览。
+
+## Key Concepts
+
+- GEO means Generative Engine Optimization. The operational goal is not only traditional search ranking, but inclusion, citation, ranking order and accuracy inside generated AI answers.
+- 美人计GEO uses new beauty operations as the first practical field for the operations team's AI transformation.
+- The internal workflow is: query map, answer assets, technical readability, cross-model evaluation, weekly iteration.
+- Primary assets include question banks, citation-ready answer blocks, case libraries, glossaries, comparison pages and machine-readable site guides.
+
+## Source References
+
+- [GEO: Generative Engine Optimization](https://arxiv.org/abs/2311.09735): academic framing and GEO-Bench visibility metrics.
+- [GEO-optim/GEO](https://github.com/GEO-optim/GEO): open-source implementation and GEO-Bench reference.
+- [AgenticGEO](https://github.com/AIcling/agentic_geo): 2026 research reference for adaptive agentic GEO.
+- [geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude): Claude Code skill package for GEO audit, citability, crawler analysis and schema checks.
+- [GEO/AEO Tracker](https://github.com/danishashko/geo-aeo-tracker): local-first AI visibility dashboard reference.
+- [llms.txt specification](https://llmstxt.org/): proposal for LLM-readable site context files.
+- [Cloudflare AI Crawl Control bot reference](https://developers.cloudflare.com/ai-crawl-control/reference/bots/): AI crawler and AI search bot user-agent reference.
+- [Vercel LLM SEO article](https://vercel.com/blog/how-were-adapting-seo-for-llms-and-ai-search): practical content strategy for LLM and AI search visibility.
+
+## Operational Guardrails
+
+- Do not fabricate citations, customer cases, data, certifications or media mentions.
+- Do not create keyword-stuffed or hidden-text pages for machines at the expense of human readability.
+- New beauty content must avoid medical diagnosis, treatment promises, misleading pricing, unauthorized personal information and autonomous execution claims.
+
+## Optional
+
+- [AI Product Bench](https://github.com/amplifying-ai/ai-product-bench): open dataset and analysis pattern for AI product recommendation consistency.

@@ -6,7 +6,7 @@
 
 ## Core Pages
 
-- [美人计GEO首页](https://huanlongai.github.io/hl-dispatch/): GEO 内部学习路径、开源资料雷达、美业分账系统 GEO 首阶段任务、两人小组分工矩阵、基础设施就绪检查清单、周作战节奏与评分卡。
+- [美人计GEO首页](https://huanlongai.github.io/hl-dispatch/): GEO 内部学习路径、开源资料雷达、美业分账系统 GEO 首阶段任务、4 人全职分工矩阵、基础设施就绪检查清单、周作战节奏与评分卡。
 - [产研团队指南](https://huanlongai.github.io/hl-dispatch/pages/global.html): 原唤龙平台产研协作与交付工作流导览。
 - [新美业 AI 老板总助 P0](https://huanlongai.github.io/hl-dispatch/pages/beauty-ai-p0.html): 新美业 AI 老板总助 P0 规格族的站点导览。
 
@@ -15,7 +15,7 @@
 - GEO means Generative Engine Optimization. The operational goal is not only traditional search ranking, but inclusion, citation, ranking order and accuracy inside generated AI answers.
 - 美人计GEO uses new beauty operations as the first practical field for the operations team's AI transformation.
 - The first-stage mission is 美业分账系统 GEO: build answer assets and AI visibility around beauty revenue sharing, commission settlement, multi-store reconciliation and implementation readiness.
-- Roles are organized as two-person groups. Each group must close the full loop from research and production to technical coordination, evaluation, review and next-week task assignment.
+- Roles are organized as one 4 人全职 team, also described as 全职4人 in the page. The team does not need subgrouping; each person has a primary role while the full team closes the loop from research and production to technical coordination, evaluation, review and next-week task assignment.
 - The internal workflow is: query map, answer assets, technical readability, cross-model evaluation, weekly iteration.
 - Primary assets include question banks, citation-ready answer blocks, case libraries, glossaries, comparison pages and machine-readable site guides.
 - Infrastructure readiness requires product and engineering team cooperation for public URLs, sitemap, robots.txt, llms.txt, schema markup, product evidence, observability and compliance boundaries.

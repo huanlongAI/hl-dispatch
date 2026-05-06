@@ -424,7 +424,7 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
 
 .roles {
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:14px;
 }
 .role-card {
@@ -700,7 +700,7 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
     </div>
     <div class="hero-stats" aria-label="GEO学习站点核心指标">
       <div class="stat"><strong>首阶段</strong><span>美业分账系统 GEO</span></div>
-      <div class="stat"><strong>2 人组</strong><span>每组从研究到交付全闭环</span></div>
+      <div class="stat"><strong>全职4人</strong><span>不分组，4 人全职闭环</span></div>
       <div class="stat"><strong>6 类资产</strong><span>问答页、案例、FAQ、术语、证据、llms.txt</span></div>
       <div class="stat"><strong>周循环</strong><span>每周用真实 AI 答案校验可见性</span></div>
     </div>
@@ -881,7 +881,7 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
         <h3>步骤 6：复盘并派发改版</h3>
         <ol>
           <li>把每个低分项归因到内容、产品证据、技术可读、品牌权威或合规边界。</li>
-          <li>两人小组给出下周改版任务，每项任务必须有 owner、验收命令或人工验收口径。</li>
+          <li>4 人全职团队给出下周改版任务，每项任务必须有 owner、验收命令或人工验收口径。</li>
           <li>周五沉淀一个模板：prompt 模板、页面模板、评测表或基础设施检查表。</li>
         </ol>
       </article>
@@ -892,23 +892,23 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
     <div class="section-header">
       <div>
         <div class="section-kicker">05 / Operating Model</div>
-        <h2>两人小组分工矩阵：每组全闭环</h2>
+        <h2>4 人全职分工矩阵：不分组，全闭环</h2>
       </div>
-      <p>角色按 2 人一个小组配置。每组必须覆盖研究、产出、技术协同、评测、复盘，不把未闭环工作甩给下游。</p>
+      <p>全职4人直接组成一个 GEO 作战单元，不再拆小队。每个人有主责，但每周共同完成研究、产出、技术协同、评测、复盘和下周派工。</p>
     </div>
     <div class="roles">
       <article class="role-card">
-        <h3>A 组：问题地图 + 产品口径</h3>
-        <p>1 名运营负责人 + 1 名产品接口人，负责把市场问题翻译成产品可回答的问题包。</p>
+        <h3>1. GEO 负责人</h3>
+        <p>负责目标、节奏、产研协调和最终闭环，确保美业分账系统 GEO 不停在学习层。</p>
         <ul>
-          <li>交付 30 个问题、10 个 P0 prompt、意图标签</li>
-          <li>确认分账系统能力边界、禁用承诺、可公开证据</li>
-          <li>验收：问题包能驱动页面标题和 FAQ</li>
+          <li>维护 30 个问题、10 个 P0 prompt、周 OKR</li>
+          <li>对齐产品能力边界、禁用承诺、可公开证据</li>
+          <li>验收：每周低分项都进入明确 backlog</li>
         </ul>
       </article>
       <article class="role-card">
-        <h3>B 组：内容资产 + 证据库</h3>
-        <p>1 名内容运营 + 1 名行业/合规审查，负责可引用页面和案例证据。</p>
+        <h3>2. 内容资产负责人</h3>
+        <p>负责把问题、产品口径和案例证据转成可引用、可发布、可复用的内容资产。</p>
         <ul>
           <li>交付总览页、场景页、FAQ、对比页、案例样例</li>
           <li>每页补适用对象、前置条件、风险边界</li>
@@ -916,8 +916,8 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
         </ul>
       </article>
       <article class="role-card">
-        <h3>C 组：技术可读 + 基础设施</h3>
-        <p>1 名运营技术伙伴 + 1 名研发接口人，负责让页面可访问、可抓取、可结构化。</p>
+        <h3>3. 技术与基础设施负责人</h3>
+        <p>负责把运营需求翻译成产研可执行清单，并验收页面可访问、可抓取、可结构化。</p>
         <ul>
           <li>交付 sitemap、robots、llms.txt、schema、页面访问检查</li>
           <li>确认公开 URL、跳转、登录墙、响应码、页面性能</li>
@@ -925,30 +925,12 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
         </ul>
       </article>
       <article class="role-card">
-        <h3>D 组：AI 评测 + 复盘派工</h3>
-        <p>1 名 AI 评测官 + 1 名项目推进，负责把答案变化转成下周任务。</p>
+        <h3>4. AI 评测与增长负责人</h3>
+        <p>负责跨模型评测、销售承接、线索反馈和复盘模板，把答案变化转成增长动作。</p>
         <ul>
           <li>交付 prompt bank、跨模型记录、截图、评分表</li>
-          <li>标注引用、竞品、误读、未纳入原因</li>
-          <li>验收：低分项全部回写到 backlog 并分配 owner</li>
-        </ul>
-      </article>
-      <article class="role-card">
-        <h3>E 组：销售承接 + 线索反馈</h3>
-        <p>1 名销售/增长接口 + 1 名运营，负责把 GEO 流量接到可跟进线索。</p>
-        <ul>
           <li>交付落地页 CTA、咨询话术、常见异议反馈</li>
-          <li>收集用户看完页面后的真实追问</li>
-          <li>验收：每个高意图页面有下一步行动</li>
-        </ul>
-      </article>
-      <article class="role-card">
-        <h3>F 组：模板沉淀 + 内训复制</h3>
-        <p>1 名 AI 工具教练 + 1 名团队代表，负责把本周方法沉淀成可复制 SOP。</p>
-        <ul>
-          <li>交付页面模板、评测模板、基础设施检查模板</li>
-          <li>组织 30 分钟复盘内训</li>
-          <li>验收：下一个业务主题能照模板开工</li>
+          <li>验收：评测结论能转成下周页面、证据或基础设施任务</li>
         </ul>
       </article>
     </div>
@@ -963,11 +945,11 @@ main { padding:34px clamp(18px,4vw,52px) 72px; }
       <p>运营 AI 转型不能停在培训。每周都要有可发布资产、可复现评测和明确的下周改版任务。</p>
     </div>
     <div class="week-grid">
-      <div class="week-card"><div class="day">Monday</div><h3>锁问题</h3><p>A 组锁定本周 10 个分账系统 prompt，产研确认能力边界。</p></div>
-      <div class="week-card"><div class="day">Tuesday</div><h3>写资产</h3><p>B 组写页面与 FAQ，补案例、边界、证据和下一步行动。</p></div>
-      <div class="week-card"><div class="day">Wednesday</div><h3>查基础设施</h3><p>C 组检查标题、结构、schema、sitemap、robots、llms.txt 和公开访问。</p></div>
-      <div class="week-card"><div class="day">Thursday</div><h3>跑评测</h3><p>D 组用固定 prompt 在多模型跑答案，记录引用、竞品、误读和漂移。</p></div>
-      <div class="week-card"><div class="day">Friday</div><h3>闭环派工</h3><p>全部两人小组一起复盘，低分项必须落到下周 owner 与验收口径。</p></div>
+      <div class="week-card"><div class="day">Monday</div><h3>锁问题</h3><p>GEO 负责人锁定本周 10 个分账系统 prompt，产研确认能力边界。</p></div>
+      <div class="week-card"><div class="day">Tuesday</div><h3>写资产</h3><p>内容资产负责人写页面与 FAQ，补案例、边界、证据和下一步行动。</p></div>
+      <div class="week-card"><div class="day">Wednesday</div><h3>查基础设施</h3><p>技术与基础设施负责人检查标题、schema、sitemap、robots、llms.txt 和公开访问。</p></div>
+      <div class="week-card"><div class="day">Thursday</div><h3>跑评测</h3><p>AI 评测与增长负责人用固定 prompt 跑多模型答案，记录引用、竞品、误读和漂移。</p></div>
+      <div class="week-card"><div class="day">Friday</div><h3>闭环派工</h3><p>4 人全职团队一起复盘，低分项必须落到下周 owner 与验收口径。</p></div>
     </div>
   </section>
 

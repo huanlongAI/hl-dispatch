@@ -75,8 +75,8 @@ body { min-width: 1200px; background: #0b1020; }
     <p>2026 年 4 月为 AI-first 工作方式缓冲期。自 2026 年 5 月起，绩效考核正式实施：以 5 倍提效为基本门槛，以角色 owner 结果、工程证据、质量门禁、LTC-Endpoint 合规和 AI-first 组织资产为核心依据。</p>
     <div class="perf-metrics">
       <div class="metric"><strong>5x</strong><span>正式实施基本门槛，不是优秀线。</span></div>
-      <div class="metric"><strong>30%</strong><span>绩效工资基数占目标月薪比例。</span></div>
-      <div class="metric"><strong>70%</strong><span>固定工资占目标月薪比例。</span></div>
+      <div class="metric"><strong>45%</strong><span>绩效工资基数占目标月薪比例。</span></div>
+      <div class="metric"><strong>55%</strong><span>固定工资占目标月薪比例。</span></div>
       <div class="metric"><strong>100</strong><span>评分满分：结果、提效、流程、资产。</span></div>
     </div>
   </div>
@@ -88,7 +88,8 @@ body { min-width: 1200px; background: #0b1020; }
   <div class="toc-grid">
     <a class="toc-card" href="#decision"><b>制度裁决</b><span>5x 门槛、正式实施、证据优先。</span></a>
     <a class="toc-card" href="#score"><b>评分与评级</b><span>R1/R2/R3/R4、A+ 到 D、封顶和否决。</span></a>
-    <a class="toc-card" href="#wage"><b>绩效工资</b><span>43% 调整为 30%，公式和示例。</span></a>
+    <a class="toc-card" href="#wage"><b>绩效工资</b><span>43% 调整为 45%，公式和示例。</span></a>
+    <a class="toc-card" href="#qualified"><b>合格线</b><span>B 档及以上，连续三个月不合格触发调薪确认程序。</span></a>
     <a class="toc-card" href="#ltc"><b>LTC-Endpoint</b><span>全员安装、元数据边界、合规履约。</span></a>
     <a class="toc-card" href="#ledger"><b>台账与证据</b><span>Evidence Pack、AI 填写字段、审批留痕。</span></a>
     <a class="toc-card" href="#examples"><b>快速示例</b><span>B 档、A 档、C 档、D 档如何算。</span></a>
@@ -150,15 +151,38 @@ body { min-width: 1200px; background: #0b1020; }
     <p>封顶规则优先于分数区间。未达到 5x、Evidence Pack 缺关键证据、LTC-Endpoint 未安装或长期断链且无合理说明，原则上不得评为 B 及以上。伪造证据、篡改端点、未经授权绕过 required status checks 并造成后果、重大安全 / 数据 / 合规事故责任成立，进入硬性否决。</p>
   </section>
 
+  <section class="section" id="qualified">
+    <h2>4. 合格线与连续不合格处理</h2>
+    <p>月度绩效合格线为 B 档及以上。但“B 档及以上”不是单一评级判断，员工必须同时满足总分 S 不低于 75、有效提效倍数 M 不低于 5.0、无硬性否决项、Evidence Pack 关键证据完整、LTC-Endpoint 合规前置通过，才视为当月合格。</p>
+    <table>
+      <thead><tr><th>情形</th><th>是否计入不合格月</th></tr></thead>
+      <tbody>
+        <tr><td>最终评级为 C、C+ 或 D</td><td>计入。</td></tr>
+        <tr><td>总分达到 75 但未达到 5x 基本门槛，且无可信组织阻塞归因</td><td>计入。</td></tr>
+        <tr><td>Evidence Pack 缺关键证据，且责任归因到个人</td><td>计入。</td></tr>
+        <tr><td>LTC-Endpoint 未安装、长期断链且无合理说明，或合规前置未完成且责任归因到个人</td><td>计入。</td></tr>
+        <tr><td>组织原因、项目取消、方向变更、公司端工具故障导致无法完整评价，并经审批标记为“暂缓”</td><td>不计入。</td></tr>
+      </tbody>
+    </table>
+    <p>通俗理解：月度绩效合格不是“分数看起来够”，而是结果、5x 提效、质量证据和合规履约同时过线。任一关键前置条件未通过的，均不能视为完整合格；但经审批确认属于非个人责任的月份，不计入连续不合格。</p>
+    <h3>连续三个月不合格</h3>
+    <p>员工连续三个自然绩效月被认定为“不合格月”的，自第四个绩效月起，自动触发薪酬调整确认程序。调整标准为目标月薪下调至调整前的 70%，即 30% 薪酬调整机制。</p>
+    <div class="formula">调整后目标月薪 = 调整前目标月薪 × 70%
+调整后固定工资 = 调整后目标月薪 × 55%
+调整后绩效工资基数 = 调整后目标月薪 × 45%</div>
+    <p>示例：调整前目标月薪 20,000 元，连续三个月不合格后，调整后目标月薪为 14,000 元；其中固定工资为 7,700 元，绩效工资基数为 6,300 元。</p>
+    <div class="callout-warn">执行边界：该规则应随绩效制度、薪酬确认单或劳动合同变更文件一并由员工签署确认；触发后需形成书面薪酬调整确认单、绩效台账证据和审批留痕；未完成书面确认、审批留痕和必要签署前，不得直接调整已约定应发的固定工资，完成后自确认文件约定的生效月份起执行；调整后固定工资和实际发放工资不得低于当地最低工资及国家 / 地方工资支付规则要求；组织原因、项目取消、方向变更、公司端工具故障等非个人责任月份不计入连续不合格；恢复到 B 档及以上并满足合格线全部条件后，连续不合格计数清零。</div>
+  </section>
+
   <section class="section" id="wage">
-    <h2>4. 绩效工资规则</h2>
-    <p>历史薪酬制度已经公司全员阅读同意并生效，历史绩效工资比例为目标月薪的 43%。本次绩效制度发布时，同步将绩效工资占比调整为 30%，固定工资占比调整为 70%。本次调整不是新增绩效工资，而是降低浮动比例、提高固定工资保障。</p>
+    <h2>5. 绩效工资规则</h2>
+    <p>历史薪酬制度已经公司全员阅读同意并生效，历史绩效工资比例为目标月薪的 43%。本次绩效制度发布时，同步将绩效工资占比调整为 45%，固定工资占比调整为 55%。本次调整不是新增绩效工资，而是在已生效薪酬结构基础上重新明确固定工资与绩效工资比例：固定工资仍为月薪主体，绩效工资用于承接 AI-first 正式实施后的结果差异、5x 提效差异和合规履约差异。</p>
     <div class="split">
       <div>
         <h3>月薪拆分</h3>
         <div class="formula">目标月薪 T = 固定工资 F + 绩效工资基数 B
-固定工资 F = 目标月薪 T × 70%
-绩效工资基数 B = 目标月薪 T × 30%</div>
+固定工资 F = 目标月薪 T × 55%
+绩效工资基数 B = 目标月薪 T × 45%</div>
       </div>
       <div>
         <h3>绩效工资计算</h3>
@@ -169,29 +193,29 @@ body { min-width: 1200px; background: #0b1020; }
     <table>
       <thead><tr><th>项目</th><th>历史制度</th><th>本次调整后</th></tr></thead>
       <tbody>
-        <tr><td>固定工资部分</td><td>57%</td><td>70%</td></tr>
-        <tr><td>绩效工资部分</td><td>43%</td><td>30%</td></tr>
+        <tr><td>固定工资部分</td><td>57%</td><td>55%</td></tr>
+        <tr><td>绩效工资部分</td><td>43%</td><td>45%</td></tr>
       </tbody>
     </table>
-    <div class="callout-warn">合规边界：该拆分随制度一并发布并签署确认；不得单方追溯降低已产生或已约定应付工资；员工提供正常劳动时，固定工资和实际发放工资均不得低于当地最低工资及国家 / 地方工资支付规则要求；加班工资、法定津贴、福利待遇不得被 30% 绩效工资吸收或替代。</div>
+    <div class="callout-warn">合规边界：该拆分随制度一并发布并签署确认；不得单方追溯降低已产生或已约定应付工资；员工提供正常劳动时，固定工资和实际发放工资均不得低于当地最低工资及国家 / 地方工资支付规则要求；加班工资、法定津贴、福利待遇不得被 45% 绩效工资吸收或替代。</div>
   </section>
 
   <section class="section" id="examples">
-    <h2>5. 计算示例：目标月薪 20,000 元</h2>
+    <h2>6. 计算示例：目标月薪 20,000 元</h2>
     <table>
       <thead><tr><th>场景</th><th>计算</th><th>实际月度收入</th><th>解释</th></tr></thead>
       <tbody>
-        <tr><td>历史 43% 调整为 30%</td><td>固定工资 11,400 -> 14,000；绩效基数 8,600 -> 6,000</td><td>20,000</td><td>目标月薪不变，浮动部分降低，固定保障提高。</td></tr>
-        <tr><td>B 档达标</td><td>14,000 + 6,000 × 1.00</td><td>20,000</td><td>达到 5x 基本门槛，绩效工资按 100% 发放。</td></tr>
-        <tr><td>A 档上浮</td><td>14,000 + 6,000 × 1.30</td><td>21,800</td><td>只对 30% 绩效工资部分上浮。</td></tr>
-        <tr><td>C 档下调</td><td>14,000 + 6,000 × 0.60</td><td>17,600</td><td>未达到 5x 或存在明显短板，但有改进路径。</td></tr>
-        <tr><td>D 档</td><td>14,000 + 6,000 × 0</td><td>14,000</td><td>适用于严重不适配或触发硬性否决。</td></tr>
+        <tr><td>历史 43% 调整为 45%</td><td>固定工资 11,400 -> 11,000；绩效基数 8,600 -> 9,000</td><td>20,000</td><td>目标月薪不变，绩效部分小幅提高，更直接承接结果差异。</td></tr>
+        <tr><td>B 档达标</td><td>11,000 + 9,000 × 1.00</td><td>20,000</td><td>达到 5x 基本门槛，绩效工资按 100% 发放。</td></tr>
+        <tr><td>A 档上浮</td><td>11,000 + 9,000 × 1.30</td><td>22,700</td><td>只对 45% 绩效工资部分上浮。</td></tr>
+        <tr><td>C 档下调</td><td>11,000 + 9,000 × 0.60</td><td>16,400</td><td>未达到 5x 或存在明显短板，但有改进路径。</td></tr>
+        <tr><td>D 档</td><td>11,000 + 9,000 × 0</td><td>11,000</td><td>适用于严重不适配或触发硬性否决。</td></tr>
       </tbody>
     </table>
   </section>
 
   <section class="section" id="ltc">
-    <h2>6. LTC-Endpoint 安装与合规签署</h2>
+    <h2>7. LTC-Endpoint 安装与合规签署</h2>
     <p>LTC-Endpoint 是公司产研团队绩效制度的工程证据与合规基础设施。制度正式发布后，公司将组织纳入绩效制度的产研成员完成全员安装、知情确认、制度签署与合规承诺。</p>
     <table>
       <thead><tr><th>要求</th><th>规则</th></tr></thead>
@@ -208,7 +232,7 @@ body { min-width: 1200px; background: #0b1020; }
   </section>
 
   <section class="section" id="ledger">
-    <h2>7. Evidence Pack 与绩效台账</h2>
+    <h2>8. Evidence Pack 与绩效台账</h2>
     <p>每个绩效周期必须在飞书绩效台账中形成可由 AI 后续填写和复核的结构化记录。AI 可以填字段、补链接、计算公式、做一致性检查，但最终评级和审批结论必须经过授权负责人确认。</p>
     <table>
       <thead><tr><th>字段组</th><th>用途</th></tr></thead>
@@ -218,13 +242,14 @@ body { min-width: 1200px; background: #0b1020; }
         <tr><td>R1/R2/R3/R4、总分 S、有效提效倍数 M</td><td>支撑评分与评级。</td></tr>
         <tr><td>评级前置结论、硬性否决、评级封顶、最终评级</td><td>支撑评级校准。</td></tr>
         <tr><td>目标月薪、固定工资、绩效基数、系数、周期折算、合规调整、特殊调整</td><td>支撑绩效工资计算。</td></tr>
+        <tr><td>合格线结论、连续不合格月数、薪酬调整确认状态、调整后目标月薪、调整后固定工资、调整后绩效基数</td><td>支撑连续三个月不合格后的 30% 薪酬调整确认程序。</td></tr>
         <tr><td>应发绩效工资、实际月度收入、负面事件归因、审批状态</td><td>形成薪酬计算结果和审批留痕。</td></tr>
       </tbody>
     </table>
   </section>
 
   <section class="section" id="process">
-    <h2>8. 周期计算步骤</h2>
+    <h2>9. 周期计算步骤</h2>
     <ol>
       <li>确认人员是否在本制度适用范围内。</li>
       <li>确认周期内有效在岗天数，计算周期折算 P。</li>
@@ -240,8 +265,8 @@ body { min-width: 1200px; background: #0b1020; }
 </main>
 
 <footer class="site-footer">
-  <p>公司产研团队绩效考核制度 · 正式版 · 2026-05-05</p>
-  <p>Formal source: Feishu policy document and Feishu performance ledger.</p>
+  <p>公司产研团队绩效考核制度 · 正式版 · 2026-05-06</p>
+  <p>正式真源：飞书正式制度、飞书绩效台账及书面薪酬确认文件；站点仅作为可读投影。</p>
 </footer>
 </body>
 </html>

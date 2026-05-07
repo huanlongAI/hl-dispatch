@@ -30,7 +30,78 @@
 - 阅读 `qa.html#quickstart`、`qa.html#qa-workflow`、`qa.html#qa-bootstrap-v04`。
 - 准备本地 Codex 工作区，不在未确认范围内修改业务代码。
 
-## 3. D0-D5 执行步骤
+## 3. 云效消费仓库与流水线规则
+
+测试团队将在云效 / Codeup 消费仓库，但流水线口径必须遵守“双轨”规则：
+
+- GitHub / `hl-dispatch` / `hl-contracts` 是治理与规格真源，承载任务书、契约、验收口径、PR 留痕与 required status checks。
+- Codeup / 云效是开发执行面，承载工程师日常开发、构建、测试、部署执行与流水线日志。
+- 云效当前 post-merge 部署流水线不能替代 GitHub pre-merge required check。
+- 发布前必须证明 GitHub main、Codeup main、云效构建 commit 一致。
+
+### 3.1 测试团队如何消费仓库
+
+| 仓库 | 云效/Codeup 用途 | 测试团队权限口径 | 禁止事项 |
+|------|------------------|------------------|----------|
+| `hl-contracts` | 查 DD-TEST、TECH-STACK、Cap-Spec / Case-ID | 只读消费 | 不在云效侧改契约真源 |
+| `hl-dispatch` | 查任务书、启动指南、Evidence Pack 模板、复盘归档 | 读为主；文档更新走 PR / 受控提交 | 不在飞书或云效评论替代正式文档 |
+| `hl-platform` | 放置 `biz.demo.acceptance`、manifest、G-026、JUnit 5、Testcontainers 样例 | 在授权分支开发，走 PR / MR | 不直接推 main，不绕过 QA verdict |
+
+建议分支：
+
+```text
+qa/bootstrap-biz-demo
+qa/<capability-id>-acceptance
+```
+
+### 3.2 云效流水线中 QA 要看什么
+
+| 阶段 | QA 关注点 | 通过条件 | 失败归口 |
+|------|-----------|----------|----------|
+| L1 编译 / 类型 / 格式 | 构建是否可运行，测试代码是否破坏基础编译 | L1 全绿 | 工程师修复；QA 不签 PASS |
+| L2 契约 / 模块 / G-026 | `acceptance-manifest.yaml` 是否存在、字段完整、mode/status 合法 | G-026 PASS，非法 manifest 必须 FAIL | 测试组长定口径；测试成员修 manifest；后端修脚本 |
+| L3 单元 / 集成 / G-023 | JUnit 5、Testcontainers、验收场景回放是否通过 | API_EXEC / AUDIT_EXEC 对应 G-023 PASS | 工程师修实现；QA 修验收映射；后端/运维修环境 |
+| Evidence Pack | 是否有 G-026、G-023、manifest hash、Reviewer、Approver、Timestamp | 字段完整且测试组长 Approver | 测试成员补证据；测试组长判定 |
+| qa-verdict | 质量放行是否机读化 | 测试组长确认 PASS，required status check 生效 | 测试组长 / 运维 |
+
+### 3.3 Evidence Pack 必须记录的云效信息
+
+每次 dry run 或真实能力包验收，都必须记录：
+
+- GitHub PR 链接。
+- Codeup MR / 分支链接。
+- 云效流水线 run 链接。
+- 云效构建 commit SHA。
+- GitHub main SHA、Codeup main SHA；发布前必须一致。
+- G-026 日志链接与结论。
+- G-023 日志链接与结论。
+- Testcontainers 运行证据。
+- manifest hash 与 PR commit 对应关系。
+
+### 3.4 失败分流规则
+
+| 失败类型 | 先找谁 | 测试团队动作 |
+|----------|--------|--------------|
+| 拉不到仓库 / 无云效权限 | Founder / 运维 | 记录阻塞，不自行换仓库 |
+| Codeup 与 GitHub 内容不一致 | 技术负责人 / 运维 | 暂停验收，要求给出对齐证据 |
+| L1 失败 | 工程师 | 不进入 QA PASS |
+| G-026 失败 | 测试组长 + 测试成员 + 后端支持 | 判断是 manifest 问题还是脚本问题 |
+| G-023 失败 | 工程师 + 测试成员 | 判断是实现失败、验收映射错误还是测试数据问题 |
+| Testcontainers 环境失败 | 后端支持 + 运维 | 确认 Docker / PostgreSQL 18.x / CI runner |
+| Evidence Pack 缺字段 | 测试成员 | 补齐后再审 |
+| qa-verdict 无法回写 required check | 运维 | 样例 PR 可模拟；真实首包前必须真实接入 |
+
+### 3.5 需要 Founder 配合的支持
+
+请 Founder 或指定治理 Owner 确认：
+
+- 测试组长和测试成员在云效 / Codeup 中可见 `hl-platform`、`hl-dispatch`、必要的 `hl-contracts` 镜像或只读入口。
+- 测试团队可以创建 `qa/bootstrap-*` 分支或等价 MR。
+- 云效流水线日志对测试团队可读，至少能看到 L1 / L2 / L3 结果、commit SHA、run URL。
+- 运维明确真实首包 `qa-verdict` required status check 的接入责任人和目标 repo / branch protection / CI。
+- 后端支持人明确协助 G-026、JUnit 5、Testcontainers 的技术可运行性。
+
+## 4. D0-D5 执行步骤
 
 ### D0：Kickoff 与边界确认
 
@@ -185,7 +256,7 @@ hl-dispatch/deliverables/tasks/QA-VERDICT-REQUIRED-CHECK-DESIGN.md
 - 样例 PR dry run 可模拟。
 - 真实首包进入 QA 放行 / 合并门禁前，必须接入真实 required status check，不能只依赖模拟。
 
-## 4. Codex 启动提示词
+## 5. Codex 启动提示词
 
 ### 4.1 测试组长总控提示词
 
@@ -339,7 +410,36 @@ hl-dispatch/deliverables/tasks/QA-VERDICT-REQUIRED-CHECK-DESIGN.md
 5. 是否允许首个真实能力包进入 QA 放行 / 合并门禁的建议
 ```
 
-## 5. 每日同步格式
+### 5.7 云效取证提示词
+
+```text
+你是测试团队 Codex 助手，负责在云效 / Codeup 消费仓库并整理 QA Bootstrap 取证。
+
+请根据当前 Codeup 分支、云效流水线 run、GitHub PR / 任务书，输出流水线取证报告。
+
+必须检查：
+1. 当前 Codeup 分支与 commit SHA。
+2. 对应 GitHub PR 或任务链接。
+3. 云效流水线 run URL、触发 commit、执行时间。
+4. L1 编译 / 类型 / 格式结果。
+5. L2 契约 / 模块 / G-026 结果。
+6. L3 单元 / 集成 / G-023 / Testcontainers 结果。
+7. Evidence Pack 是否包含 G-026、G-023、manifest hash、Reviewer、Approver、Review Timestamp。
+8. GitHub main、Codeup main、云效构建 commit 是否需要发布前一致性校验。
+
+边界：
+- 云效 post-merge 部署流水线不能替代 GitHub pre-merge required check。
+- 样例 PR dry run 可模拟 qa-verdict；真实首包前必须真实接入 required status check。
+- G-026 QA 基建验收权归测试组长，后端只做技术可运行性确认。
+
+输出：
+1. 流水线取证表
+2. 失败分流建议
+3. 是否允许进入 qa-verdict 审阅
+4. 需要 Founder / 运维 / 后端支持的事项
+```
+
+## 6. 每日同步格式
 
 ```text
 【QA Bootstrap 日报】
@@ -352,6 +452,7 @@ D2 G-026：
 D3 JUnit 5：
 D4 Evidence Pack：
 D5 Dry Run：
+云效取证：
 
 今日完成：
 今日阻塞：
@@ -362,7 +463,7 @@ D5 Dry Run：
 下一步：
 ```
 
-## 6. 完成判定
+## 7. 完成判定
 
 只有同时满足以下条件，测试团队启动才算完成：
 
@@ -372,4 +473,5 @@ D5 Dry Run：
 - Evidence Pack 模板与 qa-verdict checklist 已确认。
 - 样例 PR dry run 已验证缺证据、G-026 FAIL、G-023 缺失、G-023 FAIL 时不能 PASS。
 - 真实首包 required status check 已有接入目标 repo / branch protection / CI 的落地方案。
+- 云效流水线取证包含 run URL、commit SHA、L1 / L2 / L3 结果、G-026 / G-023 日志与双 main 对齐状态。
 - Founder 或指定治理 Owner 已批准 P0/P1 豁免项；无批准则不得豁免。

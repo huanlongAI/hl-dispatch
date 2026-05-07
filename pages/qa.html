@@ -268,8 +268,8 @@ body { min-width: 1200px; }
     <h3>已裁决真实首包卡片</h3>
     <pre><code>capability_id: hk.id.identity_create
 display_name: HK 身份创建创始人验收工作台
-owner_pm: Founder 待指定；未指定前由测试组长拉齐 PM 输入
-owner_engineer: Founder 待指定；未指定前由后端当前负责人提供技术支持
+owner_pm: Founder
+owner_engineer: 魏鹏（wp159951）
 repo_module: hl-platform / hk acceptance workbench + hl-contracts acceptance manifest
 cap_spec_url: hl-contracts/governance/FOUNDER-HK-ACCEPTANCE-SPEC.md
 cap_spec_version: FOUNDER-HK-ACCEPTANCE-SPEC v0.2 + hk.identity-create.acceptance_manifest.v0.1
@@ -287,7 +287,7 @@ first_dry_run_date: 测试组长排期
 founder_or_pm_confirmation: Founder confirmed in thread, 2026-05-07</code></pre>
     <ul class="gate-list">
       <li>首包范围只包含上述两个 HK identity-create 场景；不得临时扩展到 LTC、ReasonDict 全量或 UI 自动化。</li>
-      <li>PM / 工程支持人未指定不阻塞 QA 基建准备；但会阻塞真实 PR / MR 发起与 qa-verdict PASS。</li>
+      <li>PM 支持人与后端支持人已指定；真实 PR / MR 发起前仍需补齐 Codeup 分支、云效 run 与 qa-verdict required status check 取证。</li>
       <li>没有真实 <code>qa-verdict</code> required status check 接入方案，不允许把样例 dry run 当成真实放行。</li>
       <li><code>UI_AUTO</code> 不作为首包阻断项；如需纳入，必须另走 Founder / 治理 Owner 批准。</li>
     </ul>
@@ -371,7 +371,7 @@ founder_or_pm_confirmation: Founder confirmed in thread, 2026-05-07</code></pre>
 
 任务：
 - 输出 biz.demo.acceptance 的 D0-D5 启动步骤，说明测试成员今天具体做什么。
-- 输出 hk.id.identity_create 的真实首包卡片，并标出 PM / 工程支持人、Codeup 分支、云效 run、qa-verdict required status check 哪些项还缺失。
+- 输出 hk.id.identity_create 的真实首包卡片，确认 PM=Founder、后端支持=魏鹏，并标出 Codeup 分支、云效 run、qa-verdict required status check 哪些项还缺失。
 - 判断当前是否允许发起真实 PR / MR；如果 required status check 未接入，只允许继续样例包基建演练和首包准备，不允许 PASS。
 
 输出：首包定义说明、今天开工清单、真实首包卡片、阻塞项、需要 Founder / PM / 运维 / 后端支持的事项。</code></pre>
@@ -403,7 +403,7 @@ founder_or_pm_confirmation: Founder confirmed in thread, 2026-05-07</code></pre>
 - 不扩展到 LTC。
 - 不扩展到 ReasonDict 全量。
 - 不把样例 dry run 当成真实首包放行。
-- PM / 工程支持人未指定时，先输出阻塞项，不自行冒名指定。</code></pre>
+- PM 与后端支持人已指定；不要再把负责人缺失列为阻塞项。</code></pre>
   </section>
   <section class="prompt-card">
     <h3>Codex 提示词 2：Manifest 成员</h3>

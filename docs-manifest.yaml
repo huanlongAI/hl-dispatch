@@ -268,7 +268,10 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：Post-Merge 时序改为 INV-0 GitHub Merge → staging → prod
+      - doc: hl-dispatch#45
+        version: "2026-05-07"
+        status: LOCKED
+    last_verified: "2026-05-07"   # S28：写入 Phase 0 运维底座裁决；api.huanlong.group/hk 独立 API、console 控制台域名、ECS+supervisor、非生产 K8S 复用、PostgreSQL/Flyway 发布链路与后置规则
 
   - page: pages/team-leads.html
     title: 团队代表（6 Lead）专页
@@ -289,7 +292,7 @@ pages:
       - id: signature-matrix
         title: Lead 签字边界 · 全平台矩阵
         spec_status: DRAFT
-    last_verified: "2026-04-25"   # S23：Lead 页统一后端 6、HPRD 理解确认件口径
+    last_verified: "2026-04-29"   # S26：修正 GitHub gh-pages 发布矩阵；不再把 GitHub 部署/维护指派给曾正龙
 
   # ── 深入专题二级页面 ──
 
@@ -343,7 +346,7 @@ pages:
       - id: flow
         title: 能力包跨仓流动
         spec_status: DRAFT
-    last_verified: "2026-04-24"   # S21+导览增强：补适合谁看 / 这页回答什么 / 读完去哪
+    last_verified: "2026-04-29"   # S26：补 GitHub 回推身份 / Required Checks 配置由 INV-0 维护的权责边界
 
   - page: pages/gate-levels.html
     title: 门禁体系详解
@@ -354,7 +357,7 @@ pages:
       - doc: TOOLCHAIN-GUIDE
         version: "1.0"
         status: DRAFT
-    last_verified: "2026-04-24"   # S21+收口：Section 4 与终态卡统一为 GitHub PR Merge + 运维 post-merge 部署
+    last_verified: "2026-04-29"   # S26：Required Checks 口径补 GitHub 执行身份、保护分支、检查配置均由 INV-0 维护
 
   - page: pages/governance-docs.html
     title: 治理文档体系详解
@@ -465,7 +468,7 @@ pages:
       - id: boundary
         title: 失败路径与熔断
         spec_status: PROPOSED
-    last_verified: "2026-04-25"   # S24：双层主轨口径发布；GitHub 产品治理主仓 + Codeup 开发执行主仓；流程图和互动详情同步更新
+    last_verified: "2026-04-29"   # S26：双层主轨补权责边界；GitHub main / 执行身份 / Required Checks 由 INV-0 或授权自动账号维护，曾正龙仅按云效 B5
 
 # 规范状态定义
 status_definitions:

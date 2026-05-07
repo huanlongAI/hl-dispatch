@@ -64,6 +64,14 @@ acceptance_cases:
     phase: R3
     title: "Windows service execution observation 不包含 raw command output 或 transcript"
     must_pass: true
+  - id: AC-006E
+    phase: R3
+    title: "Windows verification runner contract 不在非 Windows 环境声明 service registered 或 startup persistence done"
+    must_pass: true
+  - id: AC-006F
+    phase: R3
+    title: "Windows verification runner observation 不包含 raw service path、command output、transcript 或 signing key"
+    must_pass: true
   - id: AC-008
     phase: R3
     title: "员工本地关闭 / 卸载 / 绕过不可执行"
@@ -100,6 +108,14 @@ acceptance_cases:
     phase: R3
     title: "owner view 聚合 runtime、断链和管理员动作状态且不泄漏 raw 字段"
     must_pass: true
+  - id: AC-013B
+    phase: R4
+    title: "owner view 展示 evidence package 状态和 hash-only 说明入口"
+    must_pass: true
+  - id: AC-013C
+    phase: R4
+    title: "员工说明 amendment 只保存 note hash、amendment ID hash 和 evidence hash 关联，不覆盖 evidence"
+    must_pass: true
   - id: AC-014
     phase: R4
     title: "dry run 隔离"
@@ -131,6 +147,18 @@ acceptance_cases:
   - id: AC-015F
     phase: R5
     title: "delivery retry plan 不产生网络、飞书或绩效副作用"
+    must_pass: true
+  - id: AC-015G
+    phase: R5
+    title: "connector dry-run response 只输出 request hash、response status、retry policy 和 audit hash"
+    must_pass: true
+  - id: AC-015H
+    phase: R5
+    title: "connector dry-run response 拒绝缺少 evidence hash、signature hash 或 idempotency key 的计划"
+    must_pass: true
+  - id: AC-015I
+    phase: R5
+    title: "connector dry-run response 拒绝 live delivery、raw request/response body、飞书 payload 和绩效裁决 payload"
     must_pass: true
   - id: AC-016
     phase: R6

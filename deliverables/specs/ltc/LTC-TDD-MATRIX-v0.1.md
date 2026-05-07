@@ -45,6 +45,8 @@
 | TDD-R3-020 | owner view 泄漏管理员 ID 或理由明文。 | owner view 只显示状态和 hash。 |
 | TDD-R3-021 | owner view 聚合 raw prompt、员工说明明文或管理员理由明文。 | 输入被 banned 字段门禁拒绝。 |
 | TDD-R3-022 | owner view 缺少 runtime / 断链 / 管理员分区时静默隐藏状态。 | 空分区显式显示 unknown / none。 |
+| TDD-R3-023 | 非 Windows 验证运行器声称 service registered 或 startup persistence done。 | 返回 Windows 验证环境缺失原因码，且状态为 verification not run。 |
+| TDD-R3-024 | Windows verification runner contract 或 observation 包含 raw service path、command output、PowerShell transcript 或 signing key。 | 被 banned 字段门禁拒绝或只输出 hash / 状态，不含 raw 字段。 |
 
 ## 4. R4 beta 测试
 
@@ -54,6 +56,8 @@
 | TDD-R4-002 | 断链无 owner view 可见性。 | 员工可见断链状态和说明入口。 |
 | TDD-R4-003 | 员工说明改写 evidence。 | 说明只以 amendment / explanation 关联。 |
 | TDD-R4-004 | dry run 写入正式绩效台账。 | dry run 被隔离并阻断。 |
+| TDD-R4-005 | owner view 不展示 evidence package 状态或说明入口。 | owner view 展示 evidence package status、hash 和 hash-only 说明入口。 |
+| TDD-R4-006 | 员工说明明文进入 amendment 或覆盖原 evidence。 | 只保存 note hash、amendment ID hash 和 evidence hash 关联，原 evidence 不变。 |
 
 ## 5. R5 evidence feed 测试
 
@@ -72,6 +76,9 @@
 | TDD-R5-011 | 真实 delivery 在 connector 未批准时可执行。 | 被 dry-run isolation 阻断。 |
 | TDD-R5-012 | delivery 失败计划产生飞书或绩效副作用。 | 只生成退避重试策略和签名审计，不执行网络、飞书或绩效动作。 |
 | TDD-R5-013 | evidence envelope 缺少 hash 或签名仍可交付。 | 返回 evidence envelope invalid 原因码。 |
+| TDD-R5-014 | connector dry-run response 返回 raw request body、raw response body 或完整 evidence。 | 只返回 request hash、response status、retry policy 和 audit hash。 |
+| TDD-R5-015 | 缺少 evidence hash、evidence signature hash 或 idempotency key 仍生成 connector response。 | 返回 dry-run plan invalid 原因码。 |
+| TDD-R5-016 | connector dry-run response 接受 live delivery、飞书 payload 或绩效裁决 payload。 | 被 dry-run isolation 或 banned 字段门禁拒绝。 |
 
 ## 6. R6 飞书测试
 

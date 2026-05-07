@@ -20,7 +20,7 @@ Owner View 不提供关闭、退出、卸载或绕过 LTC 的能力。
 | 字段 | 字段类别、字段说明、banned 字段说明。 |
 | 证据 | evidence reference 摘要，不展示 raw observation。 |
 | 断链 | 断链开始、结束、原因、说明状态。 |
-| 说明 | 员工提交的 amendment / explanation。 |
+| 说明 | 员工提交的 amendment / explanation 状态与 hash reference。 |
 | 申诉 | 申诉入口、状态、处理记录。 |
 
 ## 3. 不可见信息
@@ -46,6 +46,9 @@ Owner View 不展示：
 
 - 说明以 amendment / explanation 关联证据。
 - 说明不改写已签名 evidence。
+- 说明明文不得进入 owner view、evidence feed、日志、错误或测试快照。
+- owner view 只保存 note hash、amendment ID hash、evidence hash 关联和处理状态。
+- evidence package 可见性只展示状态和 hash，不展示 evidence signature 明文或 raw evidence。
 - 说明状态进入大辉子 evidence feed。
 - 飞书公告前必须检查说明状态。
 
@@ -74,4 +77,6 @@ Owner View 不展示：
 - 员工不可看到 raw observation 或 banned 字段。
 - 员工可以提交说明。
 - 说明不改写 evidence。
+- 说明 amendment 只保存 hash reference，不保存明文。
+- owner view 展示 evidence package 状态和说明入口。
 - 申诉状态可被大辉子引用。

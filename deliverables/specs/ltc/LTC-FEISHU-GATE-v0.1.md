@@ -22,6 +22,8 @@ LTC 无飞书写权限。飞书绩效台账和公告只能由大辉子执行。
 - banned 字段未进入输出。
 - 员工说明和申诉状态已关联。
 - R4/R5 dry run 不进入正式台账。
+- connector dry-run response 不包含 raw request body、raw response body、飞书 payload 或绩效裁决 payload。
+- connector dry-run response 只能作为审计证据，不能作为大辉子已消费或飞书已写入证据。
 
 ## 3. 公告发布前置门禁
 
@@ -42,6 +44,7 @@ LTC 无飞书写权限。飞书绩效台账和公告只能由大辉子执行。
 - LTC 试图直接写飞书。
 - 公告包含 prompt、completion、文件内容、URL、窗口标题、截图等 banned 字段。
 - R4/R5 dry run 被用于正式绩效结论。
+- LTC connector dry-run response 被当作真实大辉子消费确认。
 - break-chain 被自动转成绩效负面结论。
 - 缺制度版本、字段范围版本或确认版本。
 

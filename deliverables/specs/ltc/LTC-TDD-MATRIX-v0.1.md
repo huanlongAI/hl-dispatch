@@ -79,6 +79,10 @@
 | TDD-R5-014 | connector dry-run response 返回 raw request body、raw response body 或完整 evidence。 | 只返回 request hash、response status、retry policy 和 audit hash。 |
 | TDD-R5-015 | 缺少 evidence hash、evidence signature hash 或 idempotency key 仍生成 connector response。 | 返回 dry-run plan invalid 原因码。 |
 | TDD-R5-016 | connector dry-run response 接受 live delivery、飞书 payload 或绩效裁决 payload。 | 被 dry-run isolation 或 banned 字段门禁拒绝。 |
+| TDD-R5-017 | connector dry-run response 通过 camelCase live delivery 或 raw body alias 绕过。 | `deliveryMode`、`rawRequestBody`、`rawResponseBody`、`raw_request_body`、`raw_response_body` 均被阻断。 |
+| TDD-R5-018 | connector dry-run response 透传未登记 response status。 | 返回 dry-run response invalid，且不回显调用方 status 值。 |
+| TDD-R5-019 | evidence envelope 缺少字段范围版本或期间仍可生成 / delivery。 | evidence feed 和 delivery plan 均阻断。 |
+| TDD-R5-020 | 员工说明把明文伪装为 note_hash。 | amendment 只接受 canonical SHA-256 note hash。 |
 
 ## 6. R6 飞书测试
 

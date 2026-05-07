@@ -122,7 +122,7 @@ acceptance_cases:
     must_pass: true
   - id: AC-015
     phase: R5
-    title: "大辉子消费 evidence feed"
+    title: "LTC 生成大辉子 evidence feed dry-run 消费计划，不证明真实消费"
     must_pass: true
   - id: AC-015A
     phase: R5
@@ -166,18 +166,37 @@ acceptance_cases:
     must_pass: true
 forbidden_outputs:
   - prompt
+  - api_key
+  - asset_tag
+  - assigned_user
+  - browser_history
   - completion
   - transcript
+  - text
+  - content
+  - message
+  - last_agent_message
   - source_file_content
   - file_content
   - file_contents
   - patch_content
+  - arguments
+  - command
   - local_path
   - raw_local_path
+  - raw_service_path
+  - cwd
+  - document_path
+  - email
+  - file_path
+  - full_command_arguments
+  - home_path
   - url
+  - url_path
   - window_title
   - clipboard
   - keystroke
+  - keystrokes
   - screenshot
   - screen_recording
   - performance_score
@@ -186,13 +205,28 @@ forbidden_outputs:
   - performance_grade
   - performance_rank
   - employee_ranking
+  - employee_rank
   - salary_suggestion
   - salary_adjustment
   - disciplinary_decision
   - disciplinary_action
   - signing_key
+  - admin_reason
+  - employee_note
+  - command_args
+  - full_command_args
+  - command_arguments
   - command_output
   - powershell_transcript
+  - request_body
+  - raw_request_body
+  - response_body
+  - raw_response_body
+  - non_engineering_app_list
+  - non_engineering_app_inventory
+  - idle_inference
+  - shell_history
+  - subjective_work_attitude_metric
   - feishu_ledger_record
   - feishu_announcement
   - feishu_write_payload

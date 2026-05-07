@@ -1,0 +1,170 @@
+schema: ltc_acceptance_manifest.v1
+status: draft
+date: "2026-05-06"
+owner: NODE-A
+phase_scope:
+  - R2-alpha0-lite
+  - R3-endpoint-sentinel-alpha
+  - R4-internal-beta
+  - R5-dahuizi-evidence-feed
+  - R6-performance-integrated
+hard_gates:
+  field_gate:
+    required: true
+    rule: "scope-first / banned 字段由测试强制执行，banned 字段永久禁止。"
+  raw_boundary_gate:
+    required: true
+    rule: "raw observation 不落盘、不日志化、不下游化。"
+  platform_gate:
+    required: true
+    rule: "强制部署仅限公司固定资产电脑；Windows 优先，再 Mac，仅支持双平台。"
+  asset_boundary_gate:
+    required: true
+    rule: "LTC 只采集安装电脑硬件配置，不参与资产管理，不接入 MDM。"
+  dahuizi_gate:
+    required: true
+    rule: "只有大辉子写入绩效台账和公告。"
+  dry_run_gate:
+    required: true
+    rule: "R4/R5 dry run 不得进入正式绩效结论。"
+acceptance_cases:
+  - id: AC-001
+    phase: R2
+    title: "Codex 订阅合成样本清洗"
+    must_pass: true
+  - id: AC-002
+    phase: R2
+    title: "heiyucode.com API key 合成样本清洗"
+    must_pass: true
+  - id: AC-003
+    phase: R2
+    title: "banned 字段拒绝"
+    must_pass: true
+  - id: AC-005
+    phase: R3
+    title: "当前安装电脑硬件配置元数据和 hash"
+    must_pass: true
+  - id: AC-006
+    phase: R3
+    title: "Windows 公司固定资产电脑安装绑定"
+    must_pass: true
+  - id: AC-006A
+    phase: R3
+    title: "Windows service plan 生成但不执行真实服务命令"
+    must_pass: true
+  - id: AC-006B
+    phase: R3
+    title: "Windows service 外部观察结果必须包含 running、auto 和 heartbeat signature"
+    must_pass: true
+  - id: AC-006C
+    phase: R3
+    title: "Windows service execution contract 不包含真实命令或 raw operator ID"
+    must_pass: true
+  - id: AC-006D
+    phase: R3
+    title: "Windows service execution observation 不包含 raw command output 或 transcript"
+    must_pass: true
+  - id: AC-008
+    phase: R3
+    title: "员工本地关闭 / 卸载 / 绕过不可执行"
+    must_pass: true
+  - id: AC-009
+    phase: R3
+    title: "员工个人电脑不进入强制部署范围"
+    must_pass: true
+  - id: AC-010
+    phase: R3
+    title: "raw observation 不落盘"
+    must_pass: true
+  - id: AC-007
+    phase: R3
+    title: "Mac 公司固定资产电脑安装绑定"
+    must_pass: true
+  - id: AC-011
+    phase: R3
+    title: "心跳缺失产生断链"
+    must_pass: true
+  - id: AC-011A
+    phase: R3
+    title: "断链不自动转成绩效负面"
+    must_pass: true
+  - id: AC-011B
+    phase: R3
+    title: "owner view 可见断链状态但不泄漏员工说明明文"
+    must_pass: true
+  - id: AC-013
+    phase: R3
+    title: "管理员停用 / 卸载动作签名审计且不泄漏明文"
+    must_pass: true
+  - id: AC-013A
+    phase: R3
+    title: "owner view 聚合 runtime、断链和管理员动作状态且不泄漏 raw 字段"
+    must_pass: true
+  - id: AC-014
+    phase: R4
+    title: "dry run 隔离"
+    must_pass: true
+  - id: AC-015
+    phase: R5
+    title: "大辉子消费 evidence feed"
+    must_pass: true
+  - id: AC-015A
+    phase: R5
+    title: "LTC 生成大辉子签名 evidence envelope，但不写飞书、不裁决绩效"
+    must_pass: true
+  - id: AC-015B
+    phase: R5
+    title: "evidence envelope 拒绝 raw 字段、绩效裁决 payload 和飞书写入 payload"
+    must_pass: true
+  - id: AC-015C
+    phase: R5
+    title: "banned key 门禁覆盖 snake_case 与 camelCase alias"
+    must_pass: true
+  - id: AC-015D
+    phase: R5
+    title: "dry-run delivery 使用 evidence hash 生成幂等键"
+    must_pass: true
+  - id: AC-015E
+    phase: R5
+    title: "真实 delivery 在 connector 批准前被 dry-run isolation 阻断"
+    must_pass: true
+  - id: AC-015F
+    phase: R5
+    title: "delivery retry plan 不产生网络、飞书或绩效副作用"
+    must_pass: true
+  - id: AC-016
+    phase: R6
+    title: "大辉子写飞书台账"
+    must_pass: true
+forbidden_outputs:
+  - prompt
+  - completion
+  - transcript
+  - source_file_content
+  - file_content
+  - file_contents
+  - patch_content
+  - local_path
+  - raw_local_path
+  - url
+  - window_title
+  - clipboard
+  - keystroke
+  - screenshot
+  - screen_recording
+  - performance_score
+  - performance_decision
+  - performance_judgment
+  - performance_grade
+  - performance_rank
+  - employee_ranking
+  - salary_suggestion
+  - salary_adjustment
+  - disciplinary_decision
+  - disciplinary_action
+  - signing_key
+  - command_output
+  - powershell_transcript
+  - feishu_ledger_record
+  - feishu_announcement
+  - feishu_write_payload

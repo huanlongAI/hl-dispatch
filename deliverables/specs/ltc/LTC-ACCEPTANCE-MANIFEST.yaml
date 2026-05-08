@@ -87,7 +87,9 @@ acceptance_cases:
   - id: AC-007
     phase: R3
     title: "Mac 公司固定资产电脑安装绑定"
-    must_pass: true
+    must_pass: false
+    external_gate: true
+    notes: "Mac 为 Windows 后续平台；当前 LTC 闭环不声明 Mac 安装绑定已完成。"
   - id: AC-011
     phase: R3
     title: "心跳缺失产生断链"
@@ -160,10 +162,28 @@ acceptance_cases:
     phase: R5
     title: "connector dry-run response 拒绝 live delivery、raw request/response body、飞书 payload 和绩效裁决 payload"
     must_pass: true
+  - id: AC-006G
+    phase: R3
+    title: "Windows service execution contract 拒绝命令形态 required external actions"
+    must_pass: true
+  - id: AC-013D
+    phase: R4
+    title: "owner view 和员工说明 amendment 只接受 canonical evidence hash"
+    must_pass: true
+  - id: AC-015J
+    phase: R5
+    title: "delivery plan 和 connector dry-run response 只接受 canonical hash 字段"
+    must_pass: true
+  - id: AC-015K
+    phase: R5
+    title: "tool evidence metadata 值不得伪装 raw path、URL、命令或 banned 内容"
+    must_pass: true
   - id: AC-016
     phase: R6
     title: "大辉子写飞书台账"
-    must_pass: true
+    must_pass: false
+    external_gate: true
+    notes: "该项属于大辉子 / 飞书外部门禁；LTC 当前闭环只证明不写飞书。"
 forbidden_outputs:
   - prompt
   - api_key

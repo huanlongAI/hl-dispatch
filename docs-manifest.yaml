@@ -1,13 +1,13 @@
 # 唤龙平台 · 团队协作指南站点 — 文档清单
 # 用途：统一控制每页的源文档、版本、状态、最后校验日期
 # CI 检查脚本会读取此文件做版本漂移检测
-# 更新时间：2026-05-06（S28：测试团队快速指南并入测试团队频道；对齐 DD-TEST v1.2 与 TECH-STACK-SPEC v3.4）
+# 更新时间：2026-05-08（S29：新增绩效过程指标公示频道；按团队和个人展示任务派发、接受、进行中、已完成、过程未达标与证据缺口）
 
 site:
   name: 唤龙平台团队协作指南
   layer: guide          # guide | normative — 本站只是 guide layer
   deploy: internal      # internal | public
-  last_verified: "2026-05-06"   # S28：测试团队快速指南并入 pages/qa.html；QA 技术栈与工作流投影完成
+  last_verified: "2026-05-08"   # S29：新增 pages/performance-publication.html；绩效公示只展示过程事实，不展示绩效结果
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-29"
@@ -36,7 +36,10 @@ pages:
       - doc: PERFORMANCE-SYSTEM
         version: "1.0"
         status: LOCKED
-    last_verified: "2026-05-06"   # S28：首页测试团队快速指南入口指向 pages/qa.html#quickstart
+      - doc: PERFORMANCE-PUBLICATION
+        version: "0.1"
+        status: PROPOSED
+    last_verified: "2026-05-08"   # S29：首页新增绩效公示入口
 
   - page: pages/performance-system.html
     title: 公司产研团队绩效考核制度（正式版）
@@ -63,7 +66,43 @@ pages:
       - id: ledger
         title: Evidence Pack 与绩效台账
         spec_status: LOCKED
-    last_verified: "2026-05-05"   # S27：正式制度站点投影；飞书为正式制度真源，站点为可读说明
+    last_verified: "2026-05-08"   # S29：补充绩效公示频道链接；飞书为正式制度真源，站点为可读说明
+
+  - page: pages/performance-publication.html
+    title: 绩效过程指标公示
+    source_docs:
+      - doc: FEISHU-PERFORMANCE-POLICY
+        version: "1.0"
+        status: LOCKED
+      - doc: FEISHU-PERFORMANCE-LEDGER
+        version: "1.0"
+        status: LOCKED
+      - doc: LTC-GOVERNANCE-REBASELINE
+        version: "0.1"
+        status: DRAFT
+      - doc: PERFORMANCE-PUBLICATION
+        version: "0.1"
+        status: PROPOSED
+    sections:
+      - id: rules
+        title: 公示边界
+        spec_status: PROPOSED
+      - id: overview
+        title: 团队合盘总览
+        spec_status: PROPOSED
+      - id: dispatch
+        title: 团队分组任务派发看板
+        spec_status: PROPOSED
+      - id: board
+        title: 成员过程矩阵
+        spec_status: PROPOSED
+      - id: evidence
+        title: 待补证与待说明
+        spec_status: PROPOSED
+      - id: explain
+        title: 事实更正与申诉
+        spec_status: PROPOSED
+    last_verified: "2026-05-08"   # S29：绩效过程指标公示首版；不展示绩效分、评级、排名或薪酬
 
   - page: pages/architecture.html
     title: 系统架构图（v2.1 叙事图谱）

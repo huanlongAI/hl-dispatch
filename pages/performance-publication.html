@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>绩效过程指标公示</title>
+<style>
+:root {
+  --bg: #0b1020;
+  --panel: #111827;
+  --panel-2: #151f34;
+  --border: rgba(255,255,255,0.11);
+  --text: #f4f7fb;
+  --muted: #9ca3af;
+  --green: #55efc4;
+  --blue: #74b9ff;
+  --yellow: #fdcb6e;
+  --red: #ff7675;
+  --purple: #a29bfe;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-width: 1200px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+a { color: inherit; }
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px;
+  background: rgba(10,15,28,0.92);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+.logo {
+  font-weight: 900;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.nav-links a { text-decoration: none; }
+.nav-links .active { color: var(--green); font-weight: 800; }
+.hero {
+  padding: 64px 24px 38px;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(85,239,196,0.18), transparent 28%),
+    radial-gradient(circle at 84% 14%, rgba(116,185,255,0.18), transparent 28%),
+    linear-gradient(135deg, #101827 0%, #132035 52%, #161b2f 100%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-inner { max-width: 1080px; margin: 0 auto; }
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid rgba(85,239,196,0.35);
+  border-radius: 999px;
+  background: rgba(85,239,196,0.08);
+  color: var(--green);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  margin: 18px 0 12px;
+  max-width: 860px;
+  font-size: 3rem;
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+.hero p {
+  max-width: 830px;
+  margin: 0;
+  color: #bec7db;
+  line-height: 1.9;
+  font-size: 1rem;
+}
+.status-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 980px;
+  margin-top: 26px;
+}
+.status-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+}
+.status-card b {
+  display: block;
+  font-size: 1.35rem;
+  margin-bottom: 4px;
+}
+.status-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.wrap {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 30px 24px 70px;
+}
+.notice {
+  padding: 15px 16px;
+  border: 1px solid rgba(253,203,110,0.34);
+  border-radius: 8px;
+  background: rgba(253,203,110,0.08);
+  color: #ffe4a3;
+  line-height: 1.75;
+  font-size: 0.92rem;
+}
+.section {
+  margin-top: 22px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+}
+.section h2 {
+  margin: 0 0 14px;
+  font-size: 1.25rem;
+  letter-spacing: 0;
+}
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.metric {
+  padding: 16px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.metric .num {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--text);
+}
+.metric .label {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.team-panel {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.team-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 14px;
+  background: rgba(255,255,255,0.045);
+  border-bottom: 1px solid var(--border);
+}
+.team-title {
+  font-weight: 900;
+}
+.team-total {
+  display: flex;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.person-row {
+  display: grid;
+  grid-template-columns: 88px repeat(5, minmax(54px, 1fr)) 132px;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.person-row:last-child { border-bottom: none; }
+.person-name {
+  font-weight: 900;
+}
+.stat {
+  padding: 7px 8px;
+  border-radius: 7px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.stat b {
+  display: block;
+  font-size: 1rem;
+}
+.stat span {
+  display: block;
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+.pressure {
+  display: grid;
+  gap: 5px;
+}
+.bar {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
+}
+.pressure small {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.tab {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+.tab.active {
+  color: var(--text);
+  border-color: rgba(85,239,196,0.58);
+  background: rgba(85,239,196,0.11);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 8px;
+}
+th, td {
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 10px 11px;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+th {
+  background: rgba(85,239,196,0.10);
+  color: #f8fafc;
+  font-weight: 800;
+}
+td {
+  background: rgba(255,255,255,0.025);
+  color: #d5dbea;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  white-space: nowrap;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.ok { color: var(--green); border-color: rgba(85,239,196,0.36); background: rgba(85,239,196,0.08); }
+.wait { color: var(--yellow); border-color: rgba(253,203,110,0.36); background: rgba(253,203,110,0.08); }
+.review { color: var(--blue); border-color: rgba(116,185,255,0.36); background: rgba(116,185,255,0.08); }
+.block { color: var(--red); border-color: rgba(255,118,117,0.36); background: rgba(255,118,117,0.08); }
+.muted { color: var(--muted); }
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.flow-list {
+  display: grid;
+  gap: 10px;
+}
+.flow-item {
+  display: grid;
+  grid-template-columns: 110px 1fr 130px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.flow-item .time {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.flow-item .title {
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+.flow-item .desc {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.rule-box {
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+.rule-box h3 {
+  margin: 0 0 8px;
+  font-size: 0.98rem;
+}
+.rule-box ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #cdd5e6;
+  line-height: 1.85;
+  font-size: 0.86rem;
+}
+.footer {
+  padding: 26px 24px;
+  text-align: center;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+@media (max-width: 900px) {
+  body { min-width: 0; }
+  .nav-links { overflow-x: auto; }
+  .hero h1 { font-size: 2.1rem; }
+  .status-row, .metric-grid, .two-col, .rules, .team-grid { grid-template-columns: 1fr; }
+  .person-row { grid-template-columns: 1fr 1fr; }
+  .flow-item { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="github-yunxiao-pipeline.html">流水线指南</a>
+    <a href="product.html">产品团队</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="performance-system.html">绩效制度</a>
+    <a href="performance-publication.html" class="active">绩效公示</a>
+    <a href="glossary.html">术语表</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Dispatch Facts · Process Pressure · No Scores</div>
+    <h1>绩效过程指标公示</h1>
+    <p>本页按团队和个人公示任务派发、接受、进行中、已完成、过程未达标、证据状态、门禁状态、阻塞归因和更正窗口。不显示绩效总分、评级、排名、绩效系数、工资金额，也不把断链、缺证或超时自动解释为绩效负面。</p>
+    <div class="status-row">
+      <div class="status-card"><b>2026-05</b><span>当前绩效周期</span></div>
+      <div class="status-card"><b>106</b><span>除创始人外团队任务派发总量</span></div>
+      <div class="status-card"><b>Open</b><span>可补证、补说明、提更正</span></div>
+      <div class="status-card"><b>18:30</b><span>工作日过程状态刷新</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="notice">
+    说明：以下为首版公示模板与示例数据。真实落地时，数据应来自飞书绩效台账、GitHub PR / Checks、云效回推、QA Evidence Pack、LTC aggregate 和授权更正单。页面不得承载最终绩效结果。
+  </div>
+
+  <section class="section" id="rules">
+    <h2>公示边界</h2>
+    <div class="rules">
+      <div class="rule-box">
+        <h3>允许展示</h3>
+        <ul>
+          <li>owner 责任域、事项 ID、证据链接状态。</li>
+          <li>任务派发、接受、进行中、已完成、过程未达标。</li>
+          <li>团队合盘量化：总派发、接受率、完成量、未达标暴露量。</li>
+          <li>Evidence Pack 完整 / 待补 / 待复核 / 暂缓。</li>
+          <li>L1-L4、qa-verdict、pm-acceptance、release evidence 状态。</li>
+          <li>LTC 正常 / 降级 / 断链已说明 / 系统故障待归因。</li>
+          <li>事实更正、申诉、补证的处理状态。</li>
+        </ul>
+      </div>
+      <div class="rule-box">
+        <h3>禁止展示</h3>
+        <ul>
+          <li>绩效分、评级、排名、绩效系数、薪资金额。</li>
+          <li>态度差、不适配、风险员工等主观或 HR 标签。</li>
+          <li>prompt、模型输出、源文件内容、URL、截图、录屏。</li>
+          <li>把 token 数、prompt 数、在线时长当作绩效倾向。</li>
+          <li>把任务量直接等同于绩效好坏。</li>
+          <li>把 LTC 断链自动转成负面绩效结论。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="overview">
+    <h2>团队合盘总览</h2>
+    <div class="metric-grid">
+      <div class="metric"><div class="num">106</div><div class="label">本周期任务派发总量</div></div>
+      <div class="metric"><div class="num">97</div><div class="label">已接受任务，9 项未接受</div></div>
+      <div class="metric"><div class="num">42</div><div class="label">进行中任务，14 项 48 小时内到期</div></div>
+      <div class="metric"><div class="num">43</div><div class="label">已完成并形成关闭或验收证据</div></div>
+      <div class="metric"><div class="num">12</div><div class="label">过程未达标，均需原因和补救动作</div></div>
+      <div class="metric"><div class="num">17/21</div><div class="label">Evidence Pack 已达到可复核状态</div></div>
+    </div>
+  </section>
+
+  <section class="section" id="dispatch">
+    <h2>团队分组任务派发看板</h2>
+    <div class="team-grid">
+      <div class="team-panel">
+        <div class="team-head"><div class="team-title">PM / 产品团队</div><div class="team-total"><span>派发 15</span><span>接受 14</span><span>完成 6</span><span>未达标 1</span></div></div>
+        <div class="person-row">
+          <div class="person-name">PM-01</div><div class="stat"><b>6</b><span>派发</span></div><div class="stat"><b>6</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>4</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:46%"></i></div><small>今日到期 1 · 48h 2</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">PM-02</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>3</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:74%"></i></div><small>未接受 1 · 待说明 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">PM-03</div><div class="stat"><b>4</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:52%"></i></div><small>48h 1 · 证据待补 1</small></div>
+        </div>
+      </div>
+
+      <div class="team-panel">
+        <div class="team-head"><div class="team-title">工程团队</div><div class="team-total"><span>派发 34</span><span>接受 31</span><span>完成 13</span><span>未达标 5</span></div></div>
+        <div class="person-row">
+          <div class="person-name">ENG-01</div><div class="stat"><b>6</b><span>派发</span></div><div class="stat"><b>6</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>4</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:38%"></i></div><small>48h 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">ENG-02</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>5</b><span>接受</span></div><div class="stat"><b>3</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:66%"></i></div><small>门禁未过 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">ENG-03</div><div class="stat"><b>7</b><span>派发</span></div><div class="stat"><b>6</b><span>接受</span></div><div class="stat"><b>4</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>2</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:88%"></i></div><small>未接受 1 · G-023 缺口</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">ENG-04</div><div class="stat"><b>6</b><span>派发</span></div><div class="stat"><b>6</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>3</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:58%"></i></div><small>证据待补 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">ENG-05</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:71%"></i></div><small>未接受 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">ENG-06</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:44%"></i></div><small>48h 1</small></div>
+        </div>
+      </div>
+
+      <div class="team-panel">
+        <div class="team-head"><div class="team-title">QA 团队</div><div class="team-total"><span>派发 20</span><span>接受 19</span><span>完成 8</span><span>未达标 2</span></div></div>
+        <div class="person-row">
+          <div class="person-name">QA-01</div><div class="stat"><b>6</b><span>派发</span></div><div class="stat"><b>6</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>4</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:42%"></i></div><small>今日到期 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">QA-02</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>5</b><span>接受</span></div><div class="stat"><b>3</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:82%"></i></div><small>qa-verdict 待签</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">QA-03</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:69%"></i></div><small>未接受 1 · 缺日志</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">QA-04</div><div class="stat"><b>4</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:40%"></i></div><small>48h 1</small></div>
+        </div>
+      </div>
+
+      <div class="team-panel">
+        <div class="team-head"><div class="team-title">前端与设计团队</div><div class="team-total"><span>派发 29</span><span>接受 26</span><span>完成 12</span><span>未达标 3</span></div></div>
+        <div class="person-row">
+          <div class="person-name">FE-01</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>5</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:62%"></i></div><small>截图证据待补</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">FE-02</div><div class="stat"><b>5</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:54%"></i></div><small>未接受 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">FE-03</div><div class="stat"><b>4</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>3</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:35%"></i></div><small>无超期</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">FE-04</div><div class="stat"><b>4</b><span>派发</span></div><div class="stat"><b>4</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:76%"></i></div><small>门禁待修复</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">FE-05</div><div class="stat"><b>4</b><span>派发</span></div><div class="stat"><b>3</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:70%"></i></div><small>未接受 1</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">DES-01</div><div class="stat"><b>4</b><span>派发</span></div><div class="stat"><b>3</b><span>接受</span></div><div class="stat"><b>2</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:48%"></i></div><small>断链已说明</small></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name">DES-02</div><div class="stat"><b>3</b><span>派发</span></div><div class="stat"><b>3</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:36%"></i></div><small>48h 1</small></div>
+        </div>
+      </div>
+
+      <div class="team-panel">
+        <div class="team-head"><div class="team-title">运维团队</div><div class="team-total"><span>派发 8</span><span>接受 7</span><span>完成 4</span><span>未达标 1</span></div></div>
+        <div class="person-row">
+          <div class="person-name">OPS-01</div><div class="stat"><b>8</b><span>派发</span></div><div class="stat"><b>7</b><span>接受</span></div><div class="stat"><b>3</b><span>进行中</span></div><div class="stat"><b>4</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:78%"></i></div><small>未接受 1 · 发布证据待补</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="board">
+    <div class="tabs">
+      <button class="tab active" type="button">全部</button>
+      <button class="tab" type="button">PM</button>
+      <button class="tab" type="button">工程</button>
+      <button class="tab" type="button">QA</button>
+      <button class="tab" type="button">运维</button>
+      <button class="tab" type="button">设计</button>
+    </div>
+    <h2>成员过程矩阵（重点缺口）</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>成员</th>
+          <th>责任域</th>
+          <th>任务派发</th>
+          <th>证据包</th>
+          <th>门禁 / 验收</th>
+          <th>协作时效</th>
+          <th>LTC 链路</th>
+          <th>阻塞归因</th>
+          <th>更正窗口</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>PM-01</td>
+          <td>CAP-LTC-R5 · 语义边界</td>
+          <td>6 派发 / 6 接受 / 2 进行中 / 4 完成 / 0 未达标</td>
+          <td><span class="pill ok">完整</span></td>
+          <td><span class="pill review">PM 验收待复核</span></td>
+          <td><span class="pill ok">已回应</span></td>
+          <td><span class="pill ok">正常</span></td>
+          <td><span class="pill muted">无阻塞</span></td>
+          <td><span class="pill ok">开放</span></td>
+        </tr>
+        <tr>
+          <td>ENG-03</td>
+          <td>PR-128 · Evidence feed</td>
+          <td>7 派发 / 6 接受 / 4 进行中 / 1 完成 / 2 未达标</td>
+          <td><span class="pill wait">缺 G-023 链接</span></td>
+          <td><span class="pill ok">L1-L3 PASS</span></td>
+          <td><span class="pill wait">待补说明</span></td>
+          <td><span class="pill review">降级已登记</span></td>
+          <td><span class="pill review">系统故障待归因</span></td>
+          <td><span class="pill ok">开放</span></td>
+        </tr>
+        <tr>
+          <td>QA-02</td>
+          <td>QA-BS-D5 · 回放验收</td>
+          <td>5 派发 / 5 接受 / 3 进行中 / 1 完成 / 1 未达标</td>
+          <td><span class="pill review">待复核</span></td>
+          <td><span class="pill wait">qa-verdict 待签</span></td>
+          <td><span class="pill ok">已回应</span></td>
+          <td><span class="pill ok">正常</span></td>
+          <td><span class="pill wait">审批等待</span></td>
+          <td><span class="pill ok">开放</span></td>
+        </tr>
+        <tr>
+          <td>OPS-01</td>
+          <td>Phase 0 运维底座</td>
+          <td>8 派发 / 7 接受 / 3 进行中 / 4 完成 / 1 未达标</td>
+          <td><span class="pill ok">完整</span></td>
+          <td><span class="pill review">发布证据待补</span></td>
+          <td><span class="pill ok">已回应</span></td>
+          <td><span class="pill ok">正常</span></td>
+          <td><span class="pill review">环境窗口</span></td>
+          <td><span class="pill ok">开放</span></td>
+        </tr>
+        <tr>
+          <td>DES-01</td>
+          <td>Design Packet 一致性</td>
+          <td>4 派发 / 3 接受 / 2 进行中 / 1 完成 / 0 未达标</td>
+          <td><span class="pill ok">完整</span></td>
+          <td><span class="pill ok">设计验收已挂载</span></td>
+          <td><span class="pill ok">已回应</span></td>
+          <td><span class="pill wait">断链已说明</span></td>
+          <td><span class="pill review">设备更换</span></td>
+          <td><span class="pill ok">开放</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="two-col">
+    <section class="section" id="evidence">
+      <h2>待补证 / 待说明</h2>
+      <div class="flow-list">
+        <div class="flow-item">
+          <div class="time">05-08 12:00</div>
+          <div><div class="title">ENG-03 · G-023 结果链接</div><div class="desc">Evidence Pack 缺少验收回放引用；当前不作绩效判断，只标记证据缺口。</div></div>
+          <span class="pill wait">待补</span>
+        </div>
+        <div class="flow-item">
+          <div class="time">05-08 18:00</div>
+          <div><div class="title">QA-02 · qa-verdict 签字</div><div class="desc">审批等待，不归因个人；需补审批记录链接。</div></div>
+          <span class="pill review">待复核</span>
+        </div>
+        <div class="flow-item">
+          <div class="time">05-09 10:30</div>
+          <div><div class="title">DES-01 · LTC 断链说明</div><div class="desc">设备更换造成断链；等待管理员确认，不自动转负面。</div></div>
+          <span class="pill wait">待管理员</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="explain">
+      <h2>事实更正与申诉</h2>
+      <div class="flow-list">
+        <div class="flow-item">
+          <div class="time">05-07 10:12</div>
+          <div><div class="title">PR-128 责任域更正</div><div class="desc">申请把阻塞归因从“个人待说明”改为“接口契约等待”。</div></div>
+          <span class="pill review">处理中</span>
+        </div>
+        <div class="flow-item">
+          <div class="time">05-06 17:45</div>
+          <div><div class="title">QA evidence 缺口复核</div><div class="desc">确认缺口来自流水线日志权限，不计入个人缺证。</div></div>
+          <span class="pill ok">已更正</span>
+        </div>
+        <div class="flow-item">
+          <div class="time">05-05 15:20</div>
+          <div><div class="title">LTC 降级状态说明</div><div class="desc">系统兼容性问题已登记，等待工具侧修复版本。</div></div>
+          <span class="pill ok">已登记</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  绩效过程指标公示 · Guide Layer · 不显示绩效结果<br>
+  真源建议：飞书绩效台账、FEISHU-PERFORMANCE-POLICY、LTC evidence reference、GitHub Required Checks、QA Evidence Pack。
+</footer>
+</body>
+</html>

@@ -98,7 +98,52 @@
 | `deliverySignature` | delivery plan 签名。 | 不包含 signing key 明文。 |
 | `rawDataIncluded` | 是否含 raw 数据。 | 固定为 false。 |
 
-## 6. banned 字段
+## 6. Windows Endpoint Alpha verification 字段
+
+| 字段 | 说明 | 限制 |
+|---|---|---|
+| `serviceNameHash` | Windows service name 的 hash。 | 不保存 service name 明文。 |
+| `runningStatus` | 外部 Windows runner 观察到的运行状态。 | 只允许状态枚举，不含命令输出。 |
+| `startupMode` | 外部 Windows runner 观察到的 startup mode。 | 当前 alpha 只接受 `auto`。 |
+| `timestampBucket` | 观察时间桶。 | 不保存 PowerShell transcript。 |
+| `heartbeatSignatureState` | heartbeat signature 是否存在。 | 只保存 state，不保存签名明文。 |
+| `heartbeatSignatureHash` | heartbeat signature hash。 | canonical SHA-256。 |
+| `servicePlanIdHash` | service plan hash。 | 不含 service binary path。 |
+| `runnerIdHash` | verification runner hash。 | 不保存 runner ID 明文。 |
+| `observationHash` | alpha observation hash。 | 不可逆 hash。 |
+
+## 7. Windows installer manifest 字段
+
+| 字段 | 说明 | 限制 |
+|---|---|---|
+| `installerVersion` | installer artifact 版本。 | 不表示已构建真实安装包。 |
+| `servicePlanHash` | service plan hash。 | 不含 raw service path。 |
+| `signingPolicy` | 签名策略。 | 不包含 signing key。 |
+| `companyAssetScope` | 公司固定资产部署范围。 | 个人电脑不进入强制范围。 |
+| `manifestHash` | installer manifest hash。 | 不可逆 hash。 |
+| `installExecutionClaim` | 安装执行声明。 | 当前固定为 `not_executed_by_ltc`。 |
+| `windowsBuildVerification` | Windows 构建验证要求。 | 当前固定为后续 Windows 验证机门禁。 |
+
+## 8. Endpoint evidence chain summary 字段
+
+| 字段 | 说明 | 限制 |
+|---|---|---|
+| `chainHash` | evidence chain 摘要 hash。 | 不可逆 hash。 |
+| `segmentHashes` | heartbeat / service observation / admin action / owner amendment / evidence envelope 分段 hash。 | 不包含 raw segment。 |
+| `reasonCodes` | evidence chain 原因码列表。 | 不含绩效原因或 HR 标签。 |
+| `evidenceMutation` | evidence 是否被改写。 | 当前固定为 `not_permitted`。 |
+| `performanceImpact` | 绩效影响。 | 当前固定为 `not_evaluated_by_ltc`。 |
+
+## 9. DahuiZi connector response v2 dry-run ack 字段
+
+| 字段 | 说明 | 限制 |
+|---|---|---|
+| `ackHash` | connector ack hash。 | 不包含 raw response body。 |
+| `ackSignatureHash` | connector ack signature hash。 | 不保存 signing key 或签名明文。 |
+| `requestHash` | dry-run request shape hash。 | 不包含 raw request body。 |
+| `responseStatus` | 本地 dry-run observation status。 | 固定为本地状态，不透传大辉子真实响应。 |
+
+## 10. banned 字段
 
 以下字段永久禁止：
 
@@ -108,6 +153,8 @@
 - source file content。
 - patch content。
 - full command arguments。
+- command output。
+- PowerShell transcript。
 - shell history。
 - URL。
 - window title。
@@ -133,10 +180,16 @@
 - Feishu ledger record。
 - Feishu announcement。
 - Feishu write payload。
+- raw local path。
+- raw service path。
+- service binary path。
+- raw request body。
+- raw response body。
+- operator ID 明文。
 - HR label。
 - subjective work attitude metric。
 
-## 7. 字段门禁
+## 11. 字段门禁
 
 - 字段进入采集前必须出现在本规格或后续字段范围版本中。
 - 字段不得通过日志、错误消息、debug dump、metrics label 或测试快照泄漏 banned 值。

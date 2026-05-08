@@ -52,6 +52,26 @@ Windows R3 不得支持：
 - MDM 接入。
 - 资产管理。
 
+### 3.1 Windows Endpoint Alpha 实机化前置 contract
+
+当前 alpha contract 只定义可验证输入和 hash-only 输出，不等价于真实 Windows 服务完成。
+
+允许：
+
+- 生成 Windows service plan、execution contract、verification runner contract。
+- 校验外部 Windows runner 提交的 sanitized observation。
+- 生成 Windows installer artifact manifest。
+- 记录 installer manifest hash 和 service plan hash。
+
+禁止：
+
+- 在非 Windows 环境声明 service registered、startup auto 或 process running 已验证。
+- 在 LTC 内执行 `sc.exe`、PowerShell、`Start-Service`、`New-Service` 或安装命令。
+- 保存 command output、PowerShell transcript、raw service path、raw local path、service binary path 或完整命令参数。
+- 把 installer manifest 说成真实安装包已构建、已签名或已安装。
+
+Windows 实机验证机可用时，必须单独记录 sanitized evidence：service name hash、running status、startup mode、heartbeat signature state / hash、timestamp bucket、service plan hash、runner hash、service registered boolean 和 startup persistence boolean。
+
 ## 4. Mac runtime
 
 Mac R3/R4 必须支持：
@@ -105,3 +125,18 @@ Mac 不得使用：
 - 本地绕过或篡改尝试。
 
 断链只表示证据完整性和合规状态，不自动等价绩效负面。
+
+## 7. Endpoint evidence chain
+
+Endpoint evidence chain summary 可以把 heartbeat、Windows service observation、管理员动作、owner amendment 和 DahuiZi evidence envelope 串成 hash-only 摘要。
+
+必须：
+
+- 输出 chain hash、segment hashes、status、reason codes 和 signature state。
+- 支持断链、恢复、管理员动作和员工说明 amendment 并存。
+- 员工说明只保存 amendment hash，不覆盖原 evidence。
+
+不得：
+
+- 输出员工说明明文、管理员理由明文、绩效分、员工排名、薪酬建议或纪律处分。
+- 把断链自动转成绩效负面。

@@ -48,6 +48,11 @@
 | TDD-R3-023 | 非 Windows 验证运行器声称 service registered 或 startup persistence done。 | 返回 Windows 验证环境缺失原因码，且状态为 verification not run。 |
 | TDD-R3-024 | Windows verification runner contract 或 observation 包含 raw service path、command output、PowerShell transcript 或 signing key。 | 被 banned 字段门禁拒绝或只输出 hash / 状态，不含 raw 字段。 |
 | TDD-R3-025 | service execution contract 接受命令形态 required external actions。 | service plan invalid，且错误不回显命令或 raw path。 |
+| TDD-R3-026 | 非 Windows 环境调用 Windows Endpoint Alpha real verification observation verifier。 | 返回 `LTC_REASON_WINDOWS_VERIFICATION_ENV_REQUIRED` 和 verification not run，不声明真实服务完成。 |
+| TDD-R3-027 | Alpha observation 缺少 service name hash、running status、startup mode 或 heartbeat signature state / hash。 | 返回 service observation untrusted。 |
+| TDD-R3-028 | Alpha observation 包含 command output、PowerShell transcript、raw local path 或 service binary path。 | 被 banned 字段门禁拒绝，错误和输出不泄漏原值。 |
+| TDD-R3-029 | Windows installer manifest 缺少版本、service plan hash、签名策略或公司固定资产范围。 | 返回 installer manifest invalid。 |
+| TDD-R3-030 | Windows installer manifest 包含 raw local path、operator ID 明文、signing key 或 PowerShell transcript。 | 被 banned 字段门禁拒绝；manifest 不声明安装、服务注册或开机自启已执行。 |
 
 ## 4. R4 beta 测试
 
@@ -60,6 +65,8 @@
 | TDD-R4-005 | owner view 不展示 evidence package 状态或说明入口。 | owner view 展示 evidence package status、hash 和 hash-only 说明入口。 |
 | TDD-R4-006 | 员工说明明文进入 amendment 或覆盖原 evidence。 | 只保存 note hash、amendment ID hash 和 evidence hash 关联，原 evidence 不变。 |
 | TDD-R4-007 | owner view 或员工说明 amendment 接受 raw / non-canonical evidence hash。 | 被 owner view / amendment invalid 或 banned 字段门禁拒绝，且不泄漏原值。 |
+| TDD-R4-008 | 缺少签名 heartbeat 仍进入 healthy evidence chain。 | chain summary 标记 degraded，并返回 heartbeat signature missing 原因码。 |
+| TDD-R4-009 | 员工说明 amendment 在 evidence chain 中覆盖原 evidence。 | chain summary 只链接 amendment segment hash，evidence mutation 固定为 not permitted。 |
 
 ## 5. R5 evidence feed 测试
 
@@ -87,6 +94,8 @@
 | TDD-R5-020 | 员工说明把明文伪装为 note_hash。 | amendment 只接受 canonical SHA-256 note hash。 |
 | TDD-R5-021 | delivery plan 或 connector dry-run response 接受 non-canonical evidence hash / signature hash / idempotency key。 | 被 envelope invalid、dry-run plan invalid 或 banned 字段门禁拒绝。 |
 | TDD-R5-022 | tool evidence metadata 值伪装 raw local path、URL、命令或 banned 内容。 | 输入被 banned 字段门禁拒绝，错误不泄漏原值。 |
+| TDD-R5-023 | connector response contract v2 默认允许 live delivery 或 raw request / response body。 | 被 dry-run isolation 或 banned 字段门禁拒绝。 |
+| TDD-R5-024 | connector v2 ack 缺少 evidence hash、idempotency key 或 signature。 | 返回 DahuiZi ack invalid；通过时只输出 ack hash、signature hash、request hash 和 retry policy。 |
 
 ## 6. R6 飞书测试
 

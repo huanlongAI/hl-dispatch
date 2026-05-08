@@ -72,6 +72,18 @@ acceptance_cases:
     phase: R3
     title: "Windows verification runner observation 不包含 raw service path、command output、transcript 或 signing key"
     must_pass: true
+  - id: AC-006H
+    phase: R3
+    title: "Windows Endpoint Alpha sanitized observation 只接受 service name hash、状态、timestamp bucket 和 heartbeat signature state"
+    must_pass: true
+  - id: AC-006I
+    phase: R3
+    title: "非 Windows 环境调用 alpha real verification 返回 Windows verification env required，不声明真实服务完成"
+    must_pass: true
+  - id: AC-006J
+    phase: R3
+    title: "Windows installer artifact manifest 必须包含版本、service plan hash、签名策略和公司固定资产范围，且不声明安装已执行"
+    must_pass: true
   - id: AC-008
     phase: R3
     title: "员工本地关闭 / 卸载 / 绕过不可执行"
@@ -117,6 +129,10 @@ acceptance_cases:
   - id: AC-013C
     phase: R4
     title: "员工说明 amendment 只保存 note hash、amendment ID hash 和 evidence hash 关联，不覆盖 evidence"
+    must_pass: true
+  - id: AC-013E
+    phase: R4
+    title: "endpoint evidence chain summary 以 hash 串联 heartbeat、service observation、admin action、owner amendment 和 evidence envelope，不产生绩效结论"
     must_pass: true
   - id: AC-014
     phase: R4
@@ -178,6 +194,10 @@ acceptance_cases:
     phase: R5
     title: "tool evidence metadata 值不得伪装 raw path、URL、命令或 banned 内容"
     must_pass: true
+  - id: AC-015L
+    phase: R5
+    title: "DahuiZi connector response contract v2 只验证 dry-run ack hash，不发送真实网络请求"
+    must_pass: true
   - id: AC-016
     phase: R6
     title: "大辉子写飞书台账"
@@ -205,6 +225,7 @@ forbidden_outputs:
   - local_path
   - raw_local_path
   - raw_service_path
+  - service_binary_path
   - cwd
   - document_path
   - email
@@ -231,6 +252,7 @@ forbidden_outputs:
   - disciplinary_decision
   - disciplinary_action
   - signing_key
+  - operator_id
   - admin_reason
   - employee_note
   - command_args

@@ -1,8 +1,8 @@
 # Cap-Spec-2｜biz.booking.fulfillment / booking Acceptance Scenarios v0.1
 
-> 状态：DRAFT，等待 Founder / Gate 审查  
-> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）  
-> 当前不写代码，不作为工程开工输入  
+> 状态：DRAFT，等待 Founder / Gate 审查
+> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）
+> 当前不写代码，不作为工程开工输入
 > 本文只写业务验收场景，不写代码测试；涉及状态、key_action、reason_code 的正式命名均待 Gate 确认。
 
 ## 1. 上游引用
@@ -493,4 +493,3 @@
 | 员工改期 | 场景 8 |
 | 门店拒绝或审批失败 | 场景 9、场景 11 |
 | 审计证据留存 | 场景 12 |
-

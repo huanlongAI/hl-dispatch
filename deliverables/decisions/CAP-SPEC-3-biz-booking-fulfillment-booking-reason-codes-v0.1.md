@@ -1,8 +1,8 @@
 # Cap-Spec-3｜biz.booking.fulfillment / booking Reason Code Proposal v0.1
 
-> 状态：DRAFT，等待 Gate 审查  
-> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）  
-> 当前不写代码，不作为工程开工输入  
+> 状态：DRAFT，等待 Gate 审查
+> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）
+> 当前不写代码，不作为工程开工输入
 > 本文是 reason_code 提案，不是最终注册；所有 code 均为 DRAFT / 待 Gate 确认，尚未写入 registry。
 
 ## 1. 上游引用
@@ -102,4 +102,3 @@
 | 到店 / check-in 是否注册独立 key_action，以及其 reason_code 域归属 | 影响 `arrival_reason.*` 的 key_action 标记。 |
 | 系统触发类状态变化是否都属于 key_action | 影响 `arrival_overdue`、`auto_no_show`、`auto_assignment_failed` 审计强度。 |
 | 审批拒绝是否使用独立 `approval_denied` 域，还是归入 `resource_failure` / `reassignment_reason` | 影响审批能力与 booking 的边界。 |
-

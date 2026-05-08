@@ -1,8 +1,8 @@
 # Cap-Spec-1｜biz.booking.fulfillment / booking v0.1
 
-> 状态：DRAFT，等待 Founder / Gate 审查  
-> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）  
-> 当前不写代码，不作为工程开工输入  
+> 状态：DRAFT，等待 Founder / Gate 审查
+> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）
+> 当前不写代码，不作为工程开工输入
 > 本文是把 PM 已完成的预约阶段对话整理为 GitHub 可审查草稿，不是最终裁决，不替代 `hl-contracts` Tier 1 SSOT。
 
 ## 0. 阅读声明

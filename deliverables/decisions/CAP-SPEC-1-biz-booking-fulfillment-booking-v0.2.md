@@ -1,8 +1,8 @@
 # Cap-Spec-1｜biz.booking.fulfillment / booking v0.2
 
-> 状态：DRAFT，等待 Founder / Gate 审查  
-> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）  
-> 当前不写代码，不作为工程开工输入  
+> 状态：DRAFT，等待 Founder / Gate 审查
+> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）
+> 当前不写代码，不作为工程开工输入
 > 本文是基于 Q001-Q386 对 `CAP-SPEC-1-biz-booking-fulfillment-booking-v0.1.md` 做 coverage repair，不新增业务推演，不替代 `hl-contracts` Tier 1 SSOT。
 
 ## 0. 阅读声明
@@ -630,4 +630,3 @@ booking 子段的闭环终点是“客户到店并成功创建 / 绑定当天客
 | 是否补全指定 9 块内容 | 通过。已补冲突、第三方、变更、快速预约、pending_store_confirm、取消、reason_code、字段模型、通知契约和草稿生命周期。 |
 | 是否列出 Coverage Matrix | 通过。见 §23。 |
 | 是否仍需 Founder / Gate 裁决 | 是。见 §22。 |
-

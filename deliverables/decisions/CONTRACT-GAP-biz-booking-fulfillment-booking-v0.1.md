@@ -1,8 +1,8 @@
 # Contract Gap｜biz.booking.fulfillment / booking v0.1
 
-> 状态：DRAFT，等待 Founder / Gate 审查  
-> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）  
-> 当前不写代码，不作为工程开工输入  
+> 状态：DRAFT，等待 Founder / Gate 审查
+> 范围：仅 booking（预约）子段，不覆盖 fulfillment（履约）
+> 当前不写代码，不作为工程开工输入
 > 本文只列进入后续契约 / 工程前仍缺少的契约定义或裁决；缺口不是最终答案。
 
 ## 1. 上游引用

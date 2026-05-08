@@ -438,6 +438,77 @@ td {
     </div>
   </section>
 
+  <section class="section" id="data-rules">
+    <h2>真实数据接入前置规则</h2>
+    <div class="notice">
+      接入真实数据前，必须先完成字段复核与脱敏复核。本页只展示过程事实和补救状态；原始证据、明细链接、模型输入输出、截图录屏、薪酬与绩效结果只进入授权系统，不进入公示页。
+    </div>
+    <div class="rules">
+      <div class="rule-box">
+        <h3>数据来源与可展示投影</h3>
+        <ul>
+          <li>飞书绩效台账：周期、团队、责任域、任务 ID、派发 / 接受 / 到期 / 关闭状态。</li>
+          <li>GitHub PR / Checks：Issue / PR 编号、门禁结论、证据状态；不展示原始日志。</li>
+          <li>云效回推：构建 / 部署结论、环境层级、发布证据状态；不展示内部流水线明细。</li>
+          <li>QA Evidence Pack：验收结论、证据包完整度、缺口码、复核状态。</li>
+          <li>LTC aggregate：正常 / 降级 / 断链已说明 / 系统故障待归因；不展示窗口标题、URL、截图或录屏。</li>
+          <li>授权更正单：更正 ID、处理状态、裁决结论、更新时间；不展示原始申请全文。</li>
+        </ul>
+      </div>
+      <div class="rule-box">
+        <h3>脱敏与权限边界</h3>
+        <ul>
+          <li>默认展示团队、岗位或责任域编码；实名展示必须有制度依据和授权范围。</li>
+          <li>证据只展示“完整 / 待补 / 待复核 / 暂缓”等状态，不展示源文件内容。</li>
+          <li>链接只进入受限证据库；公示页只保留证据是否存在和是否可复核。</li>
+          <li>员工可见自身明细，团队公开页只看过程状态，管理侧受限页才看完整审计链。</li>
+          <li>任何人工更正必须保留更正人、时间、依据和前后状态，不允许覆盖原始快照。</li>
+        </ul>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>原因码</th>
+          <th>含义</th>
+          <th>是否可计入过程未达标</th>
+          <th>处理要求</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>UNACCEPTED</td><td>任务未接受</td><td>是</td><td>补接受记录或说明阻塞原因</td></tr>
+        <tr><td>OVERDUE_NO_NOTE</td><td>逾期且无说明</td><td>是</td><td>补延期说明、责任归因和新截止时间</td></tr>
+        <tr><td>EVIDENCE_GAP</td><td>证据包缺口</td><td>是</td><td>补 Evidence Pack 或申请缺口复核</td></tr>
+        <tr><td>GATE_FAILED</td><td>门禁未过</td><td>是</td><td>补修复 PR、复跑记录和门禁结论</td></tr>
+        <tr><td>QA_PENDING</td><td>等待 QA 或验收签字</td><td>待归因</td><td>先标记待复核，不直接归因个人</td></tr>
+        <tr><td>OPS_WINDOW</td><td>运维窗口或环境限制</td><td>待归因</td><td>需运维确认窗口、资源和补救动作</td></tr>
+        <tr><td>EXTERNAL_BLOCKED</td><td>外部依赖阻塞</td><td>否</td><td>登记阻塞方和解除条件</td></tr>
+        <tr><td>SYSTEM_FAULT</td><td>系统或工具故障</td><td>否</td><td>登记故障单，不转为个人负面结论</td></tr>
+        <tr><td>CORRECTION_PENDING</td><td>事实更正处理中</td><td>暂缓</td><td>冻结相关结论，等待授权裁决</td></tr>
+      </tbody>
+    </table>
+
+    <div class="two-col" style="margin-top:18px;">
+      <div class="rule-box">
+        <h3>员工更正窗口</h3>
+        <ul>
+          <li>工作日 18:30 刷新后开放更正；默认 2 个工作日内提交补证、补说明或事实更正。</li>
+          <li>周期关闭前仍未处理完的更正项，状态必须标为“暂缓”或“待裁决”，不得直接进入结果判断。</li>
+          <li>更正通过后只更新公示投影，原始快照和更正依据必须保留在审计链中。</li>
+        </ul>
+      </div>
+      <div class="rule-box">
+        <h3>刷新与审计留痕</h3>
+        <ul>
+          <li>常规刷新节奏为工作日 18:30；紧急刷新必须有授权更正单或管理员发布记录。</li>
+          <li>每次生成快照必须包含 snapshot_id、source_digest、generated_at 和 operator。</li>
+          <li>发布后只允许追加更正记录，不允许静默删除历史状态。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="overview">
     <h2>团队合盘总览</h2>
     <div class="metric-grid">

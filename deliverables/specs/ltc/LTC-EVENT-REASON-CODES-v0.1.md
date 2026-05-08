@@ -13,8 +13,10 @@
 | `LTC_EVT_ENDPOINT_BOUND` | 端点已绑定员工工程身份。 |
 | `LTC_EVT_WINDOWS_SERVICE_PLAN_CREATED` | Windows service 计划已生成，但尚未表示真实服务注册完成。 |
 | `LTC_EVT_WINDOWS_SERVICE_EXECUTION_CONTRACT_CREATED` | Windows service 外部管理员执行契约已生成。 |
-| `LTC_EVT_WINDOWS_SERVICE_EXECUTION_VERIFIED` | Windows service 外部执行观察结果已验证。 |
-| `LTC_EVT_WINDOWS_SERVICE_VERIFIED` | Windows service 外部观察结果已验证。 |
+| `LTC_EVT_WINDOWS_SERVICE_EXECUTION_OBSERVATION_ACCEPTED` | Windows service 外部执行观察结果形状已接受；不表示真实安装执行完成。 |
+| `LTC_EVT_WINDOWS_SERVICE_OBSERVATION_ACCEPTED` | Windows service 外部观察结果形状已接受；不表示真实服务注册或运行完成。 |
+| `LTC_EVT_WINDOWS_SERVICE_VERIFICATION_RUNNER_CONTRACT_CREATED` | Windows service 外部验证运行器契约已生成；不执行真实服务命令。 |
+| `LTC_EVT_WINDOWS_SERVICE_RUNNER_OBSERVATION_ACCEPTED` | Windows service runner 观察结果形状已接受；service registration / startup persistence claim 固定为 LTC 不声明。 |
 | `LTC_EVT_HEARTBEAT_SIGNED` | 心跳已签名。 |
 | `LTC_EVT_HEALTH_REPORTED` | 健康状态已上报。 |
 | `LTC_EVT_HARDWARE_PROFILE_RECORDED` | 当前安装电脑硬件配置已记录。 |
@@ -28,6 +30,7 @@
 | `LTC_EVT_BREAK_CHAIN_EXPLAINED` | 员工已提交断链说明。 |
 | `LTC_EVT_ADMIN_ACTION_RECORDED` | 管理员动作已记录。 |
 | `LTC_EVT_OWNER_VIEW_OPENED` | 员工打开 owner view。 |
+| `LTC_EVT_OWNER_EXPLANATION_AMENDMENT_RECORDED` | 员工说明 amendment 已以 hash-only 方式关联 evidence package；不覆盖原 evidence。 |
 | `LTC_EVT_FEISHU_GATE_CHECKED` | 飞书门禁已检查。 |
 
 ## 2. 原因码
@@ -39,6 +42,7 @@
 | `LTC_REASON_ADMIN_DISABLED` | 管理员停用。 |
 | `LTC_REASON_ADMIN_UNINSTALLED` | 管理员卸载。 |
 | `LTC_REASON_LOCAL_TAMPER_ATTEMPT` | 本地绕过或篡改尝试。 |
+| `LTC_REASON_SOURCE_ALLOWED` | 工具来源已登记且未发现 banned 字段。 |
 | `LTC_REASON_BANNED_FIELD_PRESENT` | 候选输入存在 banned 字段。 |
 | `LTC_REASON_RAW_BOUNDARY_VIOLATION` | raw observation 边界违规。 |
 | `LTC_REASON_FIELD_SCOPE_MISSING` | 字段未进入字段范围版本。 |
@@ -51,9 +55,14 @@
 | `LTC_REASON_SERVICE_OBSERVATION_UNTRUSTED` | Windows service 观察结果缺少 running / auto / heartbeat signature 等必要事实。 |
 | `LTC_REASON_SERVICE_PLAN_INVALID` | Windows service 计划形状或前置字段无效，不能进入执行契约。 |
 | `LTC_REASON_EVIDENCE_ENVELOPE_INVALID` | 大辉子 evidence envelope 形状、hash 或签名缺失。 |
+| `LTC_REASON_EVIDENCE_GOVERNANCE_MISSING` | evidence envelope 缺少制度版本、字段范围版本、确认版本或期间。 |
 | `LTC_REASON_ADMIN_CONTROL_NOT_IN_R3_MINIMAL_SCOPE` | 管理员停用 / 卸载不在 R3 minimal runtime core 当前切片内。 |
+| `LTC_REASON_ADMIN_ACTION_UNSUPPORTED` | 管理员动作类型未登记，不能记录为 LTC 管理动作。 |
 | `LTC_REASON_FEISHU_GATE_BLOCKED` | 飞书门禁阻断。 |
 | `LTC_REASON_DRY_RUN_ISOLATION` | dry run 隔离阻断。 |
+| `LTC_REASON_DAHUIZI_DRY_RUN_PLAN_INVALID` | DahuiZi dry-run delivery plan 缺少 evidence hash、signature hash、idempotency key 或 retry policy。 |
+| `LTC_REASON_DAHUIZI_DRY_RUN_RESPONSE_INVALID` | DahuiZi connector dry-run response status 未登记或响应形状无效。 |
+| `LTC_REASON_OWNER_AMENDMENT_INVALID` | 员工说明 amendment 缺少 evidence hash、canonical note hash 或 amendment id。 |
 
 ## 3. 状态码
 
@@ -66,7 +75,11 @@
 | `LTC_STATUS_DEGRADED` | 降级。 |
 | `LTC_STATUS_ADMIN_DISABLED` | 管理员停用。 |
 | `LTC_STATUS_ADMIN_UNINSTALLED` | 管理员卸载。 |
+| `LTC_STATUS_EVIDENCE_READY` | evidence package 已生成并可作为 hash reference 展示；不表示下游已消费。 |
 | `LTC_STATUS_EVIDENCE_HELD` | evidence 因版本或确认问题暂挂。 |
+| `LTC_STATUS_EXTERNAL_OBSERVATION_RECORDED` | 外部观察结果已记录为证据；不表示 LTC 声明真实服务、安装或开机自启完成。 |
+| `LTC_STATUS_VERIFICATION_NOT_RUN` | 当前环境未运行 Windows 验证。 |
+| `LTC_STATUS_AMENDMENT_LINKED` | 员工说明 amendment 已以 hash-only 方式关联。 |
 | `LTC_STATUS_BREAK_CHAIN_OPEN` | 断链打开。 |
 | `LTC_STATUS_BREAK_CHAIN_RESOLVED` | 断链已解决。 |
 

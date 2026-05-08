@@ -27,7 +27,7 @@
 | AC-012 | 员工提交说明。 | R4 | 说明以 amendment / explanation 关联，不改写 evidence。 |
 | AC-013 | 管理员停用端点。 | R4 | 管理动作签名并进入审计。 |
 | AC-014 | R4 dry run 被写入正式绩效台账。 | R4 | 流程阻断。 |
-| AC-015 | 大辉子消费 evidence feed。 | R5 | 大辉子收到 sanitized aggregate 和 evidence reference，不收到 raw event。 |
+| AC-015 | LTC 生成大辉子 evidence feed dry-run 消费计划。 | R5 | 只证明 LTC 可生成 sanitized aggregate、evidence reference 和 dry-run delivery plan；不证明大辉子已消费。 |
 | AC-016 | 大辉子写飞书台账。 | R6 | 只有大辉子执行；LTC 无飞书写权限。 |
 | AC-017 | 飞书公告包含 raw event 或 banned 字段。 | R6 | 公告阻断。 |
 | AC-018 | break-chain 被自动转成绩效负面。 | R6 | 流程阻断；只能作为证据完整性 / 合规状态输入。 |

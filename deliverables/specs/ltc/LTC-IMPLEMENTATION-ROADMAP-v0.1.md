@@ -214,7 +214,7 @@ R0 和 R1 不创建 runtime 代码。R2 证明字段安全。R3 和 R4 引入端
 
 - 试点组设备保持预期 runtime 状态。
 - 断链事件已签名且可说明。
-- owner view 和申诉路径可用。
+- owner view、evidence package 状态和 hash-only 说明 / 申诉路径可用。
 - evidence feed dry run 只包含 sanitized aggregate 和 evidence reference。
 - dry run 与正式绩效流程隔离可审计。
 
@@ -230,7 +230,7 @@ R0 和 R1 不创建 runtime 代码。R2 证明字段安全。R3 和 R4 引入端
 - 发布 evidence reference。
 - 发布 break-chain status（断链状态）。
 - 发布 compliance status（合规状态）。
-- 大辉子消费证据并创建 performance evidence item（绩效证据项）。
+- 生成面向大辉子的 dry-run delivery plan 和 evidence reference；不证明大辉子已消费，也不产生正式绩效证据项。
 
 不允许：
 
@@ -242,9 +242,10 @@ R0 和 R1 不创建 runtime 代码。R2 证明字段安全。R3 和 R4 引入端
 
 出口标准：
 
-- 大辉子可以消费 evidence feed。
-- 大辉子可以基于 LTC 输入创建绩效证据项。
+- LTC 可生成面向大辉子的 evidence feed dry-run delivery plan。
+- 大辉子真实消费和绩效证据项创建等待 R6 / 外部门禁，不作为 R5 完成项。
 - evidence feed 包含制度版本、字段范围版本、确认版本、签名和期间。
+- connector dry-run response 只包含 request hash、response status、retry policy 和 audit hash。
 - banned 字段不进入大辉子。
 - break-chain 只作为证据完整性和合规状态，不自动等价为绩效负面。
 - 正式绩效使用必须等待 R6 门禁。

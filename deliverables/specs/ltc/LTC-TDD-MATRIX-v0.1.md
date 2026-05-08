@@ -24,7 +24,7 @@
 | Test ID | RED 条件 | GREEN 条件 |
 |---|---|---|
 | TDD-R3-001 | Windows 端点无法安装或绑定。 | 公司固定资产 Windows 电脑安装、绑定、心跳成功。 |
-| TDD-R3-002 | Mac 端点无法安装或绑定。 | 公司固定资产 Mac 电脑安装、绑定、心跳成功。 |
+| TDD-R3-002 | Mac 端点无法安装或绑定。 | 记录为 Windows 后续平台外部门禁；当前 LTC 闭环不声明 Mac 安装绑定已完成。 |
 | TDD-R3-003 | raw observation 写入磁盘。 | raw observation 仅内存存在。 |
 | TDD-R3-004 | 硬件配置包含资产管理字段。 | 只包含硬件配置元数据和 hash。 |
 | TDD-R3-005 | 员工本地可关闭或卸载。 | 本地关闭 / 卸载不可用，异常进入断链。 |
@@ -45,6 +45,9 @@
 | TDD-R3-020 | owner view 泄漏管理员 ID 或理由明文。 | owner view 只显示状态和 hash。 |
 | TDD-R3-021 | owner view 聚合 raw prompt、员工说明明文或管理员理由明文。 | 输入被 banned 字段门禁拒绝。 |
 | TDD-R3-022 | owner view 缺少 runtime / 断链 / 管理员分区时静默隐藏状态。 | 空分区显式显示 unknown / none。 |
+| TDD-R3-023 | 非 Windows 验证运行器声称 service registered 或 startup persistence done。 | 返回 Windows 验证环境缺失原因码，且状态为 verification not run。 |
+| TDD-R3-024 | Windows verification runner contract 或 observation 包含 raw service path、command output、PowerShell transcript 或 signing key。 | 被 banned 字段门禁拒绝或只输出 hash / 状态，不含 raw 字段。 |
+| TDD-R3-025 | service execution contract 接受命令形态 required external actions。 | service plan invalid，且错误不回显命令或 raw path。 |
 
 ## 4. R4 beta 测试
 
@@ -54,6 +57,9 @@
 | TDD-R4-002 | 断链无 owner view 可见性。 | 员工可见断链状态和说明入口。 |
 | TDD-R4-003 | 员工说明改写 evidence。 | 说明只以 amendment / explanation 关联。 |
 | TDD-R4-004 | dry run 写入正式绩效台账。 | dry run 被隔离并阻断。 |
+| TDD-R4-005 | owner view 不展示 evidence package 状态或说明入口。 | owner view 展示 evidence package status、hash 和 hash-only 说明入口。 |
+| TDD-R4-006 | 员工说明明文进入 amendment 或覆盖原 evidence。 | 只保存 note hash、amendment ID hash 和 evidence hash 关联，原 evidence 不变。 |
+| TDD-R4-007 | owner view 或员工说明 amendment 接受 raw / non-canonical evidence hash。 | 被 owner view / amendment invalid 或 banned 字段门禁拒绝，且不泄漏原值。 |
 
 ## 5. R5 evidence feed 测试
 
@@ -62,7 +68,7 @@
 | TDD-R5-001 | evidence feed 不幂等。 | 相同 batchId 重试不重复记账。 |
 | TDD-R5-002 | feed 包含 raw event。 | feed 只包含 sanitized aggregate 和 evidence reference。 |
 | TDD-R5-003 | feed 缺少制度版本或确认版本。 | 发布被阻断。 |
-| TDD-R5-004 | 大辉子消费失败无重试。 | 重试有退避、签名和审计。 |
+| TDD-R5-004 | dry-run delivery 失败计划缺少重试策略。 | dry-run retry plan 有退避、签名和审计；不证明真实消费。 |
 | TDD-R5-005 | `ltc_endpoint.evidence_feed` 缺失，无法生成大辉子证据包。 | 生成 `LTC_EVT_DAHUIZI_EVIDENCE_READY` 签名 evidence envelope。 |
 | TDD-R5-006 | evidence envelope 输入包含 prompt、raw path 等 banned 字段。 | 输入被 banned 字段门禁拒绝，错误不泄漏 banned 值。 |
 | TDD-R5-007 | LTC evidence feed 接受绩效裁决或飞书写入 payload。 | 绩效裁决和飞书写入 payload 被拒绝，LTC role 固定为 evidence producer only。 |
@@ -72,6 +78,15 @@
 | TDD-R5-011 | 真实 delivery 在 connector 未批准时可执行。 | 被 dry-run isolation 阻断。 |
 | TDD-R5-012 | delivery 失败计划产生飞书或绩效副作用。 | 只生成退避重试策略和签名审计，不执行网络、飞书或绩效动作。 |
 | TDD-R5-013 | evidence envelope 缺少 hash 或签名仍可交付。 | 返回 evidence envelope invalid 原因码。 |
+| TDD-R5-014 | connector dry-run response 返回 raw request body、raw response body 或完整 evidence。 | 只返回 request hash、response status、retry policy 和 audit hash。 |
+| TDD-R5-015 | 缺少 evidence hash、evidence signature hash 或 idempotency key 仍生成 connector response。 | 返回 dry-run plan invalid 原因码。 |
+| TDD-R5-016 | connector dry-run response 接受 live delivery、飞书 payload 或绩效裁决 payload。 | 被 dry-run isolation 或 banned 字段门禁拒绝。 |
+| TDD-R5-017 | connector dry-run response 通过 camelCase live delivery 或 raw body alias 绕过。 | `deliveryMode`、`rawRequestBody`、`rawResponseBody`、`raw_request_body`、`raw_response_body` 均被阻断。 |
+| TDD-R5-018 | connector dry-run response 透传未登记 response status。 | 返回 dry-run response invalid，且不回显调用方 status 值。 |
+| TDD-R5-019 | evidence envelope 缺少字段范围版本或期间仍可生成 / delivery。 | evidence feed 和 delivery plan 均阻断。 |
+| TDD-R5-020 | 员工说明把明文伪装为 note_hash。 | amendment 只接受 canonical SHA-256 note hash。 |
+| TDD-R5-021 | delivery plan 或 connector dry-run response 接受 non-canonical evidence hash / signature hash / idempotency key。 | 被 envelope invalid、dry-run plan invalid 或 banned 字段门禁拒绝。 |
+| TDD-R5-022 | tool evidence metadata 值伪装 raw local path、URL、命令或 banned 内容。 | 输入被 banned 字段门禁拒绝，错误不泄漏原值。 |
 
 ## 6. R6 飞书测试
 

@@ -20,6 +20,7 @@
 - 所有 `reason_code` 均需 Gate 审查后，才能进入正式 `reasoncodes.csv` 或对应 registry。
 - PM 当前草稿采用三层原因表达：`reason_code`、`reason_text`、`customer_visible_reason`。
 - `reason_code` 服务工程分支、统计、审计追踪；`reason_text` 服务内部说明；`customer_visible_reason` 服务客户展示。
+- 成功路径默认不强制 `reason_code`；`reason_code` 主要用于失败、取消、退回、改派、系统触发等需要审计解释的节点，除非 Gate 另行裁决成功码体系。
 
 ## 3. reason_code 提案表
 

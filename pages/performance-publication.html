@@ -165,6 +165,35 @@ a { color: inherit; }
   font-size: 0.8rem;
   line-height: 1.5;
 }
+.sealed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.sealed-card {
+  min-height: 118px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+.sealed-card .label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.sealed-card .cipher {
+  margin: 10px 0 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.04rem;
+  color: var(--green);
+  overflow-wrap: anywhere;
+}
+.sealed-card .hint {
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
 .team-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -273,6 +302,18 @@ a { color: inherit; }
   border-color: rgba(85,239,196,0.58);
   background: rgba(85,239,196,0.11);
 }
+.empty-state {
+  display: none;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px dashed rgba(255,255,255,0.18);
+  border-radius: 8px;
+  color: var(--muted);
+  background: rgba(255,255,255,0.025);
+  font-size: 0.86rem;
+}
+.empty-state.is-visible { display: block; }
+[hidden] { display: none !important; }
 table {
   width: 100%;
   border-collapse: collapse;
@@ -379,7 +420,7 @@ td {
   body { min-width: 0; }
   .nav-links { overflow-x: auto; }
   .hero h1 { font-size: 2.1rem; }
-  .status-row, .metric-grid, .two-col, .rules, .team-grid { grid-template-columns: 1fr; }
+  .status-row, .metric-grid, .sealed-grid, .two-col, .rules, .team-grid { grid-template-columns: 1fr; }
   .person-row { grid-template-columns: 1fr 1fr; }
   .flow-item { grid-template-columns: 1fr; }
 }
@@ -533,8 +574,47 @@ td {
     </div>
   </section>
 
+  <section class="section" id="ltc-metrics">
+    <h2>LTC-Endpoint 关键指标看板</h2>
+    <div class="notice">
+      本区先作为制度接入占位。真实值不在公示页明文展示，仅展示密文投影、状态类别和复核口径；明细留在授权系统和审计链。
+    </div>
+    <div class="sealed-grid" style="margin-top:12px;">
+      <div class="sealed-card">
+        <div class="label">端点覆盖状态</div>
+        <div class="cipher">enc:ltc.coverage.••••••</div>
+        <div class="hint">仅显示密文摘要，不展示人员设备明细。</div>
+      </div>
+      <div class="sealed-card">
+        <div class="label">连接健康状态</div>
+        <div class="cipher">enc:ltc.health.••••••</div>
+        <div class="hint">只进入正常 / 降级 / 已说明断链 / 待归因分类。</div>
+      </div>
+      <div class="sealed-card">
+        <div class="label">合规签署状态</div>
+        <div class="cipher">enc:ltc.consent.••••••</div>
+        <div class="hint">只展示是否具备可复核投影，不展示签署原件。</div>
+      </div>
+      <div class="sealed-card">
+        <div class="label">采集边界检查</div>
+        <div class="cipher">enc:ltc.scope.••••••</div>
+        <div class="hint">只校验是否落在批准的工程过程元数据边界内。</div>
+      </div>
+      <div class="sealed-card">
+        <div class="label">断链说明闭环</div>
+        <div class="cipher">enc:ltc.breaks.••••••</div>
+        <div class="hint">仅显示闭环类别，不自动转成个人结论。</div>
+      </div>
+      <div class="sealed-card">
+        <div class="label">审计快照</div>
+        <div class="cipher">enc:ltc.snapshot.••••••</div>
+        <div class="hint">只保留 snapshot_id 与 digest 的密文投影。</div>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="dispatch">
-    <h2>全员姓名分组指标看板</h2>
+    <h2>指标过程看板</h2>
     <div class="team-grid">
       <div class="team-panel">
         <div class="team-head"><div class="team-title">PM / 产品团队</div><div class="team-total"><span>派发 15</span><span>接受 14</span><span>完成 6</span><span>未达标 1</span></div></div>
@@ -624,15 +704,16 @@ td {
 
   <section class="section" id="board">
     <div class="tabs">
-      <button class="tab active" type="button">全部</button>
-      <button class="tab" type="button">PM</button>
-      <button class="tab" type="button">工程</button>
-      <button class="tab" type="button">QA</button>
-      <button class="tab" type="button">运维</button>
-      <button class="tab" type="button">设计</button>
+      <button class="tab active" type="button" data-filter="all">全部</button>
+      <button class="tab" type="button" data-filter="pm">PM</button>
+      <button class="tab" type="button" data-filter="engineering">后端</button>
+      <button class="tab" type="button" data-filter="frontend">前端</button>
+      <button class="tab" type="button" data-filter="qa">QA</button>
+      <button class="tab" type="button" data-filter="ops">运维</button>
+      <button class="tab" type="button" data-filter="design">设计</button>
     </div>
     <h2>成员过程矩阵（重点缺口）</h2>
-    <table>
+    <table id="process-matrix">
       <thead>
         <tr>
           <th>成员</th>
@@ -647,7 +728,7 @@ td {
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-team="pm">
           <td>邹骢<br><span class="muted">PM-01</span></td>
           <td>CAP-LTC-R5 · 语义边界</td>
           <td>6 派发 / 6 接受 / 2 进行中 / 4 完成 / 0 未达标</td>
@@ -658,7 +739,7 @@ td {
           <td><span class="pill muted">无阻塞</span></td>
           <td><span class="pill ok">开放</span></td>
         </tr>
-        <tr>
+        <tr data-team="qa">
           <td>待实名确认<br><span class="muted">QA-02</span></td>
           <td>QA-BS-D5 · 回放验收</td>
           <td>5 派发 / 5 接受 / 3 进行中 / 1 完成 / 1 未达标</td>
@@ -669,7 +750,7 @@ td {
           <td><span class="pill wait">审批等待</span></td>
           <td><span class="pill ok">开放</span></td>
         </tr>
-        <tr>
+        <tr data-team="ops">
           <td>曾正龙<br><span class="muted">OPS-01</span></td>
           <td>Phase 0 运维底座</td>
           <td>8 派发 / 7 接受 / 3 进行中 / 4 完成 / 1 未达标</td>
@@ -680,7 +761,7 @@ td {
           <td><span class="pill review">环境窗口</span></td>
           <td><span class="pill ok">开放</span></td>
         </tr>
-        <tr>
+        <tr data-team="design">
           <td>童静<br><span class="muted">DES-01</span></td>
           <td>Design Packet 一致性</td>
           <td>4 派发 / 3 接受 / 2 进行中 / 1 完成 / 0 未达标</td>
@@ -693,6 +774,7 @@ td {
         </tr>
       </tbody>
     </table>
+    <div class="empty-state" id="matrix-empty">当前标签下暂无重点缺口项。</div>
   </section>
 
   <div class="two-col">
@@ -733,11 +815,64 @@ td {
       </div>
     </section>
   </div>
+
+  <section class="section" id="policy-alignment">
+    <h2>制度对齐检查</h2>
+    <div class="rules">
+      <div class="rule-box">
+        <h3>公开页保留的过程项</h3>
+        <ul>
+          <li>任务派发、接受、进行中、完成、过程未达标与补救状态。</li>
+          <li>Evidence Pack 完整度、门禁 / 验收状态、协作时效、阻塞归因。</li>
+          <li>LTC-Endpoint 只展示密文投影与状态类别。</li>
+          <li>员工更正窗口、审计快照、刷新节奏与追加更正记录。</li>
+        </ul>
+      </div>
+      <div class="rule-box">
+        <h3>已从公示页排除的制度项</h3>
+        <ul>
+          <li>最终结果类字段、个人顺位类字段、薪酬类字段。</li>
+          <li>个人收入计算、系数计算、历史调整示例与受限审批结论。</li>
+          <li>模型交互明细、原始工程证据、运行时明细和原始媒体证据。</li>
+          <li>结论性判断只保留在授权台账，不进入本公开投影。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="notice" style="margin-top:12px;">
+      对齐结论：当前公示页不再保留结果、顺位、薪酬和原始证据类遗留指标；剩余内容均为过程事实、前置条件、补证状态和审计状态。
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
   绩效过程指标公示 · Guide Layer · 不显示绩效结果<br>
   真源建议：飞书绩效台账、FEISHU-PERFORMANCE-POLICY、LTC evidence reference、GitHub Required Checks、QA Evidence Pack。
 </footer>
+<script>
+(() => {
+  const tabs = Array.from(document.querySelectorAll("[data-filter]"));
+  const rows = Array.from(document.querySelectorAll("#process-matrix tbody tr[data-team]"));
+  const empty = document.getElementById("matrix-empty");
+
+  function applyFilter(filter) {
+    let visibleCount = 0;
+    rows.forEach((row) => {
+      const shouldShow = filter === "all" || row.dataset.team === filter;
+      row.hidden = !shouldShow;
+      if (shouldShow) visibleCount += 1;
+    });
+    if (empty) empty.classList.toggle("is-visible", visibleCount === 0);
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((candidate) => candidate.classList.toggle("active", candidate === tab));
+      applyFilter(tab.dataset.filter || "all");
+    });
+  });
+
+  applyFilter("all");
+})();
+</script>
 </body>
 </html>

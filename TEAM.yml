@@ -1,10 +1,12 @@
 # 唤龙平台 hl-dispatch 团队角色映射
+# 本文件是 AI 任务派发用内部通讯录，不同步到 GitHub Pages 公示站点
 # Cowork 通过此文件自动识别"派给运维" → 对应 GitHub 用户名
 # 新增成员时在此文件添加即可，所有 session 自动生效
 
 ## github 字段为空时，通过内部渠道联系
 ## 成员接受邀请后，回填 github 用户名
 ## 本文件仅保留公开安全的角色代号，不存放实名或邮箱
+## 离职或退出协作的成员必须从 active roles 中移除，不保留 GitHub handle
 
 ## 当前能力包流参考 TEAM-COLLAB-SPEC v2.1。
 ## R-034 / Gate-3 条目仅保留为 legacy 派发兼容，不代表独立 QA 团队。
@@ -25,12 +27,6 @@ roles:
     github: ZDragonMeta
     responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行、Gate R 运维验收
     labels: [ops, task-assign]
-
-  pm:
-    name: PM-Ops
-    github: jianchengl
-    responsibility: 项目管理、进度跟踪、资源协调（R-034 S0 入职、WS-C 项目负责人）
-    labels: [task-assign, doc-review]
 
   product:
     name: PM-A

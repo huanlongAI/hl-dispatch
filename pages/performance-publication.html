@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>绩效过程指标公示</title>
+<title>月度任务过程事实公示（非绩效结果）</title>
 <style>
 :root {
   --bg: #0b1020;
@@ -306,37 +306,50 @@ a { color: inherit; }
   color: var(--muted);
   font-size: 0.68rem;
 }
-.pressure {
+.process-state {
   grid-column: 2 / -1;
   grid-row: 1;
   display: grid;
   align-content: center;
-  gap: 6px;
+  gap: 7px;
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
   padding: 2px 0;
 }
-.bar {
-  width: 100%;
+.discipline-meter {
+  width: min(100%, 180px);
   min-width: 0;
-  height: 7px;
+  height: 8px;
   border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.08);
   overflow: hidden;
 }
-.bar i {
+.discipline-meter i {
   display: block;
+  width: var(--meter);
   max-width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
+  background: linear-gradient(90deg, var(--blue), var(--yellow), var(--red));
 }
-.pressure small {
+.state-chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(116,185,255,0.24);
+  background: rgba(116,185,255,0.08);
   color: var(--muted);
   font-size: 0.72rem;
+  font-weight: 700;
   line-height: 1.35;
   overflow-wrap: anywhere;
+  white-space: normal;
 }
 .tabs {
   display: flex;
@@ -517,9 +530,9 @@ td {
   .hero h1 { font-size: 2.1rem; }
   .status-row, .metric-grid, .sealed-grid, .two-col, .rules, .team-grid { grid-template-columns: 1fr; }
   .person-row { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto; }
-  .person-name, .pressure { grid-column: 1 / -1; grid-row: auto; }
+  .person-name, .process-state { grid-column: 1 / -1; grid-row: auto; }
   .person-name { order: 1; }
-  .pressure { order: 2; }
+  .process-state { order: 2; }
   .stat { order: 3; }
   .correction-entry { grid-template-columns: 1fr; }
   .action-link { width: 100%; }
@@ -546,9 +559,9 @@ td {
 
 <section class="hero">
   <div class="hero-inner">
-    <div class="kicker">Dispatch Facts · Process Pressure · Result-Free</div>
-    <h1>绩效过程指标公示</h1>
-    <p>本页按团队和个人公示任务派发、接受、进行中、已完成、过程未达标、证据状态、门禁状态、阻塞归因和更正窗口。不承载最终结果、个人顺位、个人收入口径或其他结论性字段，也不把断链、缺证或超时自动解释为绩效负面。</p>
+    <div class="kicker">任务事实 · 过程纪律 · 不展示绩效结果</div>
+    <h1>月度任务过程事实公示（非绩效结果）</h1>
+    <p>本页只公开在职人员的任务派发、接受、进行中、已完成、过程阈值未过、证据状态、门禁状态、阻塞归因和更正窗口。离职人员即时从公示页面隐藏；历史审计链保留在授权台账，不进入公开页。不承载最终结果、个人顺位、个人收入口径或其他结论性字段，也不把断链、缺证或超时自动解释为绩效负面。</p>
     <div class="status-row">
       <div class="status-card"><b>2026-05-12</b><span>月度累计快照</span></div>
       <div class="status-card"><b>29</b><span>本月活跃任务项</span></div>
@@ -560,15 +573,60 @@ td {
 
 <main class="wrap">
   <div class="notice">
-    说明：本页已按 2026-05-12 GitHub Issue 月度累计口径更新。当前展示来自 `huanlongAI/hl-dispatch` 的任务派发、关闭、阻塞和待补证状态；飞书绩效台账、云效回推、QA Evidence Pack、LTC aggregate 和授权更正单接入前，只展示可复核的过程投影。页面不得承载最终绩效结果。
+    说明：本页已按 2026-05-12 GitHub Issue 月度累计口径更新。当前展示来自 `huanlongAI/hl-dispatch` 的任务派发、关闭、阻塞和待补证状态；飞书绩效台账、云效回推、QA Evidence Pack、LTC aggregate 和授权更正单接入前，只展示可复核的过程投影。页面不得承载最终绩效结果；公示名单只公开在职人员，离职人员即时从公示页面隐藏。
   </div>
+
+  <section class="section" id="discipline-authority">
+    <h2>过程纪律与结果承接</h2>
+    <div class="rules">
+      <div class="rule-box">
+        <h3>纪律口径</h3>
+        <ul>
+          <li>公开透明不是形式展示；公示期即事实核对和补救窗口。</li>
+          <li>未接受、逾期未说明、证据缺口、门禁未过等进入过程阈值未过。</li>
+          <li>纪律状态条表示当前待处理过程项占比；条长越高，代表越需要尽快补证、说明或过门禁。</li>
+          <li>纪律状态条不代表最终结论、个人顺位或收入口径。</li>
+        </ul>
+      </div>
+      <div class="rule-box">
+        <h3>结果承接</h3>
+        <ul>
+          <li>快照发布后 2 个工作日内未提交受限更正、补证或暂缓说明的，当前投影进入月度结果裁决的事实依据。</li>
+          <li>更正窗口关闭后，不再以未收到私下提醒作为同一事项的豁免理由。</li>
+          <li>Lead、成员和管理侧适用同一过程纪律；任何例外必须进入授权更正单和审计链。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="identity-scope">
+    <h2>实名展示依据与适用范围</h2>
+    <div class="rules">
+      <div class="rule-box">
+        <h3>公开对象</h3>
+        <ul>
+          <li>公开名单只包含当前在职人员；离职人员即时从公示页面隐藏。</li>
+          <li>实名展示仅用于任务过程事实核对，不用于生成个人顺位、等级结论、分值或收入口径。</li>
+          <li>历史快照如需审计保留，只进入授权台账；公开页不保留离职人员姓名和个人事项明细。</li>
+        </ul>
+      </div>
+      <div class="rule-box">
+        <h3>展示范围</h3>
+        <ul>
+          <li>展示周期为月度快照；字段限于任务派发、接受、过程状态、证据状态、门禁状态和更正状态。</li>
+          <li>员工享有事实更正、补证和暂缓标记权利；公开页仅展示处理状态，不展示申请全文。</li>
+          <li>任何字段扩展必须先复核脱敏规则、授权范围和禁用字段清单。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <section class="correction-entry" id="correction-entry" aria-label="更正与补证入口">
     <div>
-      <h3>更正 / 补证入口</h3>
-      <p>如发现任务归属、接受状态、证据状态、原因码或更正窗口展示有误，请提交 GitHub Issue。公示页只登记事项 ID、需更正字段、建议展示值和受限依据位置，不要求上传证据全文或媒体材料。</p>
+      <h3>受限更正 / 补证入口</h3>
+      <p>如发现任务归属、接受状态、证据状态、原因码或更正窗口展示有误，请提交受限更正 / 补证申请。公开页仅登记周期、事项 ID、需更正字段、建议展示值和受限联系通道；公开页仅展示更正处理状态，不展示申请全文、证据正文、个人争议说明或媒体材料。</p>
     </div>
-    <a class="action-link" href="https://github.com/huanlongAI/hl-dispatch/issues/new?title=%5B%E7%BB%A9%E6%95%88%E8%BF%87%E7%A8%8B%E6%8C%87%E6%A0%87%E6%9B%B4%E6%AD%A3%5D%20YYYY-MM%20-%20%E5%A7%93%E5%90%8D%20-%20%E4%BA%8B%E9%A1%B9ID&amp;body=%E5%91%A8%E6%9C%9F%EF%BC%9A%0A%E5%A7%93%E5%90%8D%EF%BC%9A%0A%E4%BA%8B%E9%A1%B9%20ID%EF%BC%9A%0A%E9%9C%80%E6%9B%B4%E6%AD%A3%E5%AD%97%E6%AE%B5%EF%BC%9A%0A%E5%BD%93%E5%89%8D%E5%B1%95%E7%A4%BA%E5%80%BC%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E5%B1%95%E7%A4%BA%E5%80%BC%EF%BC%9A%0A%E4%BE%9D%E6%8D%AE%E4%BD%8D%E7%BD%AE%EF%BC%9A%0A%E6%98%AF%E5%90%A6%E9%9C%80%E6%9A%82%E7%BC%93%EF%BC%9A" target="_blank" rel="noopener">提交更正 Issue</a>
+    <a class="action-link" href="https://github.com/huanlongAI/hl-dispatch/issues/new?title=%5B%E8%BF%87%E7%A8%8B%E4%BA%8B%E5%AE%9E%E6%9B%B4%E6%AD%A3%5D+YYYY-MM+-+%E4%BA%8B%E9%A1%B9ID&amp;body=%E5%91%A8%E6%9C%9F%EF%BC%9A%0A%E4%BA%8B%E9%A1%B9+ID%EF%BC%9A%0A%E9%9C%80%E6%9B%B4%E6%AD%A3%E5%AD%97%E6%AE%B5%EF%BC%9A%0A%E5%BB%BA%E8%AE%AE%E5%B1%95%E7%A4%BA%E5%80%BC%EF%BC%9A%0A%E5%8F%97%E9%99%90%E8%81%94%E7%B3%BB%E9%80%9A%E9%81%93%EF%BC%9A%0A%E6%98%AF%E5%90%A6%E9%9C%80%E6%9A%82%E7%BC%93%EF%BC%9A" target="_blank" rel="noopener">提交受限更正 / 补证申请</a>
   </section>
 
   <section class="section" id="rules">
@@ -578,8 +636,8 @@ td {
         <h3>允许展示</h3>
         <ul>
           <li>owner 责任域、事项 ID、证据链接状态。</li>
-          <li>任务派发、接受、进行中、已完成、过程未达标。</li>
-          <li>团队合盘量化：总派发、接受率、完成量、未达标暴露量。</li>
+          <li>任务派发、接受、进行中、已完成、过程阈值未过。</li>
+          <li>团队合盘量化：总派发、接受率、完成量、阈值未过暴露量。</li>
           <li>Evidence Pack 完整 / 待补 / 待复核 / 暂缓。</li>
           <li>L1-L4、qa-verdict、pm-acceptance、release evidence 状态。</li>
           <li>LTC 正常 / 降级 / 断链已说明 / 系统故障待归因。</li>
@@ -620,7 +678,7 @@ td {
       <div class="rule-box">
         <h3>脱敏与权限边界</h3>
         <ul>
-          <li>默认展示团队、岗位或责任域编码；实名展示必须有制度依据和授权范围。</li>
+          <li>只公开在职人员；实名展示必须有制度依据和授权范围，离职人员即时从公示页面隐藏。</li>
           <li>证据只展示“完整 / 待补 / 待复核 / 暂缓”等状态，不展示原始证据正文。</li>
           <li>链接只进入受限证据库；公示页只保留证据是否存在和是否可复核。</li>
           <li>员工可见自身明细，团队公开页只看过程状态，管理侧受限页才看完整审计链。</li>
@@ -634,7 +692,7 @@ td {
         <tr>
           <th>原因码</th>
           <th>含义</th>
-          <th>是否可计入过程未达标</th>
+          <th>是否可计入过程阈值未过</th>
           <th>处理要求</th>
         </tr>
       </thead>
@@ -656,7 +714,7 @@ td {
         <h3>员工更正窗口</h3>
         <ul>
           <li>工作日 18:30 刷新后开放更正；默认 2 个工作日内提交补证、补说明或事实更正。</li>
-          <li>提交入口在页面顶部“提交更正 Issue”；更正单需写明周期、姓名、事项 ID、字段、建议展示值和依据位置。</li>
+          <li>提交入口在页面顶部“提交受限更正 / 补证申请”；更正单只在公开入口填写周期、事项 ID、字段、建议展示值和受限联系通道。</li>
           <li>周期关闭前仍未处理完的更正项，状态必须标为“暂缓”或“待裁决”，不得直接进入结果判断。</li>
           <li>更正通过后只更新公示投影，原始快照和更正依据必须保留在审计链中。</li>
         </ul>
@@ -666,7 +724,7 @@ td {
         <ul>
           <li>常规刷新节奏为工作日 18:30；紧急刷新必须有授权更正单或管理员发布记录。</li>
           <li>每次生成快照必须包含 snapshot_id、source_digest、generated_at 和 operator。</li>
-          <li>发布后只允许追加更正记录，不允许静默删除历史状态。</li>
+          <li>发布后只允许追加更正记录，不允许静默删除历史状态；离职隐藏属于公开范围收缩，审计链保留在授权台账。</li>
         </ul>
       </div>
     </div>
@@ -803,86 +861,86 @@ td {
     <h2>指标过程看板</h2>
     <div class="team-grid">
       <div class="team-panel">
-        <div class="team-head"><div class="team-title">PM / 产品团队</div><div class="team-total"><span>派发 2</span><span>接受 2</span><span>完成 0</span><span>未达标 0</span></div></div>
+        <div class="team-head"><div class="team-title">PM / 产品团队</div><div class="team-total"><span>派发 2</span><span>接受 2</span><span>完成 0</span><span>阈值未过 0</span></div></div>
         <div class="person-row">
-          <div class="person-name"><span class="real">邹骢</span><span class="code">PM-01 · PM Lead</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:54%"></i></div><small>#40 · 业务口径收束</small></div>
+          <div class="person-name"><span class="real">邹骢</span><span class="code">PM-01 · PM Lead</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:54%"><div class="discipline-meter"><i></i></div><span class="state-chip">#40 · 业务口径收束</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">朱阳</span><span class="code">PM-02 · 客户与支付</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:48%"></i></div><small>#39 · 已启动盘问</small></div>
+          <div class="person-name"><span class="real">朱阳</span><span class="code">PM-02 · 客户与支付</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:48%"><div class="discipline-meter"><i></i></div><span class="state-chip">#39 · 已启动盘问</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">崔田恬</span><span class="code">PM-03 · PM</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>暂无 GitHub Issue</small></div>
-        </div>
-      </div>
-
-      <div class="team-panel">
-        <div class="team-head"><div class="team-title">后端工程团队</div><div class="team-total"><span>派发 5</span><span>接受 5</span><span>完成 0</span><span>未达标 3</span></div></div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">魏鹏</span><span class="code">ENG-01 · 工程 Lead</span><div class="person-monthly"><span><b>3</b>月累计</span><span><b>0</b>月完成</span><span><b>3</b>月打开</span></div></div><div class="stat"><b>3</b><span>派发</span></div><div class="stat"><b>3</b><span>接受</span></div><div class="stat"><b>3</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>2</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:74%"></i></div><small>#61/#76 · 待补证</small></div>
-        </div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">许久明</span><span class="code">ENG-02 · Gate H</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:38%"></i></div><small>#77 · 已接收</small></div>
-        </div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">周飞</span><span class="code">ENG-05 · Java 后端</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:68%"></i></div><small>#72 · 部分取证</small></div>
-        </div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">周春辉</span><span class="code">ENG-06 · Java 后端</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>暂无 GitHub Issue</small></div>
-        </div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">李维</span><span class="code">ENG-07 · Java 后端</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>暂无 GitHub Issue</small></div>
-        </div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">涂先权</span><span class="code">ENG-08 · PHP 后端</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>暂无 GitHub Issue</small></div>
+          <div class="person-name"><span class="real">崔田恬</span><span class="code">PM-03 · PM</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">暂无 GitHub Issue</span></div>
         </div>
       </div>
 
       <div class="team-panel">
-        <div class="team-head"><div class="team-title">QA 团队</div><div class="team-total"><span>派发 1</span><span>接受 1</span><span>完成 0</span><span>未达标 1</span></div></div>
+        <div class="team-head"><div class="team-title">后端工程团队</div><div class="team-total"><span>派发 5</span><span>接受 5</span><span>完成 0</span><span>阈值未过 3</span></div></div>
         <div class="person-row">
-          <div class="person-name"><span class="real">李云峰</span><span class="code">QA-01 · QA Lead</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:82%"></i></div><small>#61 · Evidence Pack 待补</small></div>
+          <div class="person-name"><span class="real">魏鹏</span><span class="code">ENG-01 · 工程 Lead</span><div class="person-monthly"><span><b>3</b>月累计</span><span><b>0</b>月完成</span><span><b>3</b>月打开</span></div></div><div class="stat"><b>3</b><span>派发</span></div><div class="stat"><b>3</b><span>接受</span></div><div class="stat"><b>3</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>2</b><span>阈值未过</span></div><div class="process-state" style="--meter:74%"><div class="discipline-meter"><i></i></div><span class="state-chip">#61/#76 · 待补证</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">邢昊铨</span><span class="code">QA-02 · QA</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>#61 内部分工待拆</small></div>
+          <div class="person-name"><span class="real">许久明</span><span class="code">ENG-02 · Gate H</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:38%"><div class="discipline-meter"><i></i></div><span class="state-chip">#77 · 已接收</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">赵渊</span><span class="code">QA-03 · QA</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>#61 内部分工待拆</small></div>
-        </div>
-      </div>
-
-      <div class="team-panel">
-        <div class="team-head"><div class="team-title">前端团队</div><div class="team-total"><span>派发 12</span><span>接受 11</span><span>完成 5</span><span>未达标 2</span></div></div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">胡杰威</span><span class="code">FE-01 · 前端 Lead</span><div class="person-monthly"><span><b>10</b>月累计</span><span><b>4</b>月完成</span><span><b>6</b>月打开</span></div></div><div class="stat"><b>8</b><span>派发</span></div><div class="stat"><b>8</b><span>接受</span></div><div class="stat"><b>6</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:58%"></i></div><small>#57/#58/#59 暂缓 · #71 待补</small></div>
+          <div class="person-name"><span class="real">周飞</span><span class="code">ENG-05 · Java 后端</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>1</b><span>阈值未过</span></div><div class="process-state" style="--meter:68%"><div class="discipline-meter"><i></i></div><span class="state-chip">#72 · 部分取证</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">刘刚</span><span class="code">FE-02 · 前端成员</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>1</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:20%"></i></div><small>#64 已关闭</small></div>
+          <div class="person-name"><span class="real">周春辉</span><span class="code">ENG-06 · Java 后端</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">暂无 GitHub Issue</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">刘会娟</span><span class="code">FE-03 · 前端成员</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>1</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:20%"></i></div><small>#65 已关闭</small></div>
+          <div class="person-name"><span class="real">李维</span><span class="code">ENG-07 · Java 后端</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">暂无 GitHub Issue</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">盛云</span><span class="code">FE-04 · 前端开发</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>1</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:20%"></i></div><small>#63 已关闭</small></div>
-        </div>
-        <div class="person-row">
-          <div class="person-name"><span class="real">夏全灵</span><span class="code">FE-05 · Flutter 程序员</span><div class="person-monthly"><span><b>5</b>月累计</span><span><b>4</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>1</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:68%"></i></div><small>#73 未见回填</small></div>
+          <div class="person-name"><span class="real">涂先权</span><span class="code">ENG-08 · PHP 后端</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">暂无 GitHub Issue</span></div>
         </div>
       </div>
 
       <div class="team-panel">
-        <div class="team-head"><div class="team-title">UI 设计团队</div><div class="team-total"><span>派发 0</span><span>接受 0</span><span>完成 0</span><span>未达标 0</span></div></div>
+        <div class="team-head"><div class="team-title">QA 团队</div><div class="team-total"><span>派发 1</span><span>接受 1</span><span>完成 0</span><span>阈值未过 1</span></div></div>
         <div class="person-row">
-          <div class="person-name"><span class="real">童静</span><span class="code">DES-01 · UI 设计 Lead</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>由前端统筹回填</small></div>
+          <div class="person-name"><span class="real">李云峰</span><span class="code">QA-01 · QA Lead</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>0</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>1</b><span>阈值未过</span></div><div class="process-state" style="--meter:82%"><div class="discipline-meter"><i></i></div><span class="state-chip">#61 · Evidence Pack 待补</span></div>
         </div>
         <div class="person-row">
-          <div class="person-name"><span class="real">李吴鹏</span><span class="code">DES-02 · 设计成员</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:0%"></i></div><small>由前端统筹回填</small></div>
+          <div class="person-name"><span class="real">邢昊铨</span><span class="code">QA-02 · QA</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">#61 内部分工待拆</span></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">赵渊</span><span class="code">QA-03 · QA</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">#61 内部分工待拆</span></div>
         </div>
       </div>
 
       <div class="team-panel">
-        <div class="team-head"><div class="team-title">运维团队</div><div class="team-total"><span>派发 1</span><span>接受 1</span><span>完成 0</span><span>未达标 0</span></div></div>
+        <div class="team-head"><div class="team-title">前端团队</div><div class="team-total"><span>派发 12</span><span>接受 11</span><span>完成 5</span><span>阈值未过 2</span></div></div>
         <div class="person-row">
-          <div class="person-name"><span class="real">曾正龙</span><span class="code">OPS-01 · 运维 Lead</span><div class="person-monthly"><span><b>2</b>月累计</span><span><b>1</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>未达标</span></div><div class="pressure"><div class="bar"><i style="width:44%"></i></div><small>#45 · 部署事实待回填</small></div>
+          <div class="person-name"><span class="real">胡杰威</span><span class="code">FE-01 · 前端 Lead</span><div class="person-monthly"><span><b>10</b>月累计</span><span><b>4</b>月完成</span><span><b>6</b>月打开</span></div></div><div class="stat"><b>8</b><span>派发</span></div><div class="stat"><b>8</b><span>接受</span></div><div class="stat"><b>6</b><span>进行中</span></div><div class="stat"><b>2</b><span>完成</span></div><div class="stat"><b>1</b><span>阈值未过</span></div><div class="process-state" style="--meter:58%"><div class="discipline-meter"><i></i></div><span class="state-chip">#57/#58/#59 暂缓 · #71 待补</span></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">刘刚</span><span class="code">FE-02 · 前端成员</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>1</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:20%"><div class="discipline-meter"><i></i></div><span class="state-chip">#64 已关闭</span></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">刘会娟</span><span class="code">FE-03 · 前端成员</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>1</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:20%"><div class="discipline-meter"><i></i></div><span class="state-chip">#65 已关闭</span></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">盛云</span><span class="code">FE-04 · 前端开发</span><div class="person-monthly"><span><b>1</b>月累计</span><span><b>1</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>1</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:20%"><div class="discipline-meter"><i></i></div><span class="state-chip">#63 已关闭</span></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">夏全灵</span><span class="code">FE-05 · Flutter 程序员</span><div class="person-monthly"><span><b>5</b>月累计</span><span><b>4</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>1</b><span>阈值未过</span></div><div class="process-state" style="--meter:68%"><div class="discipline-meter"><i></i></div><span class="state-chip">#73 未见回填</span></div>
+        </div>
+      </div>
+
+      <div class="team-panel">
+        <div class="team-head"><div class="team-title">UI 设计团队</div><div class="team-total"><span>派发 0</span><span>接受 0</span><span>完成 0</span><span>阈值未过 0</span></div></div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">童静</span><span class="code">DES-01 · UI 设计 Lead</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">由前端统筹回填</span></div>
+        </div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">李吴鹏</span><span class="code">DES-02 · 设计成员</span><div class="person-monthly"><span><b>0</b>月累计</span><span><b>0</b>月完成</span><span><b>0</b>月打开</span></div></div><div class="stat"><b>0</b><span>派发</span></div><div class="stat"><b>0</b><span>接受</span></div><div class="stat"><b>0</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:0%"><div class="discipline-meter"><i></i></div><span class="state-chip">由前端统筹回填</span></div>
+        </div>
+      </div>
+
+      <div class="team-panel">
+        <div class="team-head"><div class="team-title">运维团队</div><div class="team-total"><span>派发 1</span><span>接受 1</span><span>完成 0</span><span>阈值未过 0</span></div></div>
+        <div class="person-row">
+          <div class="person-name"><span class="real">曾正龙</span><span class="code">OPS-01 · 运维 Lead</span><div class="person-monthly"><span><b>2</b>月累计</span><span><b>1</b>月完成</span><span><b>1</b>月打开</span></div></div><div class="stat"><b>1</b><span>派发</span></div><div class="stat"><b>1</b><span>接受</span></div><div class="stat"><b>1</b><span>进行中</span></div><div class="stat"><b>0</b><span>完成</span></div><div class="stat"><b>0</b><span>阈值未过</span></div><div class="process-state" style="--meter:44%"><div class="discipline-meter"><i></i></div><span class="state-chip">#45 · 部署事实待回填</span></div>
         </div>
       </div>
     </div>
@@ -917,7 +975,7 @@ td {
         <tr data-team="pm">
           <td>邹骢<br><span class="muted">PM-01</span></td>
           <td>#40 · 客户与预约履约 Cap-Spec</td>
-          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 未达标</td>
+          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 阈值未过</td>
           <td><span class="pill review">待复核</span></td>
           <td><span class="pill review">业务口径收束</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -928,7 +986,7 @@ td {
         <tr data-team="pm">
           <td>朱阳<br><span class="muted">PM-02</span></td>
           <td>#39 · 供给侧能力包 Cap-Spec</td>
-          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 未达标</td>
+          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 阈值未过</td>
           <td><span class="pill review">待复核</span></td>
           <td><span class="pill wait">草稿待 PR</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -939,7 +997,7 @@ td {
         <tr data-team="engineering">
           <td>魏鹏<br><span class="muted">ENG-01</span></td>
           <td>#61 / #76 / #72 · QA 门禁与同步脚本</td>
-          <td>3 派发 / 3 接受 / 3 进行中 / 0 完成 / 2 未达标</td>
+          <td>3 派发 / 3 接受 / 3 进行中 / 0 完成 / 2 阈值未过</td>
           <td><span class="pill wait">待补证</span></td>
           <td><span class="pill wait">门禁待过</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -950,7 +1008,7 @@ td {
         <tr data-team="engineering">
           <td>周飞<br><span class="muted">ENG-05</span></td>
           <td>#72 · 并行云效仓库消费取证</td>
-          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 1 未达标</td>
+          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 1 阈值未过</td>
           <td><span class="pill review">部分取证</span></td>
           <td><span class="pill review">消费链路待收束</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -961,7 +1019,7 @@ td {
         <tr data-team="engineering">
           <td>许久明<br><span class="muted">ENG-02</span></td>
           <td>#77 · Runtime code quality deep audit</td>
-          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 未达标</td>
+          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 阈值未过</td>
           <td><span class="pill review">待复核</span></td>
           <td><span class="pill review">审计进行中</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -972,7 +1030,7 @@ td {
         <tr data-team="qa">
           <td>李云峰<br><span class="muted">QA-01</span></td>
           <td>#61 · hk.id.identity_create 首包证据</td>
-          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 1 未达标</td>
+          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 1 阈值未过</td>
           <td><span class="pill wait">待补证</span></td>
           <td><span class="pill wait">qa-verdict 待过</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -983,7 +1041,7 @@ td {
         <tr data-team="frontend">
           <td>胡杰威<br><span class="muted">FE-01</span></td>
           <td>#71 / #60 / #54 / #57-#59 · 前端总账</td>
-          <td>8 派发 / 8 接受 / 6 进行中 / 2 完成 / 1 未达标</td>
+          <td>8 派发 / 8 接受 / 6 进行中 / 2 完成 / 1 阈值未过</td>
           <td><span class="pill review">待复核</span></td>
           <td><span class="pill review">候选任务待解锁</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -994,7 +1052,7 @@ td {
         <tr data-team="frontend">
           <td>夏全灵<br><span class="muted">FE-05</span></td>
           <td>#73 · hl-scene-app 流水线参数</td>
-          <td>1 派发 / 0 接受 / 0 进行中 / 0 完成 / 1 未达标</td>
+          <td>1 派发 / 0 接受 / 0 进行中 / 0 完成 / 1 阈值未过</td>
           <td><span class="pill wait">待回填</span></td>
           <td><span class="pill wait">未接受待说明</span></td>
           <td><span class="pill wait">未见本人回填</span></td>
@@ -1005,7 +1063,7 @@ td {
         <tr data-team="ops">
           <td>曾正龙<br><span class="muted">OPS-01</span></td>
           <td>#45 · HK / 控制台部署准备</td>
-          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 未达标</td>
+          <td>1 派发 / 1 接受 / 1 进行中 / 0 完成 / 0 阈值未过</td>
           <td><span class="pill review">待复核</span></td>
           <td><span class="pill review">部署事实待回填</span></td>
           <td><span class="pill ok">已回应</span></td>
@@ -1078,7 +1136,7 @@ td {
       <div class="rule-box">
         <h3>公开页保留的过程项</h3>
         <ul>
-          <li>任务派发、接受、进行中、完成、过程未达标与补救状态。</li>
+          <li>任务派发、接受、进行中、完成、过程阈值未过与补救状态。</li>
           <li>Evidence Pack 完整度、门禁 / 验收状态、协作时效、阻塞归因。</li>
           <li>LTC-Endpoint 只展示密文投影与状态类别。</li>
           <li>员工更正窗口、审计快照、刷新节奏与追加更正记录。</li>
@@ -1101,7 +1159,7 @@ td {
 </main>
 
 <footer class="footer">
-  绩效过程指标公示 · Guide Layer · 不显示绩效结果<br>
+  月度任务过程事实公示 · Guide Layer · 不显示绩效结果<br>
   Generated from hl-dispatch monthly cumulative snapshot · 2026-05-12 Asia/Shanghai。
 </footer>
 <script>

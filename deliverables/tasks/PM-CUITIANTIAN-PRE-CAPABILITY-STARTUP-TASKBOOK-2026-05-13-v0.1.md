@@ -1,11 +1,20 @@
 # PM 崔田恬正式能力包前置启动任务书 v0.1
 
 > 日期：2026-05-13
-> 状态：DRAFT，供 Founder / PM 工作台创建 GitHub Issue 前审阅
+> 状态：PUBLISHED
 > GitHub Issue：`huanlongAI/hl-dispatch#80`
 > 面向对象：PM 崔田恬（GitHub: `cuitiantian0704`）
 > 目标：在正式能力包下发前，完成 PM Cap-Spec 工作流、GitHub 证据链、Issue / PR 节奏、Gate 反馈处理的前置演练。
 > 边界：本任务不分配正式能力包，不写 `hl-contracts` 契约，不注册 reason_code，不写代码，不授权工程开工。
+
+## 发布记录
+
+| 时间 | 事项 | 证据 |
+|---|---|---|
+| 2026-05-13 | 创建 GitHub Issue | `hl-dispatch#80` |
+| 2026-05-13 | 发布到飞书 PM工作台 | message_id `om_x100b6f762aba60a4c393d1ead098a4e` |
+| 2026-05-13 | 回填执行入口 | `hl-dispatch#80` comment `4439039076` |
+| 2026-05-13 | 处理 D0 权限反馈 | `hl-dispatch` 已补 Write；`team-memory` 受 GitHub `seat_limit` 阻塞 |
 
 ## 0. 设计依据
 

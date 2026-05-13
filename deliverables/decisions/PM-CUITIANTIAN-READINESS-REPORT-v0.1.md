@@ -60,7 +60,7 @@ PM 不直接修改 Tier 1 SSOT，不绕过 Founder / Gate 裁决，不把 AI 草
 2. 先输出上游事实、能力范围、非范围、待裁决问题，不直接写最终结论。
 3. 形成 Cap-Spec 四件套 Draft PR，PR 描述明确 DRAFT、范围、非工程开工输入、未注册项和待裁决项。
 4. 每轮 review 后在 Issue / PR 回填 commit、checks、修改摘要和剩余卡点。
-5. Gate false positive 按 `NEEDS_GATE_FIX` 回填，不使用文档 hack 绕过。
+5. Gate false positive 按 `NEEDS_GATE_FIX` 回填，不使用不可审查的文档规避写法绕过。
 6. 等待 Founder / Gate 明确裁决后，再进入下一步拆分；未授权前不推动工程开工。
 
 ## 8. 当前准备度与卡点
@@ -73,9 +73,9 @@ PM 不直接修改 Tier 1 SSOT，不绕过 Founder / Gate 裁决，不把 AI 草
 
 当前卡点：
 
-- 当前账号无法直接读取 `huanlongAI/team-memory`，首条 team-memory session 沉淀仍被权限阻塞。
+- 当前账号无法直接读取 `huanlongAI/team-memory`，首条 team-memory session 沉淀仍被权限阻塞；Issue #80 最新回填显示阻塞原因为 GitHub `seat_limit`。
 - 当前账号无法直接读取 `huanlongAI/hl-contracts`，#29/#30/#34/#35/#36 的细节只能基于 `hl-dispatch#39/#40/#80` 中可见回填对齐。
-- 当前账号对 `hl-dispatch` 为 `TRIAGE` 权限，可评论 Issue，但不能 push 分支；D2 readiness PR 需要开通 Write 权限，或明确允许 fork PR。
+- 当前账号对 `hl-dispatch` 的权限已由管理侧提升为 `write`，本报告已通过 `codex/pm-cui-tiantian-readiness` 分支提交 PR。
 
 ## 9. 边界确认
 

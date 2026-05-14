@@ -9,6 +9,8 @@ body:
         ## 任务派发
         请按清单逐项执行，完成后勾选并在评论区说明。
 
+        派发提醒：涉及前端 App / 场景前端真实构建证据时，执行角色选 Frontend-Lead；涉及 GitHub -> Codeup / 云效代码仓同步证据时，执行角色选 Infra-A；Gate-R 只承接其有权限的运维发布、部署、回滚路径。
+
   - type: input
     id: task-name
     attributes:
@@ -24,6 +26,8 @@ body:
       options:
         - 架构审计师（Gate-H）
         - 运维工程师（Gate-R）
+        - 双仓同步 Owner（Infra-A）
+        - 前端负责人（Frontend-Lead）
         - 全员协作
     validations:
       required: true

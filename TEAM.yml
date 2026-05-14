@@ -1,52 +1,166 @@
 # 唤龙平台 hl-dispatch 团队角色映射
 # 本文件是 AI 任务派发用内部通讯录，不同步到 GitHub Pages 公示站点
-# Cowork 通过此文件自动识别"派给运维" → 对应 GitHub 用户名
+# Cowork 通过此文件自动识别"派给运维" → 对应 GitHub 用户名和飞书 ID
 # 新增成员时在此文件添加即可，所有 session 自动生效
 
-## github 字段为空时，通过内部渠道联系
-## 成员接受邀请后，回填 github 用户名
-## 本文件仅保留公开安全的角色代号，不存放实名或邮箱
-## 离职或退出协作的成员必须从 active roles 中移除，不保留 GitHub handle
+# github 字段为空时，通过内部渠道联系
+# 成员接受邀请后，回填 github 用户名
+# 本文件仅保留角色代号、GitHub handle、飞书 open_id/user_id，不存放邮箱
+# 离职或退出协作的成员必须从 active roles 中移除，不保留 GitHub handle
 
-## 当前能力包流参考 TEAM-COLLAB-SPEC v2.1。
+version: 2026-05-14
+lark_id_verified_at: 2026-05-14
+source_refs:
+  - team-memory/00-index/TEAM-ROSTER.md
+  - TEAM-COLLAB-SPEC v2.1
+
+notification_policy:
+  direct_message: use lark.open_id when bot/user availability permits
+  fallback: use relevant Feishu group and record the GitHub Issue/PR link
+  departed_or_unknown: do not notify; ask founder or refresh TEAM-ROSTER first
+  historical_placeholders:
+    - Gate-3
+    - LUXBYA
+    - internal-managed
+
 roles:
   founder:
     name: L0-Founder
     github: tongzhenghui
+    lark:
+      open_id: ou_19e0b7a896b60cfe1b82d827377d8cf3
+      user_id: f541g5ec
     responsibility: 创建 Issue/PR、合并裁决、最终审批
 
   architect:
     name: Gate-H
     github: xujiuming
+    lark:
+      open_id: ou_fd0d9589180d00c88c31af6a32f782ea
+      user_id: 5ab3ebe4
     responsibility: 架构设计审查、契约变更审查、代码规范审查、Gate H 技术验收
     labels: [architect, doc-review]
 
   ops:
     name: Gate-R
     github: ZDragonMeta
-    responsibility: 基础设施审查、部署配置、环境搭建、OPS 执行、Gate R 运维验收
+    lark:
+      open_id: ou_a06976b0fae3df1c6c3c22736453fc97
+      user_id: f1g3e3gc
+    responsibility: 云效发布、回滚、环境搭建、OPS 执行、Gate R 运维验收；GitHub 侧通过 hl-dispatch public 仓留痕
     labels: [ops, task-assign]
 
   product:
     name: PM-A
     github: zoucong121
-    responsibility: 产品经理（暂不参与旧系统改造，后续另行分工）
+    lark:
+      open_id: ou_2f78c29411a569f06bedd960e3e3e9cb
+      user_id: 5dea1fba
+    responsibility: PM·商品与销售能力包
+    labels: [doc-review, decision-request]
+
+  product-customer-payment:
+    name: PM-B
+    github: zhuyang1204
+    lark:
+      open_id: ou_6ee95fc4bc20eebee3c9b119d5bc7c66
+      user_id: 44436c24
+    responsibility: PM·客户与支付能力包
+    labels: [doc-review, decision-request]
+
+  product-capability-pack:
+    name: PM-C
+    github: cuitiantian0704
+    lark:
+      open_id: ou_fa50b6abdc78aa23ee4d55ecb8698b54
+      user_id: 1cbd8g5c
+    responsibility: PM·能力包规格书与 team-memory 记忆沉淀
     labels: [doc-review, decision-request]
 
   qa-owner:
     name: QA-Owner
     github: ""
-    responsibility: QA 独立质量 Owner · qa-verdict required status check 按钮权；GitHub handle 待身份映射确认
+    lark: null
+    status: vacant
+    responsibility: QA 独立质量 Owner · qa-verdict required status check 按钮权；原 QA Owner 已离职，待创始人重新指定
     labels: [doc-review, task-assign]
 
   qa-team:
     name: QA-Team
     github: ""
-    responsibility: QA 验收执行团队 · acceptance-manifest / 验收测试 / Evidence Pack / 回归基线维护；成员 handles 待补齐
+    status: vacant
+    responsibility: QA 验收执行团队 · acceptance-manifest / 验收测试 / Evidence Pack / 回归基线维护
     labels: [doc-review, task-assign]
+    members: []
 
   backend:
     name: Infra-A
     github: wp159951
-    responsibility: 后端核心开发（Keycloak 集成 / Nacos / MQ Starter / HK Client SDK）
+    lark:
+      open_id: ou_fd38bcf8f91c3c835ec0113bf38562e3
+      user_id: bda9g5c9
+    responsibility: GitHub ↔ Codeup 同步、后端核心开发与工程证据回填
     labels: [doc-review, task-assign]
+
+  backend-team:
+    name: Backend-Team
+    github: ""
+    responsibility: Java/PHP 后端任务执行
+    labels: [task-assign]
+    members:
+      - github: zhoufei1223
+        lark:
+          open_id: ou_bc43ed6288e25b8b1b07daf212bff522
+          user_id: 3358e79e
+      - github: zhouchunhui123
+        lark:
+          open_id: ou_e225d6a5a78223fb9ee8f76708feb793
+          user_id: acf3d8ga
+      - github: lw2012888
+        lark:
+          open_id: ou_04aef2958b54a0dbf9d6ca2c29f1b88f
+          user_id: 6b5635f4
+      - github: imxzz
+        lark:
+          open_id: ou_e2677ebf363759bdfcbe7824c0a643f8
+          user_id: 7gg4f326
+
+  frontend-lead:
+    name: Frontend-Lead
+    github: "663548110"
+    lark:
+      open_id: ou_62e4620fcd2897bc4c982104005b2ec8
+      user_id: 9ceaag3c
+    responsibility: 前端团队协调、Flutter/设计系统协作、PR 统筹
+    labels: [task-assign]
+
+  frontend-team:
+    name: Frontend-Team
+    github: ""
+    responsibility: Flutter 转型、前端任务执行
+    labels: [task-assign]
+    members:
+      - github: hjliu95
+        lark:
+          open_id: ou_0f5642252a0d615c63a5185622537eb3
+          user_id: 89689g5b
+      - github: liwei333
+        lark:
+          open_id: ou_3056723a78519db5db05677c0e13eec4
+          user_id: 54eca463
+
+  design-lead:
+    name: Design-Lead
+    github: tongjing2026-glitch
+    lark:
+      open_id: ou_af324e778885668785e3515ef130d307
+      user_id: 2a6cg116
+    responsibility: 设计团队协调、设计系统输入
+    labels: [task-assign]
+
+  design-team:
+    name: Design-Team
+    github: ""
+    responsibility: 设计系统输入、组件协作
+    labels: [task-assign]
+    members: []

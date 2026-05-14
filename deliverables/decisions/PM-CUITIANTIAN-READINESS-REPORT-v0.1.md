@@ -69,13 +69,14 @@ PM 不直接修改 Tier 1 SSOT，不绕过 Founder / Gate 裁决，不把 AI 草
 
 - GitHub 账号已确认为 `cuitiantian0704`。
 - 已可读取 `huanlongAI/hl-dispatch`，并已在 `hl-dispatch#80` 回填 D0 / D1。
+- 已可读取 `huanlongAI/team-memory`，并完成首条 session 沉淀：`sessions/cuitiantian0704/2026-05-14-pm-cuitiantian-pre-capability-startup.md`。
 - 已对齐 `hl-dispatch#39` 与 `hl-dispatch#40` 中可见的朱阳、邹骢主线推进过程。
+- 已提交本 readiness report PR，并修复首轮 Sentinel 反馈。
 
 当前卡点：
 
-- 当前账号无法直接读取 `huanlongAI/team-memory`，首条 team-memory session 沉淀仍被权限阻塞；Issue #80 最新回填显示阻塞原因为 GitHub `seat_limit`。
 - 当前账号无法直接读取 `huanlongAI/hl-contracts`，#29/#30/#34/#35/#36 的细节只能基于 `hl-dispatch#39/#40/#80` 中可见回填对齐。
-- 当前账号对 `hl-dispatch` 的权限已由管理侧提升为 `write`，本报告已通过 `codex/pm-cui-tiantian-readiness` 分支提交 PR。
+- 等待 Founder / 管理侧决定是否补齐 `hl-contracts` 读取权限，以便后续逐 PR 原文复核。
 
 ## 9. 边界确认
 

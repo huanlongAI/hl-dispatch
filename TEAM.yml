@@ -47,7 +47,7 @@ roles:
     lark:
       open_id: ou_a06976b0fae3df1c6c3c22736453fc97
       user_id: f1g3e3gc
-    responsibility: 云效发布、回滚、环境搭建、OPS 执行、Gate R 运维验收；GitHub 侧通过 hl-dispatch public 仓留痕
+    responsibility: 运维发布、部署、回滚、环境搭建、OPS 执行、Gate R 运维验收；不负责无权限的前端 App 自主构建入口证据，GitHub 侧通过 hl-dispatch public 仓留痕
     labels: [ops, task-assign]
 
   product:
@@ -131,7 +131,7 @@ roles:
     lark:
       open_id: ou_62e4620fcd2897bc4c982104005b2ec8
       user_id: 9ceaag3c
-    responsibility: 前端团队协调、Flutter/设计系统协作、PR 统筹
+    responsibility: 前端团队协调、Flutter/设计系统协作、PR 统筹；前端 App / 场景前端真实构建证据 Owner
     labels: [task-assign]
 
   frontend-team:

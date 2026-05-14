@@ -80,26 +80,18 @@ roles:
   qa-owner:
     name: QA-Owner
     github: ""
-    lark:
-      open_id: ou_27dafb48411e6f4a7fb5a17f0ee27779
-      user_id: 1cg24g46
-    responsibility: QA 独立质量 Owner · qa-verdict required status check 按钮权；GitHub handle 待身份映射确认
+    lark: null
+    status: vacant
+    responsibility: QA 独立质量 Owner · qa-verdict required status check 按钮权；原 QA Owner 已离职，待创始人重新指定
     labels: [doc-review, task-assign]
 
   qa-team:
     name: QA-Team
     github: ""
+    status: vacant
     responsibility: QA 验收执行团队 · acceptance-manifest / 验收测试 / Evidence Pack / 回归基线维护
     labels: [doc-review, task-assign]
-    members:
-      - github: xingxinghaoba123
-        lark:
-          open_id: ou_66caede933eca3cf94a0ec9a4672c83d
-          user_id: 334a8g3c
-      - github: zy-zhaoyuan
-        lark:
-          open_id: ou_38b21987b1911f9df55ba0f5f1b344b6
-          user_id: caf7g633
+    members: []
 
   backend:
     name: Infra-A
@@ -148,10 +140,6 @@ roles:
     responsibility: Flutter 转型、前端任务执行
     labels: [task-assign]
     members:
-      - github: liugang1988
-        lark:
-          open_id: ou_f850f950995f32e26d9540a5f34d1923
-          user_id: 1fc35d92
       - github: hjliu95
         lark:
           open_id: ou_0f5642252a0d615c63a5185622537eb3
@@ -160,10 +148,6 @@ roles:
         lark:
           open_id: ou_3056723a78519db5db05677c0e13eec4
           user_id: 54eca463
-      - github: quanling
-        lark:
-          open_id: ou_a27da9dba6fab804f24318a1a5390fe4
-          user_id: 495f37cf
 
   design-lead:
     name: Design-Lead
@@ -179,8 +163,4 @@ roles:
     github: ""
     responsibility: 设计系统输入、组件协作
     labels: [task-assign]
-    members:
-      - github: Liwupeng0321
-        lark:
-          open_id: ou_29e0874508e72d8c148283370e97bf6d
-          user_id: fcaf36da
+    members: []

@@ -33,6 +33,11 @@ notification_steps.each do |job_name, step_name, run|
   failures << "#{label}: Feishu response code is not checked" unless run.match?(/jq\s+-e\s+'.*\.code\s*==\s*0/m)
   failures << "#{label}: direct jq-to-curl pipeline can hide jq failures" if run.match?(/\}'\s*\|\s*curl/m)
   failures << "#{label}: jq string concatenation in content must be parenthesized" if run.match?(/content:\s+\$[A-Za-z0-9_]+\s*\+/)
+
+  if run.include?("PM_WEBHOOK")
+    failures << "#{label}: pm-labeled notifications must not silently fall back to task webhook" if run.include?(']] && [ -n "${PM_WEBHOOK:-}" ]; then')
+    failures << "#{label}: pm-labeled notifications must require PM_WEBHOOK" unless run.include?('WEBHOOK="${PM_WEBHOOK:-}"')
+  end
 end
 
 if notification_steps.empty?

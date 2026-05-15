@@ -13,13 +13,16 @@ jobs:
     steps:
       - name: Issue to Task Channel
         env:
-          WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
+          TASK_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
+          PM_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_PM }}
           ACTION: ${{ github.event.action }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
           ASSIGNEE: ${{ github.event.issue.assignee.login }}
           ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
         run: |
+          set -euo pipefail
+
           if [ "$ACTION" = "opened" ]; then
             TITLE="新 Issue"; TEMPLATE="blue"
           elif [ "$ACTION" = "assigned" ]; then
@@ -32,8 +35,16 @@ jobs:
 
           [ -z "$ASSIGNEE" ] && ASSIGNEE="未指派"
 
-          jq -n \
-            --arg title "[hl-dispatch] ${TITLE}" \
+          WEBHOOK="${TASK_WEBHOOK:-}"
+          CARD_TITLE="[hl-dispatch] ${TITLE}"
+          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]] && [ -n "${PM_WEBHOOK:-}" ]; then
+            WEBHOOK="${PM_WEBHOOK}"
+            CARD_TITLE="[hl-dispatch][PM工作台] ${TITLE}"
+          fi
+          [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }
+
+          payload="$(jq -n \
+            --arg title "${CARD_TITLE}" \
             --arg template "${TEMPLATE}" \
             --arg line1 "**${ISSUE_TITLE}**" \
             --arg line2 "标签: ${ISSUE_LABELS}" \
@@ -44,11 +55,14 @@ jobs:
               card: {
                 header: {title: {tag: "plain_text", content: $title}, template: $template},
                 elements: [
-                  {tag: "div", text: {tag: "lark_md", content: $line1 + "\n" + $line2 + "\n" + $line3}},
+                  {tag: "div", text: {tag: "lark_md", content: ($line1 + "\n" + $line2 + "\n" + $line3)}},
                   {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看 Issue"}, url: $url, type: "primary"}]}
                 ]
               }
-            }' | curl -s -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d @-
+            }')"
+          response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}")"
+          echo "${response}"
+          echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null
 
   notify-decision-request:
     if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'decision-request'
@@ -61,7 +75,11 @@ jobs:
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
         run: |
-          jq -n \
+          set -euo pipefail
+
+          [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }
+
+          payload="$(jq -n \
             --arg title "🔔 有新的裁决请求" \
             --arg line1 "**${ISSUE_TITLE}**" \
             --arg line2 "提出者: ${ISSUE_AUTHOR}" \
@@ -71,11 +89,14 @@ jobs:
               card: {
                 header: {title: {tag: "plain_text", content: $title}, template: "red"},
                 elements: [
-                  {tag: "div", text: {tag: "lark_md", content: $line1 + "\n" + $line2}},
+                  {tag: "div", text: {tag: "lark_md", content: ($line1 + "\n" + $line2)}},
                   {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "立即查看"}, url: $url, type: "danger"}]}
                 ]
               }
-            }' | curl -s -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d @-
+            }')"
+          response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}")"
+          echo "${response}"
+          echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null
 
   notify-comment:
     if: github.event_name == 'issue_comment' && github.event.action == 'created'
@@ -83,13 +104,25 @@ jobs:
     steps:
       - name: Comment Notification
         env:
-          WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
+          TASK_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
+          PM_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_PM }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
           COMMENTER: ${{ github.event.comment.user.login }}
           COMMENT_URL: ${{ github.event.comment.html_url }}
         run: |
-          jq -n \
-            --arg title "[hl-dispatch] Issue 新评论" \
+          set -euo pipefail
+
+          WEBHOOK="${TASK_WEBHOOK:-}"
+          CARD_TITLE="[hl-dispatch] Issue 新评论"
+          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]] && [ -n "${PM_WEBHOOK:-}" ]; then
+            WEBHOOK="${PM_WEBHOOK}"
+            CARD_TITLE="[hl-dispatch][PM工作台] Issue 新评论"
+          fi
+          [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }
+
+          payload="$(jq -n \
+            --arg title "${CARD_TITLE}" \
             --arg line1 "**${ISSUE_TITLE}**" \
             --arg line2 "评论者: ${COMMENTER}" \
             --arg url "${COMMENT_URL}" \
@@ -98,8 +131,11 @@ jobs:
               card: {
                 header: {title: {tag: "plain_text", content: $title}, template: "blue"},
                 elements: [
-                  {tag: "div", text: {tag: "lark_md", content: $line1 + "\n" + $line2}},
+                  {tag: "div", text: {tag: "lark_md", content: ($line1 + "\n" + $line2)}},
                   {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看评论"}, url: $url, type: "primary"}]}
                 ]
               }
-            }' | curl -s -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d @-
+            }')"
+          response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}")"
+          echo "${response}"
+          echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null

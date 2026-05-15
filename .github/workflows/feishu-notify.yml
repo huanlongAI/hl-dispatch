@@ -37,8 +37,8 @@ jobs:
 
           WEBHOOK="${TASK_WEBHOOK:-}"
           CARD_TITLE="[hl-dispatch] ${TITLE}"
-          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]] && [ -n "${PM_WEBHOOK:-}" ]; then
-            WEBHOOK="${PM_WEBHOOK}"
+          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]]; then
+            WEBHOOK="${PM_WEBHOOK:-}"
             CARD_TITLE="[hl-dispatch][PM工作台] ${TITLE}"
           fi
           [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }
@@ -115,8 +115,8 @@ jobs:
 
           WEBHOOK="${TASK_WEBHOOK:-}"
           CARD_TITLE="[hl-dispatch] Issue 新评论"
-          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]] && [ -n "${PM_WEBHOOK:-}" ]; then
-            WEBHOOK="${PM_WEBHOOK}"
+          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]]; then
+            WEBHOOK="${PM_WEBHOOK:-}"
             CARD_TITLE="[hl-dispatch][PM工作台] Issue 新评论"
           fi
           [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }

@@ -1,8 +1,8 @@
 # hl-dispatch — AI 编码指引
 
-> **Write-Owner: NODE-A** — MULTI-NODE-COWORK-SPEC v0.3 §3.2
-> 跨域写入须遵循 §3.4 Cross-Domain Write Protocol
-> 最后修订：2026-04-05
+> **Write-Owner: NODE-E** — R-0122 / MULTI-NODE-COWORK-SPEC v0.6.7；原 `NODE-A` 投影已变更为 `NODE-E`
+> **NODE-M 操作权限**：当前一级完整操作节点 `NODE-M` 可按 Repo Sync、SSOT、验证门禁、branch protection 与明确 push 确认执行受控写入、push 与 Draft PR；这不改变本仓唤龙领域 Write-Owner = `NODE-E`。
+> 最后修订：2026-05-22
 
 ## 仓库定位
 
@@ -38,6 +38,7 @@ doc-review / task-assign / decision-request / architect / ops / pm / priority-p0
 
 ## Cowork 行为约定
 
-- 本仓库由 NODE-A 独占写入（变更需通过受控协作链路提交）
-- 其他节点如需修改，须通过 GitHub Issue 提案或创始人授权的 `[CROSS-DOMAIN]` commit
-- 详见 `tzhOS/40-PPR/MULTI-NODE-COWORK-SPEC.md` §3.4
+- 本仓库领域 Write-Owner 为 NODE-E（原 NODE-A 已变更为 NODE-E）。
+- NODE-M 是当前唯一完整一级操作节点，可在明确任务范围内直接执行受控写入、push 与 Draft PR。
+- 其他节点如需修改，须通过 GitHub Issue 提案或创始人授权的 `[CROSS-DOMAIN]` commit。
+- 详见 `tzhOS/40-PPR/MULTI-NODE-COWORK-SPEC.md` §3.4。

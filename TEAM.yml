@@ -8,7 +8,7 @@
 # 本文件仅保留角色代号、GitHub handle、飞书 open_id/user_id，不存放邮箱
 # 离职或退出协作的成员必须从 active roles 中移除，不保留 GitHub handle
 
-version: 2026-05-14
+version: 2026-05-23
 lark_id_verified_at: 2026-05-14
 source_refs:
   - team-memory/00-index/TEAM-ROSTER.md
@@ -124,6 +124,20 @@ roles:
         lark:
           open_id: ou_e2677ebf363759bdfcbe7824c0a643f8
           user_id: 7gg4f326
+
+  general-collaborators:
+    name: General-Collaborators
+    github: ""
+    status: pending_role_assignment
+    responsibility: 团队协作成员；具体负责域待创始人确认，仅作为人名解析与 GitHub 协作入口，不作为默认任务派发目标
+    labels: []
+    members:
+      - name: 熊剑峰
+        github: xyuchen701-sys
+        lark: null
+        repo_access:
+          hl-dispatch: triage_invitation_pending
+        status: pending_github_invitation_and_lark_id
 
   frontend-lead:
     name: Frontend-Lead

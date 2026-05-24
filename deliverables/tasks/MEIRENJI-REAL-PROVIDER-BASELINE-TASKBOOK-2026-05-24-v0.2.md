@@ -221,7 +221,20 @@ observation:
       - go / no-go / needs-founder-ruling
 ```
 
-## 8. 关联参考
+## 8. 飞书投影记录
+
+飞书仅作提醒投影，不作为 owner 回执、证据或确认真源。
+
+| 时间 | 群 | chat_id | message_id | 验证 |
+|---|---|---|---|---|
+| 2026-05-24 10:05 CST | 任务协同 | `oc_5ef189f8db26e982a94aef8ebaa598fc` | `om_x100b6e119edb70a0c2d1b9323c99279` | `lark-cli im +messages-mget` verified |
+| 2026-05-24 10:08 CST | AI native工程通知 | `oc_e261da13768e38e4791415b1d2cb89d0` | `om_x100b6e1197c150a4c10c3a603d48b07` | `lark-cli im +messages-mget` verified |
+
+GitHub 台账事件：
+
+- https://github.com/huanlongAI/hl-dispatch/issues/158#issuecomment-4527114183
+
+## 9. 关联参考
 
 - `hl-dispatch#84`：旧美人计观察侧设计输入任务，已关闭；不授权产品 baseline 或代码实现。
 - `hl-dispatch#154`：P0.5 自然交互与 AI 草稿确认能力包；不等同本独立 AI 产品 real-provider baseline。
@@ -229,7 +242,7 @@ observation:
 - `NEW-BEAUTY-AI-P0-PRODUCT-SPEC-v0.1.md`：P0 产品规格参考。
 - `NEW-BEAUTY-AI-P0-SYSTEM-ARCH-v0.1.md`：P0 系统架构参考。
 
-## 9. 当前阻塞 / 待确认项
+## 10. 当前阻塞 / 待确认项
 
 - 节点 D 设计智能体 route 需在实际调度前确认可用性。
 - 节点 C 小飞飞 route 需在实际调度前确认可用性。

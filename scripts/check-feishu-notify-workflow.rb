@@ -28,9 +28,24 @@ notification_steps.each do |job_name, step_name, run|
   label = "#{job_name} / #{step_name}"
 
   failures << "#{label}: missing strict shell mode" unless run.include?("set -euo pipefail")
-  failures << "#{label}: webhook empty guard missing" unless run.include?('[ -n "$WEBHOOK" ]')
+  unless run.include?('if [ -z "$WEBHOOK" ]; then') &&
+         run.include?("Feishu webhook is empty; notification skipped") &&
+         run.include?("Merge gate impact: none.") &&
+         run.include?("exit 0")
+    failures << "#{label}: webhook empty guard must fail open with warning and step summary"
+  end
   failures << "#{label}: curl response is not captured" unless run.include?('response="$(curl')
-  failures << "#{label}: Feishu response code is not checked" unless run.match?(/jq\s+-e\s+'.*\.code\s*==\s*0/m)
+  unless run.include?('if ! response="$(curl') &&
+         run.include?("Feishu provider request failed; notification failure is observer-only") &&
+         run.include?("Feishu notification failed open")
+    failures << "#{label}: provider request failure must fail open with warning"
+  end
+  unless run.match?(/if\s+!\s+echo\s+"\$\{response\}"\s+\|\s+jq\s+-e\s+'.*\.code\s*==\s*0/m) &&
+         run.include?("Feishu provider returned non-success response; notification failure is observer-only") &&
+         run.include?("Feishu notification provider warning")
+    failures << "#{label}: Feishu response code check must fail open with warning"
+  end
+  failures << "#{label}: notification steps must not hard fail with exit 1" if run.include?("exit 1")
   failures << "#{label}: direct jq-to-curl pipeline can hide jq failures" if run.match?(/\}'\s*\|\s*curl/m)
   failures << "#{label}: jq string concatenation in content must be parenthesized" if run.match?(/content:\s+\$[A-Za-z0-9_]+\s*\+/)
 

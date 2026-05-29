@@ -176,6 +176,10 @@ body { min-width: 1200px; }
 </tbody>
 </table></div>
 <p><strong>关键规则</strong>：你的 Cap-Spec 必须在创始人定义的契约框架内。如果需要变更契约（新增 reason_code、修改 API 规范），先走创始人审批的治理前置门。</p>
+<div class="callout warn">
+<strong>PM 版边界提醒</strong>
+PM 负责 Cap-Spec（能力规格）草稿、验收场景、Contract Gap（契约缺口）候选和待裁决问题。PM 可以提出字段、状态、原因码、通知和 OpenAPI（开放接口规范）候选，但不裁决正式契约，不把 Draft PR（草稿拉取请求）写成 baseline（基线），不授权工程开工。
+</div>
 <h3 id="22-design-packet">2.2 设计师的 Design Packet</h3>
 <p>Design Packet 是前端的真输入，取代了"群里说设计好了"。它是一份 YAML 文件，存在仓库里，有版本、可追溯。</p>
 <p>存放位置：<code>hl-scene-app/docs/design-packets/{能力包}/design-packet.yaml</code></p>
@@ -247,13 +251,14 @@ body { min-width: 1200px; }
 UI 设计师 补充视觉/交互设计
     ↓
 判断：Cap-Spec-3 是否涉及 reason_code 变更？
-  ├── 是 → 创始人先批准（治理前置门）→ 批准后你才能宣布 freeze
-  └── 否 → 你直接宣布 Cap-Spec freeze
+  ├── 是 → 作为 Contract Gap 候选提交 GitHub，等待 Founder / Gate 裁决
+  └── 否 → 作为 Draft PR / Issue 回填，等待 GitHub 上的明确 freeze 结论
 </code></pre></div>
 
 <p><strong>要点</strong>：</p>
 <ul>
 <li>Cap-Spec freeze 前确保 UI 设计师已完成视觉/交互设计</li>
+<li>PM 可以写清 Contract Gap 候选和影响范围，但不得把候选写成正式契约</li>
 <li>不要 freeze 后再改需求——改了就要解冻，工程师的 HPRD 和 design.md 全部作废</li>
 </ul>
 <h3 id="step-2hprd">Step 2：HPRD 审批 — 你审"理解对不对"</h3>
@@ -292,8 +297,8 @@ UI 设计师 补充视觉/交互设计
 </tr>
 </tbody>
 </table></div>
-<p>审批通过 → pm-hprd-pass（GitHub PR 上的流程内 Status Check，非 BLOCKING 人工门禁）= PASS → 工程师可以开始实现；Step 5 起云效再并行拉取代码跑 CI。</p>
-<p><strong>流程规则：pm-hprd-pass 未通过前，工程师不得开始 Step 3 实现。</strong></p>
+<p>审批通过 → pm-hprd-pass（GitHub PR 上的流程内 Status Check，非 BLOCKING 人工门禁）= PASS → 只能说明 PM 认可工程师的业务理解。是否进入 runtime（运行态）实现，仍需要 Founder / Gate 在 GitHub 明确授权。</p>
+<p><strong>流程规则：HPRD 草稿不等于 pm-hprd-pass；pm-hprd-pass 也不等于工程开工授权。</strong></p>
 <h3 id="step-5pm">Step 5：PM 产品验收 — 你是终审</h3>
 <p>工程师完成实现后，你在可交互演示版本上执行产品验收：</p>
 <ul>
@@ -370,8 +375,8 @@ UI 设计师 补充视觉/交互设计
 <h2 id="_5" style="margin-bottom:24px; margin-top:32px;">五、常见问题</h2>
 <p><strong>Q：Cap-Spec freeze 后发现需求变了怎么办？</strong>
 A：正式解冻 Cap-Spec（状态回退到 Cap-Spec Frozen），通知工程师和 QA，已有的 HPRD 标记为 INVALIDATED。修改后重新 freeze。不能偷偷改——改了门禁追溯不到。</p>
-<p><strong>Q：我能直接 merge Cap-Spec 的 PR 吗？</strong>
-A：可以。prd/core/ 路径的 CODEOWNERS 是 @hl-pm-team，PM 可以直接 merge Cap-Spec PR。创始人可选 review 但不 block。</p>
+<p><strong>Q：我能直接把 Cap-Spec Draft PR 当正式契约合入吗？</strong>
+A：不能。PM 负责把 Cap-Spec Draft、Contract Gap 候选和待裁决问题写清楚；正式契约合入、baseline 成立和 runtime 授权必须看 GitHub 上的 Founder / Gate 结论。</p>
 <p><strong>Q：设计师的产出在哪里冻结？</strong>
 A：在 hl-scene-app/docs/design-packets/ 下提交 design-packet.yaml。这是机读文件，有 frozen_at 字段标记冻结时间。</p>
 <p><strong>Q：HPRD 和 Cap-Spec 冲突怎么办？</strong>

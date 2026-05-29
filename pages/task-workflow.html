@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任务接收、回填与优先级指南 · 唤龙平台</title>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+body { min-width: 1200px; }
+.workflow-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; margin:18px 0; }
+.workflow-card { padding:16px 18px; background:var(--bg-card); border:1px solid var(--border); border-radius:8px; }
+.workflow-card h3 { margin-top:0; }
+.check-list { list-style:none; margin-left:0; padding-left:0; }
+.check-list li { padding-left:18px; position:relative; }
+.check-list li::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--primary-light); position:absolute; left:0; top:0.72em; }
+.status-template { background:#0D0D1A; border:1px solid var(--border); border-radius:8px; padding:16px; overflow-x:auto; color:var(--eng); font-size:0.86em; line-height:1.65; }
+.role-strip { display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; margin:16px 0; }
+.role-chip { padding:12px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,0.03); font-size:0.86em; }
+.role-chip strong { display:block; margin-bottom:4px; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="logo" href="../index.html">唤龙平台</a>
+  <div class="nav-links">
+    <a href="../index.html">首页</a>
+    <a href="global.html">全局工作流</a>
+    <a href="architecture.html">系统架构图</a>
+    <a href="github-yunxiao-pipeline.html">流水线指南</a>
+    <a href="product.html">产品团队</a>
+    <a href="frontend-design.html">前端与设计</a>
+    <a href="engineering.html">工程师</a>
+    <a href="qa.html">测试团队</a>
+    <a href="ops.html">运维</a>
+    <a href="team-leads.html">团队代表</a>
+    <a href="tech-selection.html">技术选型</a>
+    <a href="performance-system.html">绩效制度</a>
+    <a href="performance-publication.html">绩效公示</a>
+    <a href="glossary.html">术语表</a>
+  </div>
+</nav>
+
+<div style="background:rgba(108,92,231,0.15); border-left:4px solid var(--primary); padding:0.6rem 1rem; text-align:center; font-size:0.85rem; color:rgba(232,232,240,0.6);">
+  本站为桌面端专用，请在电脑浏览器中查看以获得最佳体验。
+</div>
+
+<div style="max-width:900px;margin:16px auto;padding:12px 20px;background:rgba(253,203,110,0.1);border:1px solid rgba(253,203,110,0.3);border-radius:8px;font-size:0.88em;color:#FDCB6E;text-align:center;">
+  本页为<strong>理解导览</strong>（Guide Layer），不是制度真源。任务、状态、证据和裁决以 GitHub Issue / PR / 仓库文件为准。
+</div>
+
+<div class="page-header">
+  <h1><span>任务接收、回填与优先级指南</span></h1>
+  <div class="meta">收到任务、催办、复审请求后，先判断真源、回填位置和授权边界</div>
+  <div class="badge">PM / 工程师 / Gate / QA / 运维</div>
+</div>
+
+<div class="content">
+<blockquote>
+<p><strong>适用角色</strong>：PM（产品经理）、工程师、Gate（关口审查）、QA（质量保障）、运维。</p>
+<p><strong>核心结论</strong>：飞书只是提醒你去 GitHub。GitHub Issue（事项）、PR（Pull Request，拉取请求）和仓库文件才是任务、状态、证据和裁决的 SSOT（Single Source of Truth，唯一事实源）。</p>
+</blockquote>
+
+<div class="callout danger">
+<strong>先记住这几条红线</strong>
+Draft PR（草稿拉取请求）不等于 baseline（基线）。HPRD（Human-readable Product Design，人类可读产品设计）草稿不等于 pm-hprd-pass（PM HPRD 通过检查）。CI（Continuous Integration，持续集成）green、sentinel pass（哨兵检查通过）、云效 run（流水线运行）和飞书通知都不等于 Gate 通过。没有 Founder（创始人）或 Gate 明确 runtime（运行态）授权，不得创建实现工单或写代码。
+</div>
+
+<h2 id="who">一、这页解决什么问题</h2>
+<div class="role-strip">
+  <div class="role-chip"><strong>PM</strong>知道 Cap-Spec（Capability Specification，能力规格）该写到哪里，哪些只是 Contract Gap（契约缺口）候选。</div>
+  <div class="role-chip"><strong>工程师</strong>知道 HPRD 是理解确认件，design.md 才是技术方案，何时仍不能实现。</div>
+  <div class="role-chip"><strong>Gate</strong>知道证据和裁决必须回到 GitHub，不能用飞书或流水线绿灯替代。</div>
+  <div class="role-chip"><strong>QA</strong>知道证据、qa-verdict（质量判决）和阻塞项应落在对应 Issue / PR。</div>
+  <div class="role-chip"><strong>运维</strong>知道云效、发布和通知只是证据输入或投影，不是业务授权。</div>
+</div>
+
+<h2 id="sources">二、先找真源，不从飞书开工</h2>
+<div class="workflow-grid">
+  <div class="workflow-card">
+    <h3>你收到飞书提醒时</h3>
+    <ul class="check-list">
+      <li>先打开提醒里的 GitHub Issue / PR 链接。</li>
+      <li>确认任务 owner（负责人）、范围、验收标准、禁止事项和回填位置。</li>
+      <li>如果飞书文字和 GitHub 不一致，以 GitHub 为准，并在 GitHub 说明差异。</li>
+    </ul>
+  </div>
+  <div class="workflow-card">
+    <h3>你收到催办时</h3>
+    <ul class="check-list">
+      <li>催办通常表示任务存在卡点，优先级高于普通同步。</li>
+      <li>最低动作不是在飞书回复“收到”，而是在 GitHub 回填当前状态和预计时间。</li>
+      <li>如果无法推进，直接写 BLOCKED（已阻塞）并列出需要谁裁决。</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="layers">三、四层任务结构</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>真源 / 投影</th>
+<th>你要做什么</th>
+<th>不能误解成什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务派发层</td>
+<td>hl-dispatch Issue 和任务书</td>
+<td>确认 owner、范围、验收标准、禁止事项、回填位置。</td>
+<td>不能只靠飞书口头派发。</td>
+</tr>
+<tr>
+<td>Cap-Spec Draft 层</td>
+<td>hl-contracts Draft PR 或对应 Issue</td>
+<td>PM 写能力规格草稿、Contract Gap 候选和待裁决问题。</td>
+<td>Draft PR 不等于已合入 main 的 baseline。</td>
+</tr>
+<tr>
+<td>Gate / Evidence 层</td>
+<td>GitHub PR / Issue 评论、checks、证据链接和裁决记录</td>
+<td>记录 Gate 结论、证据、阻塞项、复核结果和 no-delta（无业务差异）说明。</td>
+<td>CI green、sentinel pass、云效 run 不等于 Gate 通过。</td>
+</tr>
+<tr>
+<td>飞书投影层</td>
+<td>飞书消息、任务、群提醒</td>
+<td>提醒相关人回 GitHub 看任务、补状态、补证据。</td>
+<td>飞书已读、评论、完成不是真源，不授权 runtime。</td>
+</tr>
+</tbody>
+</table></div>
+
+<h2 id="fillback">四、标准回填模板</h2>
+<p>收到任务或催办后，优先在原 GitHub Issue / PR 评论区回填。状态从下面五种选一种，不要自造状态。</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr><th>状态</th><th>中文含义</th><th>使用场景</th></tr>
+</thead>
+<tbody>
+<tr><td><code>READY</code></td><td>已准备好</td><td>已读完真源，知道下一步，可按任务要求推进。</td></tr>
+<tr><td><code>PARTIAL</code></td><td>部分完成</td><td>已有进展和证据，但仍缺关键链路。</td></tr>
+<tr><td><code>BLOCKED</code></td><td>已阻塞</td><td>缺权限、缺真源、缺裁决、缺证据或存在冲突。</td></tr>
+<tr><td><code>READY_FOR_REVIEW</code></td><td>可复审</td><td>证据链已整理完，等待 Gate / Reviewer 复核。</td></tr>
+<tr><td><code>DONE</code></td><td>已完成</td><td>任务要求全部满足，并附可验证证据。</td></tr>
+</tbody>
+</table></div>
+
+<pre class="status-template"><code>## 状态回填
+
+状态：READY / PARTIAL / BLOCKED / READY_FOR_REVIEW / DONE
+
+已完成：
+- 
+
+证据链接：
+- GitHub Issue / PR / comment:
+- 仓库文件 / commit:
+- CI / 云效 / 日志截图:
+
+阻塞项：
+- 
+
+需要裁决：
+- 
+
+下一步：
+- 
+
+预计下一次回填时间：YYYY-MM-DD HH:mm Asia/Shanghai</code></pre>
+
+<h2 id="roles">五、不同角色怎么判断边界</h2>
+<div class="workflow-grid">
+  <div class="workflow-card">
+    <h3>PM 版</h3>
+    <ul class="check-list">
+      <li>PM 负责 Cap-Spec 草稿、验收场景、Contract Gap 候选和待裁决问题。</li>
+      <li>PM 可以列字段、状态、原因码、通知和 OpenAPI（开放接口规范）缺口候选。</li>
+      <li>PM 不裁决正式契约，不把 Draft PR 写成 baseline，不授权工程开工。</li>
+    </ul>
+  </div>
+  <div class="workflow-card">
+    <h3>工程师版</h3>
+    <ul class="check-list">
+      <li>HPRD 是你对 Cap-Spec 的理解确认件，不是技术方案。</li>
+      <li>design.md 是技术方案，进入实现前仍要看 Gate / Founder 是否明确授权 runtime。</li>
+      <li>无 runtime 授权时，只能做阅读、理解确认、gap review（缺口复核）和证据整理。</li>
+    </ul>
+  </div>
+  <div class="workflow-card">
+    <h3>Gate / QA 版</h3>
+    <ul class="check-list">
+      <li>Gate 结论和 qa-verdict 必须落在 GitHub，可引用仓库文件、PR checks 和证据链接。</li>
+      <li>AI 总结、飞书评论、下载目录、本地草稿不能替代 evidence（证据）。</li>
+      <li>缺证据时写 PARTIAL 或 BLOCKED，不写 DONE。</li>
+    </ul>
+  </div>
+  <div class="workflow-card">
+    <h3>运维版</h3>
+    <ul class="check-list">
+      <li>云效 run、发布日志、构建产物和环境状态是证据输入。</li>
+      <li>通知工作流是 observer-only（仅观察投影）和 fail-open（失败不阻塞合并）。</li>
+      <li>运维证据不能替代 PM 验收、Gate 裁决或 runtime 授权。</li>
+    </ul>
+  </div>
+</div>
+
+<h2 id="ledger">六、常见 GitHub 回填位置</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr><th>你在处理什么</th><th>优先回填位置</th><th>回填内容</th></tr>
+</thead>
+<tbody>
+<tr><td>能力包地图、全局任务分布、候选 Contract Gap</td><td><code>hl-dispatch#161</code></td><td>只写状态补丁或反链，不复制长正文。</td></tr>
+<tr><td>产品路线图、用户故事地图、当前能力位置</td><td><code>hl-dispatch#168</code></td><td>补路线图状态、禁止事项修正、PM 阅读口径。</td></tr>
+<tr><td>工程接入矩阵</td><td><code>hl-dispatch#98</code></td><td>按 DRAFT / 可前置 / waiting Gate / blocked 分层。</td></tr>
+<tr><td>工程接入前置总账</td><td><code>hl-dispatch#99</code></td><td>补总账看板、owner 状态、下一检查点。</td></tr>
+<tr><td>总调度迁移与日常推进边界</td><td><code>hl-dispatch#173</code></td><td>补调度口径、异常升级、GitHub SSOT 反链。</td></tr>
+<tr><td>飞书通知工作流</td><td><code>hl-dispatch#174</code></td><td>补 fail-open / observer-only 验证结果和后续 PR 反链。</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="examples">七、不要这样写</h2>
+<div class="table-wrapper"><table>
+<thead>
+<tr><th>错误说法</th><th>正确说法</th></tr>
+</thead>
+<tbody>
+<tr><td>飞书任务完成，所以 owner 已确认。</td><td>owner 需要在 GitHub SSOT Issue 按模板回填，飞书完成只说明提醒投影完成。</td></tr>
+<tr><td>Draft PR 已建，所以 baseline 已定。</td><td>Draft PR 只是草稿入口，baseline 以 GitHub 合并状态和裁决记录为准。</td></tr>
+<tr><td>HPRD 草稿看起来可以，工程可以开工。</td><td>HPRD 草稿只说明理解确认在推进，runtime 授权必须另有 Founder / Gate 明确裁决。</td></tr>
+<tr><td>CI green / 云效通过，所以 Gate 通过。</td><td>CI 和云效是证据输入；Gate 通过需要 GitHub 上的明确 Gate 结论。</td></tr>
+<tr><td>我先写代码，后面补授权。</td><td>无 runtime 授权时不得创建实现工单或写代码，只能做前置理解、证据和缺口整理。</td></tr>
+</tbody>
+</table></div>
+
+<div class="callout info">
+<strong>默认通知策略</strong>
+页面更新、Issue 回填建议和 PR 反链可以先在 GitHub 完成。飞书默认不发送；只有 Founder 明确要求时，才做飞书投影，并在 GitHub 写回投影事件。
+</div>
+</div>
+
+<footer class="site-footer">
+  唤龙平台 · 任务接收、回填与优先级指南 · Internal Guide · last_verified 2026-05-29<br>
+  <a href="../index.html" style="color:var(--primary-light);text-decoration:none;">返回首页</a>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

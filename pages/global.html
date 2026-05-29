@@ -312,6 +312,7 @@
   <button class="nav-tab active" onclick="switchTab('overview')" role="tab">全景总览</button>
   <button class="nav-tab" onclick="switchTab('org')" role="tab">组织架构</button>
   <button class="nav-tab" onclick="switchTab('flow')" role="tab">能力包流程</button>
+  <button class="nav-tab" onclick="switchTab('task-layers')" role="tab">任务结构</button>
   <button class="nav-tab" onclick="switchTab('otherflows')" role="tab">其他流程</button>
   <button class="nav-tab" onclick="switchTab('gates')" role="tab">门禁体系</button>
   <button class="nav-tab" onclick="switchTab('repos')" role="tab">仓库与权限</button>
@@ -385,6 +386,66 @@
       <p><strong>Owner：</strong>创始人<br>规则、门禁、契约核心、内核路径。执行者不能修改自己要遵守的规则。</p>
     </div>
   </div>
+</div>
+
+<!-- ══════════ 1.5 Task Layers ══════════ -->
+<div id="task-layers" class="section">
+  <div class="section-title"><span class="icon">▦</span> 四层任务结构<span style="margin-left:12px;padding:2px 10px;background:rgba(253,203,110,0.15);border:1px solid rgba(253,203,110,0.3);border-radius:12px;font-size:0.65em;font-weight:400;color:#FDCB6E;vertical-align:middle;">DRAFT</span> <a href="task-workflow.html" style="margin-left:8px;font-size:0.6em;color:var(--primary-light);text-decoration:none;border:1px solid var(--primary);padding:2px 10px;border-radius:12px;">→ 任务接收指南</a></div>
+  <p class="section-subtitle">团队任务先落 GitHub，再按任务派发、Cap-Spec Draft、Gate / Evidence 和飞书投影四层推进</p>
+
+  <div style="padding:16px 18px;border:1px solid rgba(253,203,110,0.3);border-left:4px solid #FDCB6E;border-radius:10px;background:rgba(253,203,110,0.08);margin-bottom:18px;">
+    <strong style="color:#fff;">飞书只是提醒你去 GitHub。</strong>
+    <span style="color:var(--text-muted);">任务、状态、证据、裁决和 owner 回填都以 GitHub Issue / PR / 仓库文件为准。催办通常表示存在卡点，最低动作是在 GitHub 回填当前状态和预计时间。</span>
+  </div>
+
+  <div class="table-wrapper"><table>
+    <thead>
+      <tr>
+        <th>层级</th>
+        <th>真源 / 投影</th>
+        <th>职责</th>
+        <th>禁止误读</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>任务派发层</strong></td>
+        <td>hl-dispatch Issue 和任务书</td>
+        <td>记录 owner、范围、验收标准、禁止事项和回填位置。</td>
+        <td>不得只靠飞书口头派发。</td>
+      </tr>
+      <tr>
+        <td><strong>Cap-Spec Draft 层</strong></td>
+        <td>hl-contracts Draft PR 或对应 Issue</td>
+        <td>承载 PM Cap-Spec 草稿、Contract Gap 候选和待裁决问题。</td>
+        <td>Draft PR 不等于已合入 main 的 baseline。</td>
+      </tr>
+      <tr>
+        <td><strong>Gate / Evidence 层</strong></td>
+        <td>GitHub PR / Issue 评论、checks、证据链接和裁决记录</td>
+        <td>记录 Gate 结论、阻塞项、复核证据、qa-verdict 和 no-delta 说明。</td>
+        <td>CI green、sentinel pass、云效 run 不等于 Gate 通过。</td>
+      </tr>
+      <tr>
+        <td><strong>飞书投影层</strong></td>
+        <td>飞书消息、任务、群提醒</td>
+        <td>只做提醒、同步和催办，提醒相关人回 GitHub 回填。</td>
+        <td>飞书已读、评论、完成不是真源，不授权 runtime。</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="table-wrapper"><table>
+    <thead>
+      <tr><th>常见误读</th><th>正确判断</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>HPRD 草稿看起来可以</td><td>只说明理解确认在推进，不等于 pm-hprd-pass，也不等于 runtime 授权。</td></tr>
+      <tr><td>Draft PR 已经开了</td><td>只是草稿入口，baseline 以合并状态和裁决记录为准。</td></tr>
+      <tr><td>云效 / CI / sentinel 都绿了</td><td>这是证据输入；Gate 通过需要 GitHub 上的明确结论。</td></tr>
+      <tr><td>飞书催办已回复</td><td>仍要在 GitHub 回填 READY / PARTIAL / BLOCKED / READY_FOR_REVIEW / DONE 和预计时间。</td></tr>
+    </tbody>
+  </table></div>
 </div>
 
 <!-- ══════════ 2. Org ══════════ -->
@@ -560,7 +621,7 @@
       <div class="flow-line"></div>
       <div class="flow-content">
         <h3>Design + HPRD · 设计冻结与理解确认</h3>
-        <p>工程师阅读 Cap-Spec，产出 HPRD（理解确认件）交 PM 审批；同时产出 design.md（技术设计）交工程师互审。QA 同步编写 acceptance-manifest.yaml。设计师产出 Design Packet 入仓。<br><strong>硬规则：pm-hprd-pass 未通过前，不得开始实现。</strong></p>
+        <p>工程师阅读 Cap-Spec，产出 HPRD（理解确认件）交 PM 审批；同时产出 design.md（技术设计）交工程师互审。QA 同步编写 acceptance-manifest.yaml。设计师产出 Design Packet 入仓。<br><strong>硬规则：HPRD 草稿不等于 pm-hprd-pass；pm-hprd-pass 和 design.md 通过也不自动授权 runtime。</strong></p>
         <div class="flow-tags">
           <span class="flow-tag eng">工程师 主导</span>
           <span class="flow-tag pm">PM 审批 HPRD</span>
@@ -575,7 +636,7 @@
       <div class="flow-line"></div>
       <div class="flow-content">
         <h3>Implementation + Tests · AI-First 编码</h3>
-        <p>工程师通过 AI-first 编码实现功能代码、单元测试、集成测试和可运行 demo。QA 同步编写验收测试套件。前端在 ui-input-ready（设计 + API mock 双就位）后开始实现。工程师提交 Draft PR。</p>
+        <p>只有 Founder / Gate 在 GitHub 明确 runtime_authorization = true 后，工程师才可通过 AI-first 编码实现功能代码、单元测试、集成测试和可运行 demo。QA 同步编写验收测试套件。前端在 ui-input-ready（设计 + API mock 双就位）后开始实现。工程师提交 Draft PR；Draft PR 不等于 baseline。</p>
         <div class="flow-tags">
           <span class="flow-tag eng">工程师（AI 编码）</span>
           <span class="flow-tag qa">QA 编写验收测试</span>
@@ -652,6 +713,7 @@
     <span class="state-arrow">→</span>
     <div class="state-node" style="border-color:var(--secondary); background: rgba(0,184,148,0.1);">Released ✓</div>
   </div>
+  <p style="margin:10px 0 0;color:var(--text-muted);font-size:0.88em;">注意：状态图是通用交付流。具体任务是否能从 Design Approved 进入 In Development，仍以 GitHub 上 Founder / Gate 的 runtime 授权为准。</p>
   <div style="text-align:center;margin-top:12px;">
     <a href="workflow-states.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 20px;background:rgba(108,92,231,0.1);border:1px solid var(--primary);border-radius:8px;color:var(--primary-light);text-decoration:none;font-size:0.85em;font-weight:600;transition:all 0.3s;">🔄 查看 12 状态详解（含动画 · 入口/出口/守卫规则）→</a>
   </div>

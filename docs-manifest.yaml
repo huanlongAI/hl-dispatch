@@ -1,13 +1,13 @@
 # 唤龙平台 · 团队协作指南站点 — 文档清单
 # 用途：统一控制每页的源文档、版本、状态、最后校验日期
 # CI 检查脚本会读取此文件做版本漂移检测
-# 更新时间：2026-05-11（S34：绩效公示补 LTC 加密占位、矩阵筛选与制度对齐检查）
+# 更新时间：2026-05-29（任务接收、回填与优先级指南；GitHub SSOT / 飞书投影 / runtime 授权边界补充）
 
 site:
   name: 唤龙平台团队协作指南
   layer: guide          # guide | normative — 本站只是 guide layer
   deploy: internal      # internal | public
-  last_verified: "2026-05-11"   # S34：绩效公示补 LTC 加密占位、矩阵筛选与制度对齐检查
+  last_verified: "2026-05-29"   # 任务接收、回填与优先级指南；GitHub SSOT / 飞书投影 / runtime 授权边界补充
   # 部署历史（最近一次 · 站点内容变更语义）
   last_deploy:
     date: "2026-04-29"
@@ -39,7 +39,7 @@ pages:
       - doc: PERFORMANCE-PUBLICATION
         version: "0.1"
         status: PROPOSED
-    last_verified: "2026-05-08"   # S29：首页新增绩效公示入口
+    last_verified: "2026-05-29"   # 新增“收到任务后怎么做”入口，指向任务接收、回填与优先级指南
 
   - page: pages/performance-system.html
     title: 公司产研团队绩效考核制度（正式版）
@@ -177,6 +177,9 @@ pages:
       - id: flow
         title: 能力包流程
         spec_status: DRAFT           # v2.1 §4，状态机细节为 v2.2 候选
+      - id: task-layers
+        title: 四层任务结构
+        spec_status: DRAFT           # GitHub SSOT / Cap-Spec Draft / Gate Evidence / 飞书投影
       - id: otherflows
         title: 其他流程
         spec_status: PROPOSED        # Bugfix/技术改动/治理为 WORKFLOW-GUIDE 候选，尚未进入 v2.1
@@ -192,7 +195,52 @@ pages:
       - id: links
         title: 团队指南链接
         spec_status: DRAFT
-    last_verified: "2026-04-25"   # S23：全局页统一 21 人正式编制口径
+    last_verified: "2026-05-29"   # 补四层任务结构，并明确 Draft / HPRD / CI / 云效 / 飞书均不等于 runtime 授权
+
+  - page: pages/task-workflow.html
+    title: 任务接收、回填与优先级指南
+    source_docs:
+      - doc: hl-dispatch#161
+        version: "2026-05-28"
+        status: DRAFT
+      - doc: hl-dispatch#168
+        version: "2026-05-27"
+        status: DRAFT
+      - doc: hl-dispatch#98
+        version: "2026-05-29"
+        status: DRAFT
+      - doc: hl-dispatch#99
+        version: "2026-05-29"
+        status: DRAFT
+      - doc: hl-dispatch#173
+        version: "2026-05-28"
+        status: DRAFT
+      - doc: hl-dispatch#174
+        version: "2026-05-29"
+        status: DRAFT
+    sections:
+      - id: who
+        title: 适用角色
+        spec_status: DRAFT
+      - id: sources
+        title: GitHub 真源与催办动作
+        spec_status: DRAFT
+      - id: layers
+        title: 四层任务结构
+        spec_status: DRAFT
+      - id: fillback
+        title: 标准回填模板
+        spec_status: DRAFT
+      - id: roles
+        title: 角色边界
+        spec_status: DRAFT
+      - id: ledger
+        title: GitHub 回填位置
+        spec_status: DRAFT
+      - id: examples
+        title: 常见误读纠正
+        spec_status: DRAFT
+    last_verified: "2026-05-29"   # GitHub Issue 真源恢复后新增团队可读任务工作流页
 
   - page: pages/product.html
     title: 产品团队指南
@@ -200,7 +248,7 @@ pages:
       - doc: TEAM-COLLABORATION-SPEC
         version: "2.1"
         status: DRAFT
-    last_verified: "2026-04-29"   # S25：新增新美业 AI 老板总助 P0 样板段，补 PM 边界冻结实例
+    last_verified: "2026-05-29"   # 补 PM Cap-Spec / Contract Gap / 正式契约裁决 / runtime 授权边界
 
   - page: pages/frontend-design.html
     title: 前端与设计团队指南
@@ -237,7 +285,7 @@ pages:
       - doc: DD-FE-MINIPROGRAM
         version: "1.0"
         status: LOCKED
-    last_verified: "2026-04-29"   # S25：新增 P0 工程边界样板段，并补 C-L2 双 runtime / DS 多 adapter 口径
+    last_verified: "2026-05-29"   # 补 HPRD、design.md、Draft PR、CI / 云效证据与 runtime 授权边界
 
   - page: pages/beauty-ai-p0.html
     title: 新美业 AI 老板总助 P0 最新进展

@@ -27,6 +27,30 @@ jobs:
           set -euo pipefail
           SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
 
+          write_delivery_ledger() {
+            local route="$1"
+            local recipient="$2"
+            local recipient_github="$3"
+            local status="$4"
+            local template="$5"
+            local target_url="$6"
+            local preview="$7"
+            {
+              echo "## Feishu delivery ledger"
+              echo
+              echo "- route: ${route}"
+              echo "- recipient: ${recipient}"
+              echo "- recipient_github: ${recipient_github}"
+              echo "- status: ${status}"
+              echo "- content_template: ${template}"
+              echo "- target_url: ${target_url}"
+              echo "- message_preview:"
+              echo '```text'
+              printf '%s\n' "${preview}"
+              echo '```'
+            } >> "${SUMMARY_FILE}"
+          }
+
           if [ "$ACTION" = "opened" ]; then
             TITLE="新 Issue"; TEMPLATE="blue"
           elif [ "$ACTION" = "assigned" ]; then
@@ -146,6 +170,14 @@ jobs:
                 exit 0
               elif echo "${dm_response}" | jq -e '.code == 0' >/dev/null; then
                 echo "Direct message sent; skipping group webhook"
+                write_delivery_ledger \
+                  "direct_message" \
+                  "node-c 技术合伙人" \
+                  "${ASSIGNEE}" \
+                  "sent" \
+                  "assigned_issue_v1" \
+                  "${ISSUE_URL}" \
+                  "${message_text}"
                 exit 0
               else
                 echo "::warning::Direct message provider returned non-success response; group webhook suppressed"
@@ -215,6 +247,15 @@ jobs:
             } >> "${SUMMARY_FILE}"
             exit 0
           fi
+          issue_preview="$(printf '%s\n%s\n标签: %s\n指派: %s\n%s' "${CARD_TITLE}" "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ASSIGNEE}" "${ISSUE_URL}")"
+          write_delivery_ledger \
+            "engineering_channel" \
+            "AI native工程通知" \
+            "n/a" \
+            "sent" \
+            "issue_mainline_v1" \
+            "${ISSUE_URL}" \
+            "${issue_preview}"
 
   notify-decision-request:
     if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'decision-request'
@@ -229,6 +270,30 @@ jobs:
         run: |
           set -euo pipefail
           SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
+
+          write_delivery_ledger() {
+            local route="$1"
+            local recipient="$2"
+            local recipient_github="$3"
+            local status="$4"
+            local template="$5"
+            local target_url="$6"
+            local preview="$7"
+            {
+              echo "## Feishu delivery ledger"
+              echo
+              echo "- route: ${route}"
+              echo "- recipient: ${recipient}"
+              echo "- recipient_github: ${recipient_github}"
+              echo "- status: ${status}"
+              echo "- content_template: ${template}"
+              echo "- target_url: ${target_url}"
+              echo "- message_preview:"
+              echo '```text'
+              printf '%s\n' "${preview}"
+              echo '```'
+            } >> "${SUMMARY_FILE}"
+          }
 
           if [ -z "$WEBHOOK" ]; then
             echo "::warning::Feishu webhook is empty; notification skipped"
@@ -280,6 +345,15 @@ jobs:
             } >> "${SUMMARY_FILE}"
             exit 0
           fi
+          decision_preview="$(printf '🔔 有新的裁决请求\n%s\n提出者: %s\n%s' "${ISSUE_TITLE}" "${ISSUE_AUTHOR}" "${ISSUE_URL}")"
+          write_delivery_ledger \
+            "command_channel" \
+            "创始人指挥台" \
+            "${ISSUE_AUTHOR}" \
+            "sent" \
+            "decision_request_v1" \
+            "${ISSUE_URL}" \
+            "${decision_preview}"
 
   notify-comment:
     if: github.event_name == 'issue_comment' && github.event.action == 'created'
@@ -295,6 +369,30 @@ jobs:
         run: |
           set -euo pipefail
           SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
+
+          write_delivery_ledger() {
+            local route="$1"
+            local recipient="$2"
+            local recipient_github="$3"
+            local status="$4"
+            local template="$5"
+            local target_url="$6"
+            local preview="$7"
+            {
+              echo "## Feishu delivery ledger"
+              echo
+              echo "- route: ${route}"
+              echo "- recipient: ${recipient}"
+              echo "- recipient_github: ${recipient_github}"
+              echo "- status: ${status}"
+              echo "- content_template: ${template}"
+              echo "- target_url: ${target_url}"
+              echo "- message_preview:"
+              echo '```text'
+              printf '%s\n' "${preview}"
+              echo '```'
+            } >> "${SUMMARY_FILE}"
+          }
 
           WEBHOOK="${ENGINEERING_WEBHOOK:-}"
           CARD_TITLE="[hl-dispatch][工程通知] Issue 新评论"
@@ -348,3 +446,12 @@ jobs:
             } >> "${SUMMARY_FILE}"
             exit 0
           fi
+          comment_preview="$(printf '%s\n%s\n评论者: %s\n%s' "${CARD_TITLE}" "${ISSUE_TITLE}" "${COMMENTER}" "${COMMENT_URL}")"
+          write_delivery_ledger \
+            "engineering_channel" \
+            "AI native工程通知" \
+            "${COMMENTER}" \
+            "sent" \
+            "issue_comment_v1" \
+            "${COMMENT_URL}" \
+            "${comment_preview}"

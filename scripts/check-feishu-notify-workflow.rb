@@ -57,6 +57,14 @@ notification_steps.each do |job_name, step_name, run, env|
   failures << "#{label}: notification steps must not hard fail with exit 1" if run.include?("exit 1")
   failures << "#{label}: direct jq-to-curl pipeline can hide jq failures" if run.match?(/\}'\s*\|\s*curl/m)
   failures << "#{label}: jq string concatenation in content must be parenthesized" if run.match?(/content:\s+\$[A-Za-z0-9_]+\s*\+/)
+  unless run.include?("Feishu delivery ledger") &&
+         run.include?("route:") &&
+         run.include?("status:") &&
+         run.include?("content_template:") &&
+         run.include?("target_url:") &&
+         run.include?("message_preview:")
+    failures << "#{label}: delivery ledger summary must include route/status/template/target/preview"
+  end
 
   if run.include?("PM_WEBHOOK")
     failures << "#{label}: pm-labeled notifications must not silently fall back to task webhook" if run.include?(']] && [ -n "${PM_WEBHOOK:-}" ]; then')
@@ -72,6 +80,9 @@ notification_steps.each do |job_name, step_name, run, env|
     failures << "#{label}: direct messages must target open_id" unless run.include?("receive_id_type=open_id")
     failures << "#{label}: successful direct message must skip group webhook" unless run.include?("Direct message sent; skipping group webhook")
     failures << "#{label}: personal progress must suppress group fallback" unless run.include?("Personal progress notification is DM-only; group webhook suppressed")
+    failures << "#{label}: assigned direct-message ledger must include recipient_github" unless run.include?("recipient_github:") && run.include?('"${ASSIGNEE}"')
+    failures << "#{label}: assigned direct-message ledger must use assigned_issue_v1 template" unless run.include?("assigned_issue_v1")
+    failures << "#{label}: issue mainline ledger must use issue_mainline_v1 template" unless run.include?("issue_mainline_v1")
     failures << "#{label}: TEAM.yml loader must permit Date on GitHub runner Ruby" unless run.include?('require "date"') && run.include?("permitted_classes: [Date]")
     unless run.include?('if [ "$ACTION" = "assigned" ]; then') &&
            run.include?("Direct message bot credentials missing; group webhook suppressed")
@@ -96,6 +107,7 @@ notification_steps.each do |job_name, step_name, run, env|
     failures << "#{label}: mainline comment notifications must use engineering webhook" unless env["ENGINEERING_WEBHOOK"].to_s.include?("FEISHU_WEBHOOK_ENGINEERING") && run.include?("ENGINEERING_WEBHOOK")
     failures << "#{label}: mainline comment notifications must not use task webhook" if env.key?("TASK_WEBHOOK") || env.values.any? { |value| value.to_s.include?("FEISHU_WEBHOOK_TASK") } || run.include?("TASK_WEBHOOK") || run.include?("FEISHU_WEBHOOK_TASK")
     failures << "#{label}: engineering comment cards must identify the engineering channel" unless run.include?("[hl-dispatch][工程通知]")
+    failures << "#{label}: comment ledger must use issue_comment_v1 template" unless run.include?("issue_comment_v1")
     if run.include?("PM_WEBHOOK")
       failures << "#{label}: mainline comments must not route to PM webhook"
     end

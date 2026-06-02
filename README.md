@@ -115,9 +115,10 @@ ruby scripts/feishu-direct-message.rb --github wp159951 --text "请查看 GitHub
 ```bash
 gh run list --repo huanlongAI/hl-dispatch --workflow "Feishu Notification" --limit 10
 gh run view <run_id> --repo huanlongAI/hl-dispatch --json jobs
+gh run view <run_id> --repo huanlongAI/hl-dispatch --log | rg FEISHU_DELIVERY_LEDGER_JSON
 ```
 
-在对应 run 的 summary 中查看 `Feishu delivery ledger`。台账不记录飞书 `open_id`、密钥或私聊会话全文；内容准确性以 GitHub Issue / comment 的标题、标签、指派人和 URL 为准。
+在对应 run 的 summary 中查看 `Feishu delivery ledger`，或用日志里的 `FEISHU_DELIVERY_LEDGER_JSON` 单行 JSON 做命令行检查。台账不记录飞书 `open_id`、密钥或私聊会话全文；内容准确性以 GitHub Issue / comment 的标题、标签、指派人和 URL 为准。
 
 ## 标签体系
 

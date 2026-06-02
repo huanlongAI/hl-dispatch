@@ -65,6 +65,11 @@ notification_steps.each do |job_name, step_name, run, env|
          run.include?("message_preview:")
     failures << "#{label}: delivery ledger summary must include route/status/template/target/preview"
   end
+  unless run.include?("FEISHU_DELIVERY_LEDGER_JSON=") &&
+         run.include?("ledger_json=\"$(jq -cn") &&
+         run.include?("message_preview")
+    failures << "#{label}: delivery ledger must emit jq-built FEISHU_DELIVERY_LEDGER_JSON log line"
+  end
 
   if run.include?("PM_WEBHOOK")
     failures << "#{label}: pm-labeled notifications must not silently fall back to task webhook" if run.include?(']] && [ -n "${PM_WEBHOOK:-}" ]; then')

@@ -35,6 +35,25 @@ jobs:
             local template="$5"
             local target_url="$6"
             local preview="$7"
+            local ledger_json
+            ledger_json="$(jq -cn \
+              --arg route "${route}" \
+              --arg recipient "${recipient}" \
+              --arg recipient_github "${recipient_github}" \
+              --arg status "${status}" \
+              --arg content_template "${template}" \
+              --arg target_url "${target_url}" \
+              --arg message_preview "${preview}" \
+              '{
+                route: $route,
+                recipient: $recipient,
+                recipient_github: $recipient_github,
+                status: $status,
+                content_template: $content_template,
+                target_url: $target_url,
+                message_preview: $message_preview
+              }')"
+            printf 'FEISHU_DELIVERY_LEDGER_JSON=%s\n' "${ledger_json}"
             {
               echo "## Feishu delivery ledger"
               echo
@@ -279,6 +298,25 @@ jobs:
             local template="$5"
             local target_url="$6"
             local preview="$7"
+            local ledger_json
+            ledger_json="$(jq -cn \
+              --arg route "${route}" \
+              --arg recipient "${recipient}" \
+              --arg recipient_github "${recipient_github}" \
+              --arg status "${status}" \
+              --arg content_template "${template}" \
+              --arg target_url "${target_url}" \
+              --arg message_preview "${preview}" \
+              '{
+                route: $route,
+                recipient: $recipient,
+                recipient_github: $recipient_github,
+                status: $status,
+                content_template: $content_template,
+                target_url: $target_url,
+                message_preview: $message_preview
+              }')"
+            printf 'FEISHU_DELIVERY_LEDGER_JSON=%s\n' "${ledger_json}"
             {
               echo "## Feishu delivery ledger"
               echo
@@ -378,6 +416,25 @@ jobs:
             local template="$5"
             local target_url="$6"
             local preview="$7"
+            local ledger_json
+            ledger_json="$(jq -cn \
+              --arg route "${route}" \
+              --arg recipient "${recipient}" \
+              --arg recipient_github "${recipient_github}" \
+              --arg status "${status}" \
+              --arg content_template "${template}" \
+              --arg target_url "${target_url}" \
+              --arg message_preview "${preview}" \
+              '{
+                route: $route,
+                recipient: $recipient,
+                recipient_github: $recipient_github,
+                status: $status,
+                content_template: $content_template,
+                target_url: $target_url,
+                message_preview: $message_preview
+              }')"
+            printf 'FEISHU_DELIVERY_LEDGER_JSON=%s\n' "${ledger_json}"
             {
               echo "## Feishu delivery ledger"
               echo

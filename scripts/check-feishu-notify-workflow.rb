@@ -61,6 +61,19 @@ notification_steps.each do |job_name, step_name, run|
     failures << "#{label}: direct messages must use bot app credentials" unless run.include?("FEISHU_BOT_APP_ID") && run.include?("FEISHU_BOT_APP_SECRET")
     failures << "#{label}: direct messages must target open_id" unless run.include?("receive_id_type=open_id")
     failures << "#{label}: successful direct message must skip group webhook" unless run.include?("Direct message sent; skipping group webhook")
+    unless run.include?('if ! token_response="$(curl') &&
+           run.include?("Direct message token request failed; falling back to group webhook")
+      failures << "#{label}: direct message token request failure must fall back to group webhook"
+    end
+    unless run.include?('if ! tenant_token="$(echo "${token_response}" | jq -er') &&
+           run.include?("Direct message token parse failed; falling back to group webhook")
+      failures << "#{label}: direct message token parse failure must fall back to group webhook"
+    end
+    unless run.include?('if ! dm_response="$(curl') &&
+           run.include?("Direct message provider request failed; falling back to group webhook")
+      failures << "#{label}: direct message provider request failure must fall back to group webhook"
+    end
+    failures << "#{label}: direct message non-success response must fall back to group webhook" unless run.include?("Direct message provider returned non-success response; falling back to group webhook")
   end
 end
 

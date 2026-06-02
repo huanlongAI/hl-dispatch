@@ -66,20 +66,53 @@ jobs:
                 --arg app_id "${FEISHU_BOT_APP_ID}" \
                 --arg app_secret "${FEISHU_BOT_APP_SECRET}" \
                 '{app_id: $app_id, app_secret: $app_secret}')"
-              token_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal" -H "Content-Type: application/json" -d "${token_payload}")"
-              tenant_token="$(echo "${token_response}" | jq -er '.tenant_access_token')"
-
-              message_text="$(printf '[hl-dispatch] Issue 已指派给你\n%s\n标签: %s\n%s' "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ISSUE_URL}")"
-              dm_payload="$(jq -n \
-                --arg receive_id "${DIRECT_OPEN_ID}" \
-                --arg text "${message_text}" \
-                '{receive_id: $receive_id, msg_type: "text", content: ({text: $text} | tojson)}')"
-              dm_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id" -H "Authorization: Bearer ${tenant_token}" -H "Content-Type: application/json" -d "${dm_payload}")"
-              if echo "${dm_response}" | jq -e '.code == 0' >/dev/null; then
-                echo "Direct message sent; skipping group webhook"
-                exit 0
+              if ! token_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal" -H "Content-Type: application/json" -d "${token_payload}" 2>&1)"; then
+                echo "::warning::Direct message token request failed; falling back to group webhook"
+                {
+                  echo "## Feishu direct message skipped"
+                  echo
+                  echo "Reason: bot token request failed."
+                  echo "Impact: assigned issue will use group fallback notification."
+                  echo "Merge gate impact: none."
+                } >> "${SUMMARY_FILE}"
+              elif ! tenant_token="$(echo "${token_response}" | jq -er '.tenant_access_token' 2>/dev/null)"; then
+                echo "::warning::Direct message token parse failed; falling back to group webhook"
+                {
+                  echo "## Feishu direct message skipped"
+                  echo
+                  echo "Reason: bot token response did not include tenant_access_token."
+                  echo "Impact: assigned issue will use group fallback notification."
+                  echo "Merge gate impact: none."
+                } >> "${SUMMARY_FILE}"
+              else
+                message_text="$(printf '[hl-dispatch] Issue 已指派给你\n%s\n标签: %s\n%s' "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ISSUE_URL}")"
+                dm_payload="$(jq -n \
+                  --arg receive_id "${DIRECT_OPEN_ID}" \
+                  --arg text "${message_text}" \
+                  '{receive_id: $receive_id, msg_type: "text", content: ({text: $text} | tojson)}')"
+                if ! dm_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id" -H "Authorization: Bearer ${tenant_token}" -H "Content-Type: application/json" -d "${dm_payload}" 2>&1)"; then
+                  echo "::warning::Direct message provider request failed; falling back to group webhook"
+                  {
+                    echo "## Feishu direct message failed open"
+                    echo
+                    echo "Reason: provider request failed."
+                    echo "Impact: assigned issue will use group fallback notification."
+                    echo "Merge gate impact: none."
+                  } >> "${SUMMARY_FILE}"
+                elif echo "${dm_response}" | jq -e '.code == 0' >/dev/null; then
+                  echo "Direct message sent; skipping group webhook"
+                  exit 0
+                else
+                  echo "::warning::Direct message provider returned non-success response; falling back to group webhook"
+                  {
+                    echo "## Feishu direct message provider warning"
+                    echo
+                    echo "Reason: provider returned non-success response."
+                    echo "Impact: assigned issue will use group fallback notification."
+                    echo "Merge gate impact: none."
+                  } >> "${SUMMARY_FILE}"
+                fi
               fi
-              echo "Direct message failed; falling back to group webhook" >&2
             fi
           fi
 

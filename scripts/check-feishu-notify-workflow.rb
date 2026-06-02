@@ -4,13 +4,20 @@
 
 require "yaml"
 require "json"
+require "date"
 require "open3"
 
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
+def load_yaml(path)
+  YAML.load_file(path, permitted_classes: [Date])
+rescue ArgumentError
+  YAML.load_file(path)
+end
+
 workflow_path = File.expand_path("../.github/workflows/feishu-notify.yml", __dir__)
-workflow = YAML.load_file(workflow_path)
+workflow = load_yaml(workflow_path)
 jobs = workflow.fetch("jobs")
 
 notification_steps = []
@@ -107,6 +114,25 @@ end
 
 direct_message_path = File.expand_path("feishu-direct-message.rb", __dir__)
 team_path = File.expand_path("../TEAM.yml", __dir__)
+team = load_yaml(team_path)
+notification_policy = team.fetch("notification_policy")
+
+unless notification_policy.fetch("mainline_process", "").include?("AI native工程通知") &&
+       notification_policy.fetch("mainline_process", "").include?("FEISHU_WEBHOOK_ENGINEERING")
+  failures << "TEAM.yml notification_policy must route mainline_process to AI native工程通知 via FEISHU_WEBHOOK_ENGINEERING"
+end
+
+unless notification_policy.fetch("personal_progress", "") == "direct_message_only"
+  failures << "TEAM.yml notification_policy must mark personal_progress as direct_message_only"
+end
+
+unless notification_policy.fetch("group_fallback", "").include?("suppressed")
+  failures << "TEAM.yml notification_policy must suppress group fallback for personal progress"
+end
+
+if notification_policy.fetch("fallback", "").match?(/Feishu group|飞书群|group/i)
+  failures << "TEAM.yml notification_policy must not preserve group fallback for personal progress"
+end
 
 if !File.exist?(direct_message_path)
   failures << "direct-message helper missing: scripts/feishu-direct-message.rb"

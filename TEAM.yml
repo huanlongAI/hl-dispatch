@@ -15,8 +15,10 @@ source_refs:
   - TEAM-COLLAB-SPEC v2.1
 
 notification_policy:
-  direct_message: use lark.open_id when bot/user availability permits
-  fallback: use relevant Feishu group and record the GitHub Issue/PR link
+  mainline_process: AI native工程通知 via FEISHU_WEBHOOK_ENGINEERING
+  personal_progress: direct_message_only
+  direct_message: use lark.open_id for personal progress when bot/user availability permits
+  group_fallback: suppressed for personal progress; write GitHub Actions warning only
   departed_or_unknown: do not notify; ask founder or refresh TEAM-ROSTER first
   historical_placeholders:
     - Gate-3

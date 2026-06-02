@@ -68,8 +68,14 @@ jobs:
 
             DIRECT_OPEN_ID="$(
               ruby -ryaml -e '
+                require "date"
                 assignee = ENV.fetch("ASSIGNEE", "").downcase
-                team = YAML.load_file("TEAM.yml")
+                team =
+                  begin
+                    YAML.load_file("TEAM.yml", permitted_classes: [Date])
+                  rescue ArgumentError
+                    YAML.load_file("TEAM.yml")
+                  end
                 entries = []
                 team.fetch("roles").each do |role_id, role|
                   next unless role.is_a?(Hash)

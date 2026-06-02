@@ -3,6 +3,7 @@
 # frozen_string_literal: true
 
 require "json"
+require "date"
 require "open3"
 require "optparse"
 require "yaml"
@@ -64,6 +65,12 @@ def team_entries(team)
   end
 
   entries
+end
+
+def load_team(path)
+  YAML.load_file(path, permitted_classes: [Date])
+rescue ArgumentError
+  YAML.load_file(path)
 end
 
 def resolve_recipient(team, options)
@@ -165,7 +172,7 @@ end
 
 def main(argv)
   options = parse_options(argv)
-  team = YAML.load_file(options[:team])
+  team = load_team(options[:team])
   recipient, open_id = resolve_recipient(team, options)
   command = build_command(options, open_id)
 

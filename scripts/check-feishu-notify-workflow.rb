@@ -65,6 +65,7 @@ notification_steps.each do |job_name, step_name, run, env|
     failures << "#{label}: direct messages must target open_id" unless run.include?("receive_id_type=open_id")
     failures << "#{label}: successful direct message must skip group webhook" unless run.include?("Direct message sent; skipping group webhook")
     failures << "#{label}: personal progress must suppress group fallback" unless run.include?("Personal progress notification is DM-only; group webhook suppressed")
+    failures << "#{label}: TEAM.yml loader must permit Date on GitHub runner Ruby" unless run.include?('require "date"') && run.include?("permitted_classes: [Date]")
     unless run.include?('if [ "$ACTION" = "assigned" ]; then') &&
            run.include?("Direct message bot credentials missing; group webhook suppressed")
       failures << "#{label}: missing direct-message credentials must skip group notification"
@@ -115,6 +116,7 @@ else
   failures << "direct-message helper must target --user-id for P2P delivery" unless helper.include?("--user-id")
   failures << "direct-message helper must not default to group --chat-id delivery" if helper.include?("--chat-id")
   failures << "direct-message helper must require --execute for writes" unless helper.include?("--execute")
+  failures << "direct-message helper TEAM.yml loader must permit Date on GitHub runner Ruby" unless helper.include?("permitted_classes: [Date]")
 
   stdout, stderr, status = Open3.capture3(
     "ruby",

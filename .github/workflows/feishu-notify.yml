@@ -13,10 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Issue to Task Channel
+      - name: Issue to Engineering Channel
         env:
-          TASK_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
-          PM_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_PM }}
+          ENGINEERING_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_ENGINEERING }}
           FEISHU_BOT_APP_ID: ${{ secrets.FEISHU_BOT_APP_ID }}
           FEISHU_BOT_APP_SECRET: ${{ secrets.FEISHU_BOT_APP_SECRET }}
           ACTION: ${{ github.event.action }}
@@ -40,7 +39,33 @@ jobs:
 
           [ -z "$ASSIGNEE" ] && ASSIGNEE="未指派"
 
-          if [ "$ACTION" = "assigned" ] && [ "$ASSIGNEE" != "未指派" ] && [ -n "${FEISHU_BOT_APP_ID:-}" ] && [ -n "${FEISHU_BOT_APP_SECRET:-}" ]; then
+          if [ "$ACTION" = "assigned" ]; then
+            echo "Personal progress notification is DM-only; group webhook suppressed"
+
+            if [ "$ASSIGNEE" = "未指派" ]; then
+              echo "::warning::Assigned issue has no assignee; group webhook suppressed"
+              {
+                echo "## Feishu personal progress notification skipped"
+                echo
+                echo "Reason: assigned issue has no assignee."
+                echo "Impact: group notification suppressed by policy."
+                echo "Merge gate impact: none."
+              } >> "${SUMMARY_FILE}"
+              exit 0
+            fi
+
+            if [ -z "${FEISHU_BOT_APP_ID:-}" ] || [ -z "${FEISHU_BOT_APP_SECRET:-}" ]; then
+              echo "::warning::Direct message bot credentials missing; group webhook suppressed"
+              {
+                echo "## Feishu personal progress notification skipped"
+                echo
+                echo "Reason: bot credentials are missing."
+                echo "Impact: group notification suppressed by policy."
+                echo "Merge gate impact: none."
+              } >> "${SUMMARY_FILE}"
+              exit 0
+            fi
+
             DIRECT_OPEN_ID="$(
               ruby -ryaml -e '
                 assignee = ENV.fetch("ASSIGNEE", "").downcase
@@ -61,67 +86,77 @@ jobs:
               '
             )"
 
-            if [ -n "${DIRECT_OPEN_ID:-}" ]; then
-              token_payload="$(jq -n \
-                --arg app_id "${FEISHU_BOT_APP_ID}" \
-                --arg app_secret "${FEISHU_BOT_APP_SECRET}" \
-                '{app_id: $app_id, app_secret: $app_secret}')"
-              if ! token_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal" -H "Content-Type: application/json" -d "${token_payload}" 2>&1)"; then
-                echo "::warning::Direct message token request failed; falling back to group webhook"
+            if [ -z "${DIRECT_OPEN_ID:-}" ]; then
+              echo "::warning::Direct message recipient missing open_id; group webhook suppressed"
+              {
+                echo "## Feishu personal progress notification skipped"
+                echo
+                echo "Reason: assignee has no active Feishu open_id mapping."
+                echo "Impact: group notification suppressed by policy."
+                echo "Merge gate impact: none."
+              } >> "${SUMMARY_FILE}"
+              exit 0
+            fi
+
+            token_payload="$(jq -n \
+              --arg app_id "${FEISHU_BOT_APP_ID}" \
+              --arg app_secret "${FEISHU_BOT_APP_SECRET}" \
+              '{app_id: $app_id, app_secret: $app_secret}')"
+            if ! token_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal" -H "Content-Type: application/json" -d "${token_payload}" 2>&1)"; then
+              echo "::warning::Direct message token request failed; group webhook suppressed"
+              {
+                echo "## Feishu personal progress notification skipped"
+                echo
+                echo "Reason: bot token request failed."
+                echo "Impact: group notification suppressed by policy."
+                echo "Merge gate impact: none."
+              } >> "${SUMMARY_FILE}"
+              exit 0
+            elif ! tenant_token="$(echo "${token_response}" | jq -er '.tenant_access_token' 2>/dev/null)"; then
+              echo "::warning::Direct message token parse failed; group webhook suppressed"
+              {
+                echo "## Feishu personal progress notification skipped"
+                echo
+                echo "Reason: bot token response did not include tenant_access_token."
+                echo "Impact: group notification suppressed by policy."
+                echo "Merge gate impact: none."
+              } >> "${SUMMARY_FILE}"
+              exit 0
+            else
+              message_text="$(printf '[hl-dispatch] Issue 已指派给你\n%s\n标签: %s\n%s' "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ISSUE_URL}")"
+              dm_payload="$(jq -n \
+                --arg receive_id "${DIRECT_OPEN_ID}" \
+                --arg text "${message_text}" \
+                '{receive_id: $receive_id, msg_type: "text", content: ({text: $text} | tojson)}')"
+              if ! dm_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id" -H "Authorization: Bearer ${tenant_token}" -H "Content-Type: application/json" -d "${dm_payload}" 2>&1)"; then
+                echo "::warning::Direct message provider request failed; group webhook suppressed"
                 {
-                  echo "## Feishu direct message skipped"
+                  echo "## Feishu personal progress notification failed open"
                   echo
-                  echo "Reason: bot token request failed."
-                  echo "Impact: assigned issue will use group fallback notification."
+                  echo "Reason: provider request failed."
+                  echo "Impact: group notification suppressed by policy."
                   echo "Merge gate impact: none."
                 } >> "${SUMMARY_FILE}"
-              elif ! tenant_token="$(echo "${token_response}" | jq -er '.tenant_access_token' 2>/dev/null)"; then
-                echo "::warning::Direct message token parse failed; falling back to group webhook"
-                {
-                  echo "## Feishu direct message skipped"
-                  echo
-                  echo "Reason: bot token response did not include tenant_access_token."
-                  echo "Impact: assigned issue will use group fallback notification."
-                  echo "Merge gate impact: none."
-                } >> "${SUMMARY_FILE}"
+                exit 0
+              elif echo "${dm_response}" | jq -e '.code == 0' >/dev/null; then
+                echo "Direct message sent; skipping group webhook"
+                exit 0
               else
-                message_text="$(printf '[hl-dispatch] Issue 已指派给你\n%s\n标签: %s\n%s' "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ISSUE_URL}")"
-                dm_payload="$(jq -n \
-                  --arg receive_id "${DIRECT_OPEN_ID}" \
-                  --arg text "${message_text}" \
-                  '{receive_id: $receive_id, msg_type: "text", content: ({text: $text} | tojson)}')"
-                if ! dm_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id" -H "Authorization: Bearer ${tenant_token}" -H "Content-Type: application/json" -d "${dm_payload}" 2>&1)"; then
-                  echo "::warning::Direct message provider request failed; falling back to group webhook"
-                  {
-                    echo "## Feishu direct message failed open"
-                    echo
-                    echo "Reason: provider request failed."
-                    echo "Impact: assigned issue will use group fallback notification."
-                    echo "Merge gate impact: none."
-                  } >> "${SUMMARY_FILE}"
-                elif echo "${dm_response}" | jq -e '.code == 0' >/dev/null; then
-                  echo "Direct message sent; skipping group webhook"
-                  exit 0
-                else
-                  echo "::warning::Direct message provider returned non-success response; falling back to group webhook"
-                  {
-                    echo "## Feishu direct message provider warning"
-                    echo
-                    echo "Reason: provider returned non-success response."
-                    echo "Impact: assigned issue will use group fallback notification."
-                    echo "Merge gate impact: none."
-                  } >> "${SUMMARY_FILE}"
-                fi
+                echo "::warning::Direct message provider returned non-success response; group webhook suppressed"
+                {
+                  echo "## Feishu personal progress notification provider warning"
+                  echo
+                  echo "Reason: provider returned non-success response."
+                  echo "Impact: group notification suppressed by policy."
+                  echo "Merge gate impact: none."
+                } >> "${SUMMARY_FILE}"
+                exit 0
               fi
             fi
           fi
 
-          WEBHOOK="${TASK_WEBHOOK:-}"
-          CARD_TITLE="[hl-dispatch] ${TITLE}"
-          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]]; then
-            WEBHOOK="${PM_WEBHOOK:-}"
-            CARD_TITLE="[hl-dispatch][PM工作台] ${TITLE}"
-          fi
+          WEBHOOK="${ENGINEERING_WEBHOOK:-}"
+          CARD_TITLE="[hl-dispatch][工程通知] ${TITLE}"
           if [ -z "$WEBHOOK" ]; then
             echo "::warning::Feishu webhook is empty; notification skipped"
             {
@@ -246,8 +281,7 @@ jobs:
     steps:
       - name: Comment Notification
         env:
-          TASK_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
-          PM_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_PM }}
+          ENGINEERING_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_ENGINEERING }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
           COMMENTER: ${{ github.event.comment.user.login }}
@@ -256,12 +290,8 @@ jobs:
           set -euo pipefail
           SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
 
-          WEBHOOK="${TASK_WEBHOOK:-}"
-          CARD_TITLE="[hl-dispatch] Issue 新评论"
-          if [[ ",${ISSUE_LABELS// /}," == *",pm,"* ]]; then
-            WEBHOOK="${PM_WEBHOOK:-}"
-            CARD_TITLE="[hl-dispatch][PM工作台] Issue 新评论"
-          fi
+          WEBHOOK="${ENGINEERING_WEBHOOK:-}"
+          CARD_TITLE="[hl-dispatch][工程通知] Issue 新评论"
           if [ -z "$WEBHOOK" ]; then
             echo "::warning::Feishu webhook is empty; notification skipped"
             {

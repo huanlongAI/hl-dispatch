@@ -20,13 +20,13 @@ jobs.each do |job_name, job|
     next unless run
     next unless step.fetch("name", "").match?(/Notification|Channel/)
 
-    notification_steps << [job_name, step.fetch("name"), run]
+    notification_steps << [job_name, step.fetch("name"), run, step["env"] || {}]
   end
 end
 
 failures = []
 
-notification_steps.each do |job_name, step_name, run|
+notification_steps.each do |job_name, step_name, run, env|
   label = "#{job_name} / #{step_name}"
 
   failures << "#{label}: missing strict shell mode" unless run.include?("set -euo pipefail")
@@ -57,23 +57,46 @@ notification_steps.each do |job_name, step_name, run|
   end
 
   if job_name == "notify-issue-task"
+    failures << "#{label}: mainline issue notifications must use engineering webhook" unless env["ENGINEERING_WEBHOOK"].to_s.include?("FEISHU_WEBHOOK_ENGINEERING") && run.include?("ENGINEERING_WEBHOOK")
+    failures << "#{label}: mainline issue notifications must not use task webhook" if env.key?("TASK_WEBHOOK") || env.values.any? { |value| value.to_s.include?("FEISHU_WEBHOOK_TASK") } || run.include?("TASK_WEBHOOK") || run.include?("FEISHU_WEBHOOK_TASK")
+    failures << "#{label}: engineering cards must identify the engineering channel" unless run.include?("[hl-dispatch][工程通知]")
     failures << "#{label}: assigned issues must prefer direct message routing" unless run.include?('ACTION" = "assigned"') && run.include?("DIRECT_OPEN_ID")
     failures << "#{label}: direct messages must use bot app credentials" unless run.include?("FEISHU_BOT_APP_ID") && run.include?("FEISHU_BOT_APP_SECRET")
     failures << "#{label}: direct messages must target open_id" unless run.include?("receive_id_type=open_id")
     failures << "#{label}: successful direct message must skip group webhook" unless run.include?("Direct message sent; skipping group webhook")
+    failures << "#{label}: personal progress must suppress group fallback" unless run.include?("Personal progress notification is DM-only; group webhook suppressed")
+    unless run.include?('if [ "$ACTION" = "assigned" ]; then') &&
+           run.include?("Direct message bot credentials missing; group webhook suppressed")
+      failures << "#{label}: missing direct-message credentials must skip group notification"
+    end
     unless run.include?('if ! token_response="$(curl') &&
-           run.include?("Direct message token request failed; falling back to group webhook")
-      failures << "#{label}: direct message token request failure must fall back to group webhook"
+           run.include?("Direct message token request failed; group webhook suppressed")
+      failures << "#{label}: direct message token request failure must skip group notification"
     end
     unless run.include?('if ! tenant_token="$(echo "${token_response}" | jq -er') &&
-           run.include?("Direct message token parse failed; falling back to group webhook")
-      failures << "#{label}: direct message token parse failure must fall back to group webhook"
+           run.include?("Direct message token parse failed; group webhook suppressed")
+      failures << "#{label}: direct message token parse failure must skip group notification"
     end
     unless run.include?('if ! dm_response="$(curl') &&
-           run.include?("Direct message provider request failed; falling back to group webhook")
-      failures << "#{label}: direct message provider request failure must fall back to group webhook"
+           run.include?("Direct message provider request failed; group webhook suppressed")
+      failures << "#{label}: direct message provider request failure must skip group notification"
     end
-    failures << "#{label}: direct message non-success response must fall back to group webhook" unless run.include?("Direct message provider returned non-success response; falling back to group webhook")
+    failures << "#{label}: direct message non-success response must skip group notification" unless run.include?("Direct message provider returned non-success response; group webhook suppressed")
+  end
+
+  if job_name == "notify-comment"
+    failures << "#{label}: mainline comment notifications must use engineering webhook" unless env["ENGINEERING_WEBHOOK"].to_s.include?("FEISHU_WEBHOOK_ENGINEERING") && run.include?("ENGINEERING_WEBHOOK")
+    failures << "#{label}: mainline comment notifications must not use task webhook" if env.key?("TASK_WEBHOOK") || env.values.any? { |value| value.to_s.include?("FEISHU_WEBHOOK_TASK") } || run.include?("TASK_WEBHOOK") || run.include?("FEISHU_WEBHOOK_TASK")
+    failures << "#{label}: engineering comment cards must identify the engineering channel" unless run.include?("[hl-dispatch][工程通知]")
+    if run.include?("PM_WEBHOOK")
+      failures << "#{label}: mainline comments must not route to PM webhook"
+    end
+  end
+
+  if job_name == "notify-issue-task"
+    if run.include?("falling back to group webhook")
+      failures << "#{label}: personal progress must not fall back to group webhook"
+    end
   end
 end
 

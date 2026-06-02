@@ -26,6 +26,7 @@ jobs:
           ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
         run: |
           set -euo pipefail
+          SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
 
           if [ "$ACTION" = "opened" ]; then
             TITLE="新 Issue"; TEMPLATE="blue"
@@ -88,7 +89,17 @@ jobs:
             WEBHOOK="${PM_WEBHOOK:-}"
             CARD_TITLE="[hl-dispatch][PM工作台] ${TITLE}"
           fi
-          [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }
+          if [ -z "$WEBHOOK" ]; then
+            echo "::warning::Feishu webhook is empty; notification skipped"
+            {
+              echo "## Feishu notification skipped"
+              echo
+              echo "Reason: webhook is empty."
+              echo "Impact: notification not sent."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
 
           payload="$(jq -n \
             --arg title "${CARD_TITLE}" \
@@ -107,9 +118,29 @@ jobs:
                 ]
               }
             }')"
-          response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}")"
+          if ! response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}" 2>&1)"; then
+            echo "::warning::Feishu provider request failed; notification failure is observer-only"
+            {
+              echo "## Feishu notification failed open"
+              echo
+              echo "Reason: provider request failed."
+              echo "Impact: notification may be missing."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
           echo "${response}"
-          echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null
+          if ! echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null; then
+            echo "::warning::Feishu provider returned non-success response; notification failure is observer-only"
+            {
+              echo "## Feishu notification provider warning"
+              echo
+              echo "Reason: provider returned non-success response."
+              echo "Impact: notification may be missing."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
 
   notify-decision-request:
     if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'decision-request'
@@ -123,8 +154,19 @@ jobs:
           ISSUE_URL: ${{ github.event.issue.html_url }}
         run: |
           set -euo pipefail
+          SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
 
-          [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }
+          if [ -z "$WEBHOOK" ]; then
+            echo "::warning::Feishu webhook is empty; notification skipped"
+            {
+              echo "## Feishu notification skipped"
+              echo
+              echo "Reason: webhook is empty."
+              echo "Impact: notification not sent."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
 
           payload="$(jq -n \
             --arg title "🔔 有新的裁决请求" \
@@ -141,9 +183,29 @@ jobs:
                 ]
               }
             }')"
-          response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}")"
+          if ! response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}" 2>&1)"; then
+            echo "::warning::Feishu provider request failed; notification failure is observer-only"
+            {
+              echo "## Feishu notification failed open"
+              echo
+              echo "Reason: provider request failed."
+              echo "Impact: notification may be missing."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
           echo "${response}"
-          echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null
+          if ! echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null; then
+            echo "::warning::Feishu provider returned non-success response; notification failure is observer-only"
+            {
+              echo "## Feishu notification provider warning"
+              echo
+              echo "Reason: provider returned non-success response."
+              echo "Impact: notification may be missing."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
 
   notify-comment:
     if: github.event_name == 'issue_comment' && github.event.action == 'created'
@@ -159,6 +221,7 @@ jobs:
           COMMENT_URL: ${{ github.event.comment.html_url }}
         run: |
           set -euo pipefail
+          SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
 
           WEBHOOK="${TASK_WEBHOOK:-}"
           CARD_TITLE="[hl-dispatch] Issue 新评论"
@@ -166,7 +229,17 @@ jobs:
             WEBHOOK="${PM_WEBHOOK:-}"
             CARD_TITLE="[hl-dispatch][PM工作台] Issue 新评论"
           fi
-          [ -n "$WEBHOOK" ] || { echo "Feishu webhook is empty"; exit 1; }
+          if [ -z "$WEBHOOK" ]; then
+            echo "::warning::Feishu webhook is empty; notification skipped"
+            {
+              echo "## Feishu notification skipped"
+              echo
+              echo "Reason: webhook is empty."
+              echo "Impact: notification not sent."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
 
           payload="$(jq -n \
             --arg title "${CARD_TITLE}" \
@@ -183,6 +256,26 @@ jobs:
                 ]
               }
             }')"
-          response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}")"
+          if ! response="$(curl -sS --fail-with-body -X POST "${WEBHOOK}" -H "Content-Type: application/json" -d "${payload}" 2>&1)"; then
+            echo "::warning::Feishu provider request failed; notification failure is observer-only"
+            {
+              echo "## Feishu notification failed open"
+              echo
+              echo "Reason: provider request failed."
+              echo "Impact: notification may be missing."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi
           echo "${response}"
-          echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null
+          if ! echo "${response}" | jq -e '.code == 0 or .StatusCode == 0' >/dev/null; then
+            echo "::warning::Feishu provider returned non-success response; notification failure is observer-only"
+            {
+              echo "## Feishu notification provider warning"
+              echo
+              echo "Reason: provider returned non-success response."
+              echo "Impact: notification may be missing."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
+          fi

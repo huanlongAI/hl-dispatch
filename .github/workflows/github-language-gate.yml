@@ -1,0 +1,19 @@
+name: GitHub Language Gate
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  github-language-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enforce Chinese issue/comment language gate
+        run: python3 scripts/check-github-language-gate.py --event-path "$GITHUB_EVENT_PATH"

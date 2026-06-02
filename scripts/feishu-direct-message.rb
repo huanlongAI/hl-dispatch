@@ -121,7 +121,9 @@ def parse_options(argv)
   options = {
     team: DEFAULT_TEAM_PATH,
     lark_cli: ENV.fetch("LARK_CLI", "lark-cli"),
-    execute: false
+    execute: false,
+    max_attempts: positive_integer_env("LARK_DM_MAX_ATTEMPTS", 5),
+    retry_sleep_seconds: positive_float_env("LARK_DM_RETRY_SLEEP_SECONDS", 1.0)
   }
 
   parser = OptionParser.new do |opts|
@@ -154,6 +156,54 @@ def parse_options(argv)
   options
 end
 
+def positive_integer_env(name, default)
+  value = ENV.fetch(name, default.to_s).to_i
+  value.positive? ? value : default
+end
+
+def positive_float_env(name, default)
+  value = Float(ENV.fetch(name, default.to_s))
+  value.positive? ? value : default
+rescue ArgumentError
+  default
+end
+
+def retryable_transport_error?(text)
+  normalized = text.to_s.downcase
+  [
+    '"type": "network"',
+    '"subtype": "transport"',
+    "socket is not connected",
+    "connection reset",
+    "connection refused",
+    "read tcp",
+    "timed out",
+    "timeout",
+    "eof"
+  ].any? { |marker| normalized.include?(marker) }
+end
+
+def capture_with_retry(command, max_attempts:, retry_sleep_seconds:)
+  attempt = 0
+  last_stdout = +""
+  last_stderr = +""
+  last_status = nil
+
+  loop do
+    attempt += 1
+    last_stdout, last_stderr, last_status = Open3.capture3(*command)
+    return [last_stdout, last_stderr, last_status, attempt] if last_status.success?
+
+    combined_error = "#{last_stdout}\n#{last_stderr}"
+    break unless attempt < max_attempts && retryable_transport_error?(combined_error)
+
+    warn "warning: transient lark-cli transport failure; retrying #{attempt + 1}/#{max_attempts}"
+    sleep(retry_sleep_seconds)
+  end
+
+  [last_stdout, last_stderr, last_status, attempt]
+end
+
 def print_json(payload)
   puts JSON.pretty_generate(payload)
 end
@@ -167,6 +217,112 @@ def sanitized_result(stdout)
 rescue JSON::ParserError
   {
     "raw_stdout_present" => !stdout.to_s.empty?
+  }
+end
+
+def lark_cli_config_path
+  ENV.fetch("LARK_DM_CONFIG_PATH", File.expand_path("~/.lark-cli/config.json"))
+end
+
+def load_lark_app_credentials(config_path = lark_cli_config_path)
+  env_app_id = ENV["FEISHU_BOT_APP_ID"].to_s.empty? ? ENV["LARK_BOT_APP_ID"].to_s : ENV["FEISHU_BOT_APP_ID"].to_s
+  env_app_secret = ENV["FEISHU_BOT_APP_SECRET"].to_s.empty? ? ENV["LARK_BOT_APP_SECRET"].to_s : ENV["FEISHU_BOT_APP_SECRET"].to_s
+  return [env_app_id, env_app_secret] if !env_app_id.empty? && !env_app_secret.empty?
+
+  config = JSON.parse(File.read(config_path))
+  apps = Array(config["apps"])
+  apps = [config] if apps.empty?
+  app = apps.find { |item| item["appId"].to_s == config["profile"].to_s } || apps.first
+  raise DirectMessageError, "lark config has no app entry" unless app
+
+  app_id = app["appId"].to_s
+  secret_config = app["appSecret"]
+  app_secret =
+    if secret_config.is_a?(Hash) && secret_config["source"].to_s == "file"
+      File.read(secret_config.fetch("id")).strip
+    else
+      secret_config.to_s
+    end
+
+  raise DirectMessageError, "lark app credential missing appId" if app_id.empty?
+  raise DirectMessageError, "lark app credential missing appSecret" if app_secret.empty?
+
+  [app_id, app_secret]
+end
+
+def curl_post_json(url, payload, headers = {})
+  args = [
+    "curl",
+    "-sS",
+    "-X",
+    "POST",
+    url,
+    "-H",
+    "Content-Type: application/json",
+    "--data-binary",
+    "@-"
+  ]
+  headers.each do |name, value|
+    args += ["-H", "#{name}: #{value}"]
+  end
+
+  stdout, stderr, status = Open3.capture3(*args, stdin_data: JSON.generate(payload))
+  unless status.success?
+    diagnostic = stderr.strip.empty? ? "exit #{status.exitstatus}" : stderr.lines.first.to_s.strip
+    raise DirectMessageError, "curl request failed: #{diagnostic}"
+  end
+
+  JSON.parse(stdout)
+rescue JSON::ParserError => e
+  raise DirectMessageError, "curl response was not JSON: #{e.message}"
+end
+
+def direct_message_payload(options, open_id)
+  content =
+    if options[:text]
+      {"text" => options[:text]}
+    else
+      {"text" => options[:markdown]}
+    end
+
+  payload = {
+    "receive_id" => open_id,
+    "msg_type" => "text",
+    "content" => JSON.generate(content)
+  }
+  payload["uuid"] = options[:idempotency_key] if options[:idempotency_key]
+  payload
+end
+
+def curl_direct_message(options, open_id)
+  app_id, app_secret = load_lark_app_credentials
+  token_response = curl_post_json(
+    "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal",
+    {
+      "app_id" => app_id,
+      "app_secret" => app_secret
+    }
+  )
+  unless token_response["code"] == 0 && !token_response["tenant_access_token"].to_s.empty?
+    raise DirectMessageError, "tenant token request failed with code #{token_response["code"]}"
+  end
+
+  message_response = curl_post_json(
+    "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id",
+    direct_message_payload(options, open_id),
+    "Authorization" => "Bearer #{token_response.fetch("tenant_access_token")}"
+  )
+  unless message_response["code"] == 0
+    message = message_response["msg"].to_s
+    suffix = message.empty? ? "" : ": #{message}"
+    raise DirectMessageError, "direct message request failed with code #{message_response["code"]}#{suffix}"
+  end
+
+  data = message_response["data"].is_a?(Hash) ? message_response["data"] : {}
+  {
+    "transport" => "curl_direct_message",
+    "message_id_present" => !data["message_id"].to_s.empty?,
+    "create_time" => data["create_time"]
   }
 end
 
@@ -187,12 +343,24 @@ def main(argv)
     return 0
   end
 
-  stdout, stderr, status = Open3.capture3(*command)
+  stdout, stderr, status, attempts = capture_with_retry(
+    command,
+    max_attempts: options[:max_attempts],
+    retry_sleep_seconds: options[:retry_sleep_seconds]
+  )
   unless status.success?
-    raise DirectMessageError, "lark-cli send failed: #{stderr.strip.empty? ? "exit #{status.exitstatus}" : stderr.strip}"
+    combined_error = "#{stdout}\n#{stderr}"
+    if retryable_transport_error?(combined_error) && ENV.fetch("LARK_DM_CURL_FALLBACK", "1") != "0"
+      warn "warning: lark-cli transport failed after #{attempts} attempt(s); using curl direct-message fallback"
+      result = curl_direct_message(options, open_id)
+      print_json(base_payload.merge("write_performed" => true, "result" => result.merge("lark_cli_attempts" => attempts)))
+      return 0
+    end
+
+    raise DirectMessageError, "lark-cli send failed after #{attempts} attempt(s): #{stderr.strip.empty? ? "exit #{status.exitstatus}" : stderr.strip}"
   end
 
-  print_json(base_payload.merge("write_performed" => true, "result" => sanitized_result(stdout)))
+  print_json(base_payload.merge("write_performed" => true, "result" => sanitized_result(stdout).merge("attempts" => attempts)))
   0
 end
 

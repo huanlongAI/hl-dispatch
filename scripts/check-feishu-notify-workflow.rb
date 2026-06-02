@@ -160,6 +160,13 @@ else
   failures << "direct-message helper must not default to group --chat-id delivery" if helper.include?("--chat-id")
   failures << "direct-message helper must require --execute for writes" unless helper.include?("--execute")
   failures << "direct-message helper TEAM.yml loader must permit Date on GitHub runner Ruby" unless helper.include?("permitted_classes: [Date]")
+  failures << "direct-message helper must retry transient lark-cli transport failures" unless helper.include?("LARK_DM_MAX_ATTEMPTS") && helper.include?("retryable_transport_error?")
+  failures << "direct-message helper retry path must not include group fallback" if helper.match?(/chat-id|group webhook|fallback to group/i)
+  failures << "direct-message helper must support curl fallback for lark-cli transport failures" unless helper.include?("curl_direct_message") && helper.include?("tenant_access_token/internal") && helper.include?("/open-apis/im/v1/messages")
+  failures << "direct-message helper curl fallback must prefer node-c bot env credentials" unless helper.include?("FEISHU_BOT_APP_ID") && helper.include?("FEISHU_BOT_APP_SECRET")
+  failures << "direct-message helper curl fallback must keep direct open_id delivery" unless helper.include?("receive_id_type=open_id")
+  failures << "direct-message helper curl fallback must preserve idempotency uuid" unless helper.include?('"uuid"')
+  failures << "direct-message helper curl fallback must pass JSON via stdin to avoid exposing app_secret in process args" unless helper.include?("--data-binary") && helper.include?("@-") && helper.include?("stdin_data: JSON.generate(payload)")
 
   stdout, stderr, status = Open3.capture3(
     "ruby",

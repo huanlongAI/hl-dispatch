@@ -11,10 +11,14 @@ jobs:
     if: github.event_name == 'issues'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Issue to Task Channel
         env:
           TASK_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_TASK }}
           PM_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_PM }}
+          FEISHU_BOT_APP_ID: ${{ secrets.FEISHU_BOT_APP_ID }}
+          FEISHU_BOT_APP_SECRET: ${{ secrets.FEISHU_BOT_APP_SECRET }}
           ACTION: ${{ github.event.action }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
@@ -34,6 +38,49 @@ jobs:
           fi
 
           [ -z "$ASSIGNEE" ] && ASSIGNEE="未指派"
+
+          if [ "$ACTION" = "assigned" ] && [ "$ASSIGNEE" != "未指派" ] && [ -n "${FEISHU_BOT_APP_ID:-}" ] && [ -n "${FEISHU_BOT_APP_SECRET:-}" ]; then
+            DIRECT_OPEN_ID="$(
+              ruby -ryaml -e '
+                assignee = ENV.fetch("ASSIGNEE", "").downcase
+                team = YAML.load_file("TEAM.yml")
+                entries = []
+                team.fetch("roles").each do |role_id, role|
+                  next unless role.is_a?(Hash)
+                  entries << role.merge("role" => role_id)
+                  Array(role["members"]).each do |member|
+                    entries << member.merge("role" => role_id) if member.is_a?(Hash)
+                  end
+                end
+                entry = entries.find { |item| item["github"].to_s.downcase == assignee }
+                status = entry ? entry["status"].to_s : ""
+                exit 0 if entry.nil? || status.match?(/vacant|pending|departed|inactive|离职|清理|不作为|待确认/i)
+                lark = entry["lark"]
+                puts lark["open_id"] if lark.is_a?(Hash) && lark["open_id"].to_s.start_with?("ou_")
+              '
+            )"
+
+            if [ -n "${DIRECT_OPEN_ID:-}" ]; then
+              token_payload="$(jq -n \
+                --arg app_id "${FEISHU_BOT_APP_ID}" \
+                --arg app_secret "${FEISHU_BOT_APP_SECRET}" \
+                '{app_id: $app_id, app_secret: $app_secret}')"
+              token_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal" -H "Content-Type: application/json" -d "${token_payload}")"
+              tenant_token="$(echo "${token_response}" | jq -er '.tenant_access_token')"
+
+              message_text="$(printf '[hl-dispatch] Issue 已指派给你\n%s\n标签: %s\n%s' "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ISSUE_URL}")"
+              dm_payload="$(jq -n \
+                --arg receive_id "${DIRECT_OPEN_ID}" \
+                --arg text "${message_text}" \
+                '{receive_id: $receive_id, msg_type: "text", content: ({text: $text} | tojson)}')"
+              dm_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id" -H "Authorization: Bearer ${tenant_token}" -H "Content-Type: application/json" -d "${dm_payload}")"
+              if echo "${dm_response}" | jq -e '.code == 0' >/dev/null; then
+                echo "Direct message sent; skipping group webhook"
+                exit 0
+              fi
+              echo "Direct message failed; falling back to group webhook" >&2
+            fi
+          fi
 
           WEBHOOK="${TASK_WEBHOOK:-}"
           CARD_TITLE="[hl-dispatch] ${TITLE}"

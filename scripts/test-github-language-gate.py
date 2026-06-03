@@ -8,14 +8,18 @@ from pathlib import Path
 
 
 SCRIPT = Path(__file__).resolve().parent / "check-github-language-gate.py"
+WORKFLOW = Path(__file__).resolve().parents[1] / ".github/workflows/github-language-gate.yml"
 
 
-def run_gate(event):
+def run_gate(event, github_output_path=None):
     with tempfile.TemporaryDirectory() as tmp:
         event_path = Path(tmp) / "event.json"
         event_path.write_text(json.dumps(event, ensure_ascii=False), encoding="utf-8")
+        cmd = [sys.executable, str(SCRIPT), "--event-path", str(event_path)]
+        if github_output_path:
+            cmd.extend(["--github-output", str(github_output_path)])
         return subprocess.run(
-            [sys.executable, str(SCRIPT), "--event-path", str(event_path)],
+            cmd,
             capture_output=True,
             text=True,
         )
@@ -103,6 +107,67 @@ class GitHubLanguageGateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         payload = json.loads(result.stdout)
         self.assertEqual(payload["status"], "passed")
+
+    def test_failed_comment_reports_target_issue_number(self):
+        result = run_gate(
+            {
+                "action": "created",
+                "issue": {
+                    "number": 164,
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/164",
+                },
+                "comment": {
+                    "body": "Status: blocked pending runtime owner evidence.",
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/164#issuecomment-1",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["target_issue_number"], "164")
+        self.assertEqual(
+            payload["target_url"],
+            "https://github.com/huanlongAI/hl-dispatch/issues/164#issuecomment-1",
+        )
+
+    def test_writes_github_output_for_failed_comment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            github_output_path = Path(tmp) / "github-output.txt"
+            result = run_gate(
+                {
+                    "action": "created",
+                    "issue": {
+                        "number": 164,
+                        "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/164",
+                    },
+                    "comment": {
+                        "body": "Status: blocked pending runtime owner evidence.",
+                        "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/164#issuecomment-1",
+                    },
+                },
+                github_output_path=github_output_path,
+            )
+
+            self.assertEqual(result.returncode, 1)
+            github_output = github_output_path.read_text(encoding="utf-8")
+            self.assertIn("status=failed", github_output)
+            self.assertIn("target_issue_number=164", github_output)
+            self.assertIn("errors=comment_missing_chinese", github_output)
+            self.assertIn(
+                "target_url=https://github.com/huanlongAI/hl-dispatch/issues/164#issuecomment-1",
+                github_output,
+            )
+
+    def test_workflow_reports_language_gate_violations(self):
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+
+        self.assertIn("issues: write", workflow)
+        self.assertIn("continue-on-error: true", workflow)
+        self.assertIn("--github-output \"$GITHUB_OUTPUT\"", workflow)
+        self.assertIn("Report Chinese language gate violation", workflow)
+        self.assertIn("gh issue comment", workflow)
+        self.assertIn("Fail Chinese language gate", workflow)
 
     def test_allows_owner_confirmation_yaml_without_chinese(self):
         result = run_gate(

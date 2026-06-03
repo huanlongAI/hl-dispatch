@@ -11,6 +11,7 @@ OWNER_CONFIRMATION_ROOTS = (
     "owner_confirmation_response_v1:",
     "frontend_owner_confirmation:",
 )
+ISSUE_URL_RE = re.compile(r"/issues/(\d+)(?:#|$)")
 
 
 def has_chinese(text):
@@ -70,16 +71,45 @@ def validate_event(event):
         }
 
     result["status"] = "failed" if result["errors"] else "passed"
+    result["target_issue_number"] = target_issue_number(event, result["target_url"])
     return result
+
+
+def target_issue_number(event, target_url):
+    issue = event.get("issue") or {}
+    number = issue.get("number")
+    if number is not None:
+        return str(number)
+
+    match = ISSUE_URL_RE.search(target_url or "")
+    if match:
+        return match.group(1)
+
+    return ""
+
+
+def write_github_output(output_path, result):
+    values = {
+        "status": result["status"],
+        "target_issue_number": result["target_issue_number"],
+        "target_url": result["target_url"],
+        "errors": ",".join(result["errors"]),
+    }
+    with Path(output_path).open("a", encoding="utf-8") as output:
+        for key, value in values.items():
+            output.write(f"{key}={value}\n")
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Check GitHub issue/comment language gate")
     parser.add_argument("--event-path", required=True)
+    parser.add_argument("--github-output")
     args = parser.parse_args(argv)
 
     event = json.loads(Path(args.event_path).read_text(encoding="utf-8"))
     result = validate_event(event)
+    if args.github_output:
+        write_github_output(args.github_output, result)
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 1 if result["errors"] else 0
 

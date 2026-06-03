@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   github-language-gate:
@@ -16,4 +17,29 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Enforce Chinese issue/comment language gate
-        run: python3 scripts/check-github-language-gate.py --event-path "$GITHUB_EVENT_PATH"
+        id: language_gate
+        continue-on-error: true
+        run: python3 scripts/check-github-language-gate.py --event-path "$GITHUB_EVENT_PATH" --github-output "$GITHUB_OUTPUT"
+
+      - name: Report Chinese language gate violation
+        if: steps.language_gate.outcome == 'failure' && steps.language_gate.outputs.target_issue_number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GATE_ERRORS: ${{ steps.language_gate.outputs.errors }}
+          GATE_TARGET_URL: ${{ steps.language_gate.outputs.target_url }}
+          ISSUE_NUMBER: ${{ steps.language_gate.outputs.target_issue_number }}
+        run: |
+          cat > "$RUNNER_TEMP/github-language-gate-comment.md" <<EOF
+          ## 中文门禁未通过
+
+          检测目标：$GATE_TARGET_URL
+
+          错误码：$GATE_ERRORS
+
+          请将 Issue 标题、正文或评论补充中文说明后重新编辑。英文术语可以保留，但不能提交纯英文内容。
+          EOF
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/github-language-gate-comment.md"
+
+      - name: Fail Chinese language gate
+        if: steps.language_gate.outcome == 'failure'
+        run: exit 1

@@ -43,7 +43,7 @@ jobs:
           if [ -n "$STALE_REPOS" ]; then
             echo "::warning::Stale repos detected: $STALE_REPOS"
 
-            EXISTING=$(gh api repos/huanlongAI/hl-dispatch/issues --jq '[.[] | select(.title | startswith("[自动]  仓库同步滞后")) | select(.state=="open")] | length' 2>/dev/null)
+            EXISTING=$(gh api repos/huanlongAI/hl-dispatch/issues --jq '[.[] | select(.title | startswith("[自动] 仓库同步滞后")) | select(.state=="open")] | length' 2>/dev/null)
             if [ "$EXISTING" != "0" ] && [ -n "$EXISTING" ]; then
               echo "Already have open stale alert issue, skipping creation"
               exit 0
@@ -51,11 +51,21 @@ jobs:
 
             BODY="## 仓库同步滞后告警\n\n自动检测发现以下仓库超过 48h 未推送更新。\n\n| 仓库 | 滞后 | 最后推送 |\n|------|------|---------|\n${REPORT}\n\n**建议操作：** 检查本地是否有未推送的 commit，及时同步到远端。\n\n> 本 Issue 由 CI 自动创建，问题解决后请关闭。"
 
-            gh issue create \
+            if ! gh issue create \
               --repo huanlongAI/hl-dispatch \
               --title "[自动] 仓库同步滞后告警 — $(date +%Y-%m-%d)" \
               --body "$(echo -e "$BODY")" \
-              --label "ops" 2>&1
+              --label "ops" 2>&1; then
+              echo "::warning::Stale alert issue creation failed; observer-only"
+              {
+                echo "### Stale alert issue creation failed open"
+                echo
+                echo "Merge gate impact: none."
+                echo
+                echo "The stale repo check is observer-only. Review GitHub issue permissions or label availability."
+              } >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
 
             echo "Stale alert issue created"
           else

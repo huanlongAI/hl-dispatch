@@ -2,9 +2,10 @@
 # Consistency Sentinel -- MIRA P-2 Consistency Gate
 # Phase 1: Caller template -> huanlongAI/sentinel-shared reusable workflow
 # NOTE: permissions MUST be in caller, not in reusable workflow
+# The @main reusable workflow reference is intentional for this thin caller projection.
+# Compatibility is governed by sentinel-shared cascade, D-10, and caller-sync drift checks.
 # ============================================================================
 name: Consistency Sentinel
-
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -19,12 +20,10 @@ on:
         required: false
         default: false
         type: boolean
-
 permissions:
   contents: read
   pull-requests: write
   issues: write
-
 jobs:
   sentinel:
     uses: huanlongAI/sentinel-shared/.github/workflows/consistency-sentinel.yml@main
@@ -35,5 +34,7 @@ jobs:
       HEIYUCODE_AUTH_TOKEN: ${{ secrets.HEIYUCODE_AUTH_TOKEN }}
       HEIYUCODE_API_KEY: ${{ secrets.HEIYUCODE_API_KEY }}
     with:
-      llm_provider: auto
       skip_llm: ${{ fromJSON(github.event.inputs.skip_llm || 'false') }}
+      llm_provider: auto
+      heiyucode_base_url: ${{ vars.HEIYUCODE_BASE_URL || 'https://www.heiyucode.com' }}
+      heiyucode_model: ${{ vars.HEIYUCODE_MODEL || '' }}

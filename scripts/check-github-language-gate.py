@@ -7,6 +7,12 @@ from pathlib import Path
 
 
 CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff]")
+LATIN_WORD_RE = re.compile(r"[A-Za-z][A-Za-z0-9_-]*")
+URL_RE = re.compile(r"https?://\S+")
+FENCED_CODE_BLOCK_RE = re.compile(r"```.*?```", re.DOTALL)
+MIN_BODY_CJK_CHARS = 6
+MIN_BODY_CJK_RATIO = 0.2
+LATIN_HEAVY_WORDS = 12
 OWNER_CONFIRMATION_ROOTS = (
     "owner_confirmation_response_v1:",
     "frontend_owner_confirmation:",
@@ -16,6 +22,21 @@ ISSUE_URL_RE = re.compile(r"/issues/(\d+)(?:#|$)")
 
 def has_chinese(text):
     return bool(CJK_RE.search(text or ""))
+
+
+def chinese_signal_too_weak(text):
+    normalized = URL_RE.sub(" ", text or "")
+    cjk_count = len(CJK_RE.findall(normalized))
+    if cjk_count == 0:
+        return False
+
+    prose_for_latin_count = FENCED_CODE_BLOCK_RE.sub(" ", normalized)
+    latin_word_count = len(LATIN_WORD_RE.findall(prose_for_latin_count))
+    if latin_word_count < LATIN_HEAVY_WORDS:
+        return False
+
+    cjk_ratio = cjk_count / (cjk_count + latin_word_count)
+    return cjk_count < MIN_BODY_CJK_CHARS or cjk_ratio < MIN_BODY_CJK_RATIO
 
 
 def is_structured_owner_yaml(text):
@@ -32,6 +53,8 @@ def validate_issue(issue):
         errors.append("title_missing_chinese")
     if body.strip() and not has_chinese(body):
         errors.append("body_missing_chinese")
+    elif body.strip() and chinese_signal_too_weak(body):
+        errors.append("body_chinese_ratio_too_low")
 
     return {
         "kind": "issue",
@@ -48,6 +71,8 @@ def validate_comment(comment):
 
     if not structured_yaml_allowed and not has_chinese(body):
         errors.append("comment_missing_chinese")
+    elif not structured_yaml_allowed and chinese_signal_too_weak(body):
+        errors.append("comment_chinese_ratio_too_low")
 
     return {
         "kind": "issue_comment",

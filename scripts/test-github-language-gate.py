@@ -68,6 +68,29 @@ class GitHubLanguageGateTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(payload["status"], "passed")
 
+    def test_rejects_english_body_with_incidental_chinese_terms(self):
+        result = run_gate(
+            {
+                "action": "opened",
+                "issue": {
+                    "title": "[通知台账测试] Feishu delivery ledger summary",
+                    "body": (
+                        "Purpose: verify Feishu delivery ledger summary after 02bbf19.\n\n"
+                        "Expected:\n"
+                        "- Issue opened goes to AI native工程通知 and writes a delivery ledger summary.\n"
+                        "- Assigned goes DM-only to tongzhenghui and writes a delivery ledger summary.\n\n"
+                        "This issue will be closed after verification."
+                    ),
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/179",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "failed")
+        self.assertIn("body_chinese_ratio_too_low", payload["errors"])
+
     def test_rejects_pure_english_issue_comment(self):
         result = run_gate(
             {

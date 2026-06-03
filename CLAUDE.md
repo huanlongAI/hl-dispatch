@@ -1,6 +1,6 @@
 # hl-dispatch — AI 编码指引
 
-> **Write-Owner: NODE-E** — tzhOS R-0122；原 `NODE-A` 投影已变更为 `NODE-E`
+> **Write-Owner: NODE-E** — tzhOS R-0122；当前执行投影以本行声明为准，历史本地投影不得作为依据
 > **NODE-M 操作权限**：`NODE-M` 可按 Repo Sync、SSOT、验证门禁、branch protection 与明确 push 确认执行受控写入、push 与 Draft PR；这不改变唤龙领域 Write-Owner = `NODE-E`。
 > 跨域写入须遵循 §3.4 Cross-Domain Write Protocol
 > 最后修订：2026-05-22

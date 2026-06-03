@@ -34,7 +34,7 @@ jobs:
       HEIYUCODE_AUTH_TOKEN: ${{ secrets.HEIYUCODE_AUTH_TOKEN }}
       HEIYUCODE_API_KEY: ${{ secrets.HEIYUCODE_API_KEY }}
     with:
-      skip_llm: ${{ fromJSON(github.event.inputs.skip_llm || 'false') }}
+      skip_llm: ${{ github.event_name == 'repository_dispatch' || fromJSON(github.event.inputs.skip_llm || 'false') }}
       llm_provider: auto
       heiyucode_base_url: ${{ vars.HEIYUCODE_BASE_URL || 'https://www.heiyucode.com' }}
       heiyucode_model: ${{ vars.HEIYUCODE_MODEL || '' }}

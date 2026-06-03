@@ -29,6 +29,11 @@ jobs:
   sentinel:
     uses: huanlongAI/sentinel-shared/.github/workflows/consistency-sentinel.yml@main
     secrets:
+      # LLM provider credentials are consumed only by sentinel-shared provider router.
+      # HeiyuCode is preferred when configured; Anthropic remains the fallback provider.
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      HEIYUCODE_AUTH_TOKEN: ${{ secrets.HEIYUCODE_AUTH_TOKEN }}
+      HEIYUCODE_API_KEY: ${{ secrets.HEIYUCODE_API_KEY }}
     with:
+      llm_provider: auto
       skip_llm: ${{ fromJSON(github.event.inputs.skip_llm || 'false') }}

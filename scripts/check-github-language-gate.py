@@ -7,19 +7,14 @@ from pathlib import Path
 
 
 CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff]")
-CODE_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
 OWNER_CONFIRMATION_ROOTS = (
     "owner_confirmation_response_v1:",
     "frontend_owner_confirmation:",
 )
 
 
-def strip_code_fences(text):
-    return CODE_FENCE_RE.sub("", text or "")
-
-
 def has_chinese(text):
-    return bool(CJK_RE.search(strip_code_fences(text)))
+    return bool(CJK_RE.search(text or ""))
 
 
 def is_structured_owner_yaml(text):

@@ -80,6 +80,30 @@ class GitHubLanguageGateTests(unittest.TestCase):
         self.assertEqual(payload["status"], "failed")
         self.assertIn("comment_missing_chinese", payload["errors"])
 
+    def test_accepts_chinese_inside_markdown_code_block(self):
+        result = run_gate(
+            {
+                "action": "created",
+                "comment": {
+                    "body": (
+                        "@owner\n\n"
+                        "```yaml\n"
+                        "runtime_main_chain_data_callback:\n"
+                        "  status: blocked\n"
+                        "  note: \"需要 Runtime Owner 追加结构化 ready 回执。\"\n"
+                        "  requested_action:\n"
+                        "    - \"请补齐 negative test evidence_ref。\"\n"
+                        "```"
+                    ),
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/164#issuecomment-1",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "passed")
+
     def test_allows_owner_confirmation_yaml_without_chinese(self):
         result = run_gate(
             {

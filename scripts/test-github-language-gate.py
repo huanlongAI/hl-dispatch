@@ -186,11 +186,13 @@ class GitHubLanguageGateTests(unittest.TestCase):
         workflow = WORKFLOW.read_text(encoding="utf-8")
 
         self.assertIn("issues: write", workflow)
-        self.assertIn("continue-on-error: true", workflow)
-        self.assertIn("--github-output \"$GITHUB_OUTPUT\"", workflow)
-        self.assertIn("Report Chinese language gate violation", workflow)
-        self.assertIn("gh issue comment", workflow)
-        self.assertIn("Fail Chinese language gate", workflow)
+        self.assertIn(
+            "huanlongAI/sentinel-shared/.github/workflows/github-language-gate.yml@main",
+            workflow,
+        )
+        self.assertIn("enforcement_mode: enforce", workflow)
+        self.assertIn("report_comment: true", workflow)
+        self.assertNotIn("python3 scripts/check-github-language-gate.py", workflow)
 
     def test_allows_owner_confirmation_yaml_without_chinese(self):
         result = run_gate(

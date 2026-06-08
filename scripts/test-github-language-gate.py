@@ -182,15 +182,16 @@ class GitHubLanguageGateTests(unittest.TestCase):
                 github_output,
             )
 
-    def test_workflow_reports_language_gate_violations(self):
+    def test_workflow_reports_issue_comment_gate_violations(self):
         workflow = WORKFLOW.read_text(encoding="utf-8")
 
         self.assertIn("issues: write", workflow)
         self.assertIn("continue-on-error: true", workflow)
         self.assertIn("--github-output \"$GITHUB_OUTPUT\"", workflow)
-        self.assertIn("Report Chinese language gate violation", workflow)
+        self.assertIn("Report GitHub issue/comment gate violation", workflow)
+        self.assertIn("ai-output:v1", workflow)
         self.assertIn("gh issue comment", workflow)
-        self.assertIn("Fail Chinese language gate", workflow)
+        self.assertIn("Fail GitHub issue/comment gate", workflow)
 
     def test_allows_owner_confirmation_yaml_without_chinese(self):
         result = run_gate(
@@ -214,6 +215,125 @@ class GitHubLanguageGateTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(payload["status"], "passed")
         self.assertTrue(payload["structured_yaml_allowed"])
+
+    def test_accepts_valid_ai_output_contract_comment(self):
+        result = run_gate(
+            {
+                "action": "created",
+                "comment": {
+                    "body": (
+                        "<!-- ai-output:v1 -->\n"
+                        "【类型】status_update\n"
+                        "【结论】DS-1A sandbox pilot evidence accepted，未声明 production ready。\n"
+                        "【依据】PR #110；CI sentinel success；integration test evidence 已记录。\n"
+                        "【当前状态】accepted\n"
+                        "【下一步唯一动作】Package Owner 更新 Task Snapshot。\n"
+                        "【需要人处理】Package Owner\n"
+                        "【不确定项】无\n"
+                    ),
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/200#issuecomment-1",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "passed")
+
+    def test_rejects_ai_output_missing_required_field(self):
+        result = run_gate(
+            {
+                "action": "created",
+                "comment": {
+                    "body": (
+                        "<!-- ai-output:v1 -->\n"
+                        "【类型】status_update\n"
+                        "【结论】已完成。\n"
+                        "【依据】PR #110\n"
+                        "【当前状态】accepted\n"
+                        "【下一步唯一动作】关闭。\n"
+                        "【需要人处理】Package Owner\n"
+                    ),
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/200#issuecomment-1",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertIn("ai_output_missing_不确定项", payload["errors"])
+
+    def test_rejects_ai_output_invalid_type(self):
+        result = run_gate(
+            {
+                "action": "created",
+                "comment": {
+                    "body": (
+                        "<!-- ai-output:v1 -->\n"
+                        "【类型】普通同步\n"
+                        "【结论】继续推进整体治理。\n"
+                        "【依据】PR #110\n"
+                        "【当前状态】doing\n"
+                        "【下一步唯一动作】继续推进。\n"
+                        "【需要人处理】无\n"
+                        "【不确定项】无\n"
+                    ),
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/200#issuecomment-1",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertIn("ai_output_invalid_type", payload["errors"])
+
+    def test_rejects_needs_context_without_gap_report(self):
+        result = run_gate(
+            {
+                "action": "created",
+                "comment": {
+                    "body": (
+                        "<!-- ai-output:v1 -->\n"
+                        "【类型】status_update\n"
+                        "【结论】NEEDS_CONTEXT：缺少 Task Snapshot。\n"
+                        "【依据】未找到 task-snapshot:v1\n"
+                        "【当前状态】blocked\n"
+                        "【下一步唯一动作】补 Task Snapshot。\n"
+                        "【需要人处理】Package Owner\n"
+                        "【不确定项】当前 DRI\n"
+                    ),
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/200#issuecomment-1",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertIn("ai_output_needs_context_requires_gap_report", payload["errors"])
+
+    def test_rejects_done_claim_without_evidence(self):
+        result = run_gate(
+            {
+                "action": "created",
+                "comment": {
+                    "body": (
+                        "<!-- ai-output:v1 -->\n"
+                        "【类型】status_update\n"
+                        "【结论】已完成，可以关闭。\n"
+                        "【依据】无\n"
+                        "【当前状态】done\n"
+                        "【下一步唯一动作】关闭 Issue。\n"
+                        "【需要人处理】无\n"
+                        "【不确定项】无\n"
+                    ),
+                    "html_url": "https://github.com/huanlongAI/hl-dispatch/issues/200#issuecomment-1",
+                },
+            }
+        )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertIn("ai_output_evidence_required", payload["errors"])
 
 
 if __name__ == "__main__":

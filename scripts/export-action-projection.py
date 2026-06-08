@@ -21,7 +21,6 @@ EMPTY_VALUES = {
     "none",
     "null",
     "unknown",
-    "todo",
     "tbd",
     "无",
     "待补",

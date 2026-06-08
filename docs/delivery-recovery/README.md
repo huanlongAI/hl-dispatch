@@ -25,6 +25,10 @@ Use Delivery Slice for planned delivery. Use Risk-Retirement Slice for Red Path 
 - `TASK_SNAPSHOT_v1.md`: `task-snapshot:v1` current-card contract.
 - `RISK_PATH_GREEN_YELLOW_RED.md`: Green / Yellow / Red risk path and governance budget.
 
+## Recovery Artifacts
+
+- `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_2026-06-08.md`: Formal object chain evidence snapshot for Sales, CustomerAsset, ServiceOrder, and PaymentCheckout.
+
 ## Public Updates
 
 Public backfill comments must use one of these classes:

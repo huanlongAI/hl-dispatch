@@ -1,0 +1,132 @@
+name: "Delivery Recovery: Work Unit"
+description: "Delivery Slice 内的一项可分派工作"
+title: "[WU] "
+labels: ["task-assign"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Work Unit 是 Delivery Slice 内的单项可分派工作。完成必须提交测试、验收或审查证据。No Evidence, No Done。
+
+  - type: input
+    id: package_id
+    attributes:
+      label: "package_id"
+      placeholder: "MP-YYYYMMDD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: slice_id_or_risk_id
+    attributes:
+      label: "slice_id 或 risk_id"
+      description: "Work Unit 必须关联 Delivery Slice 或 Risk-Retirement Slice。"
+      placeholder: "DS-YYYYMMDD-001 或 RISK-YYYYMMDD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: work_unit_id
+    attributes:
+      label: "work_unit_id"
+      placeholder: "WU-YYYYMMDD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: dri
+    attributes:
+      label: "DRI"
+      description: "直接负责人 GitHub handle 或角色。"
+      placeholder: "@owner 或角色"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk_path
+    attributes:
+      label: "risk_path"
+      options:
+        - green
+        - yellow
+        - red
+    validations:
+      required: true
+
+  - type: textarea
+    id: work_scope
+    attributes:
+      label: "唯一交付物"
+      description: "一个 Work Unit 只有一个交付物。"
+      placeholder: "最小可交付结果。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: next_action
+    attributes:
+      label: "next_action"
+      description: "当前唯一下一步动作。"
+      placeholder: "下一步谁做什么，产出什么证据。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_evidence
+    attributes:
+      label: "expected_evidence / evidence_exit"
+      description: "创建时只写预期证据或退出条件；actual evidence 在验收或关闭时补齐。"
+      value: |
+        expected_evidence:
+        -
+        evidence_exit:
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "Acceptance"
+      description: "本 Work Unit 的完成判定。"
+      placeholder: "可验证的完成标准。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: "不做事项"
+      description: "明确本工作单元不处理什么。"
+      placeholder: "例如：不改业务逻辑；不改 workflow。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: ai_output
+    attributes:
+      label: "ai-output:v1"
+      description: "完成或阻塞时粘贴 AI Output Contract。"
+      value: |
+        ai-output:v1
+        package_id: ""
+        slice_id: ""
+        risk_id: "n/a"
+        work_unit_id: ""
+        actor: ""
+        status: ""
+        risk_path: ""
+        context_validity:
+          sources_read: []
+          stale_or_missing_context: []
+        changes:
+          summary: []
+          non_goals: []
+        test_evidence:
+          commands: []
+        acceptance_evidence:
+          demo_or_review: ""
+          artifact_refs: []
+        next_action: ""
+    validations:
+      required: false

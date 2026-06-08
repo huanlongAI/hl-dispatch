@@ -1,0 +1,194 @@
+name: "Delivery Recovery: Mission Package"
+description: "14-30 天恢复模式的任务包入口"
+title: "[MP] "
+labels: ["task-assign"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Mission Package 是 Delivery Recovery Mode v0.1 的有界恢复目标。GitHub Issue / PR / repo file 是 SSOT；Feishu 和 Bitable 只是 projection。
+
+  - type: input
+    id: package_id
+    attributes:
+      label: "package_id"
+      description: "任务包 ID，例如 MP-20260607-001。"
+      placeholder: "MP-YYYYMMDD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: initial_slice_id
+    attributes:
+      label: "initial_slice_id"
+      description: "可选：首个 Delivery Slice / Risk-Retirement Slice ID。Mission Package 是上游，不强制先有 slice。"
+      placeholder: "DS-YYYYMMDD-001 / RRS-YYYYMMDD-001 / blank"
+    validations:
+      required: false
+
+  - type: input
+    id: package_owner
+    attributes:
+      label: "Package Owner"
+      description: "交付 owner；无 Package Owner 不进入交付计划。"
+      placeholder: "@owner 或 Gate-H / Gate-R / PM-A"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk_level
+    attributes:
+      label: "risk_path"
+      options:
+        - green
+        - yellow
+        - red
+    validations:
+      required: true
+
+  - type: textarea
+    id: mission_goal
+    attributes:
+      label: "目标"
+      description: "本任务包要恢复或交付的最小结果。"
+      placeholder: "一句话结果 + 交付边界。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: "背景"
+      description: "只写进入本 Mission Package 必需的背景。"
+      placeholder: "为什么现在需要这个任务包。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: "范围：必做 / 不做 / 可调研但不阻塞"
+      value: |
+        must_do:
+        -
+        non_goals:
+        -
+        research_non_blocking:
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: known_context
+    attributes:
+      label: "已知上下文"
+      description: "只放关键链接。"
+      placeholder: "Issue / PR / docs links only."
+    validations:
+      required: true
+
+  - type: textarea
+    id: confirmed_facts
+    attributes:
+      label: "已确认事实"
+      description: "每条事实必须带 evidence。"
+      value: |
+        - fact:
+          evidence:
+    validations:
+      required: true
+
+  - type: textarea
+    id: success_criteria
+    attributes:
+      label: "成功标准"
+      description: "如何判断本 Mission Package 达成。"
+      placeholder: "PR / test / demo / acceptance / decision record。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: authorization_boundary
+    attributes:
+      label: "授权边界"
+      description: "允许做什么，不允许做什么，哪些必须升级。"
+      placeholder: "Allowed / not allowed / requires Founder or owner decision."
+    validations:
+      required: true
+
+  - type: textarea
+    id: escalation_conditions
+    attributes:
+      label: "升级条件"
+      description: "哪些目标、范围、Red Path 授权或重大取舍必须升级。"
+      placeholder: "Escalate when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: next_action
+    attributes:
+      label: "next_action"
+      description: "当前唯一下一步动作。"
+      placeholder: "下一步谁做什么，产出什么证据。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: "evidence"
+      description: "已有证据和完成所需证据。"
+      value: |
+        existing:
+        -
+        required_next:
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: "不做事项"
+      description: "明确本任务包不处理什么，避免恢复模式扩大。"
+      placeholder: "例如：不改业务逻辑；不改 Feishu workflow；不新增总账 issue。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: task_snapshot
+    attributes:
+      label: "task-snapshot:v1"
+      description: "可粘贴 docs/delivery-recovery/TASK_SNAPSHOT_v1.md 中的模板。"
+      value: |
+        task-snapshot:v1
+        package_id: ""
+        slice_id: ""
+        risk_id: "n/a"
+        work_unit_id: "n/a"
+        current_card: ""
+        maturity: ""
+        type: "mission_package"
+        state: "open"
+        dri: ""
+        risk_path: ""
+        current_status: ""
+        confirmed_facts: []
+        next_action: ""
+        blocked_by: []
+        unblock_condition: "n/a"
+        authorization: ""
+        evidence:
+          existing: []
+          required_next: []
+        evidence_links: []
+        close_condition: ""
+        context_validity:
+          last_context_read: []
+          known_gaps: []
+        non_goals: []
+        public_update_class: "n/a"
+        last_material_change: ""
+    validations:
+      required: false

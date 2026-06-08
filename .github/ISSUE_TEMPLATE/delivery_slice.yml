@@ -1,0 +1,193 @@
+name: "Delivery Recovery: Delivery Slice"
+description: "14-30 天恢复模式中的 1-3 天执行切片"
+title: "[DS] "
+labels: ["task-assign"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Delivery Slice 是 Mission Package 内的短周期执行切片，不是永久唯一流程。GitHub Issue / PR / repo file 是 SSOT。
+
+  - type: input
+    id: package_id
+    attributes:
+      label: "package_id"
+      placeholder: "MP-YYYYMMDD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: slice_id
+    attributes:
+      label: "slice_id"
+      placeholder: "DS-YYYYMMDD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: dri
+    attributes:
+      label: "DRI"
+      description: "直接负责人 GitHub handle 或角色。"
+      placeholder: "@owner 或角色"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk_path
+    attributes:
+      label: "risk_path"
+      options:
+        - green
+        - yellow
+        - red
+    validations:
+      required: true
+
+  - type: textarea
+    id: slice_scope
+    attributes:
+      label: "业务 / 工程目标"
+      description: "本切片 1-3 天内要完成的边界。"
+      placeholder: "本 slice 的最小闭环。"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: slice_type
+    attributes:
+      label: "Slice type"
+      options:
+        - Delivery Slice
+        - Risk-Retirement Slice
+    validations:
+      required: true
+
+  - type: textarea
+    id: runnable_path
+    attributes:
+      label: "可运行路径"
+      description: "说明本 slice 如何进入 PR/Test/Review 或如何解除风险。"
+      placeholder: "命令、PR 路径、review 路径、unblock 路径或验证入口。"
+    validations:
+      required: true
+
+  - type: input
+    id: risk_id
+    attributes:
+      label: "risk_id"
+      description: "Risk-Retirement Slice 必填；普通 Delivery Slice 填 n/a。"
+      placeholder: "RISK-YYYYMMDD-001 或 n/a"
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk_retirement
+    attributes:
+      label: "Risk-Retirement Slice 字段"
+      description: "Risk-Retirement Slice 必填；普通 Delivery Slice 各项填 n/a。"
+      value: |
+        risk_to_retire:
+        unblock_condition:
+        decision_deadline:
+        output: PR / spike report / decision record / blocker closeout / n/a
+    validations:
+      required: true
+
+  - type: textarea
+    id: completion_definition
+    attributes:
+      label: "完成定义"
+      description: "本 slice 完成时必须满足的条件。"
+      placeholder: "测试、审查、验收、unblock condition 或决策条件。"
+    validations:
+      required: true
+
+  - type: input
+    id: acceptance_owner
+    attributes:
+      label: "验收人"
+      description: "负责接受本 slice 的人或角色。"
+      placeholder: "@reviewer 或 Founder / Gate-H / Gate-R / PM"
+    validations:
+      required: true
+
+  - type: textarea
+    id: next_action
+    attributes:
+      label: "next_action"
+      description: "当前唯一下一步动作。"
+      placeholder: "下一步谁做什么，产出什么证据。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: "evidence"
+      description: "已有证据和完成所需证据。"
+      value: |
+        existing:
+        -
+        required_next:
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: work_units
+    attributes:
+      label: "Work Units"
+      description: "本 slice 下的 WU 列表；暂未拆分时写 n/a。"
+      value: |
+        - work_unit_id: WU-YYYYMMDD-001
+          owner:
+          state: open
+    validations:
+      required: true
+
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: "不做事项"
+      description: "明确本切片不处理什么。"
+      placeholder: "例如：不改业务逻辑；不改通知 workflow。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: task_snapshot
+    attributes:
+      label: "task-snapshot:v1"
+      description: "切片当前卡片快照。"
+      value: |
+        task-snapshot:v1
+        package_id: ""
+        slice_id: ""
+        risk_id: "n/a"
+        work_unit_id: "n/a"
+        current_card: ""
+        maturity: ""
+        type: "delivery_slice"
+        state: "open"
+        dri: ""
+        risk_path: ""
+        current_status: ""
+        confirmed_facts: []
+        next_action: ""
+        blocked_by: []
+        unblock_condition: ""
+        authorization: ""
+        evidence:
+          existing: []
+          required_next: []
+        evidence_links: []
+        close_condition: ""
+        context_validity:
+          last_context_read: []
+          known_gaps: []
+        non_goals: []
+        public_update_class: "n/a"
+        last_material_change: ""
+    validations:
+      required: false

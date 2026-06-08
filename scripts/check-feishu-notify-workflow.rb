@@ -17,6 +17,7 @@ rescue ArgumentError
 end
 
 workflow_path = File.expand_path("../.github/workflows/feishu-notify.yml", __dir__)
+workflow_source = File.read(workflow_path)
 workflow = load_yaml(workflow_path)
 jobs = workflow.fetch("jobs")
 
@@ -32,6 +33,20 @@ jobs.each do |job_name, job|
 end
 
 failures = []
+
+if workflow_source.match?(/^\s*issue_comment:\s*$/)
+  failures << "feishu-notify workflow must not trigger directly on issue_comment.created"
+end
+
+unless workflow_source.match?(/^\s*workflow_dispatch:\s*$/)
+  failures << "feishu-notify workflow must keep manual workflow_dispatch trigger"
+end
+
+if workflow_source.include?("notify-comment") ||
+   workflow_source.include?("Issue 新评论") ||
+   workflow_source.include?("issue_comment_v1")
+  failures << "feishu-notify workflow must not broadcast ordinary issue comments"
+end
 
 notification_steps.each do |job_name, step_name, run, env|
   label = "#{job_name} / #{step_name}"
@@ -106,16 +121,28 @@ notification_steps.each do |job_name, step_name, run, env|
       failures << "#{label}: direct message provider request failure must skip group notification"
     end
     failures << "#{label}: direct message non-success response must skip group notification" unless run.include?("Direct message provider returned non-success response; group webhook suppressed")
+
+    failures << "#{label}: labeled issue notifications must expose label name" unless env["LABEL_NAME"].to_s.include?("github.event.label.name")
+    unless run.include?('if [ "$ACTION" = "labeled" ]; then') &&
+           run.include?("action:decision_required") &&
+           run.include?("action:acceptance_ready") &&
+           run.include?("action:blocker") &&
+           run.include?("action:p0_failure") &&
+           run.include?("Label notification skipped")
+      failures << "#{label}: labeled issue notifications must be limited to explicit action labels"
+    end
   end
 
   if job_name == "notify-comment"
-    failures << "#{label}: mainline comment notifications must use engineering webhook" unless env["ENGINEERING_WEBHOOK"].to_s.include?("FEISHU_WEBHOOK_ENGINEERING") && run.include?("ENGINEERING_WEBHOOK")
-    failures << "#{label}: mainline comment notifications must not use task webhook" if env.key?("TASK_WEBHOOK") || env.values.any? { |value| value.to_s.include?("FEISHU_WEBHOOK_TASK") } || run.include?("TASK_WEBHOOK") || run.include?("FEISHU_WEBHOOK_TASK")
-    failures << "#{label}: engineering comment cards must identify the engineering channel" unless run.include?("[hl-dispatch][工程通知]")
-    failures << "#{label}: comment ledger must use issue_comment_v1 template" unless run.include?("issue_comment_v1")
-    if run.include?("PM_WEBHOOK")
-      failures << "#{label}: mainline comments must not route to PM webhook"
-    end
+    failures << "#{label}: notify-comment job must be removed; ordinary issue_comment.created must not broadcast to Feishu"
+  end
+
+  if job_name == "notify-manual"
+    failures << "#{label}: manual notifications must use engineering webhook" unless env["ENGINEERING_WEBHOOK"].to_s.include?("FEISHU_WEBHOOK_ENGINEERING") && run.include?("ENGINEERING_WEBHOOK")
+    failures << "#{label}: manual notifications must not use task webhook" if env.key?("TASK_WEBHOOK") || env.values.any? { |value| value.to_s.include?("FEISHU_WEBHOOK_TASK") } || run.include?("TASK_WEBHOOK") || run.include?("FEISHU_WEBHOOK_TASK")
+    failures << "#{label}: manual cards must identify the engineering channel" unless run.include?("[hl-dispatch][工程通知]")
+    failures << "#{label}: manual ledger must use manual_dispatch_v1 template" unless run.include?("manual_dispatch_v1")
+    failures << "#{label}: manual notifications must include target URL input" unless env["NOTIFY_URL"].to_s.include?("github.event.inputs.notify_url") && run.include?("NOTIFY_URL")
   end
 
   if job_name == "notify-issue-task"

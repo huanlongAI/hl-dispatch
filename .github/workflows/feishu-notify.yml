@@ -1,10 +1,22 @@
 name: Feishu Notification
 
 on:
+  workflow_dispatch:
+    inputs:
+      notify_title:
+        description: Manual notification title
+        required: true
+        type: string
+      notify_url:
+        description: GitHub issue, PR, run, or evidence URL
+        required: true
+        type: string
+      notify_body:
+        description: Short action-oriented notification body
+        required: true
+        type: string
   issues:
     types: [opened, assigned, labeled, closed]
-  issue_comment:
-    types: [created]
 
 jobs:
   notify-issue-task:
@@ -23,6 +35,7 @@ jobs:
           ISSUE_URL: ${{ github.event.issue.html_url }}
           ASSIGNEE: ${{ github.event.issue.assignee.login }}
           ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
+          LABEL_NAME: ${{ github.event.label.name }}
         run: |
           set -euo pipefail
           SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
@@ -212,6 +225,25 @@ jobs:
             fi
           fi
 
+          if [ "$ACTION" = "labeled" ]; then
+            case "${LABEL_NAME:-}" in
+              action:decision_required|action:acceptance_ready|action:blocker|action:p0_failure|decision-request)
+                ;;
+              *)
+                echo "Label notification skipped: ${LABEL_NAME:-unknown} is not an action label"
+                {
+                  echo "## Feishu label notification skipped"
+                  echo
+                  echo "Reason: label is not an action notification label."
+                  echo "Label: ${LABEL_NAME:-unknown}"
+                  echo "Impact: group notification suppressed by policy."
+                  echo "Merge gate impact: none."
+                } >> "${SUMMARY_FILE}"
+                exit 0
+                ;;
+            esac
+          fi
+
           WEBHOOK="${ENGINEERING_WEBHOOK:-}"
           CARD_TITLE="[hl-dispatch][工程通知] ${TITLE}"
           if [ -z "$WEBHOOK" ]; then
@@ -277,7 +309,7 @@ jobs:
             "${issue_preview}"
 
   notify-decision-request:
-    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'decision-request'
+    if: github.event_name == 'issues' && github.event.action == 'labeled' && (github.event.label.name == 'decision-request' || github.event.label.name == 'action:decision_required')
     runs-on: ubuntu-latest
     steps:
       - name: Decision Request to Command Channel
@@ -393,17 +425,17 @@ jobs:
             "${ISSUE_URL}" \
             "${decision_preview}"
 
-  notify-comment:
-    if: github.event_name == 'issue_comment' && github.event.action == 'created'
+  notify-manual:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - name: Comment Notification
+      - name: Manual Notification
         env:
           ENGINEERING_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_ENGINEERING }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
-          COMMENTER: ${{ github.event.comment.user.login }}
-          COMMENT_URL: ${{ github.event.comment.html_url }}
+          NOTIFY_TITLE: ${{ github.event.inputs.notify_title }}
+          NOTIFY_URL: ${{ github.event.inputs.notify_url }}
+          NOTIFY_BODY: ${{ github.event.inputs.notify_body }}
+          ACTOR: ${{ github.actor }}
         run: |
           set -euo pipefail
           SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-/dev/null}"
@@ -452,7 +484,7 @@ jobs:
           }
 
           WEBHOOK="${ENGINEERING_WEBHOOK:-}"
-          CARD_TITLE="[hl-dispatch][工程通知] Issue 新评论"
+          CARD_TITLE="[hl-dispatch][工程通知] ${NOTIFY_TITLE}"
           if [ -z "$WEBHOOK" ]; then
             echo "::warning::Feishu webhook is empty; notification skipped"
             {
@@ -467,16 +499,16 @@ jobs:
 
           payload="$(jq -n \
             --arg title "${CARD_TITLE}" \
-            --arg line1 "**${ISSUE_TITLE}**" \
-            --arg line2 "评论者: ${COMMENTER}" \
-            --arg url "${COMMENT_URL}" \
+            --arg line1 "${NOTIFY_BODY}" \
+            --arg line2 "触发者: ${ACTOR}" \
+            --arg url "${NOTIFY_URL}" \
             '{
               msg_type: "interactive",
               card: {
                 header: {title: {tag: "plain_text", content: $title}, template: "blue"},
                 elements: [
                   {tag: "div", text: {tag: "lark_md", content: ($line1 + "\n" + $line2)}},
-                  {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看评论"}, url: $url, type: "primary"}]}
+                  {tag: "action", actions: [{tag: "button", text: {tag: "plain_text", content: "查看链接"}, url: $url, type: "primary"}]}
                 ]
               }
             }')"
@@ -503,12 +535,12 @@ jobs:
             } >> "${SUMMARY_FILE}"
             exit 0
           fi
-          comment_preview="$(printf '%s\n%s\n评论者: %s\n%s' "${CARD_TITLE}" "${ISSUE_TITLE}" "${COMMENTER}" "${COMMENT_URL}")"
+          manual_preview="$(printf '%s\n%s\n触发者: %s\n%s' "${CARD_TITLE}" "${NOTIFY_BODY}" "${ACTOR}" "${NOTIFY_URL}")"
           write_delivery_ledger \
             "engineering_channel" \
             "AI native工程通知" \
-            "${COMMENTER}" \
+            "${ACTOR}" \
             "sent" \
-            "issue_comment_v1" \
-            "${COMMENT_URL}" \
-            "${comment_preview}"
+            "manual_dispatch_v1" \
+            "${NOTIFY_URL}" \
+            "${manual_preview}"

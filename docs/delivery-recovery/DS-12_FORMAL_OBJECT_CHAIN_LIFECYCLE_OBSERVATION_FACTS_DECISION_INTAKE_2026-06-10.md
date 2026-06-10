@@ -118,7 +118,7 @@ decision_request:
 
 | Area | Impact |
 | --- | --- |
-| contracts | No contract file change in DS-12A. The `hl-contracts` DS-12 worktree remains unused for writes because no exact `facts/facts-catalog.md` subset authorization was found. |
+| contracts | No contract file change in DS-12A. The `hl-contracts` DS-12 worktree remains clean and was not used for writes because no exact `facts/facts-catalog.md` subset authorization was found. |
 | platform | No platform change. No backend endpoint, CLI, persistence path, provider path, production config, test fixture, or real data path is authorized. |
 | dispatch | This decision intake / acceptance readback and README pointer only. |
 | rollback | Revert this dispatch PR. No facts catalog, contracts registry, runtime, provider, payment, asset, fulfillment, production, secret, deployment, workflow, or real user state exists to unwind. |

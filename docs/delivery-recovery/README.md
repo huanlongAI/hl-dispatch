@@ -28,6 +28,7 @@ Use Delivery Slice for planned delivery. Use Risk-Retirement Slice for Red Path 
 ## Recovery Artifacts
 
 - `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_2026-06-08.md`: Formal object chain evidence snapshot for Sales, CustomerAsset, ServiceOrder, and PaymentCheckout.
+- `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_REFRESH_2026-06-10.md`: Current DS-3 post-merge readback. SalesOrder, CustomerAsset, ServiceOrder, and PaymentCheckout are merged only as `hl-contracts` candidate-only draft materials; DS-2 Tenant Entitlement is completed only as a check-only pilot. This does not authorize active contract, HPRD, design.md, runtime, real payment provider, real billing, real refund, real settlement, or production.
 
 ## Public Updates
 

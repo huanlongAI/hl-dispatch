@@ -16,24 +16,19 @@ on:
         required: true
         type: string
   issues:
-    types: [opened, assigned, labeled, closed]
+    types: [labeled]
 
 jobs:
   notify-issue-task:
-    if: github.event_name == 'issues'
+    if: github.event_name == 'issues' && github.event.action == 'labeled'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Issue to Engineering Channel
+      - name: Issue Action Label to Engineering Channel
         env:
           ENGINEERING_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_ENGINEERING }}
-          FEISHU_BOT_APP_ID: ${{ secrets.FEISHU_BOT_APP_ID }}
-          FEISHU_BOT_APP_SECRET: ${{ secrets.FEISHU_BOT_APP_SECRET }}
           ACTION: ${{ github.event.action }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
-          ASSIGNEE: ${{ github.event.issue.assignee.login }}
           ISSUE_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
           LABEL_NAME: ${{ github.event.label.name }}
         run: |
@@ -83,151 +78,19 @@ jobs:
             } >> "${SUMMARY_FILE}"
           }
 
-          if [ "$ACTION" = "opened" ]; then
-            TITLE="新 Issue"; TEMPLATE="blue"
-          elif [ "$ACTION" = "assigned" ]; then
-            TITLE="Issue 已指派"; TEMPLATE="orange"
-          elif [ "$ACTION" = "closed" ]; then
-            TITLE="Issue 已关闭"; TEMPLATE="green"
-          else
-            TITLE="Issue ${ACTION}"; TEMPLATE="blue"
-          fi
-
-          [ -z "$ASSIGNEE" ] && ASSIGNEE="未指派"
-
-          if [ "$ACTION" = "assigned" ]; then
-            echo "Personal progress notification is DM-only; group webhook suppressed"
-
-            if [ "$ASSIGNEE" = "未指派" ]; then
-              echo "::warning::Assigned issue has no assignee; group webhook suppressed"
-              {
-                echo "## Feishu personal progress notification skipped"
-                echo
-                echo "Reason: assigned issue has no assignee."
-                echo "Impact: group notification suppressed by policy."
-                echo "Merge gate impact: none."
-              } >> "${SUMMARY_FILE}"
-              exit 0
-            fi
-
-            if [ -z "${FEISHU_BOT_APP_ID:-}" ] || [ -z "${FEISHU_BOT_APP_SECRET:-}" ]; then
-              echo "::warning::Direct message bot credentials missing; group webhook suppressed"
-              {
-                echo "## Feishu personal progress notification skipped"
-                echo
-                echo "Reason: bot credentials are missing."
-                echo "Impact: group notification suppressed by policy."
-                echo "Merge gate impact: none."
-              } >> "${SUMMARY_FILE}"
-              exit 0
-            fi
-
-            DIRECT_OPEN_ID="$(
-              ruby -ryaml -e '
-                require "date"
-                assignee = ENV.fetch("ASSIGNEE", "").downcase
-                team =
-                  begin
-                    YAML.load_file("TEAM.yml", permitted_classes: [Date])
-                  rescue ArgumentError
-                    YAML.load_file("TEAM.yml")
-                  end
-                entries = []
-                team.fetch("roles").each do |role_id, role|
-                  next unless role.is_a?(Hash)
-                  entries << role.merge("role" => role_id)
-                  Array(role["members"]).each do |member|
-                    entries << member.merge("role" => role_id) if member.is_a?(Hash)
-                  end
-                end
-                entry = entries.find { |item| item["github"].to_s.downcase == assignee }
-                status = entry ? entry["status"].to_s : ""
-                exit 0 if entry.nil? || status.match?(/vacant|pending|departed|inactive|离职|清理|不作为|待确认/i)
-                lark = entry["lark"]
-                puts lark["open_id"] if lark.is_a?(Hash) && lark["open_id"].to_s.start_with?("ou_")
-              '
-            )"
-
-            if [ -z "${DIRECT_OPEN_ID:-}" ]; then
-              echo "::warning::Direct message recipient missing open_id; group webhook suppressed"
-              {
-                echo "## Feishu personal progress notification skipped"
-                echo
-                echo "Reason: assignee has no active Feishu open_id mapping."
-                echo "Impact: group notification suppressed by policy."
-                echo "Merge gate impact: none."
-              } >> "${SUMMARY_FILE}"
-              exit 0
-            fi
-
-            token_payload="$(jq -n \
-              --arg app_id "${FEISHU_BOT_APP_ID}" \
-              --arg app_secret "${FEISHU_BOT_APP_SECRET}" \
-              '{app_id: $app_id, app_secret: $app_secret}')"
-            if ! token_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal" -H "Content-Type: application/json" -d "${token_payload}" 2>&1)"; then
-              echo "::warning::Direct message token request failed; group webhook suppressed"
-              {
-                echo "## Feishu personal progress notification skipped"
-                echo
-                echo "Reason: bot token request failed."
-                echo "Impact: group notification suppressed by policy."
-                echo "Merge gate impact: none."
-              } >> "${SUMMARY_FILE}"
-              exit 0
-            elif ! tenant_token="$(echo "${token_response}" | jq -er '.tenant_access_token' 2>/dev/null)"; then
-              echo "::warning::Direct message token parse failed; group webhook suppressed"
-              {
-                echo "## Feishu personal progress notification skipped"
-                echo
-                echo "Reason: bot token response did not include tenant_access_token."
-                echo "Impact: group notification suppressed by policy."
-                echo "Merge gate impact: none."
-              } >> "${SUMMARY_FILE}"
-              exit 0
-            else
-              message_text="$(printf '[hl-dispatch] Issue 已指派给你\n%s\n标签: %s\n%s' "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ISSUE_URL}")"
-              dm_payload="$(jq -n \
-                --arg receive_id "${DIRECT_OPEN_ID}" \
-                --arg text "${message_text}" \
-                '{receive_id: $receive_id, msg_type: "text", content: ({text: $text} | tojson)}')"
-              if ! dm_response="$(curl -sS --fail-with-body -X POST "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id" -H "Authorization: Bearer ${tenant_token}" -H "Content-Type: application/json" -d "${dm_payload}" 2>&1)"; then
-                echo "::warning::Direct message provider request failed; group webhook suppressed"
-                {
-                  echo "## Feishu personal progress notification failed open"
-                  echo
-                  echo "Reason: provider request failed."
-                  echo "Impact: group notification suppressed by policy."
-                  echo "Merge gate impact: none."
-                } >> "${SUMMARY_FILE}"
-                exit 0
-              elif echo "${dm_response}" | jq -e '.code == 0' >/dev/null; then
-                echo "Direct message sent; skipping group webhook"
-                write_delivery_ledger \
-                  "direct_message" \
-                  "node-c 技术合伙人" \
-                  "${ASSIGNEE}" \
-                  "sent" \
-                  "assigned_issue_v1" \
-                  "${ISSUE_URL}" \
-                  "${message_text}"
-                exit 0
-              else
-                echo "::warning::Direct message provider returned non-success response; group webhook suppressed"
-                {
-                  echo "## Feishu personal progress notification provider warning"
-                  echo
-                  echo "Reason: provider returned non-success response."
-                  echo "Impact: group notification suppressed by policy."
-                  echo "Merge gate impact: none."
-                } >> "${SUMMARY_FILE}"
-                exit 0
-              fi
-            fi
-          fi
-
           if [ "$ACTION" = "labeled" ]; then
             case "${LABEL_NAME:-}" in
-              action:decision_required|action:acceptance_ready|action:blocker|action:p0_failure|decision-request)
+              action:decision_required|decision-request)
+                TITLE="Decision required"
+                TEMPLATE="red"
+                ;;
+              action:acceptance_ready)
+                TITLE="Acceptance ready"
+                TEMPLATE="green"
+                ;;
+              action:blocker|action:p0_failure)
+                TITLE="Action blocker"
+                TEMPLATE="red"
                 ;;
               *)
                 echo "Label notification skipped: ${LABEL_NAME:-unknown} is not an action label"
@@ -242,6 +105,17 @@ jobs:
                 exit 0
                 ;;
             esac
+          else
+            echo "Issue notification skipped: ${ACTION:-unknown} is not an action label event"
+            {
+              echo "## Feishu issue notification skipped"
+              echo
+              echo "Reason: issue event is not an explicit action label."
+              echo "Action: ${ACTION:-unknown}"
+              echo "Impact: group notification suppressed by policy."
+              echo "Merge gate impact: none."
+            } >> "${SUMMARY_FILE}"
+            exit 0
           fi
 
           WEBHOOK="${ENGINEERING_WEBHOOK:-}"
@@ -263,7 +137,7 @@ jobs:
             --arg template "${TEMPLATE}" \
             --arg line1 "**${ISSUE_TITLE}**" \
             --arg line2 "标签: ${ISSUE_LABELS}" \
-            --arg line3 "指派: ${ASSIGNEE}" \
+            --arg line3 "Action label: ${LABEL_NAME}" \
             --arg url "${ISSUE_URL}" \
             '{
               msg_type: "interactive",
@@ -298,13 +172,13 @@ jobs:
             } >> "${SUMMARY_FILE}"
             exit 0
           fi
-          issue_preview="$(printf '%s\n%s\n标签: %s\n指派: %s\n%s' "${CARD_TITLE}" "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${ASSIGNEE}" "${ISSUE_URL}")"
+          issue_preview="$(printf '%s\n%s\n标签: %s\nAction label: %s\n%s' "${CARD_TITLE}" "${ISSUE_TITLE}" "${ISSUE_LABELS}" "${LABEL_NAME}" "${ISSUE_URL}")"
           write_delivery_ledger \
             "engineering_channel" \
             "AI native工程通知" \
             "n/a" \
             "sent" \
-            "issue_mainline_v1" \
+            "action_label_v1" \
             "${ISSUE_URL}" \
             "${issue_preview}"
 

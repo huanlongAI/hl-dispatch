@@ -19,6 +19,7 @@ end
 workflow_path = File.expand_path("../.github/workflows/feishu-notify.yml", __dir__)
 workflow_source = File.read(workflow_path)
 workflow = load_yaml(workflow_path)
+triggers = workflow.fetch("on", workflow.fetch(true, {}))
 jobs = workflow.fetch("jobs")
 
 notification_steps = []
@@ -46,6 +47,19 @@ if workflow_source.include?("notify-comment") ||
    workflow_source.include?("Issue 新评论") ||
    workflow_source.include?("issue_comment_v1")
   failures << "feishu-notify workflow must not broadcast ordinary issue comments"
+end
+
+issues_trigger = triggers.fetch("issues", {})
+issue_types = Array(issues_trigger.fetch("types", []))
+unless issue_types == ["labeled"]
+  failures << "feishu-notify workflow must only subscribe to issues.labeled for explicit action notifications"
+end
+
+if workflow_source.include?("issue_mainline_v1") ||
+   workflow_source.include?("assigned_issue_v1") ||
+   workflow_source.include?("Personal progress notification") ||
+   workflow_source.include?("Direct message sent; skipping group webhook")
+  failures << "feishu-notify workflow must remove ordinary issue lifecycle and assignment notification paths"
 end
 
 notification_steps.each do |job_name, step_name, run, env|
@@ -92,35 +106,9 @@ notification_steps.each do |job_name, step_name, run, env|
   end
 
   if job_name == "notify-issue-task"
-    failures << "#{label}: mainline issue notifications must use engineering webhook" unless env["ENGINEERING_WEBHOOK"].to_s.include?("FEISHU_WEBHOOK_ENGINEERING") && run.include?("ENGINEERING_WEBHOOK")
-    failures << "#{label}: mainline issue notifications must not use task webhook" if env.key?("TASK_WEBHOOK") || env.values.any? { |value| value.to_s.include?("FEISHU_WEBHOOK_TASK") } || run.include?("TASK_WEBHOOK") || run.include?("FEISHU_WEBHOOK_TASK")
+    failures << "#{label}: action label notifications must use engineering webhook" unless env["ENGINEERING_WEBHOOK"].to_s.include?("FEISHU_WEBHOOK_ENGINEERING") && run.include?("ENGINEERING_WEBHOOK")
+    failures << "#{label}: action label notifications must not use task webhook" if env.key?("TASK_WEBHOOK") || env.values.any? { |value| value.to_s.include?("FEISHU_WEBHOOK_TASK") } || run.include?("TASK_WEBHOOK") || run.include?("FEISHU_WEBHOOK_TASK")
     failures << "#{label}: engineering cards must identify the engineering channel" unless run.include?("[hl-dispatch][工程通知]")
-    failures << "#{label}: assigned issues must prefer direct message routing" unless run.include?('ACTION" = "assigned"') && run.include?("DIRECT_OPEN_ID")
-    failures << "#{label}: direct messages must use bot app credentials" unless run.include?("FEISHU_BOT_APP_ID") && run.include?("FEISHU_BOT_APP_SECRET")
-    failures << "#{label}: direct messages must target open_id" unless run.include?("receive_id_type=open_id")
-    failures << "#{label}: successful direct message must skip group webhook" unless run.include?("Direct message sent; skipping group webhook")
-    failures << "#{label}: personal progress must suppress group fallback" unless run.include?("Personal progress notification is DM-only; group webhook suppressed")
-    failures << "#{label}: assigned direct-message ledger must include recipient_github" unless run.include?("recipient_github:") && run.include?('"${ASSIGNEE}"')
-    failures << "#{label}: assigned direct-message ledger must use assigned_issue_v1 template" unless run.include?("assigned_issue_v1")
-    failures << "#{label}: issue mainline ledger must use issue_mainline_v1 template" unless run.include?("issue_mainline_v1")
-    failures << "#{label}: TEAM.yml loader must permit Date on GitHub runner Ruby" unless run.include?('require "date"') && run.include?("permitted_classes: [Date]")
-    unless run.include?('if [ "$ACTION" = "assigned" ]; then') &&
-           run.include?("Direct message bot credentials missing; group webhook suppressed")
-      failures << "#{label}: missing direct-message credentials must skip group notification"
-    end
-    unless run.include?('if ! token_response="$(curl') &&
-           run.include?("Direct message token request failed; group webhook suppressed")
-      failures << "#{label}: direct message token request failure must skip group notification"
-    end
-    unless run.include?('if ! tenant_token="$(echo "${token_response}" | jq -er') &&
-           run.include?("Direct message token parse failed; group webhook suppressed")
-      failures << "#{label}: direct message token parse failure must skip group notification"
-    end
-    unless run.include?('if ! dm_response="$(curl') &&
-           run.include?("Direct message provider request failed; group webhook suppressed")
-      failures << "#{label}: direct message provider request failure must skip group notification"
-    end
-    failures << "#{label}: direct message non-success response must skip group notification" unless run.include?("Direct message provider returned non-success response; group webhook suppressed")
 
     failures << "#{label}: labeled issue notifications must expose label name" unless env["LABEL_NAME"].to_s.include?("github.event.label.name")
     unless run.include?('if [ "$ACTION" = "labeled" ]; then') &&
@@ -131,6 +119,7 @@ notification_steps.each do |job_name, step_name, run, env|
            run.include?("Label notification skipped")
       failures << "#{label}: labeled issue notifications must be limited to explicit action labels"
     end
+    failures << "#{label}: action label notifications must use action_label_v1 template" unless run.include?("action_label_v1")
   end
 
   if job_name == "notify-comment"

@@ -16,6 +16,8 @@ DS-3 records the current GitHub evidence for the formal object chain:
 
 This refresh supersedes the 2026-06-08 readback for current status only. The older snapshot remains historical evidence. This file is a docs-only evidence resolver artifact, not a runtime authorization, active contract authorization, production authorization, payment provider authorization, Feishu projection, or task ledger.
 
+Post-DS-4 follow-up: `DS-4_FORMAL_OBJECT_CHAIN_READ_PATH_2026-06-10.md` records the subsequent check-only read path completion through `hl-contracts#113` and `hl-platform#131`. DS-3 remains the candidate snapshot; DS-4 is the runnable read-path evidence.
+
 ## Task Snapshot
 
 ```yaml

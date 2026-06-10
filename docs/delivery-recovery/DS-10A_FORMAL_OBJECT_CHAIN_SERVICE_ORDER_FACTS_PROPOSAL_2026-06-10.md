@@ -203,7 +203,7 @@ acceptance_report:
   upstream_contracts_pr: https://github.com/huanlongAI/hl-contracts/pull/116
   upstream_readback_pr: https://github.com/huanlongAI/hl-dispatch/pull/219
   contracts_pr: https://github.com/huanlongAI/hl-contracts/pull/117
-  dispatch_pr: pending
+  dispatch_pr: https://github.com/huanlongAI/hl-dispatch/pull/221
   accepted_scope:
     - contracts_docs_only_service_order_lifecycle_facts_proposal
     - lifecycle_observation_facts_proposal

@@ -36,7 +36,8 @@ Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readb
 
 ## Recovery Artifacts
 
-- `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
+- `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, bounded engineering implementation, PM interaction, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
+- `../../deliverables/tasks/PM-ZHUYANG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 朱阳 Founder Spec Lane 语义支持任务书。PM 负责客户 / 支付 / 资产语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_2026-06-08.md`: Formal object chain evidence snapshot for Sales, CustomerAsset, ServiceOrder, and PaymentCheckout.
 - `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_REFRESH_2026-06-10.md`: Current DS-3 post-merge readback. SalesOrder, CustomerAsset, ServiceOrder, and PaymentCheckout are merged only as `hl-contracts` candidate-only draft materials; DS-2 Tenant Entitlement is completed only as a check-only pilot. This does not authorize active contract, HPRD, design.md, runtime, real payment provider, real billing, real refund, real settlement, or production.
 - `DS-4_FORMAL_OBJECT_CHAIN_READ_PATH_2026-06-10.md`: Current DS-4 read path evidence and acceptance report. Candidate A was selected and completed as a sandbox / embedded CLI evidence resolver via `hl-contracts#113` and `hl-platform#131`. This does not authorize active contract, HPRD, design.md, formal runtime, real payment provider, real billing, real refund, real settlement, customer asset deduction, service fulfillment, business object creation, workflow change, or production.

@@ -125,7 +125,21 @@ Forbidden Feishu interpretations:
 
 No GitHub SSOT action item means no Feishu notification.
 
-## 8. Current Huanlong Recovery Boundary
+## 8. PM Interaction
+
+Founder Spec Lane does not remove PM ownership of business semantics. It changes when PM can block engineering start.
+
+When a Founder-signed taskbook already provides a bounded implementation baseline:
+
+- PM Draft, HPRD draft, PM Feishu approval, or PM workbench status must not block the assignee from starting the bounded engineering slice.
+- PM may be named as semantic reviewer, gap owner, or follow-up owner, but PM is not the engineering start authority.
+- If the assignee finds business semantic ambiguity, the assignee must submit a PR note or `gap_report`; PM responds in GitHub with the smallest business semantic answer that can unblock the decision.
+- PM response can clarify business semantics but cannot expand scope, authorize production, authorize active contracts, or authorize registry writes.
+- Founder / Gate decides whether PM input changes the taskbook version, becomes a follow-up, or remains out of scope.
+
+When no Founder-signed taskbook exists, or when the work still requires open-ended product negotiation, use the normal PM Cap-Spec / HPRD lane instead of Founder Spec Lane.
+
+## 9. Current Huanlong Recovery Boundary
 
 As of 2026-06-11:
 

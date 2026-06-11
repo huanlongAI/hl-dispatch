@@ -343,6 +343,25 @@ Founder Taskbook
 - 任务书 `v1.0` 冻结 scope；`v1.1+` 只能通过编辑文件澄清。新范围和新验收标准必须走 follow-up，不能只写在评论里。
 - 飞书只能投影 GitHub SSOT action，不承载授权、验收、owner confirmation 或完成事实。
 
+### 13.2 PM Workflow Adjustment Under Founder Spec Lane
+
+PM 流程在恢复期采用双轨：
+
+1. 常规 PM Cap-Spec / HPRD lane
+   - 适用于新能力、开放语义、多方业务协商、尚无 Founder 完整任务书的能力包。
+   - PM 继续负责 Cap-Spec、HPRD 业务理解确认、semantic questions 和 PM acceptance。
+   - PM Draft、HPRD 草稿、PM 飞书认可仍不授权 engineering start、runtime、active contract、OpenAPI、facts、events、reasoncodes 或 registry。
+
+2. Founder Spec Lane PM support lane
+   - 适用于 Founder 已签字的 bounded engineering taskbook。
+   - PM 不作为工程师 24h plan、PR 或 `gap_report` 的开工前置阻塞。
+   - PM 只在 taskbook 指名或工程 PR / `gap_report` 暴露 semantic gap 时介入。
+   - PM 输出必须落 GitHub，只能提供业务语义口径、gap classification 或 follow-up 建议。
+   - PM 输出不能扩大 scope，不能授权 production、active contract、真实用户数据、provider、支付、计费、退款、结算、secrets、deploy 或 release。
+   - Founder / Gate 决定 PM 输入是否进入 taskbook `v1.1+`、follow-up 或 reject。
+
+禁止把两条轨混用成“PM / HPRD 前置阻断 Founder-signed engineering taskbook”。如果 Founder Spec Lane taskbook 已签字且 scope 明确，工程师应按 taskbook 开工；PM 语义缺口通过 PR / `gap_report` 回到 GitHub 裁决链。
+
 ## 14. Risk Path / Governance Budget
 
 Green:

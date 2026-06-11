@@ -2,7 +2,7 @@
 
 日期：2026-06-11
 
-状态：READY_FOR_FOUNDER_DISPATCH
+状态：DISPATCH_READY
 
 Owner：崔田恬 / `cuitiantian0704`
 
@@ -18,6 +18,7 @@ GitHub SSOT：
 - CustomerProfile owner confirmation: https://github.com/huanlongAI/hl-dispatch/issues/109
 - CustomerProfile taskbook source: `deliverables/tasks/PM-CUITIANTIAN-CUSTOMER-PROFILE-CAPABILITY-TASKBOOK-2026-05-15-v0.1.md`
 - Founder Spec Lane rule source: `docs/delivery-recovery/FOUNDER_SPEC_LANE_v0.1.md`
+- Founder dispatch confirmation: 2026-06-11 当前 GitHub 发布线程确认批准
 
 ## 1. 任务定位
 

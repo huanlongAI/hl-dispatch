@@ -2,7 +2,7 @@
 
 日期：2026-06-11
 
-状态：READY_FOR_FOUNDER_DISPATCH
+状态：DISPATCH_READY
 
 Owner：邹骢 / `zoucong121`
 
@@ -18,6 +18,7 @@ GitHub SSOT：
 - PaymentCheckout PM issue: https://github.com/huanlongAI/hl-dispatch/issues/198
 - PaymentCheckout candidate baseline: https://github.com/huanlongAI/hl-contracts/pull/112
 - Founder Spec Lane rule source: `docs/delivery-recovery/FOUNDER_SPEC_LANE_v0.1.md`
+- Founder dispatch confirmation: 2026-06-11 当前 GitHub 发布线程确认批准
 
 ## 1. 任务定位
 

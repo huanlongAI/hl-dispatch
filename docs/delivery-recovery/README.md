@@ -10,7 +10,7 @@ Mission Package -> Delivery Slice / Risk-Retirement Slice -> Work Unit -> Contex
 
 Use Delivery Slice for planned delivery. Use Risk-Retirement Slice for Red Path risk removal, architecture spikes, provider blockers, secret blockers, or other unblock work.
 
-Founder Spec Lane is an approved recovery-period lane for Founder-supplied bounded taskbooks. It is not a permanent process, not a Founder privilege, and not production runtime authorization. It exists to move bounded recovery work from ledger / Draft / HPRD / Gate / Feishu / micro-decision drift back into taskbook -> bounded HK engineering implementation -> PR or gap_report -> dual AI gates -> human cross audit -> Founder acceptance.
+Founder Spec Lane is an approved recovery-period lane for Founder-supplied bounded taskbooks. It is not a permanent process, not a Founder privilege, and not production runtime authorization. It exists to move bounded recovery work from ledger / Draft / HPRD / Gate / Feishu / micro-decision drift back into taskbook -> context engineering preflight -> bounded HK engineering implementation -> PR or gap_report -> human-readable gates -> dual AI gates -> human cross audit -> Founder acceptance.
 
 ## Source Of Truth
 
@@ -23,8 +23,8 @@ Founder Spec Lane is an approved recovery-period lane for Founder-supplied bound
 
 - `DELIVERY_RECOVERY_IMPLEMENTATION_CONTRACT_v0.1.md`: canonical implementation contract.
 - `DELIVERY_RECOVERY_MODE_v0.1.md`: recovery mode scope, gates, flow, and exceptions.
-- `FOUNDER_SPEC_LANE_v0.1.md`: Founder taskbook lane for bounded recovery-period delivery closeout.
-- `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract.
+- `FOUNDER_SPEC_LANE_v0.1.md`: Founder taskbook lane for bounded recovery-period delivery closeout, including context engineering and human-readable output requirements.
+- `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract, including black-box governance phrase rejection.
 - `TASK_SNAPSHOT_v1.md`: `task-snapshot:v1` current-card contract.
 - `RISK_PATH_GREEN_YELLOW_RED.md`: Green / Yellow / Red risk path and governance budget.
 
@@ -36,7 +36,7 @@ Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readb
 
 ## Recovery Artifacts
 
-- `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, bounded engineering implementation, PM interaction, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
+- `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, context engineering preflight, human-readable output, bounded engineering implementation, PM interaction, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
 - `../../deliverables/tasks/PM-ZHUYANG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 朱阳 Founder Spec Lane 语义支持任务书。PM 负责客户 / 支付 / 资产语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `../../deliverables/tasks/PM-ZOUCONG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 邹骢 Founder Spec Lane 语义支持任务书。PM 负责 booking / service / payment 语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `../../deliverables/tasks/PM-CUITIANTIAN-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 崔田恬 Founder Spec Lane 语义支持任务书。PM 负责 sales / customer profile 语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。

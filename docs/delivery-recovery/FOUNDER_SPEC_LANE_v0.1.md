@@ -54,12 +54,14 @@ Every Founder Spec Lane taskbook must include:
 - assignee
 - human_cross_auditor
 - GitHub SSOT links
+- context engineering preflight
 - objective
 - current confirmed facts with evidence
 - scope in
 - scope out
 - authorization boundary
 - expected output: PR, `gap_report`, or both
+- human-readable output standard
 - required evidence
 - Gate A checklist
 - Gate B checklist
@@ -80,7 +82,57 @@ Within 24h of dispatch, the engineer must provide exactly one of:
 
 `gap_report` is an acceptable delivery outcome. It is not a failed task when the report prevents unauthorized runtime work, false readiness, or evidence fabrication.
 
-## 5. Dual AI Gates
+## 5. Context Engineering
+
+Founder Spec Lane taskbooks must prevent AI or engineers from guessing context from long issue history, chat-only memory, Feishu projection, or jargon-heavy summaries.
+
+When a Context Atlas entry exists, the taskbook may reference it as a read-only navigation aid:
+
+- Context Atlas answers what to read and how to report read scope.
+- It is not source truth, authorization, acceptance evidence, runtime permission, or production approval.
+- Draft Context Views remain draft. They must not be promoted to active through a Founder Spec Lane taskbook.
+- If no dedicated task route exists, the taskbook must state the temporary route and the gap.
+
+Every PR, implementation plan, `gap_report`, or acceptance pack should include a short context usage summary:
+
+```yaml
+context_usage_summary:
+  context_id: "<context id or none>"
+  context_route: "<DR-* route or none>"
+  files_read:
+    - "<GitHub URL or repo-relative file>"
+  missing_or_stale_context:
+    - "<none or concrete gap>"
+  context_not_authorization: true
+```
+
+Missing context is not a reason to guess. It is a reason to submit `gap_report`.
+
+## 6. Human-Readable Gate
+
+Founder Spec Lane does not use a 30-second hard gate, but it does require human-readable task and acceptance output.
+
+Every taskbook, PR summary, `gap_report`, Gate report, and acceptance pack must make these items clear to a human reader:
+
+- one-sentence conclusion;
+- evidence;
+- current state;
+- exactly one next action and owner;
+- unresolved uncertainty;
+- plain-language explanation for task-specific terms.
+
+Black-box governance phrases are not acceptable delivery output, including:
+
+- "继续推进整体治理"
+- "需要进一步确认"
+- "当前上下文显示"
+- "可能已经处理过"
+- "runtime 那个"
+- "HPRD 已确认但无证据"
+
+If the work cannot be explained in this shape, submit `gap_report` instead of a PR that only contains jargon.
+
+## 7. Dual AI Gates
 
 Gate A and Gate B must be anti-correlated:
 
@@ -92,7 +144,7 @@ Gate A and Gate B must be anti-correlated:
 
 CI green, Draft PR green, PM Draft, HPRD draft, Feishu done, or Gate readback is evidence only. None of them is production authorization.
 
-## 6. Human Cross Audit
+## 8. Human Cross Audit
 
 Human Cross Audit has veto power.
 
@@ -100,12 +152,13 @@ Minimum audit actions:
 
 - independently read at least three core files or evidence entries;
 - run or verify at least one relevant command, check, demo, or evidence artifact;
+- check at least one Founder-readable summary, context usage summary, or `gap_report` for human readability;
 - write at least one observation not already mentioned by the AI gates;
 - return exactly one verdict: `PASS`, `CONDITIONAL_PASS`, or `FAIL`.
 
 If Human Cross Audit returns `FAIL`, Founder Acceptance is blocked unless Founder / Gate explicitly re-scopes the taskbook.
 
-## 7. Feishu Projection
+## 9. Feishu Projection
 
 Feishu is projection only.
 
@@ -125,7 +178,7 @@ Forbidden Feishu interpretations:
 
 No GitHub SSOT action item means no Feishu notification.
 
-## 8. PM Interaction
+## 10. PM Interaction
 
 Founder Spec Lane does not remove PM ownership of business semantics. It changes when PM can block engineering start.
 
@@ -147,7 +200,7 @@ For the current HK recovery taskbook, PM semantic support is bounded by named ta
 
 These PM support taskbooks do not create standing action items. A PM acts only when a GitHub PR, `gap_report`, Gate, or Founder / Gate comment asks a bounded semantic question.
 
-## 9. Current Huanlong Recovery Boundary
+## 11. Current Huanlong Recovery Boundary
 
 As of 2026-06-11:
 

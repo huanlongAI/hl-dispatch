@@ -197,6 +197,19 @@ Context Pack 包含：
 
 缺任何一项，AI 只能输出 gap_report。
 
+Context Atlas 可以作为 Context Pack 的只读导航输入，用于说明应先读哪些 Context View、File Map、Deep Read Trigger 和源文件。它不能替代 Context Pack，也不能替代 GitHub / repo file / `hl-contracts` 真源。
+
+使用 Context Atlas 时必须记录最小 context usage summary：
+
+- context_id / route
+- files_read
+- missing_or_stale_context
+- full_repo_scan 是否发生
+- source truth claims 的证据来源
+- `context_not_authorization: true`
+
+若 Context Atlas 仍缺少当前任务路由，必须写明临时 route 和缺口；不得把 draft Context View、Gate Decision 或 Context Usage Summary 解释为执行授权、验收证明或生产授权。
+
 ## 10. AI Output Contract
 
 公共 GitHub 回填只允许四类：

@@ -302,6 +302,74 @@ Task Snapshot 是当前口径，不是人肉签字。
 - close reason
 - next prevention if applicable
 
+## 13.1 Founder Spec Lane / 创始人规格直达通道
+
+Founder Spec Lane 是 Delivery Recovery Mode v0.1 恢复期内的正式通道之一，不是 Founder 特权通道，也不是永久唯一流程。
+
+适用条件：
+- Founder 提供完整任务书，或明确批准基于 GitHub 当前事实起草的任务书。
+- 目标是受控 HK 工程实现、closeout、audit、fill-in、test、acceptance packaging 或受控交付恢复步骤。
+- 契约方向、禁止事项、验收方式足够清楚，一个 DRI 可以执行。
+- 输出可以是 PR、确定性测试 / demo evidence，或 `gap_report`。
+
+禁止用于：
+- 开放式 discovery；
+- 多方语义谈判；
+- production runtime 实现或生产发布；
+- 真实用户数据；
+- 真实支付、计费、退款、结算或 provider 集成；
+- secrets / secret-store 变更；
+- 没有测试、demo 或证据入口的任务。
+
+固定流程：
+
+```text
+Founder Taskbook
+-> Engineer 24h Implementation Plan
+-> PR or gap_report
+-> Gate A: Dahuizi contract / business / redline review
+-> Gate B: Xiaofeifei code / test / security / regression review
+-> Human Cross Audit
+-> Founder Acceptance
+-> merge / conditional pass / follow-up / reject
+```
+
+硬规则：
+- `gap_report` 是合格交付形态，不是失败。
+- Founder 任务书可以授权受控 HK 工程实现，但不能被解释为生产 runtime、active contract、真实数据、真实 provider、真实支付 / 计费 / 退款 / 结算、secrets、部署或发布授权。
+- Gate A / Gate B 必须反相关：职责不同、检查独立、分别给出 P0 / P1 / P2。
+- 任一 P0 阻断 Founder Acceptance，除非 Founder / Gate 重新裁决 scope。
+- Human Cross Audit 有 veto，最少独立读取 3 个核心文件或证据、运行或验证 1 个命令 / artifact、写出至少 1 条 AI 未提及观察。
+- 任务书 `v1.0` 冻结 scope；`v1.1+` 只能通过编辑文件澄清。新范围和新验收标准必须走 follow-up，不能只写在评论里。
+- 飞书只能投影 GitHub SSOT action，不承载授权、验收、owner confirmation 或完成事实。
+
+### 13.2 PM Workflow Adjustment Under Founder Spec Lane
+
+PM 流程在恢复期采用双轨：
+
+1. 常规 PM Cap-Spec / HPRD lane
+   - 适用于新能力、开放语义、多方业务协商、尚无 Founder 完整任务书的能力包。
+   - PM 继续负责 Cap-Spec、HPRD 业务理解确认、semantic questions 和 PM acceptance。
+   - PM Draft、HPRD 草稿、PM 飞书认可仍不授权 engineering start、runtime、active contract、OpenAPI、facts、events、reasoncodes 或 registry。
+
+2. Founder Spec Lane PM support lane
+   - 适用于 Founder 已签字的 bounded engineering taskbook。
+   - PM 不作为工程师 24h plan、PR 或 `gap_report` 的开工前置阻塞。
+   - PM 只在 taskbook 指名或工程 PR / `gap_report` 暴露 semantic gap 时介入。
+   - PM 输出必须落 GitHub，只能提供业务语义口径、gap classification 或 follow-up 建议。
+   - PM 输出不能扩大 scope，不能授权 production、active contract、真实用户数据、provider、支付、计费、退款、结算、secrets、deploy 或 release。
+   - Founder / Gate 决定 PM 输入是否进入 taskbook `v1.1+`、follow-up 或 reject。
+
+当前 HK recovery taskbook 的 PM support lane 采用 named semantic support taskbook：
+
+- 朱阳 / `zhuyang1204`：customer / payment / asset semantic gaps。
+- 邹骢 / `zoucong121`：booking / service / payment semantic gaps。
+- 崔田恬 / `cuitiantian0704`：sales / customer profile semantic gaps。
+
+这些 PM support taskbook 不是常驻待办池。没有 GitHub PR、`gap_report`、Gate 或 Founder / Gate comment 提出的 bounded semantic question，就没有 PM action item，也不发送飞书提醒。
+
+禁止把两条轨混用成“PM / HPRD 前置阻断 Founder-signed engineering taskbook”。如果 Founder Spec Lane taskbook 已签字且 scope 明确，工程师应按 taskbook 开工；PM 语义缺口通过 PR / `gap_report` 回到 GitHub 裁决链。
+
 ## 14. Risk Path / Governance Budget
 
 Green:
@@ -348,35 +416,30 @@ M9 production_authorized
 - AI draft ≠ 正式对象
 - Founder dispatch accepted ≠ engineering start allowed
 
-## 16. 当前优先切片
+## 16. 当前切片状态
 
-DS-0 Booking Readiness Check
-- 24h 内判断 booking 是否可作为第一交付切片
-- pass → DS-1A Booking Runtime Pilot
-- fail → DS-1B Runtime Smoke Path
+As of 2026-06-11:
 
-DS-1A Booking Runtime Pilot
-- 仅 DS-0 pass 后启动
-- 跑通 booking.submit → booking.confirm → booking.arrival.complete
-- 输出 PR + integration/smoke test + demo evidence + acceptance report
-- 不生产、不真实用户、不扩完整履约
+Completed / accepted as evidence only:
 
-DS-1B Runtime Smoke Path
-- DS-0 fail 后启动
-- 跑通 runtime 最小冒烟路径
-- 不扩业务语义
+- DS-0 Booking Readiness Check / booking staging pilot：`hl-dispatch#195` 已验收关闭，`hl-platform#106` 已合并为 staging / sandbox evidence，`hl-platform#109` 承载 DS-0 readback。
+- DS-2 Tenant Entitlement Quota Check-only：`hl-dispatch#177`、`hl-contracts#103`、`hl-platform#113` 已完成 check-only evidence；`hl-dispatch#196` 已作为 DS-2 check-only superseded entry 关闭。
+- Formal Object Chain DS-3 到 DS-16 已按各自 readback / decision request / closeout 文档收束；DS-15 只接受 `service_order.lifecycle.observed_state` 单个 descriptive facts catalog row，DS-16 Option A closeout 不授权继续扩展。
 
-DS-2 Tenant Entitlement Quota Check-only
-- 低风险工程薄切片
-- input: tenant_id, capability_id, requested_units
-- output: allowed, remaining_quota, reason_code, trace_id
-- mock / seed 数据
-- 3 个 case：有额度、无额度、unknown tenant
-- 不生产、不真实扣减、不接真实计费、不替代 PM 主线
+Current active staging work order:
 
-DS-3 Formal Object Chain Snapshot
-- 收稳 Sales / CustomerAsset / Service / Payment 当前成熟度与下一步
-- 不派售后、优惠、业绩
+- none
+
+Next action:
+
+- none unless Founder / Gate opens a new GitHub SSOT decision or dispatch-ready Founder Spec Lane taskbook.
+
+禁止误读：
+- booking staging pilot accepted ≠ production runtime authorization
+- `hl-platform#106` merged ≠ MVP pass
+- DS-2 check-only completed ≠ full entitlement runtime
+- HPRD / PM Draft / Draft PR / CI green / Feishu done / Gate readback ≠ engineering start allowed
+- Founder Spec Lane taskbook ≠ production authorization
 
 ## 17. 当前能力包处理原则
 

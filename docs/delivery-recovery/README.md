@@ -10,6 +10,8 @@ Mission Package -> Delivery Slice / Risk-Retirement Slice -> Work Unit -> Contex
 
 Use Delivery Slice for planned delivery. Use Risk-Retirement Slice for Red Path risk removal, architecture spikes, provider blockers, secret blockers, or other unblock work.
 
+Founder Spec Lane is an approved recovery-period lane for Founder-supplied bounded taskbooks. It is not a permanent process, not a Founder privilege, and not production runtime authorization. It exists to move bounded recovery work from ledger / Draft / HPRD / Gate / Feishu / micro-decision drift back into taskbook -> bounded HK engineering implementation -> PR or gap_report -> dual AI gates -> human cross audit -> Founder acceptance.
+
 ## Source Of Truth
 
 - GitHub Issues, PRs, and repository files are the evidence source.
@@ -21,12 +23,20 @@ Use Delivery Slice for planned delivery. Use Risk-Retirement Slice for Red Path 
 
 - `DELIVERY_RECOVERY_IMPLEMENTATION_CONTRACT_v0.1.md`: canonical implementation contract.
 - `DELIVERY_RECOVERY_MODE_v0.1.md`: recovery mode scope, gates, flow, and exceptions.
+- `FOUNDER_SPEC_LANE_v0.1.md`: Founder taskbook lane for bounded recovery-period delivery closeout.
 - `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract.
 - `TASK_SNAPSHOT_v1.md`: `task-snapshot:v1` current-card contract.
 - `RISK_PATH_GREEN_YELLOW_RED.md`: Green / Yellow / Red risk path and governance budget.
 
+## Current Recovery State
+
+As of 2026-06-11, DS-0 Booking Readiness / booking staging pilot and DS-2 Tenant Entitlement quota check-only are completed evidence paths. The current HK mainline parent remains `hl-dispatch#194`, but there is no active staging work order unless Founder / Gate opens a new GitHub SSOT decision.
+
+Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readback as production runtime authorization.
+
 ## Recovery Artifacts
 
+- `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
 - `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_2026-06-08.md`: Formal object chain evidence snapshot for Sales, CustomerAsset, ServiceOrder, and PaymentCheckout.
 - `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_REFRESH_2026-06-10.md`: Current DS-3 post-merge readback. SalesOrder, CustomerAsset, ServiceOrder, and PaymentCheckout are merged only as `hl-contracts` candidate-only draft materials; DS-2 Tenant Entitlement is completed only as a check-only pilot. This does not authorize active contract, HPRD, design.md, runtime, real payment provider, real billing, real refund, real settlement, or production.
 - `DS-4_FORMAL_OBJECT_CHAIN_READ_PATH_2026-06-10.md`: Current DS-4 read path evidence and acceptance report. Candidate A was selected and completed as a sandbox / embedded CLI evidence resolver via `hl-contracts#113` and `hl-platform#131`. This does not authorize active contract, HPRD, design.md, formal runtime, real payment provider, real billing, real refund, real settlement, customer asset deduction, service fulfillment, business object creation, workflow change, or production.

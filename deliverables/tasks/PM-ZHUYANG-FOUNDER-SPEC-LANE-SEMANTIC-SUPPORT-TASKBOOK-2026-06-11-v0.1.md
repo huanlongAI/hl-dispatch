@@ -2,7 +2,7 @@
 
 日期：2026-06-11
 
-状态：DRAFT_FOR_FOUNDER_REVIEW
+状态：DISPATCH_READY
 
 Owner：朱阳 / `zhuyang1204`
 
@@ -15,6 +15,7 @@ GitHub SSOT：
 - HK engineering taskbook PR: https://github.com/huanlongAI/hl-platform/pull/132
 - Dispatch-ready pointer: https://github.com/huanlongAI/hl-dispatch/issues/194#issuecomment-4678138374
 - PM workflow adjustment source: `docs/delivery-recovery/FOUNDER_SPEC_LANE_v0.1.md`
+- Founder dispatch confirmation: 2026-06-11 当前 GitHub 发布线程确认继续推进
 
 ## 1. 任务定位
 
@@ -120,4 +121,4 @@ pm_semantic_response:
 GitHub taskbook / issue / PR 是唯一事实源；飞书只是提醒投影，不是授权、验收或完成证明。
 ```
 
-本任务当前仍为 `DRAFT_FOR_FOUNDER_REVIEW`，不得发送飞书。
+本任务当前为 `DISPATCH_READY`。允许向朱阳发送一次飞书提醒投影；发送后必须回写 GitHub 投影事件。

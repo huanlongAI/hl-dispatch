@@ -360,6 +360,14 @@ PM 流程在恢复期采用双轨：
    - PM 输出不能扩大 scope，不能授权 production、active contract、真实用户数据、provider、支付、计费、退款、结算、secrets、deploy 或 release。
    - Founder / Gate 决定 PM 输入是否进入 taskbook `v1.1+`、follow-up 或 reject。
 
+当前 HK recovery taskbook 的 PM support lane 采用 named semantic support taskbook：
+
+- 朱阳 / `zhuyang1204`：customer / payment / asset semantic gaps。
+- 邹骢 / `zoucong121`：booking / service / payment semantic gaps。
+- 崔田恬 / `cuitiantian0704`：sales / customer profile semantic gaps。
+
+这些 PM support taskbook 不是常驻待办池。没有 GitHub PR、`gap_report`、Gate 或 Founder / Gate comment 提出的 bounded semantic question，就没有 PM action item，也不发送飞书提醒。
+
 禁止把两条轨混用成“PM / HPRD 前置阻断 Founder-signed engineering taskbook”。如果 Founder Spec Lane taskbook 已签字且 scope 明确，工程师应按 taskbook 开工；PM 语义缺口通过 PR / `gap_report` 回到 GitHub 裁决链。
 
 ## 14. Risk Path / Governance Budget

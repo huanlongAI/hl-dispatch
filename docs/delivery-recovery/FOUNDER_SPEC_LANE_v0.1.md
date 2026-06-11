@@ -139,6 +139,14 @@ When a Founder-signed taskbook already provides a bounded implementation baselin
 
 When no Founder-signed taskbook exists, or when the work still requires open-ended product negotiation, use the normal PM Cap-Spec / HPRD lane instead of Founder Spec Lane.
 
+For the current HK recovery taskbook, PM semantic support is bounded by named taskbooks:
+
+- 朱阳 / `zhuyang1204`: customer / payment / asset semantic gaps.
+- 邹骢 / `zoucong121`: booking / service / payment semantic gaps.
+- 崔田恬 / `cuitiantian0704`: sales / customer profile semantic gaps.
+
+These PM support taskbooks do not create standing action items. A PM acts only when a GitHub PR, `gap_report`, Gate, or Founder / Gate comment asks a bounded semantic question.
+
 ## 9. Current Huanlong Recovery Boundary
 
 As of 2026-06-11:

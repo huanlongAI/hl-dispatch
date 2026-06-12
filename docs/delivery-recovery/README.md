@@ -28,6 +28,7 @@ Founder Spec Lane is an approved recovery-period lane for Founder-supplied bound
 - `HL_PROGRESS_EXPORTER_v0.1.md`: P1 read-only `hl-progress` exporter for GitHub Issues / PRs / repo files -> JSON / Markdown Founder packet.
 - `HL_PROGRESS_BITABLE_DRY_RUN_v0.1.md`: P2 dry-run Feishu Bitable projection mapping and ledger. It does not write Feishu or GitHub.
 - `HL_PROGRESS_GITHUB_WRITEBACK_PROPOSAL_v0.1.md`: P3 controlled GitHub writeback proposal. It requires a separate Founder / Gate SSOT before any real writeback.
+- `HL_PROGRESS_OPERATION_RUNBOOK_v0.1.md`: Daily / weekly read-only operation runbook for P1 JSON, Markdown Founder packets, and P2 dry-run projection.
 - `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract.
 - `TASK_SNAPSHOT_v1.md`: `task-snapshot:v1` current-card contract.
 - `RISK_PATH_GREEN_YELLOW_RED.md`: Green / Yellow / Red risk path and governance budget.
@@ -45,6 +46,7 @@ Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readb
 - `HL_PROGRESS_EXPORTER_v0.1.md`: P1 implementation notes for `scripts/export-hl-progress.py`. The exporter normalizes GitHub Issues / PRs / repo files into `hl-progress-work-item:v0.1`, emits JSON or Markdown Founder packets, reports missing fields as warnings, and performs no GitHub / Feishu / Bitable writes.
 - `HL_PROGRESS_BITABLE_DRY_RUN_v0.1.md`: P2 dry-run projection notes for `scripts/project-hl-progress-bitable.py`. The script maps P1 JSON into Bitable-shaped rows, field mapping, projection-only copy, and an audit ledger with `external_write: false`.
 - `HL_PROGRESS_GITHUB_WRITEBACK_PROPOSAL_v0.1.md`: P3 proposal for controlled GitHub comments / labels / issue creation after a separate Founder / Gate SSOT. It defines the minimum command set, permission boundary, rollback plan, audit log, rejected actions, and Feishu / dashboard reverse-pollution prevention.
+- `HL_PROGRESS_OPERATION_RUNBOOK_v0.1.md`: Green read-only operation guide for recurring `hl-progress` daily scans, weekly Founder packets, P2 dry-run previews, gate stops, and verification commands.
 - `../../deliverables/tasks/HL-PROGRESS-GOVERNANCE-LOOP-TASKBOOK-2026-06-12-v0.1.md`: Founder-approved goal-mode launch taskbook for the `hl-progress` Engineering progress governance loop. P0 is docs-only; P1 is read-only exporter; P2+ requires separate projection / writeback gates.
 - `../../deliverables/tasks/PM-ZHUYANG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 朱阳 Founder Spec Lane 语义支持任务书。PM 负责客户 / 支付 / 资产语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `../../deliverables/tasks/PM-ZOUCONG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 邹骢 Founder Spec Lane 语义支持任务书。PM 负责 booking / service / payment 语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。

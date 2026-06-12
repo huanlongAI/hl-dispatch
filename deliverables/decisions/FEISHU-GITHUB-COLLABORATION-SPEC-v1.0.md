@@ -190,7 +190,7 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 3. PM 创建 hl-dispatch Issue（[decision-request] 标签）← SSOT
 4. 飞书自动推送到 指挥台通道
 5. 创始人在 GitHub Issue 中回复裁决（留痕）
-6. 创始人在飞书 PM 工作台通道 简要同步"已裁决，见 Issue #xxx"
+6. 创始人在飞书 PM 工作台通道 简要同步"已裁决，见 GitHub Issue 链接"
 ```
 
 **反模式**：PM 只在飞书群讨论获得口头同意就开始执行，不创建 Issue → 违反 SSOT。

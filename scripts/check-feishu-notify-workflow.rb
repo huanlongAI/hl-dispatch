@@ -183,6 +183,9 @@ else
   failures << "direct-message helper curl fallback must keep direct open_id delivery" unless helper.include?("receive_id_type=open_id")
   failures << "direct-message helper curl fallback must preserve idempotency uuid" unless helper.include?('"uuid"')
   failures << "direct-message helper curl fallback must pass JSON via stdin to avoid exposing app_secret in process args" unless helper.include?("--data-binary") && helper.include?("@-") && helper.include?("stdin_data: JSON.generate(payload)")
+  failures << "direct-message helper must validate task message context before sending" unless helper.include?("validate_message_quality!") && helper.include?("message_missing_github_url") && helper.include?("message_contains_black_box_phrase")
+
+  valid_direct_message = "魏鹏，请执行测试任务。背景：验证飞书私聊必须附上下文。GitHub 是唯一事实源，飞书只是提醒。任务入口：https://github.com/huanlongAI/hl-dispatch/issues/194。请在 GitHub 回复结果。本消息不授权生产。"
 
   stdout, stderr, status = Open3.capture3(
     "ruby",
@@ -192,7 +195,7 @@ else
     "--github",
     "wp159951",
     "--text",
-    "dry run"
+    valid_direct_message
   )
 
   if !status.success?
@@ -210,6 +213,24 @@ else
     rescue JSON::ParserError => e
       failures << "direct-message helper dry-run did not emit JSON: #{e.message}"
     end
+  end
+
+  _bad_stdout, bad_stderr, bad_status = Open3.capture3(
+    "ruby",
+    direct_message_path,
+    "--team",
+    team_path,
+    "--github",
+    "wp159951",
+    "--text",
+    "收到，继续。"
+  )
+  failures << "direct-message helper must reject context-free task messages" if bad_status.success?
+  unless bad_stderr.include?("direct message lacks required task context") &&
+         bad_stderr.include?("message_missing_github_url") &&
+         bad_stderr.include?("message_missing_context") &&
+         bad_stderr.include?("message_contains_black_box_phrase:收到，继续")
+    failures << "direct-message helper context-free rejection must name missing context, GitHub URL, and black-box phrase"
   end
 end
 

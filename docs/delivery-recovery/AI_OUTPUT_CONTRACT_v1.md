@@ -88,3 +88,5 @@ If the AI cannot confirm package, slice, owner, risk path, or evidence, it must 
 Do not write "已完成", "已确认", "已授权", "已阻塞", "已通过", "可关闭", "runtime ready", or "production ready" without evidence and the required human role where applicable.
 
 Do not write filler or black-box governance phrases: "收到 / 已知 / 继续推进", "继续推进整体治理", "需要进一步确认", "当前上下文显示", "可能已经处理过", "runtime 那个", or "HPRD 已确认但无证据".
+
+The live GitHub language gate rejects `ai-output:v1` comments that contain the canonical black-box phrases above only after the shared `sentinel-shared` gate update is merged into the reusable workflow consumed by this repository. `sentinel-shared` is the canonical source for live GitHub enforcement; this repository's local checker is a mirror for local tests and must stay aligned with it. If the work needs more context, use `gap_report` and name the missing context, evidence, authorization, or owner.

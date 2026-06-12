@@ -10,7 +10,9 @@ Mission Package -> Delivery Slice / Risk-Retirement Slice -> Work Unit -> Contex
 
 Use Delivery Slice for planned delivery. Use Risk-Retirement Slice for Red Path risk removal, architecture spikes, provider blockers, secret blockers, or other unblock work.
 
-Founder Spec Lane is an approved recovery-period lane for Founder-supplied bounded taskbooks. It is not a permanent process, not a Founder privilege, and not production runtime authorization. It exists to move bounded recovery work from ledger / Draft / HPRD / Gate / Feishu / micro-decision drift back into taskbook -> bounded HK engineering implementation -> PR or gap_report -> dual AI gates -> human cross audit -> Founder acceptance.
+Founder Spec Lane is an approved recovery-period lane for Founder-supplied bounded taskbooks. It is not a permanent process, not a Founder privilege, and not production runtime authorization. It exists to move bounded recovery work from ledger / Draft / HPRD / Gate / Feishu / micro-decision drift back into Founder + AI taskbook creation -> Judgment Harness only for complex pre-dispatch judgment -> Founder sign-off -> dispatch to named implementer -> bounded implementation -> PR or gap_report -> human-readable gates -> dual AI gates -> human cross audit -> Founder acceptance.
+
+PM-led capability packages use a separate execution shape: Founder / AI capability taskbook -> PM complete Cap-Spec and requirements design -> engineer HPRD / technical plan -> PM HPRD review -> bounded development starts immediately -> PM acceptance -> AI gates -> human engineering cross audit -> Founder acceptance / merge decision.
 
 ## Source Of Truth
 
@@ -23,25 +25,25 @@ Founder Spec Lane is an approved recovery-period lane for Founder-supplied bound
 
 - `DELIVERY_RECOVERY_IMPLEMENTATION_CONTRACT_v0.1.md`: canonical implementation contract.
 - `DELIVERY_RECOVERY_MODE_v0.1.md`: recovery mode scope, gates, flow, and exceptions.
-- `FOUNDER_SPEC_LANE_v0.1.md`: Founder taskbook lane for bounded recovery-period delivery closeout.
+- `FOUNDER_SPEC_LANE_v0.1.md`: Founder taskbook lane for bounded recovery-period delivery closeout, including context engineering and human-readable output requirements.
 - `HL_PROGRESS_GOVERNANCE_LOOP_v0.1.md`: long-running Engineering progress governance loop for GitHub SSOT -> AI-friendly read model -> Bitable / dashboard projection.
 - `HL_PROGRESS_EXPORTER_v0.1.md`: P1 read-only `hl-progress` exporter for GitHub Issues / PRs / repo files -> JSON / Markdown Founder packet.
 - `HL_PROGRESS_BITABLE_DRY_RUN_v0.1.md`: P2 dry-run Feishu Bitable projection mapping and ledger. It does not write Feishu or GitHub.
 - `HL_PROGRESS_GITHUB_WRITEBACK_PROPOSAL_v0.1.md`: P3 controlled GitHub writeback proposal. It requires a separate Founder / Gate SSOT before any real writeback.
 - `HL_PROGRESS_OPERATION_RUNBOOK_v0.1.md`: Daily / weekly read-only operation runbook for P1 JSON, Markdown Founder packets, and P2 dry-run projection.
-- `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract.
+- `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract, including black-box governance phrase rejection.
 - `TASK_SNAPSHOT_v1.md`: `task-snapshot:v1` current-card contract.
 - `RISK_PATH_GREEN_YELLOW_RED.md`: Green / Yellow / Red risk path and governance budget.
 
 ## Current Recovery State
 
-As of 2026-06-11, DS-0 Booking Readiness / booking staging pilot and DS-2 Tenant Entitlement quota check-only are completed evidence paths. The current HK mainline parent remains `hl-dispatch#194`, but there is no active staging work order unless Founder / Gate opens a new GitHub SSOT decision.
+As of 2026-06-12, DS-0 Booking Readiness / booking staging pilot and DS-2 Tenant Entitlement quota check-only are completed evidence paths. The current HK mainline parent remains `hl-dispatch#194`. The active recovery movement is the bounded HK engineering taskbook for Xu Jiuming, not a production runtime work order.
 
-Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readback as production runtime authorization.
+Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readback as production runtime authorization. Do not interpret those signals as reasons to block a Founder-signed engineering taskbook or a PM-approved capability package that has passed PM HPRD review.
 
 ## Recovery Artifacts
 
-- `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, bounded engineering implementation, PM interaction, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
+- `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, context engineering preflight, human-readable output, bounded engineering implementation, PM interaction, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
 - `HL_PROGRESS_GOVERNANCE_LOOP_v0.1.md`: `hl-progress` long-running progress governance contract. It keeps GitHub as SSOT, treats Feishu Bitable / Project / dashboards as projection, defines `hl-progress-work-item:v0.1`, and phases read-only exporter, Bitable projection, and any future writeback behind explicit gates. It does not authorize route / mode / permission / branch-protection / production expansion.
 - `HL_PROGRESS_EXPORTER_v0.1.md`: P1 implementation notes for `scripts/export-hl-progress.py`. The exporter normalizes GitHub Issues / PRs / repo files into `hl-progress-work-item:v0.1`, emits JSON or Markdown Founder packets, reports missing fields as warnings, and performs no GitHub / Feishu / Bitable writes.
 - `HL_PROGRESS_BITABLE_DRY_RUN_v0.1.md`: P2 dry-run projection notes for `scripts/project-hl-progress-bitable.py`. The script maps P1 JSON into Bitable-shaped rows, field mapping, projection-only copy, and an audit ledger with `external_write: false`.
@@ -51,6 +53,8 @@ Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readb
 - `../../deliverables/tasks/PM-ZHUYANG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 朱阳 Founder Spec Lane 语义支持任务书。PM 负责客户 / 支付 / 资产语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `../../deliverables/tasks/PM-ZOUCONG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 邹骢 Founder Spec Lane 语义支持任务书。PM 负责 booking / service / payment 语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `../../deliverables/tasks/PM-CUITIANTIAN-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 崔田恬 Founder Spec Lane 语义支持任务书。PM 负责 sales / customer profile 语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
+- `../../deliverables/tasks/PM-ZHUYANG-CUSTOMER-ASSET-CAPABILITY-LANE-TASKBOOK-2026-06-12-v1.0.md`: 第一批 PM-led capability package taskbook。朱阳负责把 `biz.customer.asset` merged draft candidate 转成 PM readiness pack，再进入 engineer HPRD / PM HPRD pass / bounded implementation 流程。当前为 `DISPATCH_READY_FOR_PM_READINESS`，只授权 PM readiness，不授权 runtime / active contract / production。
+- `../../deliverables/tasks/PM-CUITIANTIAN-SALES-ORDER-CAPABILITY-LANE-TASKBOOK-2026-06-12-v1.0.md`: 第一批 PM-led capability package taskbook。崔田恬负责把 `biz.sales.order` merged draft candidate 转成 PM readiness pack，再进入 engineer HPRD / PM HPRD pass / bounded implementation 流程。当前为 `DISPATCH_READY_FOR_PM_READINESS`，只授权 PM readiness，不授权 runtime / active contract / production。
 - `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_2026-06-08.md`: Formal object chain evidence snapshot for Sales, CustomerAsset, ServiceOrder, and PaymentCheckout.
 - `DS-3_FORMAL_OBJECT_CHAIN_SNAPSHOT_REFRESH_2026-06-10.md`: Current DS-3 post-merge readback. SalesOrder, CustomerAsset, ServiceOrder, and PaymentCheckout are merged only as `hl-contracts` candidate-only draft materials; DS-2 Tenant Entitlement is completed only as a check-only pilot. This does not authorize active contract, HPRD, design.md, runtime, real payment provider, real billing, real refund, real settlement, or production.
 - `DS-4_FORMAL_OBJECT_CHAIN_READ_PATH_2026-06-10.md`: Current DS-4 read path evidence and acceptance report. Candidate A was selected and completed as a sandbox / embedded CLI evidence resolver via `hl-contracts#113` and `hl-platform#131`. This does not authorize active contract, HPRD, design.md, formal runtime, real payment provider, real billing, real refund, real settlement, customer asset deduction, service fulfillment, business object creation, workflow change, or production.

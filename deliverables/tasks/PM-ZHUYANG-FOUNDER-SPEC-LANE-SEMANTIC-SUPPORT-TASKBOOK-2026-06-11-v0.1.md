@@ -32,11 +32,13 @@ GitHub SSOT：
 
 朱阳只在出现客户 / 支付 / 资产语义相关 gap 时介入，并且只在 GitHub 上回复。
 
+注意：这只描述当前 HK `biz.booking.fulfillment` 工程任务中的 PM 支持位置，不取消朱阳对其负责能力包的 PM 主流程。若 Founder / Gate 派发客户 / 支付 / 资产能力包任务，朱阳应按 PM capability lane 完成完整 Cap-Spec / requirements design，交给工程师产出 HPRD / technical implementation plan，PM 审 HPRD 通过后工程师立即进入受控开发。
+
 ## 2. 当前事实
 
 截至 2026-06-11：
 
-- `biz.customer.asset` candidate-only Cap-Spec 已合入 `hl-contracts`，但仍不是 active contract、active registry、runtime、production 或工程开工授权。
+- `biz.customer.asset` candidate-only Cap-Spec 已合入 `hl-contracts`，但单独看仍不是 active contract、active registry、runtime、production 或跨任务书工程开工授权；它可以作为后续 PM capability lane 的输入。
 - PM Draft、HPRD 草稿、飞书认可、CI green、Gate readback 都只是证据或投影，不是生产授权。
 - Founder Spec Lane 已允许许久明在 `hl-platform#132` 范围内做受控 HK 工程实现。
 - PM 工作流需要从“开工前置审批链”调整为“业务语义基线与 gap 输入链”。
@@ -60,7 +62,7 @@ GitHub SSOT：
 朱阳禁止做：
 
 - 阻断许久明按 `hl-platform#132` 提交 24h plan、PR 或 `gap_report`。
-- 把 PM Draft、HPRD 草稿、飞书消息或 PM 工作台状态解释为 engineering start authorization。
+- 把 PM Draft、HPRD 草稿、飞书消息或 PM 工作台状态解释为脱离签字 taskbook / PM HPRD pass 的工程开工授权。
 - 直接授权 production runtime、active contract、active registry、真实用户数据、provider、支付、计费、退款、结算、secrets、deploy 或 release。
 - 直接要求许久明修改 `hl-contracts`。
 - 通过飞书口头确认替代 GitHub semantic gap 回复。
@@ -110,6 +112,25 @@ pm_semantic_response:
 - 明确区分“现有基线澄清”和“需要 Founder / Gate 裁决”。
 - 不把 PM 口径写成 production、active contract、runtime 或 registry 授权。
 - 能被 Gate A / Gate B / Human Cross Audit 直接消费。
+
+## 7.1 PM Capability Lane Trigger
+
+当 Founder / Gate 派发朱阳负责的能力包任务时，流程改为：
+
+```text
+Founder / AI capability taskbook
+-> 朱阳完成 Cap-Spec / requirements design
+-> 工程师提交 HPRD / technical implementation plan
+-> 朱阳审 HPRD 是否满足 Cap-Spec
+-> PM HPRD pass 后工程师立即开发
+-> PR / demo / test evidence
+-> PM acceptance
+-> Gate A / Gate B
+-> Human Cross Audit
+-> Founder Acceptance / merge decision
+```
+
+PM HPRD pass 只授权该能力包任务书范围内的受控开发；不授权 production runtime、active contract、真实用户、真实 provider、真实支付 / 计费 / 退款 / 结算、secrets、deploy 或 release。
 
 ## 8. 飞书投影
 

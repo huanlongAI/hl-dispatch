@@ -8,11 +8,12 @@
 # 本文件仅保留角色代号、GitHub handle、飞书 open_id/user_id，不存放邮箱
 # 离职或退出协作的成员必须从 active roles 中移除，不保留 GitHub handle
 
-version: 2026-05-23
+version: 2026-06-12
 lark_id_verified_at: 2026-05-14
 source_refs:
   - team-memory/00-index/TEAM-ROSTER.md
   - TEAM-COLLAB-SPEC v2.1
+  - Founder roster correction 2026-06-12: product-engineering team has 11 people only
 
 notification_policy:
   mainline_process: AI native工程通知 via FEISHU_WEBHOOK_ENGINEERING
@@ -24,6 +25,23 @@ notification_policy:
     - Gate-3
     - LUXBYA
     - internal-managed
+
+active_roster:
+  founder: [tongzhenghui]
+  design: [tongjing2026-glitch]
+  engineering: [wp159951, xujiuming, zhoufei1223]
+  frontend_client: ["663548110", liwei333]
+  ops: [ZDragonMeta]
+  pm: [zoucong121, zhuyang1204, cuitiantian0704]
+  total_people: 11
+
+github_access_model:
+  private_repo_seats: 9
+  public_lane_no_private_seat: [tongjing2026-glitch, ZDragonMeta]
+  read_only_exceptions:
+    - github: xyuchen701-sys
+      repo_access:
+        hl-dispatch: read
 
 roles:
   founder:
@@ -51,6 +69,10 @@ roles:
       user_id: f1g3e3gc
     responsibility: 运维发布、部署、回滚、环境搭建、OPS 执行、Gate R 运维验收；不负责无权限的前端 App 自主构建入口证据，GitHub 侧通过 hl-dispatch public 仓留痕
     labels: [ops, task-assign]
+    github_access:
+      mode: public_lane_no_private_seat
+      public_repo: hl-dispatch
+      private_repo_proxy: wp159951
 
   product:
     name: PM-A
@@ -107,39 +129,27 @@ roles:
   backend-team:
     name: Backend-Team
     github: ""
-    responsibility: Java/PHP 后端任务执行
+    responsibility: Java/PHP 后端任务执行；当前 Founder 确认活跃成员仅周飞
     labels: [task-assign]
     members:
       - github: zhoufei1223
         lark:
           open_id: ou_bc43ed6288e25b8b1b07daf212bff522
           user_id: 3358e79e
-      - github: zhouchunhui123
-        lark:
-          open_id: ou_e225d6a5a78223fb9ee8f76708feb793
-          user_id: acf3d8ga
-      - github: lw2012888
-        lark:
-          open_id: ou_04aef2958b54a0dbf9d6ca2c29f1b88f
-          user_id: 6b5635f4
-      - github: imxzz
-        lark:
-          open_id: ou_e2677ebf363759bdfcbe7824c0a643f8
-          user_id: 7gg4f326
 
   general-collaborators:
     name: General-Collaborators
     github: ""
-    status: pending_role_assignment
-    responsibility: 团队协作成员；具体负责域待创始人确认，仅作为人名解析与 GitHub 协作入口，不作为默认任务派发目标
+    status: read_only_exception
+    responsibility: 非活跃产研团队不得作为默认任务派发目标；读取例外仅用于 Founder 明确指定的仓库
     labels: []
     members:
       - name: 熊剑峰
         github: xyuchen701-sys
         lark: null
         repo_access:
-          hl-dispatch: triage_invitation_pending
-        status: pending_github_invitation_and_lark_id
+          hl-dispatch: read
+        status: read_only_exception
 
   frontend-lead:
     name: Frontend-Lead
@@ -153,13 +163,9 @@ roles:
   frontend-team:
     name: Frontend-Team
     github: ""
-    responsibility: Flutter 转型、前端任务执行
+    responsibility: Flutter 转型、前端任务执行；当前 Founder 确认活跃成员仅盛云
     labels: [task-assign]
     members:
-      - github: hjliu95
-        lark:
-          open_id: ou_0f5642252a0d615c63a5185622537eb3
-          user_id: 89689g5b
       - github: liwei333
         lark:
           open_id: ou_3056723a78519db5db05677c0e13eec4
@@ -173,6 +179,10 @@ roles:
       user_id: 2a6cg116
     responsibility: 设计团队协调、设计系统输入
     labels: [task-assign]
+    github_access:
+      mode: public_lane_no_private_seat
+      public_repo: hl-dispatch
+      private_repo_proxy: ["663548110", wp159951]
 
   design-team:
     name: Design-Team

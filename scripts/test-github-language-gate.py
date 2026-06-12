@@ -222,6 +222,7 @@ class GitHubLanguageGateTests(unittest.TestCase):
             {
                 "action": "created",
                 "comment": {
+                    "author_association": "MEMBER",
                     "body": (
                         "<!-- ai-output:v1 -->\n"
                         "【类型】status_update\n"

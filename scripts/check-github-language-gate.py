@@ -45,6 +45,8 @@ AI_OUTPUT_EVIDENCE_TERMS = (
     "runtime ready",
     "production ready",
 )
+# Keep this mirror aligned with sentinel-shared/scripts/check-github-language-gate.py.
+# The reusable sentinel-shared workflow is the canonical live GitHub gate.
 AI_OUTPUT_BLACK_BOX_PHRASES = (
     "收到 / 已知 / 继续推进",
     "继续推进整体治理",

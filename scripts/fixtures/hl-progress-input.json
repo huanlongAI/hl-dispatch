@@ -1,0 +1,19 @@
+{
+  "repo": "huanlongAI/hl-dispatch",
+  "issues": [
+    {
+      "number": 305,
+      "title": "[Decision] Founder packet",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/305",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "decision-request"
+        }
+      ],
+      "assignees": [],
+      "updatedAt": "2026-06-12T01:02:03Z",
+      "body": "Decision required."
+    }
+  ]
+}

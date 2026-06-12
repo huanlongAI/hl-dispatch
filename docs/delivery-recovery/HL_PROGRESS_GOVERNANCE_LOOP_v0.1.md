@@ -210,5 +210,5 @@ The loop is acceptable only if:
 | `HLPROG-P0-WU1` | Green | This contract + taskbook + README index. | Docs PR verification. |
 | `HLPROG-P1-WU1` | Green | Read-only exporter design mapped to existing `action-projection:v0.1`; implementation notes in `HL_PROGRESS_EXPORTER_v0.1.md`. | Offline tests. |
 | `HLPROG-P1-WU2` | Green | JSON / Markdown Founder packet output via `scripts/export-hl-progress.py`. | Deterministic fixture tests. |
-| `HLPROG-P2-WU1` | Yellow | Feishu Bitable field mapping and dry-run ledger. | Separate Feishu projection decision. |
+| `HLPROG-P2-WU1` | Yellow | Feishu Bitable field mapping and dry-run ledger in `HL_PROGRESS_BITABLE_DRY_RUN_v0.1.md`; local dry-run via `scripts/project-hl-progress-bitable.py`. | Separate Feishu projection decision before any external write. |
 | `HLPROG-P3-WU1` | Yellow / Red | Controlled GitHub writeback proposal. | Separate Founder / Gate SSOT. |

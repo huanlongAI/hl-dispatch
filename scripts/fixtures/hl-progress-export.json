@@ -1,0 +1,85 @@
+{
+  "schema": "hl-progress-export:v0.1",
+  "source": "github",
+  "repo": "huanlongAI/hl-dispatch",
+  "generated_at": "2026-06-12T00:00:00Z",
+  "counts": {
+    "issues": 2,
+    "pull_requests": 0,
+    "repo_files": 0,
+    "items": 2,
+    "warnings": 5
+  },
+  "items": [
+    {
+      "schema": "hl-progress-work-item:v0.1",
+      "task_id": "HLPROG-P1-WU1",
+      "source": {
+        "system": "github",
+        "repo": "huanlongAI/hl-dispatch",
+        "issue_url": "https://github.com/huanlongAI/hl-dispatch/issues/301",
+        "pr_urls": [],
+        "file_refs": []
+      },
+      "owner": {
+        "github": "@dahuizi",
+        "role": "dahuizi"
+      },
+      "status": "in_progress",
+      "risk_path": "green",
+      "evidence_state": "linked",
+      "next_gate": "offline deterministic tests",
+      "next_action": "Run hl-progress exporter deterministic tests.",
+      "blocker": {
+        "state": "none",
+        "summary": "n/a",
+        "owner": "n/a"
+      },
+      "founder_decision_required": false,
+      "projection": {
+        "target": "json",
+        "generated_at": "2026-06-12T00:00:00Z",
+        "source_hash": "3d767ce1d3feaf46b859c0e4593f44586e1bbcf39f79064a0202be8bf97a2180"
+      },
+      "warnings": []
+    },
+    {
+      "schema": "hl-progress-work-item:v0.1",
+      "task_id": "issue-302",
+      "source": {
+        "system": "github",
+        "repo": "huanlongAI/hl-dispatch",
+        "issue_url": "https://github.com/huanlongAI/hl-dispatch/issues/302",
+        "pr_urls": [],
+        "file_refs": []
+      },
+      "owner": {
+        "github": "unknown",
+        "role": "unknown"
+      },
+      "status": "founder_acceptance",
+      "risk_path": "unknown",
+      "evidence_state": "unknown",
+      "next_gate": "Founder",
+      "next_action": "n/a",
+      "blocker": {
+        "state": "none",
+        "summary": "n/a",
+        "owner": "n/a"
+      },
+      "founder_decision_required": true,
+      "projection": {
+        "target": "json",
+        "generated_at": "2026-06-12T00:00:00Z",
+        "source_hash": "6746e3ae7ad43c01fdc90ab9320a89d479b77b379f6014f399a41b6b0bca2b51"
+      },
+      "warnings": [
+        "missing_evidence_state",
+        "missing_next_action",
+        "missing_owner",
+        "missing_risk_path",
+        "projection_gate_required_before_external_write"
+      ]
+    }
+  ]
+}

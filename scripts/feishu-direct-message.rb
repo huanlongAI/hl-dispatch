@@ -14,6 +14,29 @@ Encoding.default_internal = Encoding::UTF_8
 class DirectMessageError < StandardError; end
 
 DEFAULT_TEAM_PATH = File.expand_path("../TEAM.yml", __dir__)
+GITHUB_URL_RE = %r{https://github\.com/huanlongAI/[^\s，。；、）)]+}
+TASK_CONTEXT_TERMS = %w[背景 上下文 目标 为什么 来源]
+TASK_ACTION_TERMS = %w[请在 请执行 请回复 请查看 请处理 下一步 要做 回复]
+TASK_BOUNDARY_TERMS = [
+  "GitHub 是唯一事实源",
+  "GitHub 仍是唯一事实源",
+  "GitHub 是 SSOT",
+  "唯一事实源",
+  "飞书只是提醒",
+  "飞书只是投影",
+  "不授权",
+  "不是授权"
+].freeze
+BLACK_BOX_PHRASES = [
+  "收到，继续",
+  "收到 / 已知 / 继续推进",
+  "继续推进整体治理",
+  "需要进一步确认",
+  "当前上下文显示",
+  "可能已经处理过",
+  "runtime 那个",
+  "HPRD 已确认但无证据"
+].freeze
 
 def public_recipient(entry)
   {
@@ -154,6 +177,33 @@ def parse_options(argv)
   end
 
   options
+end
+
+def message_body(options)
+  options[:text] || options[:markdown] || ""
+end
+
+def include_any?(text, terms)
+  terms.any? { |term| text.include?(term) }
+end
+
+def validate_message_quality!(text)
+  body = text.to_s
+  normalized = body.downcase
+  errors = []
+
+  errors << "message_missing_github_url" unless body.match?(GITHUB_URL_RE)
+  errors << "message_missing_context" unless include_any?(body, TASK_CONTEXT_TERMS)
+  errors << "message_missing_action" unless include_any?(body, TASK_ACTION_TERMS)
+  errors << "message_missing_authorization_boundary" unless include_any?(body, TASK_BOUNDARY_TERMS)
+
+  BLACK_BOX_PHRASES.each do |phrase|
+    errors << "message_contains_black_box_phrase:#{phrase}" if normalized.include?(phrase.downcase)
+  end
+
+  return if errors.empty?
+
+  raise DirectMessageError, "direct message lacks required task context: #{errors.join(", ")}"
 end
 
 def positive_integer_env(name, default)
@@ -328,6 +378,7 @@ end
 
 def main(argv)
   options = parse_options(argv)
+  validate_message_quality!(message_body(options))
   team = load_team(options[:team])
   recipient, open_id = resolve_recipient(team, options)
   command = build_command(options, open_id)

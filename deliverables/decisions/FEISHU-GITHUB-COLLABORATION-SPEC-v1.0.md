@@ -295,6 +295,15 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 ❌ 错误：biz.product 的 Cap-Spec 写好了，你们看看。（没有链接，不知道在哪看）
 ```
 
+**任务私聊 / 派发提醒**：必须让接收人看得懂背景、入口、动作和边界。
+
+- 必须写清任务背景或上下文，避免只给一句指令。
+- 必须附 GitHub Issue / PR / taskbook 链接；GitHub 是唯一事实源，飞书只是提醒或投影。
+- 必须写清接收人要做的唯一下一步、回复位置和预期输出。
+- 必须写清授权边界；如果任务不授权生产、runtime、active contract、真实用户、真实计费、发布或部署，消息正文必须直接说明。
+- 禁止发送只有状态词、内部代号或黑话的任务私聊，例如："收到，继续"、"继续推进整体治理"、"需要进一步确认"、"当前上下文显示"、"runtime 那个"、"HPRD 已确认但无证据"。
+- Huanlong owner / evidence / task private DM 必须使用 `scripts/feishu-direct-message.rb`；该脚本会在发送前拒绝缺少上下文、GitHub 入口、明确动作或授权边界的消息。
+
 **同步裁决/决策时**：
 
 ```
@@ -450,3 +459,4 @@ super-founder 的飞书架构（四群分流 + 双通道 + Bitable）
 |------|------|------|
 | 2026-03-30 | v1.0 | 初版——从 super-founder FEISHU-INTEGRATION-PLAN v4.0 适配唤龙团队 |
 | 2026-03-30 | v1.0 LOCKED | 创始人裁决 D-1~D-6 全部通过：四群分流、PM 负责 Bitable、GitHub 原生飞书 App、main CI 不静默、24h 落地铁律、审批走 GitHub |
+| 2026-06-12 | recovery addendum | 创始人恢复期要求：任务私聊必须附上下文、GitHub 入口、明确动作和授权边界；禁止黑话式派发。 |

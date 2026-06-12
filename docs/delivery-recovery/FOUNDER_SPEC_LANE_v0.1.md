@@ -177,6 +177,8 @@ Allowed Feishu use:
 - point to the GitHub SSOT issue / PR / taskbook;
 - remind the owner to reply in GitHub.
 
+Every task private message must be human-readable and context-rich. It must include the background, GitHub SSOT entrypoint, the recipient's one next action, the expected GitHub reply location, and the authorization boundary. For Huanlong owner / evidence / task private DMs, use `scripts/feishu-direct-message.rb`; the helper rejects context-free or black-box task messages before sending.
+
 Forbidden Feishu interpretations:
 
 - Feishu sent means authorized;

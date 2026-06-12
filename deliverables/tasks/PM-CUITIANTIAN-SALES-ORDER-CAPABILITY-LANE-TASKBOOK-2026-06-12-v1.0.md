@@ -1,11 +1,12 @@
 # PM Capability Lane Taskbook: biz.sales.order v1.0
 
-Status: DRAFT_FOR_FOUNDER_SIGNOFF
+Status: DISPATCH_READY_FOR_PM_READINESS
 Date: 2026-06-12
 Owner: Cui Tiantian / `cuitiantian0704`
 Capability: `biz.sales.order`
 Lane: PM-led capability package lane
 Parent recovery issue: https://github.com/huanlongAI/hl-dispatch/issues/194
+Founder dispatch approval: https://github.com/huanlongAI/hl-dispatch/issues/194#issuecomment-4688063883
 
 ## 1. Purpose
 
@@ -143,6 +144,6 @@ Black-box phrases such as "继续推进整体治理", "需要进一步确认", "
 
 ## 9. Feishu Projection
 
-Feishu may be sent only after Founder confirms this taskbook is dispatch-ready in GitHub.
+Founder has confirmed this taskbook is dispatch-ready for PM readiness work only.
 
 The Feishu message must include background, GitHub entrypoint, one next action, expected GitHub reply location, and authorization boundary. GitHub remains the only source of truth.

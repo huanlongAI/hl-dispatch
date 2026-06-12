@@ -24,6 +24,7 @@ Founder Spec Lane is an approved recovery-period lane for Founder-supplied bound
 - `DELIVERY_RECOVERY_IMPLEMENTATION_CONTRACT_v0.1.md`: canonical implementation contract.
 - `DELIVERY_RECOVERY_MODE_v0.1.md`: recovery mode scope, gates, flow, and exceptions.
 - `FOUNDER_SPEC_LANE_v0.1.md`: Founder taskbook lane for bounded recovery-period delivery closeout.
+- `HL_PROGRESS_GOVERNANCE_LOOP_v0.1.md`: long-running Engineering progress governance loop for GitHub SSOT -> AI-friendly read model -> Bitable / dashboard projection.
 - `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract.
 - `TASK_SNAPSHOT_v1.md`: `task-snapshot:v1` current-card contract.
 - `RISK_PATH_GREEN_YELLOW_RED.md`: Green / Yellow / Red risk path and governance budget.
@@ -37,6 +38,8 @@ Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readb
 ## Recovery Artifacts
 
 - `FOUNDER_SPEC_LANE_v0.1.md`: Founder Spec Lane recovery-period lane definition, including applicability, bounded engineering implementation, PM interaction, PR / gap_report output, dual AI gates, Human Cross Audit, scope freeze, and Feishu projection limits.
+- `HL_PROGRESS_GOVERNANCE_LOOP_v0.1.md`: `hl-progress` long-running progress governance contract. It keeps GitHub as SSOT, treats Feishu Bitable / Project / dashboards as projection, defines `hl-progress-work-item:v0.1`, and phases read-only exporter, Bitable projection, and any future writeback behind explicit gates. It does not authorize route / mode / permission / branch-protection / production expansion.
+- `../../deliverables/tasks/HL-PROGRESS-GOVERNANCE-LOOP-TASKBOOK-2026-06-12-v0.1.md`: Founder-approved goal-mode launch taskbook for the `hl-progress` Engineering progress governance loop. P0 is docs-only; P1 is read-only exporter; P2+ requires separate projection / writeback gates.
 - `../../deliverables/tasks/PM-ZHUYANG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 朱阳 Founder Spec Lane 语义支持任务书。PM 负责客户 / 支付 / 资产语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `../../deliverables/tasks/PM-ZOUCONG-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 邹骢 Founder Spec Lane 语义支持任务书。PM 负责 booking / service / payment 语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。
 - `../../deliverables/tasks/PM-CUITIANTIAN-FOUNDER-SPEC-LANE-SEMANTIC-SUPPORT-TASKBOOK-2026-06-11-v0.1.md`: PM 崔田恬 Founder Spec Lane 语义支持任务书。PM 负责 sales / customer profile 语义 gap 输入，不阻断 Founder-signed engineering taskbook 开工，不授权 runtime / active contract / production。

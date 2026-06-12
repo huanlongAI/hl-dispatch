@@ -35,11 +35,13 @@ GitHub SSOT：
 
 崔田恬只在出现 sales / customer profile 语义相关 gap 时介入，并且只在 GitHub 上回复。
 
+注意：这只描述当前 HK `biz.booking.fulfillment` 工程任务中的 PM 支持位置，不取消崔田恬对 sales / customer profile 能力包的 PM 主流程。若 Founder / Gate 派发对应能力包任务，崔田恬应按 PM capability lane 完成完整 Cap-Spec / requirements design，交给工程师产出 HPRD / technical implementation plan，PM 审 HPRD 通过后工程师立即进入受控开发。
+
 ## 2. 当前事实
 
 截至 2026-06-11：
 
-- `biz.sales.order` candidate-only Cap-Spec 已通过 `hl-contracts#99` 合入，但仍不是 active registry、HPRD、design.md、runtime 或生产授权。
+- `biz.sales.order` candidate-only Cap-Spec 已通过 `hl-contracts#99` 合入，但单独看仍不是 active registry、HPRD、design.md、runtime 或生产授权；它可以作为后续 PM capability lane 的输入。
 - `hl-dispatch#184` 仍 open，应从旧 Draft correction / Gate prep 阻塞口径调整为 candidate baseline readback + bounded semantic support。
 - `biz.customer.profile` 仍保留为 regular PM capability lane 的候选任务，不作为当前 HK booking staging pilot 的开工阻塞项。
 - `hl-dispatch#109` 仍 open，当前只能作为 CustomerProfile owner confirmation / taskbook evidence，不授权 HK runtime 或 production。
@@ -65,7 +67,7 @@ GitHub SSOT：
 崔田恬禁止做：
 
 - 阻断许久明按 `hl-platform#132` 提交 24h plan、PR 或 `gap_report`。
-- 把 `hl-dispatch#184`、`hl-dispatch#109`、PM preflight、候选 Cap-Spec 或合并状态解释为 engineering start authorization。
+- 把 `hl-dispatch#184`、`hl-dispatch#109`、PM preflight、候选 Cap-Spec 或合并状态解释为脱离签字 taskbook / PM HPRD pass 的工程开工授权。
 - 直接授权 production runtime、active contract、active registry、真实用户数据、provider、支付、计费、退款、结算、secrets、deploy 或 release。
 - 直接要求许久明修改 `hl-contracts`。
 - 通过飞书口头确认替代 GitHub semantic gap 回复。
@@ -115,6 +117,25 @@ pm_semantic_response:
 - 明确区分“现有基线澄清”和“需要 Founder / Gate 裁决”。
 - 不把 PM 口径写成 production、active contract、runtime 或 registry 授权。
 - 能被 Gate A / Gate B / Human Cross Audit 直接消费。
+
+## 7.1 PM Capability Lane Trigger
+
+当 Founder / Gate 派发崔田恬负责的能力包任务时，流程改为：
+
+```text
+Founder / AI capability taskbook
+-> 崔田恬完成 Cap-Spec / requirements design
+-> 工程师提交 HPRD / technical implementation plan
+-> 崔田恬审 HPRD 是否满足 Cap-Spec
+-> PM HPRD pass 后工程师立即开发
+-> PR / demo / test evidence
+-> PM acceptance
+-> Gate A / Gate B
+-> Human Cross Audit
+-> Founder Acceptance / merge decision
+```
+
+PM HPRD pass 只授权该能力包任务书范围内的受控开发；不授权 production runtime、active contract、真实用户、真实 provider、真实支付 / 计费 / 退款 / 结算、secrets、deploy 或 release。
 
 ## 8. 飞书投影
 

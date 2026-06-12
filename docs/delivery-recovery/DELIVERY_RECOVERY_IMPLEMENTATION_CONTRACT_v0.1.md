@@ -337,8 +337,11 @@ Founder Spec Lane 是 Delivery Recovery Mode v0.1 恢复期内的正式通道之
 固定流程：
 
 ```text
-Founder Taskbook
--> Engineer 24h Implementation Plan
+Founder + AI Taskbook Draft
+-> Judgment Harness only when the task is judgment-heavy
+-> Founder Sign-off
+-> Dispatch to named engineer / designer / PM
+-> 24h Implementation Plan or equivalent role plan
 -> PR or gap_report
 -> Gate A: Dahuizi contract / business / redline review
 -> Gate B: Xiaofeifei code / test / security / regression review
@@ -349,7 +352,8 @@ Founder Taskbook
 
 硬规则：
 - `gap_report` 是合格交付形态，不是失败。
-- Founder 任务书可以授权受控 HK 工程实现，但不能被解释为生产 runtime、active contract、真实数据、真实 provider、真实支付 / 计费 / 退款 / 结算、secrets、部署或发布授权。
+- Founder 任务书可以授权受控 HK 工程实现。签字任务书发布到 GitHub SSOT 后，命名执行人应按任务书开工；Gate、PM Draft、HPRD 草稿或飞书状态不得重新变成开工前置循环。
+- Founder 任务书不能被解释为生产 runtime、active contract、真实数据、真实 provider、真实支付 / 计费 / 退款 / 结算、secrets、部署或发布授权。
 - Gate A / Gate B 必须反相关：职责不同、检查独立、分别给出 P0 / P1 / P2。
 - 任一 P0 阻断 Founder Acceptance，除非 Founder / Gate 重新裁决 scope。
 - Human Cross Audit 有 veto，最少独立读取 3 个核心文件或证据、运行或验证 1 个命令 / artifact、写出至少 1 条 AI 未提及观察。
@@ -360,10 +364,14 @@ Founder Taskbook
 
 PM 流程在恢复期采用双轨：
 
-1. 常规 PM Cap-Spec / HPRD lane
+1. 常规 PM Cap-Spec / HPRD capability lane
    - 适用于新能力、开放语义、多方业务协商、尚无 Founder 完整任务书的能力包。
-   - PM 继续负责 Cap-Spec、HPRD 业务理解确认、semantic questions 和 PM acceptance。
-   - PM Draft、HPRD 草稿、PM 飞书认可仍不授权 engineering start、runtime、active contract、OpenAPI、facts、events、reasoncodes 或 registry。
+   - Founder / AI 先给 PM 一个能力包任务书；复杂能力包可在任务书签字前走 Judgment Harness。
+   - PM 负责完整 Cap-Spec / requirements design，而不是只产出泛泛 Draft。
+   - 工程师基于 PM Cap-Spec 产出 HPRD / technical implementation plan。
+   - PM 审 HPRD 是否满足 Cap-Spec；PM pass 后，工程师立即进入实际开发，不再等待额外 Gate readback。
+   - 开发完成后，PM 做业务验收，Gate A / Gate B 做 AI 门禁验收，人类工程师做 Cross Audit，最后进入 Founder Acceptance / merge 决策。
+   - PM Draft、HPRD 草稿、PM 飞书认可仍不授权 production、runtime、active contract、OpenAPI、facts、events、reasoncodes、registry、真实用户、真实支付 / 计费 / 退款 / 结算、provider、secrets、deploy 或 release。
 
 2. Founder Spec Lane PM support lane
    - 适用于 Founder 已签字的 bounded engineering taskbook。
@@ -427,7 +435,8 @@ M9 production_authorized
 - staging accepted ≠ PR merged / production
 - Feishu done ≠ GitHub done
 - AI draft ≠ 正式对象
-- Founder dispatch accepted ≠ engineering start allowed
+- Unsigned dispatch accepted ≠ engineering start allowed
+- Founder-signed taskbook GitHub SSOT publication may authorize bounded engineering start inside that taskbook
 
 ## 16. 当前切片状态
 
@@ -451,22 +460,24 @@ Next action:
 - booking staging pilot accepted ≠ production runtime authorization
 - `hl-platform#106` merged ≠ MVP pass
 - DS-2 check-only completed ≠ full entitlement runtime
-- HPRD / PM Draft / Draft PR / CI green / Feishu done / Gate readback ≠ engineering start allowed
+- Unsigned PM Draft / HPRD draft / Draft PR / CI green / Feishu done / Gate readback ≠ production, release, active contract, registry, or cross-scope authorization
+- Founder-signed engineering taskbook authorizes bounded implementation inside that taskbook; PM-approved Cap-Spec plus PM-reviewed HPRD authorizes bounded capability implementation inside a signed capability taskbook
 - Founder Spec Lane taskbook ≠ production authorization
 
 ## 17. 当前能力包处理原则
 
 P0:
-- Booking #106 closeout / readiness check
+- HK bounded engineering taskbook: dispatch-ready implementation path for Xu Jiuming. This is not a new production runtime work order; it is bounded staging / sandbox / capability-package implementation and evidence closeout.
 
 P1:
-- biz.sales.order 术语红线修复，统一“手艺人 / 服务人员”
-- biz.customer.asset 相邻边界与 Contract Gap 裁决
-- biz.service.order Draft PR / blocker
-- biz.payment.checkout preflight / blocker
+- PM-led capability package specs that can proceed through the PM capability lane:
+  - biz.sales.order: PM Cap-Spec / term redline cleanup, then engineer HPRD, PM review, implementation.
+  - biz.customer.asset: PM Cap-Spec / adjacent boundary and contract-gap framing, then engineer HPRD, PM review, implementation.
+  - biz.service.order: candidate baseline readback, PM Cap-Spec completion, engineer HPRD, PM review, implementation.
+  - biz.payment.checkout: PM Cap-Spec / provider and settlement boundaries, engineer HPRD, PM review, implementation.
 
 P2:
-- biz.tenant.entitlement check-only 工程薄切片
+- biz.tenant.entitlement check-only follow-up only when a signed taskbook names a new bounded slice.
 
 Freeze:
 - biz.aftersale.case

@@ -10,7 +10,9 @@ Mission Package -> Delivery Slice / Risk-Retirement Slice -> Work Unit -> Contex
 
 Use Delivery Slice for planned delivery. Use Risk-Retirement Slice for Red Path risk removal, architecture spikes, provider blockers, secret blockers, or other unblock work.
 
-Founder Spec Lane is an approved recovery-period lane for Founder-supplied bounded taskbooks. It is not a permanent process, not a Founder privilege, and not production runtime authorization. It exists to move bounded recovery work from ledger / Draft / HPRD / Gate / Feishu / micro-decision drift back into taskbook -> context engineering preflight -> bounded HK engineering implementation -> PR or gap_report -> human-readable gates -> dual AI gates -> human cross audit -> Founder acceptance.
+Founder Spec Lane is an approved recovery-period lane for Founder-supplied bounded taskbooks. It is not a permanent process, not a Founder privilege, and not production runtime authorization. It exists to move bounded recovery work from ledger / Draft / HPRD / Gate / Feishu / micro-decision drift back into Founder + AI taskbook creation -> Judgment Harness only for complex pre-dispatch judgment -> Founder sign-off -> dispatch to named implementer -> bounded implementation -> PR or gap_report -> human-readable gates -> dual AI gates -> human cross audit -> Founder acceptance.
+
+PM-led capability packages use a separate execution shape: Founder / AI capability taskbook -> PM complete Cap-Spec and requirements design -> engineer HPRD / technical plan -> PM HPRD review -> bounded development starts immediately -> PM acceptance -> AI gates -> human engineering cross audit -> Founder acceptance / merge decision.
 
 ## Source Of Truth
 
@@ -30,9 +32,9 @@ Founder Spec Lane is an approved recovery-period lane for Founder-supplied bound
 
 ## Current Recovery State
 
-As of 2026-06-11, DS-0 Booking Readiness / booking staging pilot and DS-2 Tenant Entitlement quota check-only are completed evidence paths. The current HK mainline parent remains `hl-dispatch#194`, but there is no active staging work order unless Founder / Gate opens a new GitHub SSOT decision.
+As of 2026-06-12, DS-0 Booking Readiness / booking staging pilot and DS-2 Tenant Entitlement quota check-only are completed evidence paths. The current HK mainline parent remains `hl-dispatch#194`. The active recovery movement is the bounded HK engineering taskbook for Xu Jiuming, not a production runtime work order.
 
-Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readback as production runtime authorization.
+Do not interpret Feishu, CI green, PM Draft, HPRD draft, Draft PR, or Gate readback as production runtime authorization. Do not interpret those signals as reasons to block a Founder-signed engineering taskbook or a PM-approved capability package that has passed PM HPRD review.
 
 ## Recovery Artifacts
 

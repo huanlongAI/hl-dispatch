@@ -7,7 +7,13 @@ Default DRI: one named engineer
 
 Founder Spec Lane is a formal Delivery Recovery lane for bounded taskbooks supplied by Founder. It is not a Founder privilege lane, not a shortcut around evidence, and not a production authorization path.
 
-It exists to move recovery work out of ledger drift, Draft drift, HPRD drift, Gate drift, Feishu projection drift, and Founder micro-decision loops, and back into taskbook, bounded engineering implementation, PR or gap report, review, test, human cross audit, and Founder acceptance.
+It exists to move recovery work out of ledger drift, Draft drift, HPRD drift, Gate drift, Feishu projection drift, and Founder micro-decision loops, and back into signed taskbook, dispatch to named implementer, bounded implementation, PR or gap report, review, test, human cross audit, and Founder acceptance.
+
+The lane separates taskbook creation from implementation:
+
+- Founder and AI create the taskbook. Complex judgment-heavy taskbooks use Judgment Harness before sign-off.
+- Engineers, designers, or PMs consume the signed taskbook. They do not re-run Judgment Harness and do not need a second start authorization unless they hit new scope, missing context, or forbidden authority.
+- Gates and audits check implementation output after a PR, artifact, or `gap_report` exists. They are not a standing pre-start approval loop.
 
 ## 1. When To Use
 
@@ -33,8 +39,11 @@ Do not use this lane for:
 ## 2. Flow
 
 ```text
-Founder Taskbook
--> Engineer 24h Implementation Plan
+Founder + AI Taskbook Draft
+-> Judgment Harness only when the task is judgment-heavy
+-> Founder Sign-off
+-> Dispatch to named engineer / designer / PM
+-> 24h Implementation Plan or equivalent role plan
 -> PR or gap_report
 -> Gate A: Dahuizi contract / business / redline review
 -> Gate B: Xiaofeifei code / test / security / regression review
@@ -43,7 +52,7 @@ Founder Taskbook
 -> merge / conditional pass / follow-up / reject
 ```
 
-This flow may authorize bounded HK engineering implementation when the Founder taskbook says so. It does not authorize production by itself. Any production runtime, active contract registry write, real provider, real billing, real refund, real settlement, real customer impact, release, deployment, or secrets expansion requires a separate Founder / Gate GitHub SSOT decision.
+This flow may authorize bounded HK engineering implementation when the Founder-signed taskbook says so. After sign-off and GitHub SSOT publication, the named assignee should start within the taskbook boundary. It does not authorize production by itself. Any production runtime, active contract registry write, real provider, real billing, real refund, real settlement, real customer impact, release, deployment, or secrets expansion requires a separate Founder / Gate GitHub SSOT decision.
 
 ## 3. Required Taskbook Fields
 
@@ -178,9 +187,11 @@ Forbidden Feishu interpretations:
 
 No GitHub SSOT action item means no Feishu notification.
 
-## 10. PM Interaction
+## 10. PM And Capability Package Workflow
 
-Founder Spec Lane does not remove PM ownership of business semantics. It changes when PM can block engineering start.
+Founder Spec Lane does not remove PM ownership of business semantics. It stops PM Drafts and HPRD drafts from becoming indefinite blockers, while preserving a clear PM-owned capability-package lane.
+
+### 10.1 Founder-Signed Engineering Taskbook
 
 When a Founder-signed taskbook already provides a bounded implementation baseline:
 
@@ -190,7 +201,27 @@ When a Founder-signed taskbook already provides a bounded implementation baselin
 - PM response can clarify business semantics but cannot expand scope, authorize production, authorize active contracts, or authorize registry writes.
 - Founder / Gate decides whether PM input changes the taskbook version, becomes a follow-up, or remains out of scope.
 
-When no Founder-signed taskbook exists, or when the work still requires open-ended product negotiation, use the normal PM Cap-Spec / HPRD lane instead of Founder Spec Lane.
+### 10.2 PM-Led Capability Package Lane
+
+When the task is a capability package that still needs complete product specification, use this lane:
+
+```text
+Founder + AI capability taskbook
+-> PM complete Cap-Spec / requirements design
+-> engineer HPRD / technical implementation plan
+-> PM review of HPRD against the Cap-Spec
+-> bounded engineering implementation starts immediately after PM HPRD pass
+-> PR / demo / test evidence
+-> PM acceptance
+-> Gate A / Gate B
+-> Human Cross Audit
+-> Founder Acceptance
+-> merge / conditional pass / follow-up / reject
+```
+
+In this lane, PM-approved Cap-Spec plus PM-reviewed HPRD is the start trigger for bounded engineering implementation inside the signed capability taskbook. It still does not authorize production runtime, active contracts, real users, real payments, providers, secrets, release, or deployment.
+
+PM must not hand engineers a vague Draft and then block indefinitely. If the PM cannot complete a spec, the output is a `gap_report` with the smallest missing Founder / Gate decision.
 
 For the current HK recovery taskbook, PM semantic support is bounded by named taskbooks:
 

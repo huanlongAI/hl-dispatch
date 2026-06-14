@@ -1,0 +1,307 @@
+version: v0.1
+status: DRAFT_INITIAL_LEDGER
+date: '2026-06-14'
+scope: hl-dispatch delivery-recovery operating surface only
+non_authorization_boundary:
+  - This ledger is not a contract registry.
+  - This ledger is not a runtime registry.
+  - This ledger does not authorize live release, runtime activation, live business operation, live customer data mutation, money movement, billing, entitlement mutation, contract mutation, or identity/privacy mutation.
+  - SSOT remains in hl-contracts for contracts and in hl-platform for runtime.
+owner_assignment_sla: 48h after docs landing
+items:
+  - capability_id: booking_staging_pilot_closeout
+    display_name: Booking staging pilot closeout / hl-platform issue 106
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: P0_closeout
+    maturity: M7
+    execution_state: THIN_SLICE
+    risk_class: GATED
+    risk_tags:
+      - staging_status_ambiguity
+      - release_wording_risk
+      - live_issue_evidence_needed
+    cap_spec_status: not_applicable
+    contract_gap_status: partial
+    gateway_can_path: partial
+    human_end: partial
+    agent_manifest: partial
+    idempotency_retry: partial
+    reason_trace: partial
+    events_facts_audit: partial
+    evidence_mode: independent_partial
+    gate_h: missing_or_unconfirmed
+    not_authorized:
+      - live release claim
+      - live runtime authorization claim
+      - live business operation claim
+      - merged-delivery claim without evidence
+    next_action: Produce closeout decision package with local repo evidence and live issue evidence if accessible.
+    blocker: Live issue and PR status not verified in the review-only pass.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-dispatch/docs/delivery-recovery/CAPABILITY_INTEGRATION_BASELINE_2026-06-07.md
+      - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+    learning_patch_required: true
+
+  - capability_id: biz.booking.fulfillment
+    display_name: Booking fulfillment capability
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: P0_booking_closeout
+    maturity: M6_M7
+    execution_state: THIN_SLICE
+    risk_class: GATED
+    risk_tags:
+      - formal_booking_object
+      - resource_hold
+      - human_confirmation
+      - audit_required
+    cap_spec_status: patch_required
+    contract_gap_status: partial
+    gateway_can_path: partial
+    human_end: partial
+    agent_manifest: partial
+    idempotency_retry: partial
+    reason_trace: partial
+    events_facts_audit: partial
+    evidence_mode: independent_partial
+    gate_h: missing_or_unconfirmed
+    not_authorized:
+      - live release
+      - live booking operation
+      - bypassing human confirmation
+      - bypassing Gateway or Can check
+    next_action: Patch Human End, Agent manifest, override owner matrix, retry and duplicate policy.
+    blocker: PM dual-end PATCH gaps remain.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
+      - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+    learning_patch_required: true
+
+  - capability_id: biz.sales.order
+    display_name: Sales order capability
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: P1_formal_object_chain
+    maturity: M2_M3
+    execution_state: SPEC_ONLY
+    risk_class: GATED
+    risk_tags:
+      - formal_sales_object
+      - provider_dependency
+      - payment_dependency
+      - billing_dependency
+    cap_spec_status: pm_readiness_only
+    contract_gap_status: open
+    gateway_can_path: missing
+    human_end: missing
+    agent_manifest: missing
+    idempotency_retry: missing
+    reason_trace: partial
+    events_facts_audit: missing
+    evidence_mode: generated_only
+    gate_h: missing
+    not_authorized:
+      - runtime start
+      - provider integration
+      - payment integration
+      - billing flow
+      - live sales object mutation
+    next_action: Collect PM readiness pack, fix terminology redlines, and produce Contract Gap decision list.
+    blocker: Not authorized beyond PM readiness.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-dispatch/deliverables/tasks
+      - hl-contracts/prd/biz
+    learning_patch_required: true
+
+  - capability_id: biz.customer.asset
+    display_name: Customer asset capability
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: P1_formal_object_chain
+    maturity: M2_M3
+    execution_state: SPEC_ONLY
+    risk_class: GATED
+    risk_tags:
+      - customer_asset_state
+      - identity_dependency
+      - formal_object_chain
+    cap_spec_status: pm_readiness_only
+    contract_gap_status: open
+    gateway_can_path: missing
+    human_end: missing
+    agent_manifest: missing
+    idempotency_retry: missing
+    reason_trace: partial
+    events_facts_audit: missing
+    evidence_mode: generated_only
+    gate_h: missing
+    not_authorized:
+      - runtime start
+      - active contract claim
+      - live customer asset mutation
+      - identity merge
+      - privacy state mutation
+    next_action: Collect PM readiness pack and produce Contract Gap decision list.
+    blocker: Not authorized beyond PM readiness.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-dispatch/deliverables/tasks
+      - hl-contracts/prd/biz
+    learning_patch_required: true
+
+  - capability_id: biz.offer.catalog
+    display_name: Offer catalog capability
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: founder_signed_first_batch
+    maturity: M2_M4
+    execution_state: SPEC_ONLY
+    risk_class: GATED
+    risk_tags:
+      - service_catalog
+      - approval_matrix
+      - offer_visibility
+      - pricing_dependency
+    cap_spec_status: draft_or_prd
+    contract_gap_status: open
+    gateway_can_path: missing
+    human_end: partial
+    agent_manifest: missing
+    idempotency_retry: missing
+    reason_trace: partial
+    events_facts_audit: missing
+    evidence_mode: generated_only
+    gate_h: missing
+    not_authorized:
+      - engineering start from PRD only
+      - live catalog mutation
+      - approval bypass
+      - Gateway bypass
+    next_action: Patch Gateway path, OpenAPI gap, idempotency rule, Agent/Human End split, and approval matrix.
+    blocker: PM dual-end review remains blocked.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-dispatch/deliverables/decisions/HL-FIRST-CAPABILITY-PACKS-UPSTREAM-v0.6.md
+      - hl-contracts/docs/pm/capabilities/biz.offer.catalog/DUAL-END-PM-REVIEW.md
+    learning_patch_required: true
+
+  - capability_id: biz.store.resource
+    display_name: Store resource capability
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: founder_signed_first_batch
+    maturity: M2_M4
+    execution_state: SPEC_ONLY
+    risk_class: GATED
+    risk_tags:
+      - resource_occupancy
+      - qualified_resource_hold
+      - scheduling
+      - idempotency_required
+    cap_spec_status: draft_or_prd
+    contract_gap_status: open
+    gateway_can_path: missing
+    human_end: partial
+    agent_manifest: missing
+    idempotency_retry: missing
+    reason_trace: partial
+    events_facts_audit: missing
+    evidence_mode: generated_only
+    gate_h: missing
+    not_authorized:
+      - engineering start from PRD only
+      - live resource occupancy mutation
+      - Gateway bypass
+      - idempotency bypass
+    next_action: Patch Gateway path, normalized state machine, QRH retry and idempotency, and Human End confirmation surface.
+    blocker: PM dual-end review remains blocked.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-dispatch/deliverables/decisions/HL-FIRST-CAPABILITY-PACKS-UPSTREAM-v0.6.md
+      - hl-contracts/docs/pm/capabilities/biz.store.resource/DUAL-END-PM-REVIEW.md
+    learning_patch_required: true
+
+  - capability_id: biz.tenant.entitlement
+    display_name: Tenant entitlement capability
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: P2_engineering_thin_slice
+    maturity: M5_M6
+    execution_state: THIN_SLICE
+    risk_class: REVERSIBLE
+    risk_tags:
+      - check_only
+      - mock_seed_demo
+      - entitlement_boundary
+    cap_spec_status: draft_or_prd
+    contract_gap_status: partial
+    gateway_can_path: partial
+    human_end: not_required_for_check_only
+    agent_manifest: partial
+    idempotency_retry: partial
+    reason_trace: partial
+    events_facts_audit: partial
+    evidence_mode: independent_partial
+    gate_h: missing_or_unconfirmed
+    not_authorized:
+      - live billing mutation
+      - live entitlement mutation
+      - commercial tenant state mutation
+      - quota mutation outside check-only demo boundary
+    next_action: Maintain check-only evidence with mock/seed/demo boundary and failure path.
+    blocker: Any live entitlement or billing touch reclassifies to GATED.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-contracts/prd/biz/CONTRACT-GAP-Biz.TenantEntitlement.RRS-TE-0-QuotaCheckOnly.v0.1.md
+      - hl-platform/biz/tenant-entitlement/capability-manifest.yaml
+    learning_patch_required: true
+
+  - capability_id: biz.payment.checkout
+    display_name: Payment checkout capability
+    dri: TBD_FOUNDER_DECISION
+    pm_owner: TBD_FOUNDER_DECISION
+    gate_owner: TBD_FOUNDER_DECISION
+    lane: P1_formal_object_chain
+    maturity: M2_M3
+    execution_state: SPEC_ONLY
+    risk_class: GATED
+    risk_tags:
+      - money_movement
+      - refund
+      - settlement
+      - financial_audit
+      - provider_sovereignty
+    cap_spec_status: preflight_only
+    contract_gap_status: open
+    gateway_can_path: missing
+    human_end: missing
+    agent_manifest: missing
+    idempotency_retry: missing
+    reason_trace: missing
+    events_facts_audit: missing
+    evidence_mode: generated_only
+    gate_h: missing
+    not_authorized:
+      - payment provider integration
+      - refund operation
+      - settlement operation
+      - financial ledger mutation
+      - live money movement
+    next_action: Produce preflight and blocker map covering provider sovereignty, idempotency, and financial audit.
+    blocker: Financial risk requires explicit future Founder/Gate decision.
+    due: TBD_FOUNDER_DECISION
+    ssot_refs:
+      - hl-contracts/docs/pm/capabilities/biz.payment.checkout/DUAL-END-PM-REVIEW.md
+      - hl-contracts/prd/biz
+    learning_patch_required: true

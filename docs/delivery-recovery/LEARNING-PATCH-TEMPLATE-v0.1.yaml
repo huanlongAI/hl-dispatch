@@ -1,0 +1,22 @@
+template_version: v0.1
+status: TEMPLATE_ONLY
+non_authorization_boundary: This template records learning and routing only. It does not approve contract, runtime, release, or production operation.
+capability_id: TBD
+ledger_item_ref: TBD
+dri: TBD_FOUNDER_DECISION
+state_progression:
+  from: TBD
+  to: TBD
+patch_type: RULE_PATCH_OR_TEMPLATE_PATCH_OR_AGENT_PROMPT_PATCH_OR_GATE_PATCH_OR_TAXONOMY_PATCH_OR_DEFER_PATCH
+learning_summary: TBD
+observed_failure_or_gap: TBD
+proposed_patch: TBD
+routing:
+  default_repo: hl-dispatch
+  target_repo_if_not_dispatch: TBD
+  separate_founder_decision_required: true_or_false
+files_or_rules_to_update: []
+evidence_bundle_ref: TBD
+owner: TBD_FOUNDER_DECISION
+due: TBD_FOUNDER_DECISION
+status: proposed_or_accepted_or_deferred_or_rejected

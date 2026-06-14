@@ -71,7 +71,7 @@ items:
     reason_trace: partial
     events_facts_audit: partial
     evidence_mode: independent_partial
-    gate_h: historical_engineering_approval_present; v0.2_readiness_reuse_needs_founder_or_gate_decision
+    gate_h: historical_engineering_approval_present; docs_only_reuse_policy_approved; new_runtime_or_contract_gate_h_decision_required
     not_authorized:
       - live release
       - production runtime authorization
@@ -81,15 +81,18 @@ items:
       - bypassing human confirmation
       - bypassing Gateway or Can check
       - runtime expansion without separate Founder/Gate decision
-    next_action: Founder/Gate decide whether to accept the readiness patch package and assign Human End, Agent End, override owner matrix, retry/duplicate policy, dependency exit path, and Gate-H reuse owners.
-    blocker: PM dual-end PATCH gaps remain until owners and acceptance criteria are recorded.
-    due: TBD_FOUNDER_DECISION
+    next_action: Prepare docs-only patch planning packets for Human End, Agent End, Gateway/Can/Audit, override owner matrix, retry/duplicate policy, dependency exit path, and Gate-H reuse readback. Keep runtime, contract, production, release, MVP, active contract, schema, registry, manifest, config, OpenAPI, events, facts, and reasoncodes not authorized.
+    blocker: PM dual-end PATCH gaps remain until approved docs-only patch packets are landed and independently verified; runtime/contract progression remains not authorized.
+    due: TBD_PATCH_PACKET_PR
     ssot_refs:
       - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
       - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-PATCH-PACKAGE-v0.1-2026-06-14.md
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-EVIDENCE-BUNDLE-v0.1-2026-06-14.yaml
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-LEARNING-PATCH-v0.1-2026-06-14.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-PACKET-v0.1-2026-06-14.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-READBACK-v0.1-2026-06-14.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DOCS-PATCH-PLANNING-v0.1-2026-06-14.md
     learning_patch_required: true
 
   - capability_id: biz.sales.order

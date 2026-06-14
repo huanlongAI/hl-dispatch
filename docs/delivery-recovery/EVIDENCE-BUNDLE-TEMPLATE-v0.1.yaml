@@ -1,0 +1,26 @@
+template_version: v0.1
+status: TEMPLATE_ONLY
+non_authorization_boundary: This template does not approve any capability, release, runtime, contract, or production operation.
+capability_id: TBD
+ledger_item_ref: TBD
+dri: TBD_FOUNDER_DECISION
+risk_class: REVERSIBLE_OR_GATED
+execution_state: SPEC_ONLY_OR_THIN_SLICE_OR_RELEASE_CANDIDATE
+change_summary: TBD
+ssot_refs: []
+evidence_refs: []
+risks_tested: []
+happy_path_fixtures: []
+failure_path_fixtures: []
+automated_checks: []
+manual_checks: []
+independent_verifier: TBD
+verification_method: TBD
+evidence_mode: generated_only_or_independent_partial_or_independent_ok
+open_risks: []
+not_authorized: []
+rollback_or_exit_path: TBD
+gate_decision: not_requested_or_blocked_or_waived_or_accepted
+founder_or_gate_required: true_or_false
+decision_record: TBD
+learning_patch_ref: TBD

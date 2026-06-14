@@ -1,0 +1,101 @@
+template_version: v0.1
+status: RECORDED_EVIDENCE_BUNDLE
+date: '2026-06-14'
+non_authorization_boundary: This bundle records booking staging pilot closeout evidence only. It does not approve production runtime, release, active contract, schema, registry, manifest, live business operation, live customer data mutation, money movement, billing, entitlement mutation, or formal business object mutation.
+capability_id: booking_staging_pilot_closeout
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#booking_staging_pilot_closeout
+dri: Gate-H / 许久明
+risk_class: GATED
+execution_state: THIN_SLICE
+change_summary: Live GitHub evidence shows hl-dispatch#195 closed with Founder staging evidence acceptance and hl-platform#106 merged as staging-only booking pilot evidence.
+ssot_refs:
+  - https://github.com/huanlongAI/hl-dispatch/issues/195
+  - https://github.com/huanlongAI/hl-platform/pull/106
+  - https://github.com/huanlongAI/hl-platform/pull/109
+  - https://github.com/huanlongAI/hl-platform/pull/110
+  - docs/delivery-recovery/DELIVERY_RECOVERY_IMPLEMENTATION_CONTRACT_v0.1.md
+  - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+evidence_refs:
+  - id: dispatch_195_final_acceptance
+    url: https://github.com/huanlongAI/hl-dispatch/issues/195#issuecomment-4637724331
+    result: Founder accepted hl-dispatch#195 staging-only booking pilot evidence and closed the workbench.
+  - id: platform_106_merge
+    url: https://github.com/huanlongAI/hl-platform/pull/106
+    result: PR merged on 2026-06-08T04:46:31Z with merge commit e6e25a28917a98310067f98a6855c19266260e83.
+  - id: platform_106_checks
+    url: https://github.com/huanlongAI/hl-platform/pull/106
+    result: ai-audit, contract-gate, fast-lane, runtime-lane, build, and sentinel checks succeeded before merge.
+  - id: platform_109_ds0_readback
+    url: https://github.com/huanlongAI/hl-platform/pull/109
+    result: DS-0 Booking Readiness Check marked PASS after #106 merged, with no runtime code changes.
+  - id: platform_110_related_ds1a
+    url: https://github.com/huanlongAI/hl-platform/pull/110
+    result: Related DS-1A booking runtime pilot evidence merged as sandbox / embedded / non-production evidence.
+risks_tested:
+  - staging_status_ambiguity
+  - three_step_booking_http_path
+  - durable_audit_completed_assertion
+  - event_id_non_empty_assertion
+  - failure_path_service_flow_bind_failed
+  - reason_code_guard_behavior
+happy_path_fixtures:
+  - booking-submit.json
+  - booking-confirm.json
+  - booking-arrival-complete.json
+failure_path_fixtures:
+  - booking-arrival-complete-service-flow-bind-failed.json
+automated_checks:
+  - name: ai-audit / cross-model-review
+    repo: huanlongAI/hl-platform
+    pr: 106
+    conclusion: SUCCESS
+  - name: contract-gate
+    repo: huanlongAI/hl-platform
+    pr: 106
+    conclusion: SUCCESS
+  - name: fast-lane
+    repo: huanlongAI/hl-platform
+    pr: 106
+    conclusion: SUCCESS
+  - name: runtime-lane
+    repo: huanlongAI/hl-platform
+    pr: 106
+    conclusion: SUCCESS
+  - name: build
+    repo: huanlongAI/hl-platform
+    pr: 106
+    conclusion: SUCCESS
+  - name: sentinel / 一致性检查
+    repo: huanlongAI/hl-platform
+    pr: 106
+    conclusion: SUCCESS
+manual_checks:
+  - name: Founder final staging evidence acceptance
+    source: https://github.com/huanlongAI/hl-dispatch/issues/195#issuecomment-4637724331
+    result: accepted_for_staging_evidence_only
+  - name: GitHub PR reviews on hl-platform#106
+    source: gh pr view 106 --repo huanlongAI/hl-platform --json reviews
+    result: no_reviews_returned; advisory owner follow-up was explicitly not blocking hl-dispatch#195
+independent_verifier: GitHub issue and PR state, GitHub Actions check results, and local repo evidence read by Codex; Human Gate H PR review was not present.
+verification_method: Read-only GitHub issue/PR JSON checks plus local repo file inspection; no hl-platform tests were rerun in this closeout pass.
+evidence_mode: independent_partial
+open_risks:
+  - Gate-H PR review was not present on hl-platform#106.
+  - This evidence does not certify production, release, active contract, or broader runtime readiness.
+  - Runtime diagnostics in related DS-1A evidence include committed snapshots, not a fresh long-running live runtime capture.
+  - The top-level booking manifest remains pilot-scoped; manifest fields must not be used alone as authorization.
+not_authorized:
+  - production runtime authorization
+  - MVP pass
+  - production release
+  - active contract registration
+  - formal OpenAPI / facts / events / reasoncodes registration
+  - live booking operation
+  - live customer data mutation
+  - payment / asset / sales.order / service.order / customer.profile expansion
+  - provider, billing, refund, settlement, or entitlement behavior
+rollback_or_exit_path: If this closeout evidence is disputed, keep production/release blocked and open a separate Founder/Gate decision packet. Any platform revert or runtime rollback requires separate hl-platform authorization.
+gate_decision: accepted_for_staging_evidence_only
+founder_or_gate_required: true
+decision_record: https://github.com/huanlongAI/hl-dispatch/issues/195#issuecomment-4637724331
+learning_patch_ref: docs/delivery-recovery/BOOKING-STAGING-PILOT-LEARNING-PATCH-v0.1-2026-06-14.yaml

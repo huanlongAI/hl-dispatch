@@ -62,7 +62,7 @@ items:
       - resource_hold
       - human_confirmation
       - audit_required
-    cap_spec_status: patch_required
+    cap_spec_status: patch_package_prepared
     contract_gap_status: partial
     gateway_can_path: partial
     human_end: partial
@@ -71,18 +71,25 @@ items:
     reason_trace: partial
     events_facts_audit: partial
     evidence_mode: independent_partial
-    gate_h: missing_or_unconfirmed
+    gate_h: historical_engineering_approval_present; v0.2_readiness_reuse_needs_founder_or_gate_decision
     not_authorized:
       - live release
+      - production runtime authorization
+      - MVP pass
+      - active contract registration
       - live booking operation
       - bypassing human confirmation
       - bypassing Gateway or Can check
-    next_action: Patch Human End, Agent manifest, override owner matrix, retry and duplicate policy.
-    blocker: PM dual-end PATCH gaps remain.
+      - runtime expansion without separate Founder/Gate decision
+    next_action: Founder/Gate decide whether to accept the readiness patch package and assign Human End, Agent End, override owner matrix, retry/duplicate policy, dependency exit path, and Gate-H reuse owners.
+    blocker: PM dual-end PATCH gaps remain until owners and acceptance criteria are recorded.
     due: TBD_FOUNDER_DECISION
     ssot_refs:
       - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
       - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-PATCH-PACKAGE-v0.1-2026-06-14.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-EVIDENCE-BUNDLE-v0.1-2026-06-14.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-LEARNING-PATCH-v0.1-2026-06-14.yaml
     learning_patch_required: true
 
   - capability_id: biz.sales.order

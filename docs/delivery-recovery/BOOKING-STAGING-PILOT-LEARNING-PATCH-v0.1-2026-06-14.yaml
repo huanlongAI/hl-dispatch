@@ -1,0 +1,26 @@
+template_version: v0.1
+status: proposed
+date: '2026-06-14'
+non_authorization_boundary: This learning patch records process learning only. It does not approve contract, runtime, release, production operation, schema, registry, manifest, live data, or business mutation.
+capability_id: booking_staging_pilot_closeout
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#booking_staging_pilot_closeout
+dri: Gate-H / 许久明
+state_progression:
+  from: live_issue_and_pr_status_not_verified
+  to: live_issue_closed_and_pr_merged_as_staging_evidence_only
+patch_type: DEFER_PATCH
+learning_summary: Closeout evidence can change after an initial review-only Ledger entry. The operating loop must separate PR merge evidence from production, MVP, release, or active-contract authorization.
+observed_failure_or_gap: The initial Ledger correctly blocked on unverified live Issue / PR state. After hl-platform#106 merged, that blocker became stale, but the PR merge still must not be interpreted as production authorization.
+proposed_patch: For future closeouts, produce a closeout package and Evidence Bundle first, then update Ledger only with explicit non-authorization wording and a separate follow-up decision if production, release, active contract, or runtime expansion is requested.
+routing:
+  default_repo: hl-dispatch
+  target_repo_if_not_dispatch: TBD
+  separate_founder_decision_required: false_for_dispatch_only_closeout_docs_true_for_contract_or_runtime
+files_or_rules_to_update:
+  - docs/delivery-recovery/BOOKING-STAGING-PILOT-CLOSEOUT-PACKAGE-v0.1-2026-06-14.md
+  - docs/delivery-recovery/BOOKING-STAGING-PILOT-EVIDENCE-BUNDLE-v0.1-2026-06-14.yaml
+  - future optional Ledger update for booking_staging_pilot_closeout
+evidence_bundle_ref: docs/delivery-recovery/BOOKING-STAGING-PILOT-EVIDENCE-BUNDLE-v0.1-2026-06-14.yaml
+owner: Gate-H / 许久明
+due: before_any_ledger_state_update
+status_note: Proposed with this closeout package; not a runtime or contract change.

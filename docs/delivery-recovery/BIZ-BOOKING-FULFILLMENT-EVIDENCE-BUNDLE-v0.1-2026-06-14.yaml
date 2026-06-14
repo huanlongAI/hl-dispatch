@@ -1,0 +1,168 @@
+template_version: v0.1
+status: READINESS_EVIDENCE_BUNDLE_DRAFT
+date: '2026-06-14'
+non_authorization_boundary: This bundle records biz.booking.fulfillment readiness evidence only. It does not approve production runtime, release, MVP pass, active contract, schema, registry, manifest, OpenAPI, events, facts, reasoncodes, live booking operation, live customer data mutation, money movement, billing, entitlement mutation, or formal business object mutation.
+review_first: true
+capability_id: biz.booking.fulfillment
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#biz.booking.fulfillment
+dri: PM-A / 邹骢
+pm_owner: PM-A / 邹骢
+gate_owner: Gate-H / 许久明
+risk_class: GATED
+execution_state: THIN_SLICE
+maturity: M6_M7
+change_summary: Readiness evidence supports a patch package for Human End, Agent manifest, override owner matrix, retry/duplicate policy, dependency exit path, and Gate-H reuse decision. It does not authorize runtime expansion.
+current_result:
+  pm_dual_end_review: PATCH_REQUIRED
+  ledger_gate_h: missing_or_unconfirmed
+  historical_gate_h_record: APPROVED_FOR_ENGINEERING
+  historical_gate_h_date: '2026-05-25'
+  platform_manifest_lifecycle: pilot
+  platform_manifest_status: pilot
+  runtime_compatibility_mode: pilot
+  acceptance_manifest_status: READY
+  acceptance_manifest_coverage:
+    scenario_count: 41
+    covered: 41
+    success_cases: 19
+    failure_cases: 22
+    action_count: 19
+  openapi_contract_surface:
+    x_hl_action_contracts: 19
+    can_routes: 19
+    action_routes: 19
+    schemas: 9
+ssot_refs:
+  - hl-dispatch/docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+  - hl-dispatch/docs/delivery-recovery/BOOKING-STAGING-PILOT-CLOSEOUT-PACKAGE-v0.1-2026-06-14.md
+  - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
+  - hl-contracts/apis/biz.booking.fulfillment.internal.openapi.v1.yaml
+  - hl-contracts/events/biz-booking-fulfillment-state-audit.v0.1.yaml
+  - hl-contracts/events/biz-booking-fulfillment-outcome-classification.v0.1.yaml
+  - hl-contracts/reasoncodes/biz-booking-fulfillment-reasoncodes.v0.1.yaml
+  - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+  - hl-platform/biz/booking-fulfillment/acceptance-manifest.yaml
+  - hl-platform/biz/booking-fulfillment/runtime-compatibility.yaml
+  - hl-platform/docs/ai-ops/gate-h/biz.booking.fulfillment.yaml
+  - https://github.com/huanlongAI/hl-dispatch/issues/102
+  - https://github.com/huanlongAI/hl-platform/pull/106
+evidence_refs:
+  - id: ledger_current_item
+    source: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+    result: biz.booking.fulfillment remains THIN_SLICE / M6_M7 / GATED, with PM dual-end PATCH gaps as blocker.
+  - id: pm_dual_end_review
+    source: hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
+    result: PATCH_REQUIRED; requires Human End surface, Agent manifest, override owner matrix, and retry / duplicate policy before engineering entry.
+  - id: openapi_can_action_surface
+    source: hl-contracts/apis/biz.booking.fulfillment.internal.openapi.v1.yaml
+    result: 19 Can routes, 19 Action routes, and 19 x-hl-action-contracts are present; Action must re-check Can and key_action success returns event_id.
+  - id: state_audit_contract
+    source: hl-contracts/events/biz-booking-fulfillment-state-audit.v0.1.yaml
+    result: Active state audit contract maps booking states, actions, events, and required audit facts; it does not authorize runtime code or engineering start.
+  - id: reasoncode_trace_map
+    source: hl-contracts/reasoncodes/biz-booking-fulfillment-reasoncodes.v0.1.yaml
+    result: Active non-success reason_code trace map exists; success outcome classification is explicitly outside reason_code.
+  - id: platform_manifest
+    source: hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+    result: Top-level lifecycle and status are pilot; 19 actions have pilot implementation status.
+  - id: acceptance_manifest
+    source: hl-platform/biz/booking-fulfillment/acceptance-manifest.yaml
+    result: 41 covered acceptance scenarios across 19 actions, including 19 success and 22 failure cases.
+  - id: runtime_compatibility
+    source: hl-platform/biz/booking-fulfillment/runtime-compatibility.yaml
+    result: compatibility_mode is pilot.
+  - id: historical_gate_h
+    source: hl-platform/docs/ai-ops/gate-h/biz.booking.fulfillment.yaml
+    result: Historical Gate-H record says APPROVED_FOR_ENGINEERING on 2026-05-25; reuse for the v0.2 operating-rule readiness cycle needs Founder or Gate decision.
+  - id: dispatch_102_closure
+    source: https://github.com/huanlongAI/hl-dispatch/issues/102
+    result: Issue closed with boundaries stating MVP passed, Founder accepted, and Biz production resumed were false.
+  - id: platform_106_staging_evidence
+    source: https://github.com/huanlongAI/hl-platform/pull/106
+    result: PR merged after staging-only booking pilot evidence acceptance; merge is not production runtime authorization.
+readiness_gaps:
+  - id: human_end_surface
+    status: PATCH_REQUIRED
+    required: Filled NUI, GUI, confirmation, review, audit, exception, and deterministic control surfaces.
+  - id: agent_manifest
+    status: PATCH_REQUIRED
+    required: Discovery metadata, tool pruning profile, context budget, pagination, evidence summarization, and schema preservation rules.
+  - id: override_owner_matrix
+    status: NEEDS_PM_DECISION
+    required: Breakglass / override owner and approval_ref for critical resource-release and no-show corrections.
+  - id: retry_duplicate_policy
+    status: PATCH_REQUIRED
+    required: Replay, retryable failure classes, duplicate prevention, conflict behavior, and audit semantics per action class.
+  - id: external_dependency_exit_path
+    status: NEEDS_PM_DECISION
+    required: StoreResource / QRH, CustomerProfile precheck, OfferCatalog requirement, and legacy mapping failure or downgrade path.
+  - id: gate_h_reuse
+    status: NEEDS_FOUNDER_OR_GATE_DECISION
+    required: Decide whether the 2026-05-25 historical engineering approval can be reused for this v0.2 readiness package.
+representative_happy_path_fixtures:
+  - booking-submit.json
+  - booking-confirm.json
+  - booking-cancel.json
+  - booking-reschedule.json
+  - booking-arrival-complete.json
+  - booking-artisan-assign.json
+  - booking-artisan-reassign.json
+  - booking-resource-release-failure-resolve.json
+  - booking-no-show-mark.json
+representative_failure_path_fixtures:
+  - booking-submit-duplicate.json
+  - booking-submit-conflict.json
+  - booking-submit-blocked.json
+  - booking-submit-internal-error.json
+  - booking-confirm-conflict.json
+  - booking-arrival-complete-service-flow-bind-failed.json
+  - booking-artisan-assign-no-available.json
+  - booking-artisan-reassign-permission-denied.json
+  - booking-no-show-mark-invalid-reason.json
+  - booking-resource-release-failure-resolve-hold-release-failed.json
+verification_method: Read-only GitHub issue/PR evidence, local repo file inspection, YAML parsing for manifest counts, and rg checks for OpenAPI Can/Action/Audit/idempotency fields; no hl-platform tests were rerun in this docs-only pass.
+evidence_mode: independent_partial
+automated_checks:
+  - name: acceptance_manifest_declared_coverage
+    source: hl-platform/biz/booking-fulfillment/acceptance-manifest.yaml
+    conclusion: READY / 41 COVERED scenarios declared
+  - name: prior_staging_evidence_pr
+    source: huanlongAI/hl-platform#106
+    conclusion: Merged staging-only evidence; not production authorization
+manual_checks:
+  - name: PM dual-end review
+    source: hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
+    result: PATCH_REQUIRED
+  - name: Historical Gate-H closure
+    source: huanlongAI/hl-dispatch#102
+    result: APPROVED_FOR_ENGINEERING for the earlier platform lane, with MVP / Founder Accepted / production resumed all false
+open_risks:
+  - Current PM dual-end PATCH_REQUIRED result is newer than the historical 2026-05-25 Gate-H engineering approval.
+  - Pilot manifest and acceptance coverage can be misread as production readiness if non-authorization wording is omitted.
+  - Agent End tool pruning and context budget are not yet recorded.
+  - Override owner matrix and approval_ref are not yet recorded.
+  - Retry / duplicate policy remains incomplete beyond representative fixture evidence.
+  - External dependency exit paths remain incomplete.
+not_authorized:
+  - production runtime authorization
+  - MVP pass
+  - production release
+  - active contract registration
+  - OpenAPI / facts / events / reasoncodes mutation
+  - schema, registry, or manifest mutation
+  - live booking operation
+  - live customer data mutation
+  - payment, refund, settlement, billing, or entitlement mutation
+  - sales order, customer asset, provider, service order, or customer profile expansion
+  - bypassing Gateway / HK Kernel / Can -> Action -> Audit
+rollback_or_exit_path: If the readiness package is disputed, keep biz.booking.fulfillment blocked at PATCH_REQUIRED and request a separate Founder/Gate decision packet. Any contract or runtime change requires separate authorization in the owning repo.
+gate_decision: not_requested_for_runtime
+founder_decision_required: true
+decision_required_for_next_progression:
+  - accept_readiness_patch_package
+  - assign_human_end_owner
+  - assign_agent_manifest_owner
+  - define_override_owner_matrix
+  - define_retry_duplicate_policy
+  - decide_gate_h_reuse_or_new_review
+learning_patch_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-LEARNING-PATCH-v0.1-2026-06-14.yaml

@@ -1,0 +1,467 @@
+version: v0.1
+status: DRAFT_GOAL_MODE_TASK_LEDGER
+date: '2026-06-14'
+scope: hl-dispatch/docs/delivery-recovery goal-mode execution tracking only
+goal_id: hl_capability_operating_rules_remaining_task_closure
+objective: 制定唤龙能力包运行规则剩余阶段的全部任务，并形成目标模式执行闭环计划
+readable_plan_ref: docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-REMAINING-TASK-CLOSURE-v0.1-2026-06-14.md
+ledger_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+non_authorization_boundary:
+  - This task ledger is not a contract registry.
+  - This task ledger is not a runtime registry.
+  - This task ledger does not authorize runtime, schema, registry, manifest, config, OpenAPI, events, facts, reasoncodes, production, release, MVP, active contract, live data, or live business operation.
+  - This task ledger does not authorize payment, refund, settlement, billing, entitlement, identity/privacy, customer asset, sales order, provider, service order, booking object, or other formal business object mutation.
+  - SSOT remains in hl-contracts for contracts and in hl-platform for runtime.
+review_first: true
+founder_decision_required_for:
+  - any change outside hl-dispatch/docs/delivery-recovery/
+  - any hl-contracts change
+  - any hl-platform change
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - OpenAPI / events / facts / reasoncodes mutation
+  - production / release / MVP / active contract claim
+  - live data or live business operation
+  - Gateway / HK Kernel / Can -> Action -> Audit bypass
+execution_policy:
+  default_branch: origin/main
+  branch_prefix: codex/
+  unit: one bounded PR per task unless a task explicitly allows a tightly coupled pair
+  push_requires_founder_confirmation: true
+  draft_pr_requires_founder_confirmation: true
+  merge_requires_founder_confirmation: true
+  allowed_path:
+    - docs/delivery-recovery/
+  forbidden_repositories:
+    - hl-contracts
+    - hl-platform
+  required_local_validation:
+    - git diff --check
+    - path scope check only under docs/delivery-recovery/
+    - Ledger YAML parse if Ledger is touched
+    - required boundary keyword check
+    - scripts/test-github-language-gate.py
+    - scripts/test-action-projection-exporter.py
+required_keywords:
+  - Boundary
+  - Not Authorized
+  - Review-first
+  - Founder decision required
+  - Gateway / HK Kernel / Can -> Action -> Audit
+status_values:
+  - not_started
+  - in_progress
+  - pr_open
+  - merged
+  - deferred
+  - blocked_needs_founder_gate
+task_defaults:
+  current_status: not_started
+  authorized_scope: docs_only_dispatch
+  contract_authorization: not_authorized
+  runtime_authorization: not_authorized
+  production_authorization: not_authorized
+  active_contract_authorization: not_authorized
+tasks:
+  - task_id: BF-01-HUMAN-END
+    phase: Phase 3/4
+    capability_id: biz.booking.fulfillment
+    objective: Close Human End docs gap.
+    owner: PM-A / 邹骢
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - BIZ-BOOKING-FULFILLMENT-DOCS-PATCH-PLANNING-v0.1-2026-06-14
+    output_files:
+      - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - NUI intent entry surface
+      - GUI state anchor
+      - confirmation surface
+      - review surface
+      - audit surface
+      - exception handling surface
+      - deterministic non-chat controls
+      - failure path
+    done_when:
+      - output file merged on origin/main
+      - Boundary and Not Authorized sections present
+      - human confirmation thresholds recorded
+      - runtime and contract remain not authorized
+
+  - task_id: BF-02-AGENT-END
+    phase: Phase 3/4
+    capability_id: biz.booking.fulfillment
+    objective: Close Agent End readiness criteria gap.
+    owner: Gate-H / 许久明
+    reviewer: PM-A / 邹骢
+    depends_on:
+      - BF-01-HUMAN-END
+    output_files:
+      - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-PATCH-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - tool discovery
+      - tool pruning profile
+      - context budget
+      - pagination rule
+      - evidence summarization
+      - schema preservation
+      - Can before Action
+      - Action rechecks Can
+    done_when:
+      - output file merged on origin/main
+      - Agent cannot hold final booking decision authority
+      - Gateway bypass is explicitly blocked
+
+  - task_id: BF-03-GATEWAY-CAN-AUDIT
+    phase: Phase 3/4
+    capability_id: biz.booking.fulfillment
+    objective: Close Gateway / Can / Action / Audit trace gap.
+    owner: Gate-H / 许久明
+    reviewer: PM-A / 邹骢
+    depends_on:
+      - BF-02-AGENT-END
+    output_files:
+      - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-GATEWAY-CAN-AUDIT-PATCH-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - fail-secure behavior
+      - denied Can no-mutation rule
+      - event_id preservation
+      - trace_id preservation
+      - reason_code preservation
+      - audit_ref preservation
+    done_when:
+      - output file merged on origin/main
+      - every key action has visible Can -> Action -> Audit trace requirement
+
+  - task_id: BF-04-OVERRIDE-RETRY
+    phase: Phase 3/4
+    capability_id: biz.booking.fulfillment
+    objective: Close override owner matrix, approval_ref, retry, duplicate, and idempotency policy gaps.
+    owner: Gate-H / 许久明
+    reviewer: PM-A / 邹骢
+    depends_on:
+      - BF-03-GATEWAY-CAN-AUDIT
+    output_files:
+      - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-OVERRIDE-RETRY-PATCH-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - owner_role
+      - approver_role
+      - approval_ref
+      - allowed_reason_code_domains
+      - retryable failure classes
+      - non-retryable failure classes
+      - idempotency replay result
+      - duplicate submission result
+      - duplicate audit behavior
+    done_when:
+      - output file merged on origin/main
+      - no breakglass, override, or approval_ref path is activated
+
+  - task_id: BF-05-DEPENDENCY-EXIT
+    phase: Phase 3/4
+    capability_id: biz.booking.fulfillment
+    objective: Close StoreResource, CustomerProfile, OfferCatalog, and legacy mapping exit-path gaps.
+    owner: PM-A / 邹骢
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - BF-04-OVERRIDE-RETRY
+    output_files:
+      - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DEPENDENCY-EXIT-PATH-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - StoreResource / QRH failure path
+      - CustomerProfile precheck failure path
+      - OfferCatalog requirement failure path
+      - legacy reservation mapping failure path
+      - cross-capability stop rule
+    done_when:
+      - output file merged on origin/main
+      - cross-capability effects require separate owner/Gate record
+
+  - task_id: BF-06-READINESS-ROLLUP
+    phase: Phase 4
+    capability_id: biz.booking.fulfillment
+    objective: Roll up BF-01 through BF-05 and decide whether Ledger blocker can move from patch planning to decision packet ready.
+    owner: PM-A / 邹骢
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - BF-01-HUMAN-END
+      - BF-02-AGENT-END
+      - BF-03-GATEWAY-CAN-AUDIT
+      - BF-04-OVERRIDE-RETRY
+      - BF-05-DEPENDENCY-EXIT
+    output_files:
+      - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-ROLLUP-v0.1-2026-06-14.md
+      - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+    minimum_evidence:
+      - independent evidence summary
+      - failure path summary
+      - Learning Patch status
+      - Ledger blocker recommendation
+    done_when:
+      - rollup merged on origin/main
+      - Ledger remains conservative unless separately authorized
+      - runtime and contract remain not authorized
+
+  - task_id: SO-01-PM-READINESS
+    phase: Phase 4
+    capability_id: biz.sales.order
+    objective: Prepare Sales Order PM readiness packet.
+    owner: PM-A / 邹骢
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - BF-06-READINESS-ROLLUP
+    output_files:
+      - docs/delivery-recovery/BIZ-SALES-ORDER-PM-READINESS-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - PM readiness pack index
+      - terminology redlines
+      - Contract Gap decision list
+      - no provider/payment/billing authorization
+    done_when:
+      - output file merged on origin/main
+      - generated-only evidence is not accepted for GATED progression
+
+  - task_id: CA-01-PM-READINESS
+    phase: Phase 4
+    capability_id: biz.customer.asset
+    objective: Prepare Customer Asset PM readiness packet.
+    owner: PM-B / 朱阳
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - SO-01-PM-READINESS
+    output_files:
+      - docs/delivery-recovery/BIZ-CUSTOMER-ASSET-PM-READINESS-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - PM readiness pack index
+      - asset state model gaps
+      - identity/customer-profile dependency boundary
+      - Contract Gap decision list
+    done_when:
+      - output file merged on origin/main
+      - live customer asset and identity/privacy mutation remain not authorized
+
+  - task_id: OC-01-GAP-PATCH
+    phase: Phase 4
+    capability_id: biz.offer.catalog
+    objective: Prepare Offer Catalog gap patch packet.
+    owner: PM-B / 朱阳
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - CA-01-PM-READINESS
+    output_files:
+      - docs/delivery-recovery/BIZ-OFFER-CATALOG-GAP-PATCH-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - Gateway path gap
+      - OpenAPI gap
+      - idempotency rule
+      - Agent/Human End split
+      - approval matrix gap
+    done_when:
+      - output file merged on origin/main
+      - no PRD-direct engineering start is authorized
+
+  - task_id: SR-01-GAP-PATCH
+    phase: Phase 4
+    capability_id: biz.store.resource
+    objective: Prepare Store Resource gap patch packet.
+    owner: PM-B / 朱阳
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - OC-01-GAP-PATCH
+    output_files:
+      - docs/delivery-recovery/BIZ-STORE-RESOURCE-GAP-PATCH-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - resource state machine gap
+      - QRH retry/idempotency
+      - Gateway path gap
+      - occupancy mutation risk
+      - Human End confirmation surface
+    done_when:
+      - output file merged on origin/main
+      - live resource occupancy mutation remains not authorized
+
+  - task_id: TE-01-CHECK-ONLY
+    phase: Phase 4
+    capability_id: biz.tenant.entitlement
+    objective: Prepare Tenant Entitlement check-only evidence packet.
+    owner: Gate-H / 许久明
+    reviewer: PM-B / 朱阳
+    depends_on:
+      - SR-01-GAP-PATCH
+    output_files:
+      - docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-EVIDENCE-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - mock/seed/demo boundary
+      - failure path
+      - no live entitlement mutation statement
+      - no live billing mutation statement
+    done_when:
+      - output file merged on origin/main
+      - check-only boundary is preserved
+
+  - task_id: PC-01-PREFLIGHT
+    phase: Phase 4
+    capability_id: biz.payment.checkout
+    objective: Prepare Payment Checkout preflight and blocker packet.
+    owner: PM-B / 朱阳
+    reviewer: Gate-H / 许久明
+    depends_on:
+      - TE-01-CHECK-ONLY
+    output_files:
+      - docs/delivery-recovery/BIZ-PAYMENT-CHECKOUT-PREFLIGHT-BLOCKER-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - payment/refund/settlement blocker map
+      - provider sovereignty risk
+      - idempotency requirements
+      - financial audit requirements
+      - no live money movement statement
+    done_when:
+      - output file merged on origin/main
+      - live payment, refund, settlement, and financial ledger mutation remain not authorized
+
+  - task_id: LEDGER-01-PORTFOLIO-READBACK
+    phase: Phase 4
+    capability_id: portfolio
+    objective: Update Ledger after all Phase 4 docs-only packets land or are explicitly deferred.
+    owner: Dispatch / Codex
+    reviewer: Founder / Gate
+    depends_on:
+      - BF-06-READINESS-ROLLUP
+      - SO-01-PM-READINESS
+      - CA-01-PM-READINESS
+      - OC-01-GAP-PATCH
+      - SR-01-GAP-PATCH
+      - TE-01-CHECK-ONLY
+      - PC-01-PREFLIGHT
+    output_files:
+      - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+      - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-PORTFOLIO-READBACK-v0.1-2026-06-14.md
+    minimum_evidence:
+      - all Ledger rows have current ssot_refs
+      - blockers are current
+      - not_authorized exists on every row
+      - evidence_mode is current
+      - next_action is current
+    done_when:
+      - readback merged on origin/main
+      - no Ledger row implies production, release, MVP, active contract, or runtime authorization
+
+  - task_id: CONTRACT-DP-01
+    phase: Phase 5
+    capability_id: conditional
+    objective: Prepare future contract decision packet if Phase 4 evidence proves a contract change is needed.
+    owner: Owning PM + Gate-H
+    reviewer: Founder / Gate
+    depends_on:
+      - LEDGER-01-PORTFOLIO-READBACK
+    output_files:
+      - docs/delivery-recovery/CAPABILITY-CONTRACT-DECISION-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - exact hl-contracts files
+      - diff intent
+      - compatibility check
+      - rollback plan
+      - non-authorization boundary
+    done_when:
+      - decision packet merged in dispatch
+      - no hl-contracts change occurs without separate Founder / Gate approval
+
+  - task_id: PLATFORM-DP-01
+    phase: Phase 6
+    capability_id: conditional
+    objective: Prepare future platform decision packet if Founder / Gate wants runtime exploration.
+    owner: Gate-H + Engineering Owner
+    reviewer: Founder / Gate
+    depends_on:
+      - LEDGER-01-PORTFOLIO-READBACK
+      - CONTRACT-DP-01
+    output_files:
+      - docs/delivery-recovery/CAPABILITY-PLATFORM-DECISION-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - exact hl-platform files
+      - fixture plan
+      - readiness gate plan
+      - rollback plan
+      - no-production boundary
+    done_when:
+      - decision packet merged in dispatch
+      - no hl-platform change occurs without separate Founder / Gate approval
+
+  - task_id: WEEKLY-01
+    phase: Phase 7
+    capability_id: portfolio
+    objective: Establish weekly Evidence / Learning Patch review.
+    owner: Dispatch / Gate-H
+    reviewer: Founder / Gate
+    depends_on:
+      - LEDGER-01-PORTFOLIO-READBACK
+    output_files:
+      - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-WEEKLY-REVIEW-PACKET-v0.1-2026-06-14.md
+    minimum_evidence:
+      - changed state list
+      - GATED evidence list
+      - failure path list
+      - blockers needing Founder / Gate
+      - Learning Patch list
+    done_when:
+      - weekly review packet merged on origin/main
+      - Learning Patch gaps are visible
+
+  - task_id: METRICS-30
+    phase: Phase 8
+    capability_id: portfolio
+    objective: Prepare Day-30 mechanism integrity readback.
+    owner: Dispatch / Founder / Gate
+    reviewer: Founder / Gate
+    depends_on:
+      - WEEKLY-01
+    output_files:
+      - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-METRICS-30D-v0.1.md
+    minimum_evidence:
+      - Ledger coverage
+      - GATED bypass count
+      - status misread count
+      - Learning Patch after progression rate
+      - generated-only accepted count
+    done_when:
+      - metrics readback merged on origin/main
+      - simplification candidates are listed
+
+  - task_id: METRICS-60-90
+    phase: Phase 8
+    capability_id: portfolio
+    objective: Prepare Day-60/90 trend review and simplification recommendations.
+    owner: Dispatch / Founder / Gate
+    reviewer: Founder / Gate
+    depends_on:
+      - METRICS-30
+    output_files:
+      - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-METRICS-60-90D-v0.1.md
+    minimum_evidence:
+      - lead time trend
+      - blocker wait trend
+      - rework trend
+      - independent evidence trend
+      - failure path coverage trend
+      - process overhead trend
+    done_when:
+      - metrics readback merged on origin/main
+      - unnecessary rule or ritual removal candidates are listed
+completion_audit:
+  required_before_goal_complete:
+    - readable plan exists and is linked from README and implementation plan
+    - YAML task ledger parses
+    - all 18 tasks exist with owner, reviewer, dependency, output, minimum_evidence, and done_when
+    - no task authorizes runtime, contract, production, MVP, active contract, live data, or live business operation
+    - current branch diff stays under docs/delivery-recovery/
+    - local checks pass
+    - plan is pushed, Draft PR is created, checks pass, and PR is merged to origin/main
+  current_status: local_plan_prepared_ready_for_push_confirmation
+  next_required_confirmation: 推送确认：批准推送
+  current_open_pr_conflict_check:
+    checked_at: '2026-06-14'
+    result: no_docs_delivery_recovery_path_conflict_found
+    observed_open_prs:
+      - pr: https://github.com/huanlongAI/hl-dispatch/pull/261
+        path_touched: .sentinel/config.yaml
+        conflicts_with_this_task: false

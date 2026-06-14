@@ -31,17 +31,20 @@ items:
     reason_trace: partial
     events_facts_audit: partial
     evidence_mode: independent_partial
-    gate_h: missing_or_unconfirmed
+    gate_h: founder_accepted_for_staging_evidence; gate_h_pr_review_missing
     not_authorized:
       - live release claim
       - live runtime authorization claim
       - live business operation claim
       - merged-delivery claim without evidence
-    next_action: Produce closeout decision package with local repo evidence and live issue evidence if accessible.
-    blocker: Live issue and PR status not verified in the review-only pass.
+    next_action: Treat booking_staging_pilot_closeout as closed for staging evidence only; open separate Founder/Gate packet for any production, release, active contract, or broader runtime work.
+    blocker: none_for_staging_evidence_closeout; production/release/active contract/runtime expansion still not authorized
     due: TBD_FOUNDER_DECISION
     ssot_refs:
       - hl-dispatch/docs/delivery-recovery/CAPABILITY_INTEGRATION_BASELINE_2026-06-07.md
+      - hl-dispatch/docs/delivery-recovery/BOOKING-STAGING-PILOT-CLOSEOUT-PACKAGE-v0.1-2026-06-14.md
+      - hl-dispatch/docs/delivery-recovery/BOOKING-STAGING-PILOT-EVIDENCE-BUNDLE-v0.1-2026-06-14.yaml
+      - hl-dispatch/docs/delivery-recovery/BOOKING-STAGING-PILOT-LEARNING-PATCH-v0.1-2026-06-14.yaml
       - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
     learning_patch_required: true
 

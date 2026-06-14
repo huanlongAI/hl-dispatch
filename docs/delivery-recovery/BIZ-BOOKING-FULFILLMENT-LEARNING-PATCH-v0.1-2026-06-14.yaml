@@ -1,0 +1,54 @@
+template_version: v0.1
+status: proposed
+date: '2026-06-14'
+non_authorization_boundary: This learning patch records process learning only. It does not approve contract, runtime, release, production operation, schema, registry, manifest, OpenAPI, events, facts, reasoncodes, live data, or business mutation.
+review_first: true
+capability_id: biz.booking.fulfillment
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#biz.booking.fulfillment
+dri: PM-A / 邹骢
+state_progression:
+  from: pm_dual_end_patch_required_without_operating_rule_package
+  to: readiness_patch_package_prepared_awaiting_founder_or_gate_decision
+patch_type: DEFER_PATCH
+learning_summary: Historical engineering approval, pilot manifests, acceptance coverage, and staging closeout evidence must be separated from current dual-end readiness. A GATED capability can have pilot execution evidence while still requiring Human End, Agent End, owner matrix, retry, dependency exit, and Gate-H reuse decisions before broader progression.
+observed_failure_or_gap: The same capability had older Gate-H engineering approval and newer PM dual-end PATCH_REQUIRED evidence. Without an explicit readiness patch package, the older approval could be misread as current runtime, production, MVP, or active-contract authorization.
+proposed_patch: For any GATED capability with existing pilot/runtime evidence but PM dual-end PATCH_REQUIRED status, create a readiness patch package before updating Ledger state or requesting runtime/contract work. The package must isolate Human End, Agent End, Gateway/Can/Action/Audit, override owner matrix, retry/duplicate policy, dependency exit path, and Gate-H reuse/new-review decision.
+routing:
+  default_repo: hl-dispatch
+  contract_repo_if_contract_patch_needed: hl-contracts
+  runtime_repo_if_runtime_patch_needed: hl-platform
+  separate_founder_decision_required: true_for_contract_runtime_or_ledger_progression
+files_or_rules_to_update:
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-PATCH-PACKAGE-v0.1-2026-06-14.md
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-EVIDENCE-BUNDLE-v0.1-2026-06-14.yaml
+  - future optional Ledger update for biz.booking.fulfillment after Founder/Gate decision
+minimum_future_package_sections:
+  - Boundary
+  - Not authorized
+  - Review-first
+  - Founder decision required
+  - current PM review result
+  - historical Gate-H evidence and reuse decision
+  - pilot versus production interpretation
+  - Human End patch
+  - Agent End patch
+  - Gateway / Can / Action / Audit patch
+  - owner / override patch
+  - retry / duplicate patch
+  - external dependency exit path
+evidence_bundle_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-EVIDENCE-BUNDLE-v0.1-2026-06-14.yaml
+owner: PM-A / 邹骢
+gate_owner: Gate-H / 许久明
+due: before_any_biz_booking_fulfillment_ledger_state_progression
+status_note: Proposed with this readiness patch package; not a runtime, contract, schema, registry, manifest, or Ledger change.
+not_authorized:
+  - production runtime authorization
+  - MVP pass
+  - production release
+  - active contract registration
+  - OpenAPI / facts / events / reasoncodes mutation
+  - schema, registry, or manifest mutation
+  - live booking operation
+  - live customer data mutation
+  - payment, refund, settlement, billing, or entitlement mutation
+  - bypassing Gateway / HK Kernel / Can -> Action -> Audit

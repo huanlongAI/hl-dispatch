@@ -11,9 +11,9 @@ owner_assignment_sla: 48h after docs landing
 items:
   - capability_id: booking_staging_pilot_closeout
     display_name: Booking staging pilot closeout / hl-platform issue 106
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: Gate-H / 许久明
+    pm_owner: PM-A / 邹骢
+    gate_owner: Gate-H / 许久明
     lane: P0_closeout
     maturity: M7
     execution_state: THIN_SLICE
@@ -47,9 +47,9 @@ items:
 
   - capability_id: biz.booking.fulfillment
     display_name: Booking fulfillment capability
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: PM-A / 邹骢
+    pm_owner: PM-A / 邹骢
+    gate_owner: Gate-H / 许久明
     lane: P0_booking_closeout
     maturity: M6_M7
     execution_state: THIN_SLICE
@@ -84,9 +84,9 @@ items:
 
   - capability_id: biz.sales.order
     display_name: Sales order capability
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: PM-A / 邹骢
+    pm_owner: PM-A / 邹骢
+    gate_owner: Gate-H / 许久明
     lane: P1_formal_object_chain
     maturity: M2_M3
     execution_state: SPEC_ONLY
@@ -122,9 +122,9 @@ items:
 
   - capability_id: biz.customer.asset
     display_name: Customer asset capability
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: PM-B / 朱阳
+    pm_owner: PM-B / 朱阳
+    gate_owner: Gate-H / 许久明
     lane: P1_formal_object_chain
     maturity: M2_M3
     execution_state: SPEC_ONLY
@@ -159,9 +159,9 @@ items:
 
   - capability_id: biz.offer.catalog
     display_name: Offer catalog capability
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: PM-B / 朱阳
+    pm_owner: PM-B / 朱阳
+    gate_owner: Gate-H / 许久明
     lane: founder_signed_first_batch
     maturity: M2_M4
     execution_state: SPEC_ONLY
@@ -196,9 +196,9 @@ items:
 
   - capability_id: biz.store.resource
     display_name: Store resource capability
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: PM-B / 朱阳
+    pm_owner: PM-B / 朱阳
+    gate_owner: Gate-H / 许久明
     lane: founder_signed_first_batch
     maturity: M2_M4
     execution_state: SPEC_ONLY
@@ -233,9 +233,9 @@ items:
 
   - capability_id: biz.tenant.entitlement
     display_name: Tenant entitlement capability
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: Gate-H / 许久明
+    pm_owner: PM-B / 朱阳
+    gate_owner: Gate-H / 许久明
     lane: P2_engineering_thin_slice
     maturity: M5_M6
     execution_state: THIN_SLICE
@@ -269,9 +269,9 @@ items:
 
   - capability_id: biz.payment.checkout
     display_name: Payment checkout capability
-    dri: TBD_FOUNDER_DECISION
-    pm_owner: TBD_FOUNDER_DECISION
-    gate_owner: TBD_FOUNDER_DECISION
+    dri: PM-B / 朱阳
+    pm_owner: PM-B / 朱阳
+    gate_owner: Gate-H / 许久明
     lane: P1_formal_object_chain
     maturity: M2_M3
     execution_state: SPEC_ONLY

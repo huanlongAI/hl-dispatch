@@ -1,0 +1,70 @@
+template_version: v0.1
+status: EVIDENCE_BUNDLE_DRAFT_FOR_PR
+non_authorization_boundary: This evidence bundle does not approve runtime, contract, schema, registry, manifest, config, release, production, MVP, active contract, live booking operation, or formal business object mutation.
+capability_id: biz.booking.fulfillment
+task_id: BF-01-HUMAN-END
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#biz.booking.fulfillment
+dri: PM-A / 邹骢
+pm_owner: PM-A / 邹骢
+gate_owner: Gate-H / 许久明
+risk_class: GATED
+execution_state: THIN_SLICE
+change_summary: BF-01 docs-only Human End patch names human confirmation, review, exception, audit, failure path, and Gateway / Can assumptions for biz.booking.fulfillment.
+ssot_refs:
+  - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
+  - hl-contracts/apis/biz.booking.fulfillment.internal.openapi.v1.yaml
+  - hl-contracts/events/biz-booking-fulfillment-state-audit.v0.1.yaml
+  - hl-contracts/reasoncodes/biz-booking-fulfillment-reasoncodes.v0.1.yaml
+  - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+  - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-PATCH-PACKAGE-v0.1-2026-06-14.md
+  - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DOCS-PATCH-PLANNING-v0.1-2026-06-14.md
+evidence_refs:
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md
+risks_tested:
+  - Human End missing for high-risk booking actions
+  - generated-only evidence incorrectly advancing a GATED task
+  - chat-only acceptance being mistaken for deterministic human confirmation
+  - Agent or user bypassing Gateway / HK Kernel / Can -> Action -> Audit
+  - staging or pilot evidence being mistaken for production, release, MVP, active contract, or live booking authorization
+happy_path_fixtures:
+  - docs-only review maps booking.submit, booking.confirm, booking.cancel, booking.reschedule, booking.artisan.reassign, booking.assignment_overdue.resolve, booking.resource_release_failure.resolve, and booking.no_show.mark to Human End surfaces.
+failure_path_fixtures:
+  - duplicate_submission_requires_human_visible_conflict_and_no_hidden_mutation
+  - retry_after_internal_error_requires_uncertain_outcome_review_or_fail_secure
+  - hold_expiry_requires_store_resource_or_qrh_evidence
+  - manual_cancellation_requires_reason_domain_and_audit_ref
+  - override_request_requires_owner_approver_approval_ref_and_separate_BF04
+  - evidence_missing_blocks_GATED_progression
+automated_checks:
+  - git diff --check
+  - ruby YAML parse for changed YAML files
+  - scripts/test-github-language-gate.py
+  - scripts/test-action-projection-exporter.py
+manual_checks:
+  - read-only comparison against PM dual-end review Human End section
+  - read-only comparison against readiness patch package gap matrix
+  - read-only comparison against docs patch planning Human End lane
+  - path-scope review confirming only hl-dispatch/docs/delivery-recovery changes
+independent_verifier: Gate-H / 许久明
+verification_method: Independent partial verification by repository evidence review; no runtime test was run and no hl-contracts or hl-platform file was modified.
+evidence_mode: independent_partial
+open_risks:
+  - BF-02 Agent End remains open.
+  - BF-03 Gateway / Can / Action / Audit rollup remains open.
+  - BF-04 override owner matrix, approval_ref, retry, duplicate, and idempotency policy remain open.
+  - BF-05 external dependency exit paths remain open.
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - OpenAPI / events / facts / reasoncodes mutation
+  - production / release / MVP / active contract
+  - live booking operation
+  - live customer data or formal booking object mutation
+  - Gateway / HK Kernel / Can -> Action -> Audit bypass
+rollback_or_exit_path: Revert the docs-only PR or leave BF-01 blocked; no runtime rollback is required because no runtime or contract state is changed.
+gate_decision: not_requested
+founder_or_gate_required: true
+decision_record: FOUNDER_DECISION D-018 D-022 D-024 D-027 / GO_OPERATING_CYCLE_1_CREATE_PR_ONLY
+learning_patch_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-LEARNING-PATCH-v0.1-2026-06-15.yaml

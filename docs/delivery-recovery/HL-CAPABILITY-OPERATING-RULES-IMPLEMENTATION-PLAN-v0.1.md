@@ -31,6 +31,20 @@ Land the full capability operating plan so the team can move from scattered capa
 | Phase 7 | weekly | Evidence and Learning Patch cadence | authorized for dispatch docs |
 | Phase 8 | day 30/60/90 | metrics and simplification review | authorized for reporting |
 
+Current goal-mode execution queue:
+
+`HL-CAPABILITY-OPERATING-RULES-REMAINING-TASK-CLOSURE-v0.1-2026-06-14.md`
+records the remaining task set after the `biz.booking.fulfillment` Founder /
+Gate readback and docs-only patch planning. It is the dispatch-side queue for
+Phase 3 / 4 through Phase 8 execution and does not authorize `hl-contracts`,
+`hl-platform`, runtime, schema, registry, manifest, config, production, release,
+MVP, active contract, live data, or live business operation.
+
+The paired machine-readable tracking surface is
+`HL-CAPABILITY-OPERATING-RULES-GOAL-MODE-TASK-LEDGER-v0.1-2026-06-14.yaml`.
+It records task IDs, dependencies, owners, output files, minimum evidence, and
+per-task done conditions for goal-mode execution.
+
 ## 3. Phase 0 — Preflight and Branch Hygiene
 
 ### Actions

@@ -31,6 +31,8 @@ PM-led capability packages use a separate execution shape: Founder / AI capabili
 - `HL_PROGRESS_BITABLE_DRY_RUN_v0.1.md`: P2 dry-run Feishu Bitable projection mapping and ledger. It does not write Feishu or GitHub.
 - `HL_PROGRESS_GITHUB_WRITEBACK_PROPOSAL_v0.1.md`: P3 controlled GitHub writeback proposal. It requires a separate Founder / Gate SSOT before any real writeback.
 - `HL_PROGRESS_OPERATION_RUNBOOK_v0.1.md`: Daily / weekly read-only operation runbook for P1 JSON, Markdown Founder packets, and P2 dry-run projection.
+- `HL-CAPABILITY-OPERATING-RULES-REMAINING-TASK-CLOSURE-v0.1-2026-06-14.md`: Goal-mode remaining task closure plan for capability operating rules after the `biz.booking.fulfillment` Founder / Gate readback and docs-only patch planning. It defines the remaining Phase 3/4 through Phase 8 task queue, per-task execution loop, validation floor, and non-authorization boundary. It does not authorize `hl-contracts`, `hl-platform`, runtime, registry, schema, manifest, config, production, release, MVP, active contract, live data, or live business operation.
+- `HL-CAPABILITY-OPERATING-RULES-GOAL-MODE-TASK-LEDGER-v0.1-2026-06-14.yaml`: Machine-readable goal-mode task ledger for the remaining capability operating-rule task queue. It tracks task IDs, dependencies, owners, output files, validation floor, and completion criteria. It is dispatch-only and does not authorize contract or runtime changes.
 - `AI_OUTPUT_CONTRACT_v1.md`: `ai-output:v1` output contract, including black-box governance phrase rejection.
 - `TASK_SNAPSHOT_v1.md`: `task-snapshot:v1` current-card contract.
 - `RISK_PATH_GREEN_YELLOW_RED.md`: Green / Yellow / Red risk path and governance budget.

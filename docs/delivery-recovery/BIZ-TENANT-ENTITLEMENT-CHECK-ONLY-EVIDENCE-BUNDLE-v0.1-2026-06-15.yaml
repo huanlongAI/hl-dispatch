@@ -1,0 +1,90 @@
+version: v0.1
+status: EVIDENCE_BUNDLE_DRAFT_FOR_PR
+date: '2026-06-15'
+capability_id: biz.tenant.entitlement
+task_id: TE-01-CHECK-ONLY
+operating_cycle: 1
+risk_class: REVERSIBLE
+execution_state: THIN_SLICE
+evidence_mode: independent_required_before_completion
+source_refs:
+  - hl-contracts/prd/biz/CONTRACT-GAP-Biz.TenantEntitlement.RRS-TE-0-QuotaCheckOnly.v0.1.md
+  - hl-contracts/prd/biz/CONTRACT-GAP-Biz.TenantEntitlement.v0.1.md
+  - hl-platform/biz/tenant-entitlement/capability-manifest.yaml
+  - hl-dispatch/docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-GOAL-MODE-TASK-LEDGER-v0.1-2026-06-14.yaml
+scope_boundary:
+  allowed:
+    - mock fixture checks
+    - seed fixture checks
+    - demo fixture checks
+    - docs-only evidence review
+  forbidden:
+    - live billing mutation
+    - live entitlement mutation
+    - live entitlement deduction
+    - live quota mutation
+    - commercial tenant state mutation
+    - reserve / confirm / refund / settlement
+    - production / release / MVP / active contract claim
+independent_verification:
+  required: true
+  verifier_role: Gate-H or Founder-assigned reviewer
+  generated_only_evidence_can_complete_task: false
+  minimum_cases:
+    positive: 1
+    negative_or_failure: 2
+scenario_evidence:
+  - scenario_id: TE-CHECK-01
+    scenario: known tenant with quota available
+    expected_result: allowed_or_has_quota
+    required_artifacts:
+      - input fixture boundary
+      - result readback
+      - trace or reason evidence
+  - scenario_id: TE-CHECK-02
+    scenario: known tenant with quota exhausted or absent
+    expected_result: not_allowed_or_no_quota
+    required_artifacts:
+      - negative fixture
+      - result readback
+      - failure reason evidence
+  - scenario_id: TE-CHECK-03
+    scenario: unknown tenant or missing tenant context
+    expected_result: fail_closed_or_unknown
+    required_artifacts:
+      - missing tenant input
+      - fail-closed result
+  - scenario_id: TE-CHECK-04
+    scenario: feature not entitled
+    expected_result: not_entitled
+    required_artifacts:
+      - feature-scope fixture
+      - denial result
+  - scenario_id: TE-CHECK-05
+    scenario: accidental live mode input
+    expected_result: hard_stop
+    required_artifacts:
+      - evidence that no live mode was used
+      - escalation note if live flag appears
+failure_paths:
+  - live mode or commercial tenant input appears
+  - fixture boundary cannot be proven
+  - generated-only evidence is the only evidence
+  - seed data is stale or ambiguous
+  - check creates, mutates, reserves, deducts, refunds, settles, or confirms any entitlement or quota
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - live billing mutation
+  - live entitlement mutation
+  - live quota mutation
+  - commercial tenant state mutation
+  - production / release / MVP / active contract
+readiness_effect: may prepare TE-01 check-only evidence for review only; does not authorize runtime or full capability progression
+rollback_or_exit_path: revert docs-only PR or keep TE-01 blocked; no runtime rollback required because no runtime or contract state is changed
+gate_decision: not_requested
+founder_or_gate_required: true
+decision_record: FOUNDER_DECISION D-018 D-023 D-024 D-027 / GO_OPERATING_CYCLE_1_CREATE_PR_ONLY
+learning_patch_ref: docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-LEARNING-PATCH-v0.1-2026-06-15.yaml

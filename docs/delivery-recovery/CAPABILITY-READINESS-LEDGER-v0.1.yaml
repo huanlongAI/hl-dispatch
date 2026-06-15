@@ -25,7 +25,7 @@ items:
     cap_spec_status: not_applicable
     contract_gap_status: partial
     gateway_can_path: partial
-    human_end: partial
+    human_end: patch_packet_prepared_for_review
     agent_manifest: partial
     idempotency_retry: partial
     reason_trace: partial
@@ -81,9 +81,9 @@ items:
       - bypassing human confirmation
       - bypassing Gateway or Can check
       - runtime expansion without separate Founder/Gate decision
-    next_action: Prepare docs-only patch planning packets for Human End, Agent End, Gateway/Can/Audit, override owner matrix, retry/duplicate policy, dependency exit path, and Gate-H reuse readback. Keep runtime, contract, production, release, MVP, active contract, schema, registry, manifest, config, OpenAPI, events, facts, and reasoncodes not authorized.
-    blocker: PM dual-end PATCH gaps remain until approved docs-only patch packets are landed and independently verified; runtime/contract progression remains not authorized.
-    due: TBD_PATCH_PACKET_PR
+    next_action: Review BF-01 Human End patch package, then continue with BF-02 Agent End, BF-03 Gateway/Can/Audit, BF-04 override/retry, and BF-05 dependency exit docs-only patches. Keep runtime, contract, production, release, MVP, active contract, schema, registry, manifest, config, OpenAPI, events, facts, and reasoncodes not authorized.
+    blocker: Human End patch is prepared as docs-only evidence; Agent End, Gateway/Can/Audit, override/retry, and dependency exit gaps remain before broader readiness progression. Runtime/contract progression remains not authorized.
+    due: BF-02-AGENT-END_PR
     ssot_refs:
       - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
       - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
@@ -93,6 +93,9 @@ items:
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-PACKET-v0.1-2026-06-14.md
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-READBACK-v0.1-2026-06-14.md
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DOCS-PATCH-PLANNING-v0.1-2026-06-14.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-LEARNING-PATCH-v0.1-2026-06-15.yaml
     learning_patch_required: true
 
   - capability_id: biz.sales.order
@@ -266,18 +269,24 @@ items:
     reason_trace: partial
     events_facts_audit: partial
     evidence_mode: independent_partial
-    gate_h: missing_or_unconfirmed
+    gate_h: missing_or_unconfirmed; check_only_operating_slice_pr_review_required
     not_authorized:
       - live billing mutation
       - live entitlement mutation
+      - live entitlement deduction
+      - live quota mutation
       - commercial tenant state mutation
+      - reserve / confirm / refund / settlement
       - quota mutation outside check-only demo boundary
-    next_action: Maintain check-only evidence with mock/seed/demo boundary and failure path.
-    blocker: Any live entitlement or billing touch reclassifies to GATED.
-    due: TBD_FOUNDER_DECISION
+    next_action: Review TE-01 check-only operating slice, Evidence Bundle, and Learning Patch; keep mock/seed/demo boundary and require independent verification before completion.
+    blocker: Full Tenant Entitlement remains draft/blocker; any live entitlement, billing, quota, or commercial tenant mutation reclassifies to GATED and requires separate Founder/Gate authorization.
+    due: TE-01-CHECK-ONLY_PR
     ssot_refs:
       - hl-contracts/prd/biz/CONTRACT-GAP-Biz.TenantEntitlement.RRS-TE-0-QuotaCheckOnly.v0.1.md
       - hl-platform/biz/tenant-entitlement/capability-manifest.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-OPERATING-SLICE-v0.1-2026-06-15.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-LEARNING-PATCH-v0.1-2026-06-15.yaml
     learning_patch_required: true
 
   - capability_id: biz.payment.checkout

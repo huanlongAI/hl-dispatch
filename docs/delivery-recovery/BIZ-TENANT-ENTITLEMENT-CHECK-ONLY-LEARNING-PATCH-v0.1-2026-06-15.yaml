@@ -1,0 +1,40 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.tenant.entitlement
+task_id: TE-01-CHECK-ONLY
+operating_cycle: 1
+trigger: Preparing check-only operating slice for mock / seed / demo Tenant Entitlement evidence.
+state_progression:
+  from: check_only_evidence_maintained
+  to: check_only_operating_slice_prepared_for_pr_review
+patch_type: CHECK_ONLY_BOUNDARY_PATCH
+human_judgment_to_convert:
+  - judgment: Distinguishing check-only evidence from live entitlement authorization.
+    future_form: reusable check-only boundary gate
+  - judgment: Rejecting generated-only evidence for REVERSIBLE completion when live-mode leakage is possible.
+    future_form: evidence bundle validation rule
+  - judgment: Detecting when quota or entitlement checks have become mutation behavior.
+    future_form: risk trigger that upgrades REVERSIBLE to GATED
+  - judgment: Separating full capability draft status from narrow RRS check-only permission.
+    future_form: capability ledger template rule
+proposed_system_patch:
+  target: future capability operating rule template
+  change: Add a standard check-only slice section with allowed fixture boundary, live-mode hard stop, generated-only evidence limit, and mutation escalation trigger.
+  expected_effect: Reduces repeated Founder / Gate judgment on whether a read-only or check-only slice accidentally authorizes live business behavior.
+minimum_future_rule_text:
+  - A check-only capability slice must list positive, negative, unknown-context, and accidental-live-mode scenarios.
+  - Check-only evidence cannot authorize reserve, confirm, refund, settlement, deduction, quota mutation, billing mutation, or commercial tenant mutation.
+  - Any mutation behavior in a check-only slice upgrades the task to GATED and requires separate Founder / Gate decision.
+owner_to_confirm: TBD_FOUNDER_DECISION
+applies_to_future_capabilities:
+  - biz.tenant.entitlement
+  - biz.payment.checkout preflight checks
+  - any capability slice labeled check-only or read-only
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - live billing / entitlement / quota mutation
+  - production / release / MVP / active contract

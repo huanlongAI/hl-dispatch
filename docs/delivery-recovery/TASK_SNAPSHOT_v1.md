@@ -44,6 +44,13 @@ context_validity:
     - "<file-or-issue-or-pr>"
   known_gaps:
     - "<none | concrete gap>"
+context_usage_summary:
+  context_id: ""
+  context_route: ""
+  files_read: []
+  missing_or_stale_context: []
+  full_repo_scan_detected: false
+  context_not_authorization: true
 non_goals:
   - "<what this card must not do>"
 public_update_class: "<status_update | gap_report | decision_request | acceptance_report | n/a>"
@@ -67,6 +74,7 @@ last_material_change: "<YYYY-MM-DD>"
 - `authorization`
 - `evidence_links`
 - `close_condition`
+- `context_usage_summary`
 - `last_material_change`
 
 ## Rules

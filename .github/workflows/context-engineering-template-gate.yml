@@ -1,0 +1,44 @@
+name: Context Engineering Template Gate
+
+on:
+  schedule:
+    # Weekdays 10:30 CST. Observer-only: no GitHub / Feishu / Project writes.
+    - cron: "30 2 * * 1-5"
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/pull_request_template.md"
+      - ".github/workflows/context-engineering-template-gate.yml"
+      - ".gitignore"
+      - "docs/delivery-recovery/**"
+      - "scripts/check-agent-governance-d10.sh"
+      - "scripts/test_context_engineering_templates.py"
+  push:
+    branches: [main]
+    paths:
+      - "AGENTS.md"
+      - "CLAUDE.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/pull_request_template.md"
+      - ".github/workflows/context-engineering-template-gate.yml"
+      - ".gitignore"
+      - "docs/delivery-recovery/**"
+      - "scripts/check-agent-governance-d10.sh"
+      - "scripts/test_context_engineering_templates.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  context-engineering-template-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout hl-dispatch
+        uses: actions/checkout@v4
+      - name: Run context engineering template gate
+        run: |
+          python3 -B scripts/test_context_engineering_templates.py
+          git diff --check

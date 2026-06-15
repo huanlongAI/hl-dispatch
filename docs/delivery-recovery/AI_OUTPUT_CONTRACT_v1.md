@@ -53,6 +53,13 @@ context_validity:
     - "<file-or-issue-or-pr>"
   stale_or_missing_context:
     - "<none | concrete gap>"
+context_usage_summary:
+  context_id: ""
+  context_route: ""
+  files_read: []
+  missing_or_stale_context: []
+  full_repo_scan_detected: false
+  context_not_authorization: true
 changes:
   summary:
     - "<what changed>"

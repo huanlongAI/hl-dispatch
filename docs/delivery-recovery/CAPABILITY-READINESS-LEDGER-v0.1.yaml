@@ -266,18 +266,24 @@ items:
     reason_trace: partial
     events_facts_audit: partial
     evidence_mode: independent_partial
-    gate_h: missing_or_unconfirmed
+    gate_h: missing_or_unconfirmed; check_only_operating_slice_pr_review_required
     not_authorized:
       - live billing mutation
       - live entitlement mutation
+      - live entitlement deduction
+      - live quota mutation
       - commercial tenant state mutation
+      - reserve / confirm / refund / settlement
       - quota mutation outside check-only demo boundary
-    next_action: Maintain check-only evidence with mock/seed/demo boundary and failure path.
-    blocker: Any live entitlement or billing touch reclassifies to GATED.
-    due: TBD_FOUNDER_DECISION
+    next_action: Review TE-01 check-only operating slice, Evidence Bundle, and Learning Patch; keep mock/seed/demo boundary and require independent verification before completion.
+    blocker: Full Tenant Entitlement remains draft/blocker; any live entitlement, billing, quota, or commercial tenant mutation reclassifies to GATED and requires separate Founder/Gate authorization.
+    due: TE-01-CHECK-ONLY_PR
     ssot_refs:
       - hl-contracts/prd/biz/CONTRACT-GAP-Biz.TenantEntitlement.RRS-TE-0-QuotaCheckOnly.v0.1.md
       - hl-platform/biz/tenant-entitlement/capability-manifest.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-OPERATING-SLICE-v0.1-2026-06-15.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-LEARNING-PATCH-v0.1-2026-06-15.yaml
     learning_patch_required: true
 
   - capability_id: biz.payment.checkout

@@ -26,7 +26,7 @@ items:
     contract_gap_status: partial
     gateway_can_path: partial
     human_end: patch_packet_prepared_for_review
-    agent_manifest: partial
+    agent_manifest: patch_packet_prepared_for_review
     idempotency_retry: partial
     reason_trace: partial
     events_facts_audit: partial
@@ -81,9 +81,9 @@ items:
       - bypassing human confirmation
       - bypassing Gateway or Can check
       - runtime expansion without separate Founder/Gate decision
-    next_action: Review BF-01 Human End patch package, then continue with BF-02 Agent End, BF-03 Gateway/Can/Audit, BF-04 override/retry, and BF-05 dependency exit docs-only patches. Keep runtime, contract, production, release, MVP, active contract, schema, registry, manifest, config, OpenAPI, events, facts, and reasoncodes not authorized.
-    blocker: Human End patch is prepared as docs-only evidence; Agent End, Gateway/Can/Audit, override/retry, and dependency exit gaps remain before broader readiness progression. Runtime/contract progression remains not authorized.
-    due: BF-02-AGENT-END_PR
+    next_action: Review BF-02 Agent End patch package, then continue with BF-03 Gateway/Can/Audit, BF-04 override/retry, and BF-05 dependency exit docs-only patches. Keep runtime, contract, production, release, MVP, active contract, schema, registry, manifest, config, OpenAPI, events, facts, and reasoncodes not authorized.
+    blocker: Human End and Agent End patches are prepared as docs-only evidence; Gateway/Can/Audit, override/retry, and dependency exit gaps remain before broader readiness progression. Runtime/contract progression remains not authorized.
+    due: BF-03-GATEWAY-CAN-AUDIT_PR
     ssot_refs:
       - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
       - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
@@ -96,6 +96,9 @@ items:
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-LEARNING-PATCH-v0.1-2026-06-15.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-PATCH-v0.1-2026-06-15.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-LEARNING-PATCH-v0.1-2026-06-15.yaml
     learning_patch_required: true
 
   - capability_id: biz.sales.order

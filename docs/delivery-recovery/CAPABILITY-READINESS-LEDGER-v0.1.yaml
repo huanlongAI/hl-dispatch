@@ -83,10 +83,10 @@ items:
       - bypassing human confirmation
       - bypassing Gateway or Can check
       - runtime expansion without separate Founder/Gate decision
-    next_action: Review BF-01 through BF-06 docs-only closeout and BF-07 Founder/Gate decision packet before any contract or runtime progression. Keep runtime, contract, production, release, MVP, active contract, schema, registry, manifest, config, OpenAPI, events, facts, and reasoncodes not authorized.
-    blocker: BF-01 through BF-06 are prepared as docs-only evidence; any contract/runtime progression requires separate Founder/Gate decision. Runtime/contract progression remains not authorized.
-    due: BF-07-FOUNDER-GATE-DECISION_PACKET_REVIEW
-    terminal_planning_state: READY_FOR_FOUNDER_GATE_DECISION
+    next_action: Review the accepted docs-only closeout readback and the dispatch-side contract change plan only before deciding whether any exact hl-contracts PR may be authorized.
+    blocker: Contract change plan is prepared for review only; direct hl-contracts edits, runtime, production, release, MVP, active contract, OpenAPI/events/facts/reasoncodes mutation, and live booking remain not authorized.
+    due: BF-CONTRACT-CHANGE-PLAN_ONLY_REVIEW
+    terminal_planning_state: CONTRACT_CHANGE_PLAN_ONLY_READY
     ssot_refs:
       - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
       - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
@@ -109,6 +109,8 @@ items:
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DEPENDENCY-EXIT-PATCH-v0.1-2026-06-15.md
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-ROLLUP-v0.1-2026-06-15.md
       - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-PACKET-v0.2-2026-06-15.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-READBACK-v0.2-2026-06-15.md
+      - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-CONTRACT-CHANGE-PLAN-ONLY-v0.1-2026-06-15.md
     learning_patch_required: true
 
   - capability_id: biz.sales.order

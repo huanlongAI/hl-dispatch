@@ -4,6 +4,33 @@
 
 Snapshot date: 2026-06-14
 
+## 中文摘要
+
+本文是能力包运行规则剩余阶段的 docs-only 执行闭环计划。它把
+`biz.booking.fulfillment` 后续补丁、其他能力包 PM readiness、组合
+Ledger 回读、未来 contract / platform decision packet 以及 30/60/90 天
+机制复盘拆成可顺序执行的最小任务。
+
+本文只用于 `hl-dispatch/docs/delivery-recovery/` 下的调度与证据整理，不
+授权 `hl-contracts`、`hl-platform`、runtime、schema、registry、manifest、
+config、生产发布、MVP、active contract、真实业务数据、真实支付、退款、结
+算、权益扣减或正式对象变更。
+
+## 术语说明
+
+- docs-only：仅文档落库，不产生 runtime、contract、schema、registry 或生
+  产授权。
+- DRI Pull Model：能力包直接负责人默认推进，遇到不可逆风险、GATED 风险或
+  冲突裁决时再升级。
+- Review-first：先评审、再计划、再按明确授权落库，不能把计划制定误执行成
+  仓库修改。
+- Founder / Gate GitHub SSOT：Founder 或 Gate 的裁决必须落在 GitHub Issue、
+  PR 或 repo file 中；聊天、飞书、Project、Base 只能作为 projection。
+- Evidence Bundle：独立证据包，必须记录证据来源、验证方法、失败路径和不
+  授权边界。
+- Learning Patch：每次状态推进后的复盘补丁，用来沉淀规则调整、失败模式和
+  下一步验证要求。
+
 ## Scope
 
 This file defines the remaining task set for the capability operating rules

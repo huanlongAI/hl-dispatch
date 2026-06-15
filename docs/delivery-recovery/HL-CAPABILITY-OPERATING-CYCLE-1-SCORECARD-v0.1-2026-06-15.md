@@ -4,11 +4,28 @@ Status: DRAFT_FOR_PR_REVIEW
 Date: 2026-06-15
 Scope: `GO_OPERATING_CYCLE_1_CREATE_PR_ONLY`
 
-## Chinese Summary
+## 中文摘要
 
 本记分卡记录 Operating Cycle 1 的执行结果。当前只创建 Draft PR，
 不合并、不声明生效完成、不授权 runtime、schema、registry、manifest、
 config、production、release、MVP、active contract 或真实业务操作。
+
+本轮已经把三个输出面分开：第一，`biz.booking.fulfillment` 的
+`BF-01-HUMAN-END` 只形成 Human End patch package、Evidence Bundle、
+Learning Patch 和 Ledger 变更提案；第二，`biz.tenant.entitlement` 只形成
+mock / seed / demo 的 check-only 运行片和证据提案；第三，本文件只记录
+Operating Cycle 1 的执行记分卡。三者都处于 Draft PR 待审状态，尚未合并，
+尚未落为正式生效文件，也不能被解释为生产授权。
+
+Founder 需要关注的结论是：本轮 create-PR-only 闭环已经完成，但真实生效还
+需要后续合并裁决。`biz.booking.fulfillment` 仍是 GATED，必须有独立验证和
+Founder / Gate 记录后才能继续推进；`biz.tenant.entitlement` 仍只允许
+check-only，不允许 live billing、entitlement deduction、quota mutation 或
+commercial tenant state mutation；scorecard 只做复盘，不创建新的真源。
+
+如果后续批准合并，建议先处理 BF-01 和 TE-01 两个业务任务的合并顺序，再合并
+scorecard。因为 BF-01 和 TE-01 都会改 Ledger 和 README，第二个合并的 PR
+大概率需要同步分支后再进入合并窗口。
 
 术语说明：
 

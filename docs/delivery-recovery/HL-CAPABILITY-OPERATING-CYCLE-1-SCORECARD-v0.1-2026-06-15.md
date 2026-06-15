@@ -1,0 +1,167 @@
+# HL Capability Operating Cycle 1 Scorecard v0.1
+
+Status: MERGE_APPROVED_FOR_SCORECARD_LANDING
+Date: 2026-06-15
+Scope: `GO_OPERATING_CYCLE_1_CREATE_PR_ONLY`
+
+## 中文摘要
+
+本记分卡记录 Operating Cycle 1 的执行结果。Founder 已在 2026-06-15
+明确授权按 `#263 -> #264 -> #265` 顺序合并 docs-only PR。合并只表示
+`hl-dispatch/docs/delivery-recovery/` 文档落库，不授权 runtime、schema、
+registry、manifest、config、production、release、MVP、active contract 或
+真实业务操作。
+
+本轮已经把三个输出面分开：第一，`biz.booking.fulfillment` 的
+`BF-01-HUMAN-END` 只形成 Human End patch package、Evidence Bundle、
+Learning Patch 和 Ledger 变更提案；第二，`biz.tenant.entitlement` 只形成
+mock / seed / demo 的 check-only 运行片和证据提案；第三，本文件只记录
+Operating Cycle 1 的执行记分卡。#263 和 #264 已按 Founder 合并授权进入
+main；#265 是本 scorecard 的落库 PR。三者都不能被解释为生产授权。
+
+Founder 需要关注的结论是：本轮 create-PR-only 闭环已完成，并进入
+docs-only 合并落库；`biz.booking.fulfillment` 仍是 GATED，必须有独立验证和
+Founder / Gate 记录后才能继续向后续任务推进；`biz.tenant.entitlement` 仍只允许
+check-only，不允许 live billing、entitlement deduction、quota mutation 或
+commercial tenant state mutation；scorecard 只做复盘，不创建新的真源。
+
+本轮合并时已先落 #263，再同步并落 #264，最后再落 #265。#264 因 Ledger /
+README 与 #263 同区块改动发生预期内冲突，已通过合入 `origin/main` 并保留
+两组 Required Files 条目解决。
+
+术语说明：
+
+- GATED：高风险或不可逆风险，需要 Founder / Gate 裁决。
+- REVERSIBLE：可逆片段，但一旦触碰真实商业状态或 mutation 行为即升级。
+- Scorecard：本轮运行闭环的复盘面板，不是新的契约真源。
+
+## Cycle Scope
+
+| track | capability / item | expected task | risk class | authorized mode | result |
+|---|---|---|---|---|---|
+| Task A | `biz.booking.fulfillment` | `BF-01-HUMAN-END` | GATED | docs-only PR creation and merge | Merged via #263 |
+| Task B | `biz.tenant.entitlement` | `TE-01-CHECK-ONLY` | REVERSIBLE | docs-only PR creation and merge | Merged via #264 after sync |
+| Task C | Operating Cycle 1 scorecard | scorecard | REVERSIBLE docs-only | docs-only PR creation and merge | Landing via #265 |
+
+## PRs Created
+
+| task | branch | PR | status | merge authorization |
+|---|---|---|---|---|
+| Task A BF-01 Human End | `codex/cap-cycle1-bf01-human-end-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/263> | Merged | `FOUNDER_MERGE_APPROVED` |
+| Task B Tenant check-only | `codex/cap-cycle1-tenant-check-only-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/264> | Merged after branch sync | `FOUNDER_MERGE_APPROVED` |
+| Task C scorecard | `codex/cap-cycle1-scorecard-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/265> | Merge approved / landing | `FOUNDER_MERGE_APPROVED` |
+
+## Files Prepared By Cycle
+
+Task A proposed files:
+
+- `docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md`
+- `docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml`
+- `docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-LEARNING-PATCH-v0.1-2026-06-15.yaml`
+- `docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml`
+- `docs/delivery-recovery/README.md`
+
+Task B proposed files:
+
+- `docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-OPERATING-SLICE-v0.1-2026-06-15.md`
+- `docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml`
+- `docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-LEARNING-PATCH-v0.1-2026-06-15.yaml`
+- `docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml`
+- `docs/delivery-recovery/README.md`
+
+Task C proposed file:
+
+- `docs/delivery-recovery/HL-CAPABILITY-OPERATING-CYCLE-1-SCORECARD-v0.1-2026-06-15.md`
+
+## Ledger Delta
+
+Task A moves `biz.booking.fulfillment` from generic docs-only patch planning
+toward `human_end: patch_packet_prepared_for_review`, while preserving all
+non-authorization boundaries.
+
+Task B moves `biz.tenant.entitlement` toward `TE-01-CHECK-ONLY_PR` review,
+while preserving mock / seed / demo check-only boundaries and keeping the full
+capability draft / blocked for runtime.
+
+Task A and Task B were intentionally separate branches from `origin/main`; both
+touched `CAPABILITY-READINESS-LEDGER-v0.1.yaml` and `README.md`. The second PR
+therefore required branch synchronization before merge, and the README conflict
+was resolved by preserving both BF-01 and TE-01 entries.
+
+## Evidence Quality
+
+| task | evidence quality | remaining gap |
+|---|---|---|
+| BF-01 Human End | Evidence Bundle includes independent verification requirement, failure paths, and Human End touchpoint matrix. | It cannot complete GATED progression until Founder / Gate review and independent verification are recorded. |
+| TE-01 Check-only | Evidence Bundle includes positive, negative, unknown-context, feature-denial, live-mode, and stale-evidence scenarios. | Generated-only evidence cannot complete the task; verifier readback is still required. |
+| Scorecard | Summarizes created PRs and open merge/readiness state. | It is a review artifact only until merged. |
+
+## Learning Patch Summary
+
+Task A converts repeated Human End judgment into a future template/gate pattern:
+deterministic human touchpoints, confirmation, exception handling, audit evidence,
+and Gateway / HK Kernel / Can -> Action -> Audit hard stop.
+
+Task B converts repeated check-only judgment into a future boundary rule:
+positive, negative, unknown-context, and live-mode scenarios are required; any
+mutation behavior upgrades REVERSIBLE to GATED.
+
+## Boundary
+
+Boundary: Operating Cycle 1 is docs-only and limited to
+`hl-dispatch/docs/delivery-recovery/`.
+
+Review-first: PR creation or docs landing is not production authorization,
+runtime authorization, active contract authorization, or completion of GATED
+progression.
+
+Founder decision required: merging any PR, treating any PR as landed, or moving
+from evidence preparation into contract/runtime implementation requires explicit
+Founder / Gate authorization.
+
+## Not Authorized
+
+Not Authorized:
+
+1. `hl-contracts` changes.
+2. `hl-platform` changes.
+3. Runtime code, schema, registry, manifest, config, or environment changes.
+4. Production, release, MVP, active contract, or live business operation claims.
+5. Live booking operation.
+6. Live payment, refund, settlement, billing, entitlement deduction, quota
+   mutation, commercial tenant mutation, customer asset mutation, identity, or
+   privacy mutation.
+7. Gateway / HK Kernel / Can -> Action -> Audit bypass.
+8. Merge without explicit `FOUNDER_MERGE_APPROVED`.
+
+## Operating Lessons
+
+1. One task / one branch / one PR kept risk local, but Ledger and README updates
+   create predictable merge-order coordination.
+2. Evidence Bundle improved the decision surface by forcing failure paths into
+   the task output rather than leaving them as chat assumptions.
+3. `REVERSIBLE` / `GATED` is sufficient for Cycle 1 if mutation triggers are
+   written explicitly. It is too coarse if a check-only task can hide a live-mode
+   fixture or stale seed boundary.
+4. The next automation candidate is a docs-only validator that checks:
+   authorized path, Not Authorized wording, Evidence Bundle failure path,
+   generated-only evidence limit, and absence of production authorization claims.
+
+## Recommended Operating Cycle 2
+
+| priority | recommended task | reason |
+|---|---|---|
+| P0 | Sync and review PR #263 / #264 merge order. | Both update Ledger / README and need deterministic merge sequencing. |
+| P0 | Continue `biz.booking.fulfillment` with `BF-02-AGENT-END` after BF-01 review. | Agent End is the next uncompleted GATED booking readiness gap. |
+| P1 | Prepare a reusable Evidence Bundle validation checklist. | It will reduce repeated manual review for docs-only capability slices. |
+| P1 | Keep Tenant Entitlement check-only pending independent verification. | Generated-only evidence is insufficient to complete check-only progression. |
+
+## Validation Commands
+
+```bash
+git diff --check
+git diff --name-only origin/main...HEAD
+rg -n "Boundary|Not Authorized|Review-first|Founder decision required|GO_OPERATING_CYCLE_1_CREATE_PR_ONLY|FOUNDER_MERGE_APPROVED" docs/delivery-recovery/HL-CAPABILITY-OPERATING-CYCLE-1-SCORECARD-v0.1-2026-06-15.md
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-github-language-gate.py
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-action-projection-exporter.py
+```

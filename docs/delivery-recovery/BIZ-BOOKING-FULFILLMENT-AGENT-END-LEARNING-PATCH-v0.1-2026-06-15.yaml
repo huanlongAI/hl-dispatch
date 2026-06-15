@@ -1,0 +1,41 @@
+template_version: v0.1
+status: proposed
+non_authorization_boundary: This Learning Patch records learning and routing only. It does not approve contract, runtime, release, production, MVP, active contract, live booking operation, or formal business object mutation.
+capability_id: biz.booking.fulfillment
+task_id: BF-02-AGENT-END
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#biz.booking.fulfillment
+dri: Gate-H / 许久明
+state_progression:
+  from: human_end_patch_prepared_for_review
+  to: agent_end_patch_prepared_for_pr_review
+patch_type: TEMPLATE_PATCH
+learning_summary: BF-02 shows that Agent End review needs a reusable machine-side checklist before PM, Gate, and Engineering can judge whether tools, context, evidence, and authority boundaries are safe enough for later runtime or contract planning.
+observed_failure_or_gap: Existing readiness material named Agent End requirements but did not give one compact checklist that maps tool discovery, pruning, context budget, evidence summarization, schema preservation, Can before Action, and Action rechecks Can to acceptance criteria.
+proposed_patch: Add a future Agent End patch template for GATED capability tasks with required sections for authority boundary, tool discovery, pruning profile, context budget, evidence summary, schema preservation, failure paths, and next pull triggers.
+future_judgment_to_convert:
+  - Human reviewers should not re-invent the same Agent End checklist for every GATED capability.
+  - Agent instructions can require SSOT-bound tool discovery before proposing action calls.
+  - A future gate can reject GATED progression when Agent can hold final decision authority or bypass Gateway / Can.
+  - A future validator can scan docs for context budget, generated-only evidence limit, and Can before Action language.
+routing:
+  default_repo: hl-dispatch
+  target_repo_if_not_dispatch: TBD_FOUNDER_DECISION
+  separate_founder_decision_required: false
+files_or_rules_to_update:
+  - docs/delivery-recovery/EVIDENCE-BUNDLE-TEMPLATE-v0.1.yaml
+  - docs/delivery-recovery/HL-AI-NATIVE-CAPABILITY-OPERATING-RULES-v0.2.md
+  - future Agent End patch template under docs/delivery-recovery/
+evidence_bundle_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+owner: Dispatch / Gate-H
+due: before BF-06-READINESS-ROLLUP
+status_reason: Proposed only; no template or rule file is changed by BF-02 unless a future PR is authorized.
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - OpenAPI / events / facts / reasoncodes mutation
+  - production / release / MVP / active contract
+  - live booking operation
+  - Gateway / HK Kernel / Can -> Action -> Audit bypass
+  - Agent final booking decision authority

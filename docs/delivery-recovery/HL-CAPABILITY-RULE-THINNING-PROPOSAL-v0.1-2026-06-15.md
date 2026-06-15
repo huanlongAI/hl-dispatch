@@ -18,7 +18,7 @@ weekly review 后用证据判断哪些字段或仪式没有影响决策。
 
 | Candidate | Evidence required | Decision |
 |---|---|---|
-| unused Ledger field | no decision impact in two reviews | remove or defer |
+| no-longer-referenced Ledger field | no decision impact in two reviews | remove or defer |
 | duplicated SSOT copy | duplicates contract/platform truth | replace with reference |
 | ritual causing DRI wait | wait time evidence | simplify |
 | generated report without action | no owner or decision output | remove |

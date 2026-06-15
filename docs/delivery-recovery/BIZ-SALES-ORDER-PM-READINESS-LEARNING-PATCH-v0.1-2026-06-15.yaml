@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.sales.order
+task_id: SO-01-PM-READINESS
+patch_type: DEFER_PATCH
+judgment_conversion:
+  human_judgment: "PM readiness can make contract questions explicit without authorizing provider, payment, billing, or runtime work."
+  future_rule_or_template: "PM readiness packets must include forbidden dependency boundaries and Contract Gap routing."
+proposed_patch:
+  target: PM readiness template
+  change: require terminology redlines, dependency boundary, and contract decision routing
+open_risks:
+  - future contract packet still required
+not_authorized:
+  - runtime / production / release / MVP / active contract

@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.offer.catalog
+task_id: OC-01-GAP-PACK
+patch_type: TEMPLATE_PATCH
+judgment_conversion:
+  human_judgment: "Supply-side catalog work cannot start from PRD alone; Gateway, OpenAPI, idempotency, approval, and IAM gaps must be explicit."
+  future_rule_or_template: "Offer/catalog gap packs should use a standard Gateway/OpenAPI/idempotency/approval/IAM matrix."
+proposed_patch:
+  target: gap pack template
+  change: add supply-side gap matrix
+open_risks:
+  - future contract/platform packet still required
+not_authorized:
+  - runtime / production / release / MVP / active contract

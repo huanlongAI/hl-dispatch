@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.store.resource
+task_id: SR-01-GAP-PACK
+patch_type: TEMPLATE_PATCH
+judgment_conversion:
+  human_judgment: "Store resource work must hard-stop before live occupancy mutation unless Gateway, state machine, QRH retry, idempotency, and Human End evidence are explicit."
+  future_rule_or_template: "Resource capability gap packs should use a state-machine / QRH / occupancy hard-stop matrix."
+proposed_patch:
+  target: gap pack template
+  change: add resource occupancy and QRH retry section
+open_risks:
+  - future contract/platform packet still required
+not_authorized:
+  - runtime / production / release / MVP / active contract

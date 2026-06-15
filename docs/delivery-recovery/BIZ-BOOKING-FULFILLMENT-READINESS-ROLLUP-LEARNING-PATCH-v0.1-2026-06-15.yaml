@@ -1,0 +1,21 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-06-READINESS-ROLLUP
+patch_type: DEFER_PATCH
+state_progression:
+  from: bf_patch_packets_incomplete
+  to: ready_for_founder_gate_decision_packet
+judgment_conversion:
+  human_judgment: "A docs-only rollup can make a decision surface ready without converting that surface into runtime or contract authorization."
+  future_rule_or_template: "Readiness rollups must output a terminal planning state and a next decision, not a hidden implementation go-ahead."
+proposed_patch:
+  target: future readiness rollup template
+  change: require terminal_planning_state, evidence refs, failure paths, and explicit non-authorization
+open_risks:
+  - Founder / Gate decision still required
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime / production / release / MVP / active contract

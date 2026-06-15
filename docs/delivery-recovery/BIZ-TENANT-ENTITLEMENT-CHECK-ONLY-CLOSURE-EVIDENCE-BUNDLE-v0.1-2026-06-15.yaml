@@ -1,0 +1,28 @@
+version: v0.1
+status: LONGRUN_CHECK_ONLY_BLOCKED_WITH_EVIDENCE_GAP
+date: '2026-06-15'
+capability_id: biz.tenant.entitlement
+task_id: TE-02-CHECK-ONLY-CLOSURE
+risk_class: REVERSIBLE
+execution_state: THIN_SLICE
+verification_method: docs_only_review_of_existing_check_only_slice_and_evidence_bundle
+independent_verifier: required_but_not_yet_recorded
+evidence_refs:
+  - docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-OPERATING-SLICE-v0.1-2026-06-15.md
+  - docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+  - docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-CLOSURE-v0.1-2026-06-15.md
+failure_paths:
+  - live_mode_input_appears
+  - fixture_boundary_cannot_be_proven
+  - generated_only_evidence_is_only_evidence
+  - check_mutates_quota_or_entitlement
+open_risks:
+  - independent verifier readback missing
+not_authorized:
+  - live billing mutation
+  - entitlement deduction
+  - quota mutation
+  - commercial tenant mutation
+  - runtime / production / release / MVP / active contract
+terminal_planning_state: BLOCKED_WITH_OWNER_AND_EVIDENCE
+learning_patch_ref: docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-CLOSURE-LEARNING-PATCH-v0.1-2026-06-15.yaml

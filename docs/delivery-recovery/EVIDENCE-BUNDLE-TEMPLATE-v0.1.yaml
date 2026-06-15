@@ -12,6 +12,7 @@ evidence_refs: []
 risks_tested: []
 happy_path_fixtures: []
 failure_path_fixtures: []
+failure_paths: []
 automated_checks: []
 manual_checks: []
 independent_verifier: TBD

@@ -32,6 +32,10 @@ future_judgment_to_convert:
   - id: review_matrix_not_registry
     target: future_template
     description: Gateway / Can / Audit matrices may summarize existing SSOT but must not allocate new routes, events, facts, reasoncodes, or registry entries.
+judgment_conversion:
+  - Convert denied-Can mutation into a future gate rejection rule.
+  - Convert missing event_id, trace_id, audit_ref, reason_code, or idempotency evidence into future validation stops.
+  - Convert Gateway / Can / Audit review matrices into future templates, not registries.
 proposed_template_change:
   name: gated_gateway_can_audit_trace_matrix
   minimum_fields:

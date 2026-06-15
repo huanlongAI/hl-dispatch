@@ -1,0 +1,22 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-04-OVERRIDE-RETRY
+patch_type: TEMPLATE_PATCH
+state_progression:
+  from: idempotency_retry_partial
+  to: override_retry_patch_prepared_for_review
+judgment_conversion:
+  human_judgment: "Override and retry cannot be activated from a planning packet; owner, approver, approval_ref, replay result, and audit evidence must be visible first."
+  future_rule_or_template: "Add a standard override/retry matrix to future GATED capability packets."
+proposed_patch:
+  target: future Evidence Bundle template
+  change: require owner_role, approver_role, approval_ref, retry class, duplicate behavior, idempotency replay result, and unknown-result fail-secure path
+open_risks:
+  - independent verification still required
+  - no runtime path is activated
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime / production / release / MVP / active contract

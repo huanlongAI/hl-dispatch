@@ -31,6 +31,13 @@ privacy mutation 或正式业务对象变更。
 - REVERSIBLE：当前证据范围内可回退的执行类别；一旦触碰正式事实、资金、权益、
   身份、隐私、合同或生产数据，应升级为 GATED。
 
+## Not Authorized
+
+This plan is not authorized to change `hl-contracts`, `hl-platform`, runtime,
+schema, registry, manifest, config, production, release, MVP, active contract,
+live booking, live payment, billing, entitlement, quota, identity, privacy, or
+formal business object state. It is a docs-only planning artifact.
+
 ## 1. Executive summary
 
 This plan defines the remaining full landing path for the capability operating

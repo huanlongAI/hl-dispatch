@@ -12,6 +12,10 @@ patch_type: DEFER_PATCH
 learning_summary: Closeout evidence can change after an initial review-only Ledger entry. The operating loop must separate PR merge evidence from production, MVP, release, or active-contract authorization.
 observed_failure_or_gap: The initial Ledger correctly blocked on unverified live Issue / PR state. After hl-platform#106 merged, that blocker became stale, but the PR merge still must not be interpreted as production authorization.
 proposed_patch: For future closeouts, produce a closeout package and Evidence Bundle first, then update Ledger only with explicit non-authorization wording and a separate follow-up decision if production, release, active contract, or runtime expansion is requested.
+judgment_conversion:
+  - Convert stale Issue / PR state blockers into a closeout package plus Evidence Bundle before Ledger updates.
+  - Convert staging PR merge evidence into staging-evidence-only Ledger language.
+  - Convert any production, release, active contract, or runtime expansion request into a separate Founder / Gate decision.
 routing:
   default_repo: hl-dispatch
   target_repo_if_not_dispatch: TBD

@@ -16,6 +16,10 @@ future_judgment_to_convert:
   - Human reviewers should not re-invent the same Human End checklist for every GATED capability.
   - Agent instructions can require a Human End surface matrix before proposing runtime or contract progression.
   - A future gate can reject GATED progression when confirmation, review, exception, and audit surfaces are absent.
+judgment_conversion:
+  - Convert repeated Human End checklist review into a future GATED capability template.
+  - Convert missing confirmation, review, exception, or audit surface into a future gate rejection reason.
+  - Convert generated-only Human End evidence into a future stop condition.
 routing:
   default_repo: hl-dispatch
   target_repo_if_not_dispatch: TBD_FOUNDER_DECISION

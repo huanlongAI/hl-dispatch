@@ -1,0 +1,23 @@
+version: v0.1
+status: LONGRUN_EVIDENCE_PREPARED_FOR_REVIEW
+date: '2026-06-15'
+capability_id: biz.sales.order
+task_id: SO-01-PM-READINESS
+risk_class: GATED
+execution_state: SPEC_ONLY
+verification_method: docs_only_pm_readiness_and_ledger_review
+independent_verifier: Founder_or_Gate_assigned_reviewer
+evidence_refs:
+  - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+  - docs/delivery-recovery/BIZ-SALES-ORDER-PM-READINESS-PACKET-v0.1-2026-06-15.md
+failure_paths:
+  - provider_payment_or_billing_scope_creeps_into_implementation
+  - generated_only_evidence_claims_gated_progression
+open_risks:
+  - contract gap requires future Founder / Gate decision
+not_authorized:
+  - provider integration
+  - payment / billing
+  - runtime / production / release / MVP / active contract
+terminal_planning_state: CONTRACT_DECISION_PACKET_READY
+learning_patch_ref: docs/delivery-recovery/BIZ-SALES-ORDER-PM-READINESS-LEARNING-PATCH-v0.1-2026-06-15.yaml

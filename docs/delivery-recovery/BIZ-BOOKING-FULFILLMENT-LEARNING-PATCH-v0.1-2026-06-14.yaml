@@ -13,6 +13,10 @@ patch_type: DEFER_PATCH
 learning_summary: Historical engineering approval, pilot manifests, acceptance coverage, and staging closeout evidence must be separated from current dual-end readiness. A GATED capability can have pilot execution evidence while still requiring Human End, Agent End, owner matrix, retry, dependency exit, and Gate-H reuse decisions before broader progression.
 observed_failure_or_gap: The same capability had older Gate-H engineering approval and newer PM dual-end PATCH_REQUIRED evidence. Without an explicit readiness patch package, the older approval could be misread as current runtime, production, MVP, or active-contract authorization.
 proposed_patch: For any GATED capability with existing pilot/runtime evidence but PM dual-end PATCH_REQUIRED status, create a readiness patch package before updating Ledger state or requesting runtime/contract work. The package must isolate Human End, Agent End, Gateway/Can/Action/Audit, override owner matrix, retry/duplicate policy, dependency exit path, and Gate-H reuse/new-review decision.
+judgment_conversion:
+  - Convert conflicting historical approval and newer PM patch-required evidence into a required readiness patch package.
+  - Convert pilot manifest or acceptance coverage ambiguity into explicit non-authorization wording.
+  - Convert missing Human End, Agent End, owner matrix, retry, dependency exit, or Gate-H reuse decision into blocked progression.
 routing:
   default_repo: hl-dispatch
   contract_repo_if_contract_patch_needed: hl-contracts

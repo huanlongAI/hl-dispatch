@@ -33,6 +33,7 @@ independent_verification:
   minimum_cases:
     positive: 1
     negative_or_failure: 2
+verification_method: Independent verifier must review fixture boundary, positive case, at least two negative or failure cases, and proof that no live billing, entitlement, quota, or commercial tenant mutation occurred.
 scenario_evidence:
   - scenario_id: TE-CHECK-01
     scenario: known tenant with quota available
@@ -72,6 +73,10 @@ failure_paths:
   - generated-only evidence is the only evidence
   - seed data is stale or ambiguous
   - check creates, mutates, reserves, deducts, refunds, settles, or confirms any entitlement or quota
+open_risks:
+  - Independent verifier readback is still required before TE-01 can be considered complete.
+  - Fixture freshness and boundary proof remain required evidence inputs.
+  - Any live mode signal must stop the task and pull Founder / Gate review.
 not_authorized:
   - hl-contracts changes
   - hl-platform changes

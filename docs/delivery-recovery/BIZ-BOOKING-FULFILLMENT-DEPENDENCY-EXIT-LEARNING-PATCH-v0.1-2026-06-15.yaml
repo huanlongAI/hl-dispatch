@@ -1,0 +1,21 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-05-DEPENDENCY-EXIT
+patch_type: RULE_PATCH
+state_progression:
+  from: dependency_exit_open
+  to: dependency_exit_patch_prepared_for_review
+judgment_conversion:
+  human_judgment: "Missing cross-capability evidence must stop the flow instead of allowing booking to infer dependency truth."
+  future_rule_or_template: "Every GATED capability packet should include a dependency exit matrix and cross-capability stop rule."
+proposed_patch:
+  target: future capability patch template
+  change: require dependency evidence refs, owner pull, fallback behavior, and not-authorized mutation boundary
+open_risks:
+  - independent verification still required
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime / production / release / MVP / active contract

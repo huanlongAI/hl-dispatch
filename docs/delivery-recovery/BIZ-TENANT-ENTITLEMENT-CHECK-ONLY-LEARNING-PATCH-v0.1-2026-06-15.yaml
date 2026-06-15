@@ -18,6 +18,11 @@ human_judgment_to_convert:
     future_form: risk trigger that upgrades REVERSIBLE to GATED
   - judgment: Separating full capability draft status from narrow RRS check-only permission.
     future_form: capability ledger template rule
+judgment_conversion:
+  - Convert check-only versus live entitlement distinction into a reusable boundary gate.
+  - Convert generated-only evidence rejection into an evidence bundle validation rule.
+  - Convert quota or entitlement mutation detection into a REVERSIBLE-to-GATED risk trigger.
+  - Convert full capability versus narrow RRS check-only distinction into a capability ledger template rule.
 proposed_system_patch:
   target: future capability operating rule template
   change: Add a standard check-only slice section with allowed fixture boundary, live-mode hard stop, generated-only evidence limit, and mutation escalation trigger.

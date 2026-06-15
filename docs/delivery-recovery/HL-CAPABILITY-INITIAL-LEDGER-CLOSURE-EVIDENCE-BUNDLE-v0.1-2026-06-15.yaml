@@ -1,0 +1,31 @@
+version: v0.1
+status: LONGRUN_LEDGER_CLOSURE_EVIDENCE_PREPARED
+date: '2026-06-15'
+capability_id: portfolio
+task_id: PORTFOLIO-02-LEDGER-CLOSURE
+verification_method: docs_only_review_of_terminal_state_table_against_current_ledger_and_wave_artifacts
+independent_verifier: Founder_or_Gate_assigned_reviewer
+evidence_refs:
+  - docs/delivery-recovery/HL-CAPABILITY-INITIAL-LEDGER-CLOSURE-v0.1-2026-06-15.md
+  - docs/delivery-recovery/HL-CAPABILITY-PORTFOLIO-READBACK-v0.1-2026-06-15.md
+  - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+failure_paths:
+  - Ledger_delta_implies_runtime_authorization
+  - terminal_state_not_evidence_backed
+  - missing_not_authorized_boundary
+open_risks:
+  - future implementation still requires separate Founder / Gate decision
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime / production / release / MVP / active contract
+terminal_states:
+  booking_staging_pilot_closeout: CLOSED_FOR_CURRENT_SCOPE
+  biz.booking.fulfillment: READY_FOR_FOUNDER_GATE_DECISION
+  biz.sales.order: CONTRACT_DECISION_PACKET_READY
+  biz.customer.asset: CONTRACT_DECISION_PACKET_READY
+  biz.offer.catalog: CONTRACT_DECISION_PACKET_READY
+  biz.store.resource: CONTRACT_DECISION_PACKET_READY
+  biz.tenant.entitlement: BLOCKED_WITH_OWNER_AND_EVIDENCE
+  biz.payment.checkout: BLOCKED_WITH_OWNER_AND_EVIDENCE
+learning_patch_ref: docs/delivery-recovery/HL-CAPABILITY-INITIAL-LEDGER-CLOSURE-LEARNING-PATCH-v0.1-2026-06-15.yaml

@@ -17,6 +17,10 @@ future_judgment_to_convert:
   - Agent instructions can require SSOT-bound tool discovery before proposing action calls.
   - A future gate can reject GATED progression when Agent can hold final decision authority or bypass Gateway / Can.
   - A future validator can scan docs for context budget, generated-only evidence limit, and Can before Action language.
+judgment_conversion:
+  - Convert repeated Agent End review into a future machine-side checklist template.
+  - Convert non-SSOT tool discovery, missing pruning, or lost schema fields into future validation stops.
+  - Convert Agent final decision authority or Gateway / Can bypass into a future gate rejection reason.
 routing:
   default_repo: hl-dispatch
   target_repo_if_not_dispatch: TBD_FOUNDER_DECISION

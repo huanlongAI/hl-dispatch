@@ -36,6 +36,14 @@ failure_path_fixtures:
   - context_budget_overflow_requires_summary_with_stable_refs
   - generated_only_evidence_blocks_GATED_progression
   - human_end_missing_blocks_final_customer_visible_action
+failure_paths:
+  - undiscoverable tool stops and records an evidence gap
+  - pruned tool blocks Action and preserves reason
+  - denied Can blocks Action and preserves reason_code
+  - unknown Action outcome blocks synthetic event_id or audit_ref
+  - context budget overflow requires summary with stable references
+  - generated-only evidence blocks GATED progression
+  - missing Human End blocks final customer-visible action
 automated_checks:
   - git diff --check
   - ruby YAML parse for changed YAML files

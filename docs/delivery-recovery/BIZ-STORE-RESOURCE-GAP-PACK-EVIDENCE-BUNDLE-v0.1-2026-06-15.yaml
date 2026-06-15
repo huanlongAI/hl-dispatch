@@ -1,0 +1,23 @@
+version: v0.1
+status: LONGRUN_EVIDENCE_PREPARED_FOR_REVIEW
+date: '2026-06-15'
+capability_id: biz.store.resource
+task_id: SR-01-GAP-PACK
+risk_class: GATED
+execution_state: SPEC_ONLY
+verification_method: docs_only_gap_matrix_review_against_ledger_policy
+independent_verifier: Founder_or_Gate_assigned_reviewer
+evidence_refs:
+  - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+  - docs/delivery-recovery/BIZ-STORE-RESOURCE-GAP-PACK-v0.1-2026-06-15.md
+failure_paths:
+  - live_resource_occupancy_mutation_pressure
+  - Gateway_or_idempotency_missing
+  - stale_QRH_retry_unclear
+open_risks:
+  - future contract/platform decision packet required
+not_authorized:
+  - live resource occupancy mutation
+  - runtime / production / release / MVP / active contract
+terminal_planning_state: CONTRACT_DECISION_PACKET_READY
+learning_patch_ref: docs/delivery-recovery/BIZ-STORE-RESOURCE-GAP-PACK-LEARNING-PATCH-v0.1-2026-06-15.yaml

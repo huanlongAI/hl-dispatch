@@ -1,0 +1,26 @@
+version: v0.1
+status: LONGRUN_PREFLIGHT_BLOCKED_WITH_EVIDENCE_GAP
+date: '2026-06-15'
+capability_id: biz.payment.checkout
+task_id: PC-01-PREFLIGHT
+risk_class: GATED
+execution_state: SPEC_ONLY
+verification_method: docs_only_preflight_blocker_review_against_current_ledger
+independent_verifier: Founder_or_Gate_assigned_reviewer_required
+evidence_refs:
+  - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+  - docs/delivery-recovery/BIZ-PAYMENT-CHECKOUT-PREFLIGHT-PACKET-v0.1-2026-06-15.md
+failure_paths:
+  - live_money_flow_requested
+  - provider_boundary_unclear
+  - idempotency_or_financial_audit_missing
+  - refund_or_settlement_scope_creeps_into_implementation
+open_risks:
+  - financial risk requires explicit future Founder / Gate decision
+not_authorized:
+  - real payment
+  - refund / settlement / billing
+  - financial ledger mutation
+  - runtime / production / release / MVP / active contract
+terminal_planning_state: BLOCKED_WITH_OWNER_AND_EVIDENCE
+learning_patch_ref: docs/delivery-recovery/BIZ-PAYMENT-CHECKOUT-PREFLIGHT-LEARNING-PATCH-v0.1-2026-06-15.yaml

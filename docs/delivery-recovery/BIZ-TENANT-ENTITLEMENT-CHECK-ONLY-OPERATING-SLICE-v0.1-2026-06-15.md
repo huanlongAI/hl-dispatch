@@ -6,7 +6,7 @@ Operating Cycle: 1
 Capability: `biz.tenant.entitlement`
 Task: `TE-01-CHECK-ONLY`
 
-## Chinese Summary
+## 中文摘要
 
 本文件只落 `biz.tenant.entitlement` 的 check-only 运行片。
 它的作用是把已有 mock / seed / demo 配额检查证据整理成可复查闭环，

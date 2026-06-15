@@ -1,0 +1,762 @@
+version: "0.1"
+date: "2026-06-15"
+status: DRAFT_PLAN_PR
+source_anchor:
+  current_main_anchor: "PR #269 merged at f923c99cddcd68ae955d13f4d3648aebe718d9a3; BF-04 next due"
+  verified_in_clean_worktree: true
+  forbidden_claims:
+    - production authorization
+    - release authorization
+    - MVP pass
+    - active contract authorization
+    - runtime authorization
+    - live business operation
+non_authorization:
+  hl_contracts_changes: false
+  hl_platform_changes: false
+  runtime_authorization: false
+  production_authorization: false
+  release_authorization: false
+  active_contract_authorization: false
+  live_business_operation: false
+  real_payment: false
+  real_refund: false
+  real_settlement: false
+  real_billing: false
+  entitlement_mutation: false
+  quota_mutation: false
+  customer_identity_mutation: false
+  privacy_mutation: false
+boundary:
+  allowed_write_scope:
+    - docs/delivery-recovery/
+  forbidden_write_scope:
+    - hl-contracts/**
+    - hl-platform/**
+  not_authorized:
+    - production
+    - release
+    - MVP
+    - active_contract
+    - runtime_authorization
+    - live_booking_operation
+    - real_payment
+    - real_refund
+    - real_settlement
+    - real_billing
+    - entitlement_mutation
+    - quota_mutation
+    - customer_identity_mutation
+    - privacy_mutation
+defaults:
+  status: PLANNED_NOT_AUTHORIZED_FOR_EXECUTION
+  allowed_scope: hl-dispatch/docs/delivery-recovery/
+  forbidden_scope: contracts_platform_runtime_schema_registry_manifest_config_openapi_events_facts_reasoncodes
+  required_outputs:
+    - patch_package
+    - evidence_bundle
+    - learning_patch
+    - ledger_delta
+  independent_verification_required: true
+  failure_path_required: true
+waves:
+  - wave_id: W1
+    title: Booking Fulfillment closeout cluster
+    status: PLANNED_NOT_AUTHORIZED_FOR_EXECUTION
+    tasks:
+      - task_id: BF-04-OVERRIDE-RETRY
+        capability_id: biz.booking.fulfillment
+        title: Override and retry policy closure
+        wave: W1
+        current_state: "BF-03 landed; idempotency_retry partial; due BF-04-OVERRIDE-RETRY_PR"
+        target_state: override_retry_patch_prepared_for_review
+        risk_class: GATED
+        owner: Gate-H / Xu Jiuming + PM-A / Zou Cong
+        branch: codex/cap-cycle2-bf04-override-retry-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no runtime, contract, schema, registry, manifest, config, OpenAPI, events, facts, reasoncodes, live booking, release, production
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-OVERRIDE-RETRY-PATCH-v0.1-2026-06-15.md
+          - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-OVERRIDE-RETRY-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+          - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-OVERRIDE-RETRY-LEARNING-PATCH-v0.1-2026-06-15.yaml
+        evidence_required:
+          - owner_role and approver_role matrix
+          - approval_ref requirement
+          - retryable and non_retryable failure classes
+          - idempotency replay result
+          - duplicate submission and duplicate audit behavior
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: GO_WAVE_1
+        next_decision: FOUNDER_GATE
+        blocker: Wave 1 is not authorized until Founder gives GO_WAVE_1.
+        stop_conditions:
+          - active override path implied
+          - runtime or contract change needed
+      - task_id: BF-05-DEPENDENCY-EXIT
+        capability_id: biz.booking.fulfillment
+        title: Dependency exit path closure
+        wave: W1
+        current_state: StoreResource, CustomerProfile, OfferCatalog, QRH, and legacy mapping exits remain open.
+        target_state: dependency_exit_patch_prepared_for_review
+        risk_class: GATED
+        owner: PM-A / Zou Cong + Gate-H / Xu Jiuming
+        branch: codex/cap-cycle2-bf05-dependency-exit-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no dependency mutation or cross-capability runtime change
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DEPENDENCY-EXIT-PATH-PACKET-v0.1-2026-06-15.md
+        evidence_required:
+          - StoreResource or QRH failure path
+          - CustomerProfile precheck failure path
+          - OfferCatalog requirement failure path
+          - legacy reservation mapping failure path
+          - cross-capability stop rule
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: CONTINUE_WAVE_1_OR_PAUSE
+        next_decision: FOUNDER_GATE
+        blocker: Cross-capability mutation is not authorized.
+        stop_conditions:
+          - dependency implementation required
+          - formal object mutation implied
+      - task_id: BF-06-READINESS-ROLLUP
+        capability_id: biz.booking.fulfillment
+        title: Booking readiness rollup
+        wave: W1
+        current_state: BF-01, BF-02, and BF-03 landed; BF-04 and BF-05 still planned.
+        target_state: readiness_rollup_prepared_or_blocked
+        risk_class: GATED
+        owner: PM-A / Zou Cong + Gate-H / Xu Jiuming
+        branch: codex/cap-cycle2-bf06-readiness-rollup-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no runtime readiness claim, release claim, or contract activation
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-ROLLUP-v0.1-2026-06-15.md
+        evidence_required:
+          - BF-01 through BF-05 evidence summary
+          - independent verification summary
+          - failure path summary
+          - blocker recommendation
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: BF_07_DECISION_PACKET_IF_READY
+        next_decision: FOUNDER_GATE
+        blocker: Generated-only evidence cannot complete GATED progression.
+        stop_conditions:
+          - missing independent verification
+          - missing failure path
+      - task_id: BF-07-FOUNDER-GATE-DECISION-PACKET
+        capability_id: biz.booking.fulfillment
+        title: Conditional Founder / Gate decision packet
+        wave: W1
+        current_state: conditional_after_BF_06
+        target_state: decision_packet_ready_or_not_needed
+        risk_class: GATED
+        owner: TBD_FOUNDER_DECISION
+        branch: codex/cap-cycle2-bf07-founder-gate-packet-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no implementation
+        required_outputs:
+          - decision_packet
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-PACKET-v0.1-2026-06-15.md
+        evidence_required:
+          - BF-06 rollup refs
+          - explicit options and non-authorization boundary
+        learning_patch_required: false
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_GATE_DECISION
+        next_decision: FOUNDER_GATE
+        blocker: Do not create if BF-06 evidence is insufficient.
+        stop_conditions:
+          - packet would implement runtime or contract change
+  - wave_id: W2
+    title: Portfolio readback and eight-item Ledger closure
+    status: PLANNED_NOT_AUTHORIZED_FOR_EXECUTION
+    tasks:
+      - task_id: PORTFOLIO-01-READBACK
+        capability_id: portfolio
+        title: Eight-item portfolio readback
+        wave: W2
+        current_state: Initial Ledger has 8 active, pilot, or PM-led rows.
+        target_state: readback_prepared
+        risk_class: GATED
+        owner: Dispatch / Codex + Founder / Gate reviewer
+        branch: codex/full-landing-portfolio-readback-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no Ledger factual mutation without evidence
+        required_outputs:
+          - readback_packet
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-PORTFOLIO-READBACK-v0.1-2026-06-15.md
+        evidence_required:
+          - all 8 Ledger rows
+          - current owner and blocker readback
+          - terminal planning state proposal
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_GATE
+        next_decision: FOUNDER_GATE
+        blocker: none_known
+        stop_conditions:
+          - row implies release or runtime authorization
+      - task_id: PORTFOLIO-02-LEDGER-CLOSURE
+        capability_id: portfolio
+        title: Initial Ledger closure proposal
+        wave: W2
+        current_state: Eight rows need explicit terminal planning states.
+        target_state: closed_blocked_deferred_or_decision_packet_ready
+        risk_class: GATED
+        owner: TBD_FOUNDER_DECISION
+        branch: codex/full-landing-ledger-closure-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no new contract or runtime truth
+        required_outputs:
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-LEDGER-CLOSURE-v0.1-2026-06-15.md
+        evidence_required:
+          - closure state evidence per row
+          - owner or blocker evidence per row
+          - forbidden claims review
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_GATE
+        next_decision: FOUNDER_GATE
+        blocker: closure states require Founder / Gate review
+        stop_conditions:
+          - Ledger would become contract or runtime registry
+  - wave_id: W3
+    title: PM readiness and supply-side gap packs
+    status: PLANNED_NOT_AUTHORIZED_FOR_EXECUTION
+    tasks:
+      - task_id: SO-01-PM-READINESS
+        capability_id: biz.sales.order
+        title: Sales Order PM readiness
+        wave: W3
+        current_state: SPEC_ONLY / GATED; PM readiness only.
+        target_state: pm_readiness_prepared_or_blocked
+        risk_class: GATED
+        owner: PM-A / Zou Cong
+        branch: codex/full-landing-sales-order-pm-readiness-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no provider, payment, billing, runtime, or live sales object mutation
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-SALES-ORDER-PM-READINESS-PACKET-v0.1-2026-06-15.md
+        evidence_required:
+          - PM readiness index
+          - terminology redlines
+          - Contract Gap decision list
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: true
+        next_authorization_needed: CONTRACT_PACKET_IF_NEEDED
+        next_decision: CONTRACT_PACKET
+        blocker: Not authorized beyond PM readiness.
+        stop_conditions:
+          - provider or payment integration implied
+      - task_id: CA-01-PM-READINESS
+        capability_id: biz.customer.asset
+        title: Customer Asset PM readiness
+        wave: W3
+        current_state: SPEC_ONLY / GATED; PM readiness only.
+        target_state: pm_readiness_prepared_or_blocked
+        risk_class: GATED
+        owner: PM-B / Zhu Yang
+        branch: codex/full-landing-customer-asset-pm-readiness-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no active contract, live customer asset mutation, identity merge, privacy mutation
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-CUSTOMER-ASSET-PM-READINESS-PACKET-v0.1-2026-06-15.md
+        evidence_required:
+          - PM readiness index
+          - asset state model gaps
+          - identity and customer profile dependency boundary
+          - Contract Gap decision list
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: true
+        next_authorization_needed: CONTRACT_PACKET_IF_NEEDED
+        next_decision: CONTRACT_PACKET
+        blocker: Not authorized beyond PM readiness.
+        stop_conditions:
+          - live identity or privacy mutation implied
+      - task_id: OC-01-GAP-PACK
+        capability_id: biz.offer.catalog
+        title: Offer Catalog gap pack
+        wave: W3
+        current_state: SPEC_ONLY / GATED; PM dual-end review blocked.
+        target_state: gap_pack_prepared_or_blocked
+        risk_class: GATED
+        owner: PM-B / Zhu Yang
+        branch: codex/full-landing-offer-catalog-gap-pack-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no engineering start, live catalog mutation, approval bypass, Gateway bypass
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-OFFER-CATALOG-GAP-PACK-v0.1-2026-06-15.md
+        evidence_required:
+          - Gateway path gap
+          - OpenAPI gap
+          - idempotency rule
+          - Agent and Human End split
+          - approval matrix
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: true
+        next_authorization_needed: CONTRACT_OR_PLATFORM_PACKET_IF_NEEDED
+        next_decision: CONTRACT_PACKET
+        blocker: PM dual-end review remains blocked.
+        stop_conditions:
+          - PRD-direct engineering start implied
+      - task_id: SR-01-GAP-PACK
+        capability_id: biz.store.resource
+        title: Store Resource gap pack
+        wave: W3
+        current_state: SPEC_ONLY / GATED; PM dual-end review blocked.
+        target_state: gap_pack_prepared_or_blocked
+        risk_class: GATED
+        owner: PM-B / Zhu Yang
+        branch: codex/full-landing-store-resource-gap-pack-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no live resource occupancy mutation, Gateway bypass, idempotency bypass
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-STORE-RESOURCE-GAP-PACK-v0.1-2026-06-15.md
+        evidence_required:
+          - resource state machine gap
+          - QRH retry and idempotency rules
+          - Gateway path gap
+          - occupancy mutation risk notes
+          - Human End confirmation surface
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: true
+        next_authorization_needed: CONTRACT_OR_PLATFORM_PACKET_IF_NEEDED
+        next_decision: CONTRACT_PACKET
+        blocker: PM dual-end review remains blocked.
+        stop_conditions:
+          - resource occupancy mutation implied
+  - wave_id: W4
+    title: Payment and entitlement boundary closure
+    status: PLANNED_NOT_AUTHORIZED_FOR_EXECUTION
+    tasks:
+      - task_id: TE-02-CHECK-ONLY-CLOSURE
+        capability_id: biz.tenant.entitlement
+        title: Tenant Entitlement check-only closure
+        wave: W4
+        current_state: THIN_SLICE / REVERSIBLE; check-only slice prepared for review.
+        target_state: check_only_closed_or_blocked
+        risk_class: REVERSIBLE
+        owner: Gate-H / Xu Jiuming
+        branch: codex/full-landing-tenant-entitlement-check-only-closure-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no live billing, entitlement deduction, quota mutation, commercial tenant mutation
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-TENANT-ENTITLEMENT-CHECK-ONLY-CLOSURE-v0.1-2026-06-15.md
+        evidence_required:
+          - positive check case
+          - negative or failure cases
+          - unknown tenant or missing context case
+          - accidental live-mode hard-stop evidence
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_GATE_IF_MUTATION_APPEARS
+        next_decision: FOUNDER_GATE
+        blocker: Generated-only evidence cannot complete the check-only task.
+        stop_conditions:
+          - mutation behavior appears
+      - task_id: PC-01-PREFLIGHT
+        capability_id: biz.payment.checkout
+        title: Payment Checkout preflight
+        wave: W4
+        current_state: SPEC_ONLY / GATED; preflight only.
+        target_state: preflight_blocker_map_prepared
+        risk_class: GATED
+        owner: PM-B / Zhu Yang
+        branch: codex/full-landing-payment-checkout-preflight-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no provider integration, refund, settlement, financial ledger mutation, live money movement
+        required_outputs:
+          - patch_package
+          - evidence_bundle
+          - learning_patch
+          - ledger_delta
+        expected_outputs:
+          - docs/delivery-recovery/BIZ-PAYMENT-CHECKOUT-PREFLIGHT-BLOCKER-PACKET-v0.1-2026-06-15.md
+        evidence_required:
+          - provider sovereignty risk
+          - idempotency requirements
+          - financial audit requirements
+          - payment, refund, settlement blocker map
+        learning_patch_required: true
+        ledger_delta_required: true
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: true
+        next_authorization_needed: FOUNDER_GATE
+        next_decision: FOUNDER_GATE
+        blocker: Financial risk requires explicit future Founder / Gate decision.
+        stop_conditions:
+          - live money flow implied
+  - wave_id: W5
+    title: Cross-repo decision packets only
+    status: PLANNED_NOT_AUTHORIZED_FOR_EXECUTION
+    tasks:
+      - task_id: CONTRACT-DP-01
+        capability_id: conditional
+        title: Contract decision packet
+        wave: W5
+        current_state: conditional_after_W2_W4
+        target_state: contract_decision_packet_ready_or_not_needed
+        risk_class: GATED
+        owner: Owning PM + Gate-H
+        branch: codex/full-landing-contract-decision-packet-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no hl-contracts edit
+        required_outputs:
+          - decision_packet
+        expected_outputs:
+          - docs/delivery-recovery/CONTRACT-DECISION-PACKET-CAPABILITY-FULL-LANDING-v0.1-2026-06-15.md
+        evidence_required:
+          - exact target files
+          - diff intent
+          - compatibility check
+          - rollback or defer option
+        learning_patch_required: false
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: true
+        next_authorization_needed: FOUNDER_GATE_CONTRACT_DECISION
+        next_decision: CONTRACT_PACKET
+        blocker: Only packet preparation is authorized.
+        stop_conditions:
+          - hl-contracts change attempted
+      - task_id: PLATFORM-DP-01
+        capability_id: conditional
+        title: Platform decision packet
+        wave: W5
+        current_state: conditional_after_W2_W4
+        target_state: platform_decision_packet_ready_or_not_needed
+        risk_class: GATED
+        owner: Gate-H + Engineering Owner
+        branch: codex/full-landing-platform-decision-packet-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no hl-platform edit
+        required_outputs:
+          - decision_packet
+        expected_outputs:
+          - docs/delivery-recovery/PLATFORM-DECISION-PACKET-CAPABILITY-FULL-LANDING-v0.1-2026-06-15.md
+        evidence_required:
+          - exact target files
+          - fixture plan
+          - readiness gate plan
+          - rollback or defer option
+        learning_patch_required: false
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: true
+        next_authorization_needed: FOUNDER_GATE_PLATFORM_DECISION
+        next_decision: PLATFORM_PACKET
+        blocker: Only packet preparation is authorized.
+        stop_conditions:
+          - hl-platform change attempted
+      - task_id: RELEASE-GATE-DP-01
+        capability_id: conditional
+        title: Release Gate decision packet
+        wave: W5
+        current_state: only_if_release_like_claim_appears
+        target_state: release_gate_packet_ready_or_not_needed
+        risk_class: GATED
+        owner: TBD_FOUNDER_DECISION
+        branch: codex/full-landing-release-gate-packet-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no release authorization
+        required_outputs:
+          - decision_packet
+        expected_outputs:
+          - docs/delivery-recovery/RELEASE-GATE-DECISION-PACKET-CAPABILITY-FULL-LANDING-v0.1-2026-06-15.md
+        evidence_required:
+          - claim source
+          - evidence gap
+          - no-release state until explicit decision
+        learning_patch_required: false
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_RELEASE_GATE_IF_REQUESTED
+        next_decision: RELEASE_GATE
+        blocker: Only packet preparation is authorized.
+        stop_conditions:
+          - packet implies release approval
+  - wave_id: W6
+    title: Operating mechanism closure
+    status: PLANNED_NOT_AUTHORIZED_FOR_EXECUTION
+    tasks:
+      - task_id: WEEKLY-01
+        capability_id: portfolio
+        title: Weekly evidence and Learning Patch review
+        wave: W6
+        current_state: cadence not yet formalized for full landing
+        target_state: weekly_review_packet_prepared
+        risk_class: REVERSIBLE
+        owner: Dispatch / Gate-H
+        branch: codex/full-landing-weekly-review-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no new task entry unless action item exists
+        required_outputs:
+          - review_packet
+          - learning_patch
+        expected_outputs:
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-WEEKLY-REVIEW-PACKET-v0.1-2026-06-15.md
+        evidence_required:
+          - changed state list
+          - GATED evidence gaps
+          - failure path gaps
+          - blockers needing Founder / Gate
+          - Learning Patch list
+        learning_patch_required: true
+        ledger_delta_required: false
+        independent_verification_required: false
+        failure_path_required: true
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: CONFIRM_CADENCE_OR_REVISE
+        next_decision: FOUNDER_GATE
+        blocker: Review must produce decisions, not busywork.
+        stop_conditions:
+          - cadence creates reporting without action
+      - task_id: METRICS-30
+        capability_id: portfolio
+        title: Day 30 mechanism metrics
+        wave: W6
+        current_state: metrics targets exist in rules v0.2
+        target_state: metrics_30_packet_prepared
+        risk_class: REVERSIBLE
+        owner: TBD_FOUNDER_DECISION
+        branch: codex/full-landing-metrics-30-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no production or release interpretation
+        required_outputs:
+          - metrics_packet
+          - learning_patch
+        expected_outputs:
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-METRICS-30D-v0.1.md
+        evidence_required:
+          - Ledger coverage
+          - not_authorized coverage
+          - GATED bypass count
+          - status misread count
+          - Learning Patch rate
+          - generated-only accepted count
+        learning_patch_required: true
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: false
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_METRICS_REVIEW
+        next_decision: FOUNDER_GATE
+        blocker: Metrics owner not confirmed.
+        stop_conditions:
+          - metrics cannot be evidenced
+      - task_id: METRICS-60-90
+        capability_id: portfolio
+        title: Day 60 and Day 90 trend metrics
+        wave: W6
+        current_state: trend metrics defined but not measured
+        target_state: metrics_60_90_packet_prepared
+        risk_class: REVERSIBLE
+        owner: TBD_FOUNDER_DECISION
+        branch: codex/full-landing-metrics-60-90-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no production or release interpretation
+        required_outputs:
+          - metrics_packet
+          - learning_patch
+        expected_outputs:
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-METRICS-60-90D-v0.1.md
+        evidence_required:
+          - lead time trend
+          - blocker wait trend
+          - rework trend
+          - independent evidence trend
+          - failure path coverage trend
+          - process overhead trend
+        learning_patch_required: true
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: false
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_METRICS_REVIEW
+        next_decision: FOUNDER_GATE
+        blocker: Metrics owner not confirmed.
+        stop_conditions:
+          - trend inputs missing
+      - task_id: RULE-THINNING-01
+        capability_id: portfolio
+        title: Rule thinning proposal
+        wave: W6
+        current_state: rules v0.2 intentionally thin; thinning trigger still future
+        target_state: thinning_proposal_prepared_or_not_needed
+        risk_class: REVERSIBLE
+        owner: Dispatch / Founder / Gate
+        branch: codex/full-landing-rule-thinning-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no contract or platform rule mutation without decision
+        required_outputs:
+          - rule_patch_or_defer_patch
+          - learning_patch
+        expected_outputs:
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-RULE-THINNING-v0.1.md
+        evidence_required:
+          - fields not affecting decisions
+          - duplicate SSOT signals
+          - reporting-over-action cases
+          - DRI wait caused by ritual
+        learning_patch_required: true
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: false
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_GATE_IF_RULE_CHANGE_LEAVES_DISPATCH
+        next_decision: FOUNDER_GATE
+        blocker: No thinning without repeated evidence.
+        stop_conditions:
+          - thinning changes contracts or platform
+      - task_id: RISK-CLASS-01
+        capability_id: portfolio
+        title: Risk-class evolution review
+        wave: W6
+        current_state: REVERSIBLE and GATED only
+        target_state: risk_class_policy_confirmed_or_change_packet_prepared
+        risk_class: REVERSIBLE
+        owner: Founder / Gate
+        branch: codex/full-landing-risk-class-evolution-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no new policy outside dispatch without decision
+        required_outputs:
+          - rule_patch_or_decision_packet
+          - learning_patch
+        expected_outputs:
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-RISK-CLASS-EVOLUTION-v0.1.md
+        evidence_required:
+          - ambiguity caused by two-level model
+          - over-ritual caused by two-level model
+          - proposed policy effect
+        learning_patch_required: true
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: false
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_GATE
+        next_decision: FOUNDER_GATE
+        blocker: No new risk class without evidence.
+        stop_conditions:
+          - policy change lacks evidence
+      - task_id: DISCOVERY-01
+        capability_id: portfolio
+        title: Discovery and value judgment loop
+        wave: W6
+        current_state: discovery loop required but not yet formalized for full landing
+        target_state: discovery_value_readback_prepared
+        risk_class: REVERSIBLE
+        owner: TBD_FOUNDER_DECISION
+        branch: codex/full-landing-discovery-loop-20260615
+        allowed_scope: hl-dispatch/docs/delivery-recovery/
+        forbidden_scope: no active delivery expansion from unclear value
+        required_outputs:
+          - discovery_packet
+          - learning_patch
+        expected_outputs:
+          - docs/delivery-recovery/HL-CAPABILITY-OPERATING-RULES-DISCOVERY-VALUE-LOOP-v0.1.md
+        evidence_required:
+          - DRI slot value
+          - observable user or system value
+          - candidate and deferred item rationale
+          - Founder discovery decision boundary
+        learning_patch_required: true
+        ledger_delta_required: false
+        independent_verification_required: true
+        failure_path_required: false
+        cross_repo_decision_packet_required: false
+        next_authorization_needed: FOUNDER_DISCOVERY_DECISION
+        next_decision: FOUNDER_GATE
+        blocker: Discovery owner not confirmed.
+        stop_conditions:
+          - delivery pressure replaces product value judgment

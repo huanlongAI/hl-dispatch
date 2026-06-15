@@ -5,6 +5,32 @@ Date: 2026-06-15
 Scope: full landing execution planning for capability operating rules
 Boundary: docs-only planning in `hl-dispatch/docs/delivery-recovery/`
 
+## 中文摘要
+
+本文是能力包运行规则的全量落地执行计划。它把 BF-04 到 BF-07、组合
+Portfolio 回读、初始 8 个 Ledger 条目闭环、PM readiness、gap packs、
+payment / entitlement 边界、跨仓 decision packet、weekly review、
+30/60/90 metrics、rule thinning、risk-class evolution 和 discovery /
+value loop 串成一个 docs-only 执行模型。
+
+本文只授权计划评审，不授权 BF-04 执行，不授权 `hl-contracts`、
+`hl-platform`、runtime、生产、发布、MVP、active contract、live booking、
+live payment、billing、entitlement mutation、quota mutation、identity /
+privacy mutation 或正式业务对象变更。
+
+## 术语说明
+
+- Full landing：全量落地，指每个 active / pilot / PM-led 能力项都有明确
+  终态：关闭、等待 Founder / Gate 裁决、带证据阻塞、带原因延期，或进入单独
+  contract / platform decision packet；不等于生产授权。
+- Evidence Bundle：证据包，用于记录来源、验证方法、失败路径、开放风险和
+  退出路径，帮助裁决而不是替代裁决。
+- Learning Patch：学习补丁，把重复的人类判断沉淀为规则、模板、gate、agent
+  指令或 defer rationale。
+- GATED：高风险或不可逆执行类别，需要独立验证和失败路径。
+- REVERSIBLE：当前证据范围内可回退的执行类别；一旦触碰正式事实、资金、权益、
+  身份、隐私、合同或生产数据，应升级为 GATED。
+
 ## 1. Executive summary
 
 This plan defines the remaining full landing path for the capability operating
@@ -342,4 +368,3 @@ Next required action after PR review:
 - Founder requests plan revision; or
 - Founder changes wave order, WIP limit, owner assignment, discovery loop, or
   risk-class policy.
-

@@ -4,6 +4,28 @@ Status: DRAFT_FOR_FOUNDER_REVIEW
 Date: 2026-06-15
 Scope: decisions required after the full landing execution plan PR is reviewed
 
+## 中文摘要
+
+本文是全量落地执行计划的 Founder 裁决包。它用于在计划 PR 评审后决定是否
+允许进入 `GO_WAVE_1_BF_CLOSEOUT_CREATE_PRS_ONLY`，以及是否调整 WIP limit、
+owner assignment、discovery loop、metrics owner 和 risk-class policy。
+
+本文不授权 BF-04 执行，不授权 `hl-contracts` 或 `hl-platform` 实现，不授权
+runtime、生产、发布、MVP、active contract、live booking、live payment、
+billing、entitlement mutation、quota mutation、identity / privacy mutation
+或正式业务对象变更。
+
+## 术语说明
+
+- Founder decision packet：Founder 裁决包，用来列出可选裁决、推荐选项、
+  影响面和最小回复格式。
+- GO_WAVE_1：允许进入 Wave 1 的 create-PR-only 执行授权；不是合并授权、
+  生产授权或 runtime 授权。
+- WIP limit：同时进行的执行 PR 和 readback PR 数量上限，用于控制判断带宽。
+- Discovery loop：上游产品价值判断循环，用来确认能力项是否值得进入 DRI 槽位，
+  与下游风险接受裁决分离。
+- Risk class：执行风险分类；当前计划仅使用 REVERSIBLE 和 GATED。
+
 ## Decision brief
 
 This packet asks Founder to review the full landing execution plan and decide
@@ -158,4 +180,3 @@ depending on the option selected. It does not authorize:
 8. Entitlement deduction or quota mutation.
 9. Customer identity or privacy mutation.
 10. Formal business object mutation.
-

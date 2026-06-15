@@ -1,0 +1,56 @@
+template_version: v0.1
+status: LEARNING_PATCH_DRAFT_FOR_PR
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-03-GATEWAY-CAN-AUDIT
+patch_type: TEMPLATE_PATCH
+risk_class: GATED
+execution_state: THIN_SLICE
+state_progression:
+  from: agent_end_patch_prepared_for_review
+  to: gateway_can_audit_patch_prepared_for_pr_review
+learning_summary: >-
+  GATED capability work needs a reusable Gateway / Can / Action / Audit review
+  matrix before any runtime or contract request. The matrix must be explicitly
+  docs-only, reference SSOT instead of becoming a new registry, and block
+  progression when denied Can mutates state, Action skips Can recheck, success
+  lacks event_id, trace/audit evidence is missing, reason_code is unknown, or
+  generated-only evidence is used.
+future_judgment_to_convert:
+  - id: gate_rejects_hidden_mutation_on_denied_can
+    target: future_gate_rule
+    description: GATED review should reject any path where denied Can still mutates state or writes success audit.
+  - id: validator_scans_trace_preservation
+    target: future_template_or_lint
+    description: Future Evidence Bundles should check for event_id, trace_id, audit_ref, reason_code, idempotency_key, current state, previous state, and resource refs when present.
+  - id: success_outcome_not_reason_code
+    target: future_agent_instruction
+    description: Agent and reviewer instructions should keep success arrival classification out of reason_code fields.
+  - id: no_synthetic_event_id
+    target: future_gate_rule
+    description: Missing event_id on success is an evidence gap; generated event_id or audit_ref is forbidden.
+  - id: review_matrix_not_registry
+    target: future_template
+    description: Gateway / Can / Audit matrices may summarize existing SSOT but must not allocate new routes, events, facts, reasoncodes, or registry entries.
+proposed_template_change:
+  name: gated_gateway_can_audit_trace_matrix
+  minimum_fields:
+    - capability_id
+    - task_id
+    - action_id
+    - Can before Action requirement
+    - Action rechecks Can requirement
+    - event_type
+    - required trace fields
+    - denied Can no-mutation rule
+    - registered reason_code rule
+    - failure path
+non_authorization_boundary:
+  - This Learning Patch does not modify hl-contracts.
+  - This Learning Patch does not modify hl-platform.
+  - This Learning Patch does not authorize runtime, schema, registry, manifest, config, OpenAPI, events, facts, reasoncodes, production, release, MVP, active contract, live booking operation, live customer data, or formal business object mutation.
+  - Founder decision required for any future conversion into enforceable contract, runtime, schema, registry, manifest, config, or gate automation.
+validation_notes:
+  - Evidence Bundle must be independently verified before GATED progression.
+  - Ledger remains conservative after this patch; BF-04 and BF-05 remain blockers.
+  - Generated-only evidence is not acceptable for GATED progression.

@@ -1,0 +1,73 @@
+template_version: v0.1
+status: EVIDENCE_BUNDLE_DRAFT_FOR_PR
+non_authorization_boundary: This evidence bundle does not approve runtime, contract, schema, registry, manifest, config, OpenAPI, events, facts, reasoncodes, release, production, MVP, active contract, live booking operation, or formal business object mutation.
+capability_id: biz.booking.fulfillment
+task_id: BF-02-AGENT-END
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#biz.booking.fulfillment
+dri: Gate-H / 许久明
+pm_owner: PM-A / 邹骢
+gate_owner: Gate-H / 许久明
+risk_class: GATED
+execution_state: THIN_SLICE
+change_summary: BF-02 docs-only Agent End patch names tool discovery, tool pruning, context budget, pagination, evidence summarization, schema preservation, Can before Action, Action rechecks Can, and Agent authority boundaries for biz.booking.fulfillment.
+ssot_refs:
+  - hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
+  - hl-contracts/apis/biz.booking.fulfillment.internal.openapi.v1.yaml
+  - hl-contracts/events/biz-booking-fulfillment-state-audit.v0.1.yaml
+  - hl-contracts/reasoncodes/biz-booking-fulfillment-reasoncodes.v0.1.yaml
+  - hl-platform/biz/booking-fulfillment/capability-manifest.yaml
+  - hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md
+evidence_refs:
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-PATCH-v0.1-2026-06-15.md
+risks_tested:
+  - Agent tool discovery inventing non-SSOT tools
+  - Agent holding final booking decision authority
+  - Agent bypassing Gateway / HK Kernel / Can -> Action -> Audit
+  - Agent calling Action without Can
+  - Action result being summarized without event_id, trace_id, reason_code, audit_ref, idempotency_key, state, or resource refs
+  - generated-only evidence incorrectly advancing a GATED task
+happy_path_fixtures:
+  - docs-only review maps booking action families to Can / Action discovery, pruning, context, and evidence-summary expectations.
+failure_path_fixtures:
+  - undiscoverable_tool_stops_and_records_evidence_gap
+  - pruned_tool_blocks_action_and_preserves_reason
+  - can_denied_blocks_action_and_preserves_reason_code
+  - action_unknown_outcome_blocks_synthetic_event_id
+  - context_budget_overflow_requires_summary_with_stable_refs
+  - generated_only_evidence_blocks_GATED_progression
+  - human_end_missing_blocks_final_customer_visible_action
+automated_checks:
+  - git diff --check
+  - ruby YAML parse for changed YAML files
+  - scripts/test-github-language-gate.py
+  - scripts/test-action-projection-exporter.py
+manual_checks:
+  - read-only comparison against PM dual-end review Agent End section
+  - read-only comparison against OpenAPI Can / Action route pairs and x-hl-action-contracts
+  - read-only comparison against state audit action_id to event_type mapping
+  - read-only comparison against reason-code trace domains
+  - read-only comparison against pilot/staging capability manifest as evidence only
+  - path-scope review confirming only hl-dispatch/docs/delivery-recovery changes
+independent_verifier: Gate-H / 许久明
+verification_method: Independent partial verification by repository evidence review; no runtime test was run and no hl-contracts or hl-platform file was modified.
+evidence_mode: independent_partial
+open_risks:
+  - BF-03 Gateway / Can / Action / Audit rollup remains open.
+  - BF-04 override owner matrix, approval_ref, retry, duplicate, and idempotency policy remain open.
+  - BF-05 external dependency exit paths remain open.
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - OpenAPI / events / facts / reasoncodes mutation
+  - production / release / MVP / active contract
+  - live booking operation
+  - live customer data or formal booking object mutation
+  - Gateway / HK Kernel / Can -> Action -> Audit bypass
+  - Agent final booking decision authority
+rollback_or_exit_path: Revert the docs-only PR or leave BF-02 blocked; no runtime rollback is required because no runtime or contract state is changed.
+gate_decision: not_requested
+founder_or_gate_required: true
+decision_record: FOUNDER_DECISION GO_OPERATING_CYCLE_2_BF02_AGENT_END_CREATE_PR_ONLY
+learning_patch_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-LEARNING-PATCH-v0.1-2026-06-15.yaml

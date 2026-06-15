@@ -1,0 +1,103 @@
+template_version: v0.1
+status: EVIDENCE_BUNDLE_DRAFT_FOR_PR
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-03-GATEWAY-CAN-AUDIT
+risk_class: GATED
+execution_state: THIN_SLICE
+dri: Gate-H / 许久明
+pm_owner: PM-A / 邹骢
+gate_owner: Gate-H / 许久明
+review_first: true
+founder_decision_required: true
+authorization_boundary:
+  allowed_paths:
+    - hl-dispatch/docs/delivery-recovery/
+  not_authorized:
+    - hl-contracts changes
+    - hl-platform changes
+    - runtime implementation
+    - schema / registry / manifest / config mutation
+    - OpenAPI / events / facts / reasoncodes mutation
+    - production / release / MVP / active contract claim
+    - live booking operation
+    - live customer data or formal business object mutation
+    - payment / refund / settlement / billing / entitlement mutation
+    - Gateway / HK Kernel / Can -> Action -> Audit bypass
+change_summary:
+  - docs-only BF-03 patch defines Gateway / Can / Action / Audit trace expectations for biz.booking.fulfillment.
+  - docs-only review matrix maps existing booking action families to Can -> Action -> Audit trace requirements without creating a new registry.
+  - failure paths cover denied Can no-mutation, Action recheck denial, missing event_id, missing trace/audit evidence, unknown reason_code, and generated-only evidence.
+source_evidence:
+  pm_dual_end_review:
+    path: hl-contracts/docs/pm/capabilities/biz.booking.fulfillment/DUAL-END-PM-REVIEW.md
+    use: Gateway Path, shared domain truth, audit surface, and fail-secure requirements.
+  openapi:
+    path: hl-contracts/apis/biz.booking.fulfillment.internal.openapi.v1.yaml
+    use: Existing Can / Action route pairs, response envelope, event_id, trace_id, idempotency_key, and reason_code rules.
+  events:
+    path: hl-contracts/events/biz-booking-fulfillment-state-audit.v0.1.yaml
+    use: Existing action_id to event_type map and required audit facts.
+  reasoncodes:
+    path: hl-contracts/reasoncodes/biz-booking-fulfillment-reasoncodes.v0.1.yaml
+    use: Registered non-success reason-code domains; success arrival classification is not a reason_code.
+  human_end_patch:
+    path: hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md
+    use: Human confirmation and review surfaces that cannot be bypassed.
+  agent_end_patch:
+    path: hl-dispatch/docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-PATCH-v0.1-2026-06-15.md
+    use: Agent End Can-before-Action and schema-preservation expectations.
+risks_tested:
+  - denied Can mutates booking state
+  - Action bypasses Can recheck
+  - success Action lacks event_id
+  - missing trace_id or audit_ref
+  - unknown reason_code
+  - success outcome classification incorrectly becomes reason_code
+  - generated-only evidence advances GATED progression
+failure_path_fixtures:
+  - id: can_denied_no_action_no_mutation
+    expected_result: Denied Can stops progression, preserves reason_code and trace_id, and performs no Action or state mutation.
+  - id: action_recheck_denied_no_event_id
+    expected_result: Action internal Can denial stops execution and must not emit a success event_id.
+  - id: action_unknown_outcome_no_synthetic_event_id
+    expected_result: Unknown outcome preserves uncertainty and does not synthesize event_id or audit_ref.
+  - id: missing_trace_or_audit_blocks_progression
+    expected_result: Missing trace_id, event_id, or audit_ref blocks GATED readiness progression.
+  - id: unregistered_reason_code_stop
+    expected_result: Unknown reason_code stops and pulls PM / Gate.
+  - id: success_outcome_misused_as_reason_code_stop
+    expected_result: Success arrival classification used as reason_code is a trace contract violation.
+  - id: upstream_resource_evidence_missing_fail_secure
+    expected_result: Missing StoreResource / QRH / dependency truth fails secure or pulls BF-05 owner decision.
+  - id: generated_only_evidence_not_accepted
+    expected_result: Generated-only evidence cannot advance a GATED task.
+independent_verification:
+  status: partial_docs_only
+  required_before_progression:
+    - compare BF-03 trace matrix against OpenAPI Can / Action pairs
+    - compare action_id rows against event audit map
+    - compare non-success paths against registered reason-code domains
+    - confirm Ledger remains GATED and THIN_SLICE
+    - confirm no forbidden repository or runtime file changed
+automated_checks:
+  - git status --short --branch
+  - git diff --check
+  - git diff --name-only -- ':!docs/delivery-recovery/**'
+  - ruby YAML parse for Evidence Bundle, Learning Patch, and Ledger
+  - required boundary keyword grep
+  - PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-github-language-gate.py
+  - PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-action-projection-exporter.py
+manual_checks:
+  - read-only comparison against hl-contracts OpenAPI Can / Action route pairs
+  - read-only comparison against hl-contracts events action_id to event_type map
+  - read-only comparison against hl-contracts reason-code domains
+  - verify no production, release, MVP, active contract, or runtime authorization wording
+decision_record:
+  founder_decision: FOUNDER_DECISION APPROVE_PLAN_A_MERGE_266_THEN_BF03_LINEAR
+  merge_boundary: PR 266 merged before BF-03 branch work
+  pr_policy: create PR only; do not merge BF-03 without explicit Founder merge approval
+remaining_blockers:
+  - BF-04 override owner matrix, approval_ref, retry, duplicate, and idempotency policy
+  - BF-05 dependency exit paths
+  - BF-06 readiness rollup after BF-01 through BF-05

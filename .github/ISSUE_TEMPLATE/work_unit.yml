@@ -119,6 +119,13 @@ body:
         context_validity:
           sources_read: []
           stale_or_missing_context: []
+        context_usage_summary:
+          context_id: ""
+          context_route: ""
+          files_read: []
+          missing_or_stale_context: []
+          full_repo_scan_detected: false
+          context_not_authorization: true
         changes:
           summary: []
           non_goals: []

@@ -102,7 +102,7 @@ When a Context Atlas entry exists, the taskbook may reference it as a read-only 
 - Draft Context Views remain draft. They must not be promoted to active through a Founder Spec Lane taskbook.
 - If no dedicated task route exists, the taskbook must state the temporary route and the gap.
 
-Every PR, implementation plan, `gap_report`, or acceptance pack should include a short context usage summary:
+Every PR, implementation plan, `gap_report`, or acceptance pack must include a short context usage summary. Team assignees do not need to read Context Atlas directly. The assignee may instead report the Context Pack, repo files, GitHub links, and taskbook sections actually used.
 
 ```yaml
 context_usage_summary:
@@ -112,6 +112,7 @@ context_usage_summary:
     - "<GitHub URL or repo-relative file>"
   missing_or_stale_context:
     - "<none or concrete gap>"
+  full_repo_scan_detected: false
   context_not_authorization: true
 ```
 

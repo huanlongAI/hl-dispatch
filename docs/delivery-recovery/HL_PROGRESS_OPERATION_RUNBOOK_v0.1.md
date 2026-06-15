@@ -93,8 +93,16 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-exporter.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-bitable-projection.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-writeback-proposal.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-action-projection-exporter.py
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/test_context_engineering_templates.py
+bash scripts/check-agent-governance-d10.sh
 git diff --check
 ```
+
+The Context Engineering Template Gate also runs as an observer-only GitHub Actions workflow on pull requests, pushes to `main`, manual dispatch, and weekdays at 10:30 CST. It does not create GitHub issues, send Feishu messages, update Project, write Bitable, or grant authorization.
+
+`scripts/check-agent-governance-d10.sh` is a local wrapper for the canonical sibling `sentinel-shared/scripts/precheck-agent-governance.sh`; it does not redefine D-10 rules.
+
+CI D-10 remains owned by the existing `Consistency Sentinel` reusable workflow. The Context Engineering Template Gate intentionally does not checkout `sentinel-shared`; it only checks local task / output templates.
 
 Optional live read-only smoke:
 

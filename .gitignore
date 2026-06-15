@@ -1,4 +1,6 @@
 /.idea/
+.sentinel-shared/
+.sentinel/results/
 # === 敏感文件 ===
 .env
 .env.*

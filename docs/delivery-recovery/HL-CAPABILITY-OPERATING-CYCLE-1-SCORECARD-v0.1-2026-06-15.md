@@ -1,31 +1,33 @@
 # HL Capability Operating Cycle 1 Scorecard v0.1
 
-Status: DRAFT_FOR_PR_REVIEW
+Status: MERGE_APPROVED_FOR_SCORECARD_LANDING
 Date: 2026-06-15
 Scope: `GO_OPERATING_CYCLE_1_CREATE_PR_ONLY`
 
 ## 中文摘要
 
-本记分卡记录 Operating Cycle 1 的执行结果。当前只创建 Draft PR，
-不合并、不声明生效完成、不授权 runtime、schema、registry、manifest、
-config、production、release、MVP、active contract 或真实业务操作。
+本记分卡记录 Operating Cycle 1 的执行结果。Founder 已在 2026-06-15
+明确授权按 `#263 -> #264 -> #265` 顺序合并 docs-only PR。合并只表示
+`hl-dispatch/docs/delivery-recovery/` 文档落库，不授权 runtime、schema、
+registry、manifest、config、production、release、MVP、active contract 或
+真实业务操作。
 
 本轮已经把三个输出面分开：第一，`biz.booking.fulfillment` 的
 `BF-01-HUMAN-END` 只形成 Human End patch package、Evidence Bundle、
 Learning Patch 和 Ledger 变更提案；第二，`biz.tenant.entitlement` 只形成
 mock / seed / demo 的 check-only 运行片和证据提案；第三，本文件只记录
-Operating Cycle 1 的执行记分卡。三者都处于 Draft PR 待审状态，尚未合并，
-尚未落为正式生效文件，也不能被解释为生产授权。
+Operating Cycle 1 的执行记分卡。#263 和 #264 已按 Founder 合并授权进入
+main；#265 是本 scorecard 的落库 PR。三者都不能被解释为生产授权。
 
-Founder 需要关注的结论是：本轮 create-PR-only 闭环已经完成，但真实生效还
-需要后续合并裁决。`biz.booking.fulfillment` 仍是 GATED，必须有独立验证和
-Founder / Gate 记录后才能继续推进；`biz.tenant.entitlement` 仍只允许
+Founder 需要关注的结论是：本轮 create-PR-only 闭环已完成，并进入
+docs-only 合并落库；`biz.booking.fulfillment` 仍是 GATED，必须有独立验证和
+Founder / Gate 记录后才能继续向后续任务推进；`biz.tenant.entitlement` 仍只允许
 check-only，不允许 live billing、entitlement deduction、quota mutation 或
 commercial tenant state mutation；scorecard 只做复盘，不创建新的真源。
 
-如果后续批准合并，建议先处理 BF-01 和 TE-01 两个业务任务的合并顺序，再合并
-scorecard。因为 BF-01 和 TE-01 都会改 Ledger 和 README，第二个合并的 PR
-大概率需要同步分支后再进入合并窗口。
+本轮合并时已先落 #263，再同步并落 #264，最后再落 #265。#264 因 Ledger /
+README 与 #263 同区块改动发生预期内冲突，已通过合入 `origin/main` 并保留
+两组 Required Files 条目解决。
 
 术语说明：
 
@@ -37,17 +39,17 @@ scorecard。因为 BF-01 和 TE-01 都会改 Ledger 和 README，第二个合并
 
 | track | capability / item | expected task | risk class | authorized mode | result |
 |---|---|---|---|---|---|
-| Task A | `biz.booking.fulfillment` | `BF-01-HUMAN-END` | GATED | docs-only PR creation | Draft PR created, awaiting Founder review |
-| Task B | `biz.tenant.entitlement` | `TE-01-CHECK-ONLY` | REVERSIBLE | docs-only PR creation | Draft PR created, awaiting Founder review |
-| Task C | Operating Cycle 1 scorecard | scorecard | REVERSIBLE docs-only | docs-only PR creation | This scorecard branch, awaiting PR review |
+| Task A | `biz.booking.fulfillment` | `BF-01-HUMAN-END` | GATED | docs-only PR creation and merge | Merged via #263 |
+| Task B | `biz.tenant.entitlement` | `TE-01-CHECK-ONLY` | REVERSIBLE | docs-only PR creation and merge | Merged via #264 after sync |
+| Task C | Operating Cycle 1 scorecard | scorecard | REVERSIBLE docs-only | docs-only PR creation and merge | Landing via #265 |
 
 ## PRs Created
 
 | task | branch | PR | status | merge authorization |
 |---|---|---|---|---|
-| Task A BF-01 Human End | `codex/cap-cycle1-bf01-human-end-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/263> | Draft / open at scorecard creation time | Not authorized |
-| Task B Tenant check-only | `codex/cap-cycle1-tenant-check-only-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/264> | Draft / open at scorecard creation time | Not authorized |
-| Task C scorecard | `codex/cap-cycle1-scorecard-20260615` | To be created from this branch | Draft target | Not authorized |
+| Task A BF-01 Human End | `codex/cap-cycle1-bf01-human-end-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/263> | Merged | `FOUNDER_MERGE_APPROVED` |
+| Task B Tenant check-only | `codex/cap-cycle1-tenant-check-only-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/264> | Merged after branch sync | `FOUNDER_MERGE_APPROVED` |
+| Task C scorecard | `codex/cap-cycle1-scorecard-20260615` | <https://github.com/huanlongAI/hl-dispatch/pull/265> | Merge approved / landing | `FOUNDER_MERGE_APPROVED` |
 
 ## Files Prepared By Cycle
 
@@ -73,18 +75,18 @@ Task C proposed file:
 
 ## Ledger Delta
 
-Task A proposes to move `biz.booking.fulfillment` from generic docs-only patch
-planning toward `human_end: patch_packet_prepared_for_review`, while preserving
-all non-authorization boundaries.
+Task A moves `biz.booking.fulfillment` from generic docs-only patch planning
+toward `human_end: patch_packet_prepared_for_review`, while preserving all
+non-authorization boundaries.
 
-Task B proposes to move `biz.tenant.entitlement` toward
-`TE-01-CHECK-ONLY_PR` review, while preserving mock / seed / demo check-only
-boundaries and keeping the full capability draft / blocked for runtime.
+Task B moves `biz.tenant.entitlement` toward `TE-01-CHECK-ONLY_PR` review,
+while preserving mock / seed / demo check-only boundaries and keeping the full
+capability draft / blocked for runtime.
 
-Because Task A and Task B are intentionally separate branches from `origin/main`,
-both touch `CAPABILITY-READINESS-LEDGER-v0.1.yaml` and `README.md`. If both are
-approved, the second PR merged will likely require branch synchronization before
-merge.
+Task A and Task B were intentionally separate branches from `origin/main`; both
+touched `CAPABILITY-READINESS-LEDGER-v0.1.yaml` and `README.md`. The second PR
+therefore required branch synchronization before merge, and the README conflict
+was resolved by preserving both BF-01 and TE-01 entries.
 
 ## Evidence Quality
 
@@ -109,7 +111,7 @@ mutation behavior upgrades REVERSIBLE to GATED.
 Boundary: Operating Cycle 1 is docs-only and limited to
 `hl-dispatch/docs/delivery-recovery/`.
 
-Review-first: Draft PR creation is not merge, landing, production authorization,
+Review-first: PR creation or docs landing is not production authorization,
 runtime authorization, active contract authorization, or completion of GATED
 progression.
 

@@ -1,0 +1,39 @@
+template_version: v0.1
+status: proposed
+non_authorization_boundary: This Learning Patch records learning and routing only. It does not approve contract, runtime, release, production, MVP, active contract, live booking operation, or formal business object mutation.
+capability_id: biz.booking.fulfillment
+task_id: BF-01-HUMAN-END
+ledger_item_ref: docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml#biz.booking.fulfillment
+dri: PM-A / 邹骢
+state_progression:
+  from: docs_only_patch_planning
+  to: human_end_patch_prepared_for_pr_review
+patch_type: TEMPLATE_PATCH
+learning_summary: BF-01 shows that Human End review needs a reusable surface matrix before PM, Gate, and Engineering can judge whether an action has enough human confirmation, review, audit, and exception handling.
+observed_failure_or_gap: Existing readiness material named Human End requirements but did not give one compact checklist that maps high-risk booking actions to human confirmation, review, audit, failure path, and Gateway / Can assumptions.
+proposed_patch: Add a future Human End patch template for GATED capability tasks with required sections for touchpoint matrix, confirmation thresholds, exception paths, Gateway / Can assumptions, acceptance criteria, and next pull triggers.
+future_judgment_to_convert:
+  - Human reviewers should not re-invent the same Human End checklist for every GATED capability.
+  - Agent instructions can require a Human End surface matrix before proposing runtime or contract progression.
+  - A future gate can reject GATED progression when confirmation, review, exception, and audit surfaces are absent.
+routing:
+  default_repo: hl-dispatch
+  target_repo_if_not_dispatch: TBD_FOUNDER_DECISION
+  separate_founder_decision_required: false
+files_or_rules_to_update:
+  - docs/delivery-recovery/EVIDENCE-BUNDLE-TEMPLATE-v0.1.yaml
+  - docs/delivery-recovery/HL-AI-NATIVE-CAPABILITY-OPERATING-RULES-v0.2.md
+  - future Human End patch template under docs/delivery-recovery/
+evidence_bundle_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-EVIDENCE-BUNDLE-v0.1-2026-06-15.yaml
+owner: Dispatch / Gate-H
+due: before BF-06-READINESS-ROLLUP
+status_reason: Proposed only; no template or rule file is changed by BF-01 unless a future PR is authorized.
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - OpenAPI / events / facts / reasoncodes mutation
+  - production / release / MVP / active contract
+  - live booking operation
+  - Gateway / HK Kernel / Can -> Action -> Audit bypass

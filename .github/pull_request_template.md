@@ -18,6 +18,20 @@ maturity:
 - `task-snapshot:v1` updated if context changed: yes|no|n/a
 - Context Pack includes Mission Package, Slice/Risk Slice, Task Snapshot, Evidence List, Allowed Action, Authorization Boundary: yes|no
 
+## Context Usage Summary
+
+Context usage is read-scope evidence only. It is not authorization, acceptance, runtime permission, or production approval.
+
+```yaml
+context_usage_summary:
+  context_id: ""
+  context_route: ""
+  files_read: []
+  missing_or_stale_context: []
+  full_repo_scan_detected: false
+  context_not_authorization: true
+```
+
 ## Summary
 
 -

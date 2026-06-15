@@ -186,6 +186,13 @@ body:
         context_validity:
           last_context_read: []
           known_gaps: []
+        context_usage_summary:
+          context_id: ""
+          context_route: ""
+          files_read: []
+          missing_or_stale_context: []
+          full_repo_scan_detected: false
+          context_not_authorization: true
         non_goals: []
         public_update_class: "n/a"
         last_material_change: ""

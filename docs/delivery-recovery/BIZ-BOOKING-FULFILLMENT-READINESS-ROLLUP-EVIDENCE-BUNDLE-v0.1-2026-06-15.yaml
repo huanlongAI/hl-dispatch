@@ -1,0 +1,30 @@
+version: v0.1
+status: LONGRUN_ROLLUP_EVIDENCE_PREPARED_FOR_REVIEW
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-06-READINESS-ROLLUP
+risk_class: GATED
+execution_state: THIN_SLICE
+verification_method: docs_only_rollup_of_bf01_through_bf05_artifacts_and_current_ledger
+independent_verifier: Founder_or_Gate_assigned_reviewer_required_before_any_gated_progression
+evidence_refs:
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-GATEWAY-CAN-AUDIT-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-OVERRIDE-RETRY-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DEPENDENCY-EXIT-PATCH-v0.1-2026-06-15.md
+failure_paths:
+  - generated_only_evidence_cannot_complete_gated_progression
+  - missing_independent_verifier_blocks_runtime_or_contract_progression
+  - active_override_or_dependency_mutation_requires_separate_decision
+open_risks:
+  - no runtime test evidence is produced by this docs-only rollup
+  - Founder / Gate decision still required for next step
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - production / release / MVP / active contract
+  - live booking operation
+terminal_planning_state: READY_FOR_FOUNDER_GATE_DECISION
+learning_patch_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-READINESS-ROLLUP-LEARNING-PATCH-v0.1-2026-06-15.yaml

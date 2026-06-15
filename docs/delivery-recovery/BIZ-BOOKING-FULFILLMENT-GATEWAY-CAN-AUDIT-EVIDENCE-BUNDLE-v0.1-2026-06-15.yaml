@@ -72,6 +72,15 @@ failure_path_fixtures:
     expected_result: Missing StoreResource / QRH / dependency truth fails secure or pulls BF-05 owner decision.
   - id: generated_only_evidence_not_accepted
     expected_result: Generated-only evidence cannot advance a GATED task.
+failure_paths:
+  - denied Can must stop progression without Action or state mutation
+  - Action internal Can denial must not emit success event_id
+  - unknown Action outcome must not synthesize event_id or audit_ref
+  - missing trace_id, event_id, or audit_ref blocks GATED progression
+  - unknown reason_code stops and pulls PM / Gate
+  - success arrival classification must not be used as reason_code
+  - missing upstream resource evidence fails secure or pulls BF-05 owner decision
+  - generated-only evidence cannot advance a GATED task
 independent_verification:
   status: partial_docs_only
   required_before_progression:
@@ -80,6 +89,22 @@ independent_verification:
     - compare non-success paths against registered reason-code domains
     - confirm Ledger remains GATED and THIN_SLICE
     - confirm no forbidden repository or runtime file changed
+verification_method: Independent partial verification by repository evidence review; no runtime test was run and no hl-contracts or hl-platform file was modified.
+open_risks:
+  - BF-04 override owner matrix, approval_ref, retry, duplicate, and idempotency policy remain open.
+  - BF-05 dependency exit paths remain open.
+  - BF-06 readiness rollup remains open until BF-01 through BF-05 evidence is read back together.
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime implementation
+  - schema / registry / manifest / config mutation
+  - OpenAPI / events / facts / reasoncodes mutation
+  - production / release / MVP / active contract
+  - live booking operation
+  - live customer data or formal booking object mutation
+  - payment / refund / settlement / billing / entitlement mutation
+  - Gateway / HK Kernel / Can -> Action -> Audit bypass
 automated_checks:
   - git status --short --branch
   - git diff --check

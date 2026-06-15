@@ -1,0 +1,42 @@
+version: v0.1
+status: LONGRUN_EVIDENCE_PREPARED_FOR_REVIEW
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-04-OVERRIDE-RETRY
+risk_class: GATED
+execution_state: THIN_SLICE
+verification_method: docs_only_cross_read_of_bf01_bf02_bf03_ledger_and_patch_requirements
+independent_verifier: Founder_or_Gate_assigned_reviewer_required_before_progression
+evidence_refs:
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-HUMAN-END-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-AGENT-END-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-GATEWAY-CAN-AUDIT-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+happy_path_fixtures:
+  - owner_matrix_present
+  - approval_ref_required_before_active_exception
+  - idempotency_replay_requires_original_outcome
+failure_paths:
+  - ambiguous_action_result_without_event_or_audit_ref
+  - duplicate_submission_without_existing_evidence_ref
+  - unknown_reason_domain
+  - blind_retry_request
+  - generated_only_evidence_for_gated_progression
+open_risks:
+  - runtime evidence is not collected in this docs-only packet
+  - approval_ref source remains planned and not active
+  - independent verifier must still review before GATED progression
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - active override
+  - live retry
+  - runtime implementation
+  - production / release / MVP / active contract
+  - live booking operation
+  - payment / billing / entitlement / quota / identity / privacy mutation
+terminal_planning_state: READY_FOR_FOUNDER_GATE_DECISION
+ledger_delta_supported:
+  idempotency_retry: patch_packet_prepared_for_review
+  due: BF-05-DEPENDENCY-EXIT_PR
+learning_patch_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-OVERRIDE-RETRY-LEARNING-PATCH-v0.1-2026-06-15.yaml

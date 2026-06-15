@@ -1,6 +1,37 @@
 version: "0.1"
 date: "2026-06-15"
 status: DRAFT_PLAN_PR
+longrun_execution:
+  status: FULL_LANDING_LONGRUN_DOCS_ONLY_CLOSED_WITH_EXPLICIT_TERMINAL_STATES
+  updated_at: '2026-06-15'
+  branch: codex/full-landing-longrun-docs-20260615-162752
+  pr_policy: SINGLE_LONGRUN_EXECUTION_PR
+  non_authorization_boundary: This long-run execution remains docs-only and does not authorize contracts, platform, runtime, production, release, MVP, active contract, live business operation, or formal business object mutation.
+  waves_completed:
+    - W1_BF_CLOSEOUT_CLUSTER
+    - W2_PORTFOLIO_READBACK_AND_LEDGER_CLOSURE
+    - W3_PM_READINESS_AND_GAP_PACKS
+    - W4_PAYMENT_AND_ENTITLEMENT_BOUNDARY_CLOSURE
+    - W5_CROSS_REPO_DECISION_PACKETS_ONLY
+    - W6_OPERATING_MECHANISM_CLOSURE
+  terminal_states:
+    booking_staging_pilot_closeout: CLOSED_FOR_CURRENT_SCOPE
+    biz.booking.fulfillment: READY_FOR_FOUNDER_GATE_DECISION
+    biz.sales.order: CONTRACT_DECISION_PACKET_READY
+    biz.customer.asset: CONTRACT_DECISION_PACKET_READY
+    biz.offer.catalog: CONTRACT_DECISION_PACKET_READY
+    biz.store.resource: CONTRACT_DECISION_PACKET_READY
+    biz.tenant.entitlement: BLOCKED_WITH_OWNER_AND_EVIDENCE
+    biz.payment.checkout: BLOCKED_WITH_OWNER_AND_EVIDENCE
+  blockers:
+    biz.tenant.entitlement: independent verifier readback missing for check-only closure
+    biz.payment.checkout: Founder/Gate financial boundary decision required before any live-money path
+  decision_packets_created:
+    - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-FOUNDER-GATE-DECISION-PACKET-v0.2-2026-06-15.md
+    - docs/delivery-recovery/HL-CONTRACT-DECISION-PACKET-CAPABILITY-FULL-LANDING-v0.1-2026-06-15.md
+    - docs/delivery-recovery/HL-PLATFORM-DECISION-PACKET-CAPABILITY-FULL-LANDING-v0.1-2026-06-15.md
+  release_gate_packet_created: false
+  release_gate_packet_reason: no release-like authorization claim was introduced
 source_anchor:
   current_main_anchor: "PR #269 merged at f923c99cddcd68ae955d13f4d3648aebe718d9a3; BF-04 next due"
   verified_in_clean_worktree: true

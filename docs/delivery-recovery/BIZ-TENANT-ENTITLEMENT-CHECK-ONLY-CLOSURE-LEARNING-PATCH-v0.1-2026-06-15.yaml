@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.tenant.entitlement
+task_id: TE-02-CHECK-ONLY-CLOSURE
+patch_type: DEFER_PATCH
+judgment_conversion:
+  human_judgment: "Check-only can be prepared but not closed when independent verifier readback is missing."
+  future_rule_or_template: "Check-only closure packets must distinguish scenario definition from verified completion."
+proposed_patch:
+  target: check-only closure template
+  change: require verifier readback for positive, negative, unknown-context, and live-mode hard-stop cases
+open_risks:
+  - independent verifier required
+not_authorized:
+  - runtime / production / release / MVP / active contract

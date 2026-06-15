@@ -120,6 +120,17 @@ representative_failure_path_fixtures:
   - booking-artisan-reassign-permission-denied.json
   - booking-no-show-mark-invalid-reason.json
   - booking-resource-release-failure-resolve-hold-release-failed.json
+failure_paths:
+  - duplicate booking submission
+  - booking submission conflict
+  - blocked booking submission
+  - internal error during booking submission
+  - booking confirmation conflict
+  - service flow bind failure during arrival completion
+  - no available artisan during assignment
+  - permission denied during artisan reassignment
+  - invalid no-show reason
+  - hold release failure during resource release recovery
 verification_method: Read-only GitHub issue/PR evidence, local repo file inspection, YAML parsing for manifest counts, and rg checks for OpenAPI Can/Action/Audit/idempotency fields; no hl-platform tests were rerun in this docs-only pass.
 evidence_mode: independent_partial
 automated_checks:

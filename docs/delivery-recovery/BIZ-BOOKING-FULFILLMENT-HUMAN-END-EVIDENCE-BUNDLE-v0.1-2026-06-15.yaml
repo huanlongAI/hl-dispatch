@@ -35,6 +35,13 @@ failure_path_fixtures:
   - manual_cancellation_requires_reason_domain_and_audit_ref
   - override_request_requires_owner_approver_approval_ref_and_separate_BF04
   - evidence_missing_blocks_GATED_progression
+failure_paths:
+  - duplicate submission must surface a human-visible conflict and avoid hidden mutation
+  - retry after internal error must expose uncertain outcome review or fail secure
+  - hold expiry requires StoreResource or QRH evidence before progression
+  - manual cancellation requires reason domain and audit reference
+  - override request requires owner, approver, approval_ref, and separate BF-04 review
+  - missing evidence blocks GATED progression
 automated_checks:
   - git diff --check
   - ruby YAML parse for changed YAML files

@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: portfolio
+task_id: PORTFOLIO-01-READBACK
+patch_type: TEMPLATE_PATCH
+judgment_conversion:
+  human_judgment: "Portfolio-level status must force each row into one terminal planning state instead of leaving active/pilot/PM-led items ambiguous."
+  future_rule_or_template: "Add terminal_planning_state to portfolio readback templates."
+proposed_patch:
+  target: future portfolio readback template
+  change: require terminal state, evidence basis, owner/evidence gap, and next decision per item
+open_risks:
+  - terminal planning state can be misread as delivery completion unless non-authorization is repeated
+not_authorized:
+  - runtime / production / release / MVP / active contract

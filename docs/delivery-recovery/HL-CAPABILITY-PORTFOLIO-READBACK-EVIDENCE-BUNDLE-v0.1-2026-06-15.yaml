@@ -1,0 +1,28 @@
+version: v0.1
+status: LONGRUN_PORTFOLIO_EVIDENCE_PREPARED
+date: '2026-06-15'
+capability_id: portfolio
+task_id: PORTFOLIO-01-READBACK
+verification_method: docs_only_readback_of_current_ledger_full_landing_plan_and_generated_wave_artifacts
+independent_verifier: Founder_or_Gate_assigned_reviewer
+evidence_refs:
+  - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+  - docs/delivery-recovery/HL-CAPABILITY-FULL-LANDING-EXECUTION-PLAN-v0.1-2026-06-15.md
+  - docs/delivery-recovery/HL-CAPABILITY-PORTFOLIO-READBACK-v0.1-2026-06-15.md
+failure_paths:
+  - terminal_state_claim_not_supported_by_evidence
+  - Ledger_row_implies_runtime_or_release
+  - missing_owner_or_blocker
+open_risks:
+  - terminal states are planning states only
+  - independent reviewer still required before relying on GATED states
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - runtime / production / release / MVP / active contract
+terminal_state_count:
+  CLOSED_FOR_CURRENT_SCOPE: 1
+  READY_FOR_FOUNDER_GATE_DECISION: 1
+  CONTRACT_DECISION_PACKET_READY: 4
+  BLOCKED_WITH_OWNER_AND_EVIDENCE: 2
+learning_patch_ref: docs/delivery-recovery/HL-CAPABILITY-PORTFOLIO-READBACK-LEARNING-PATCH-v0.1-2026-06-15.yaml

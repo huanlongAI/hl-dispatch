@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: portfolio
+task_id: PORTFOLIO-02-LEDGER-CLOSURE
+patch_type: RULE_PATCH
+judgment_conversion:
+  human_judgment: "Ledger closure must distinguish closed-for-current-scope from implementation readiness or release readiness."
+  future_rule_or_template: "Ledger rows should carry terminal_planning_state plus non_authorization boundary."
+proposed_patch:
+  target: future Ledger rule
+  change: require terminal_planning_state for active/pilot/PM-led rows during full landing reviews
+open_risks:
+  - terminal states require periodic review if new evidence appears
+not_authorized:
+  - runtime / production / release / MVP / active contract

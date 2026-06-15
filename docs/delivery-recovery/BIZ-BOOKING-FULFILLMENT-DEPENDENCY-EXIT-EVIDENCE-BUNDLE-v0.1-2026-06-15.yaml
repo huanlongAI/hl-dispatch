@@ -1,0 +1,32 @@
+version: v0.1
+status: LONGRUN_EVIDENCE_PREPARED_FOR_REVIEW
+date: '2026-06-15'
+capability_id: biz.booking.fulfillment
+task_id: BF-05-DEPENDENCY-EXIT
+risk_class: GATED
+execution_state: THIN_SLICE
+verification_method: docs_only_dependency_exit_matrix_review_against_current_ledger_and_bf_packets
+independent_verifier: Founder_or_Gate_assigned_reviewer_required_before_progression
+evidence_refs:
+  - docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DEPENDENCY-EXIT-PATCH-v0.1-2026-06-15.md
+  - docs/delivery-recovery/CAPABILITY-READINESS-LEDGER-v0.1.yaml
+failure_paths:
+  - StoreResource evidence missing
+  - QRH stale or missing
+  - CustomerProfile identity_or_privacy_boundary_unclear
+  - OfferCatalog requirement absent
+  - legacy mapping cannot be proven
+open_risks:
+  - dependency evidence remains dispatch-side planning evidence only
+  - owner confirmations still require review
+not_authorized:
+  - hl-contracts changes
+  - hl-platform changes
+  - cross-capability mutation
+  - live booking operation
+  - production / release / MVP / active contract
+terminal_planning_state: READY_FOR_FOUNDER_GATE_DECISION
+ledger_delta_supported:
+  dependency_exit: patch_packet_prepared_for_review
+  due: BF-06-READINESS-ROLLUP_PR
+learning_patch_ref: docs/delivery-recovery/BIZ-BOOKING-FULFILLMENT-DEPENDENCY-EXIT-LEARNING-PATCH-v0.1-2026-06-15.yaml

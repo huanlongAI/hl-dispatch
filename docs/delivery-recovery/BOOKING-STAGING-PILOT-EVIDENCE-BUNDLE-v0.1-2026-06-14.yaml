@@ -44,6 +44,8 @@ happy_path_fixtures:
   - booking-arrival-complete.json
 failure_path_fixtures:
   - booking-arrival-complete-service-flow-bind-failed.json
+failure_paths:
+  - service flow bind failure during arrival completion
 automated_checks:
   - name: ai-audit / cross-model-review
     repo: huanlongAI/hl-platform

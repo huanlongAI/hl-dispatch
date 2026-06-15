@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.customer.asset
+task_id: CA-01-PM-READINESS
+patch_type: TEMPLATE_PATCH
+judgment_conversion:
+  human_judgment: "Customer asset readiness must keep identity/privacy boundaries explicit before any contract or runtime work."
+  future_rule_or_template: "Customer-facing PM readiness packets must include identity and privacy hard-stop rows."
+proposed_patch:
+  target: PM readiness template
+  change: add identity/privacy boundary and CustomerProfile dependency section
+open_risks:
+  - future contract packet still required
+not_authorized:
+  - runtime / production / release / MVP / active contract

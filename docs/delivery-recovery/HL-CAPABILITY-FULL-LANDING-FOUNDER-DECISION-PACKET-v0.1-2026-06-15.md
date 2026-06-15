@@ -26,6 +26,13 @@ billing、entitlement mutation、quota mutation、identity / privacy mutation
   与下游风险接受裁决分离。
 - Risk class：执行风险分类；当前计划仅使用 REVERSIBLE 和 GATED。
 
+## Not Authorized
+
+This packet is not authorized to change `hl-contracts`, `hl-platform`, runtime,
+schema, registry, manifest, config, production, release, MVP, active contract,
+live booking, live payment, billing, entitlement, quota, identity, privacy, or
+formal business object state. It is a docs-only Founder decision packet.
+
 ## Decision brief
 
 This packet asks Founder to review the full landing execution plan and decide

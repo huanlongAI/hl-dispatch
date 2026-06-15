@@ -11,6 +11,7 @@ patch_type: RULE_PATCH_OR_TEMPLATE_PATCH_OR_AGENT_PROMPT_PATCH_OR_GATE_PATCH_OR_
 learning_summary: TBD
 observed_failure_or_gap: TBD
 proposed_patch: TBD
+judgment_conversion: []
 routing:
   default_repo: hl-dispatch
   target_repo_if_not_dispatch: TBD

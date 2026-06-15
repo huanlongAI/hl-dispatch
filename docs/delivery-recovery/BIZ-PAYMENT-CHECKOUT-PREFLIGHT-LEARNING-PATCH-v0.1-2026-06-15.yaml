@@ -1,0 +1,16 @@
+version: v0.1
+status: proposed
+date: '2026-06-15'
+capability_id: biz.payment.checkout
+task_id: PC-01-PREFLIGHT
+patch_type: DEFER_PATCH
+judgment_conversion:
+  human_judgment: "Payment preflight must expose provider sovereignty, idempotency, and financial audit blockers without authorizing live money movement."
+  future_rule_or_template: "Payment capability packets must start with a blocker map and no-live-money boundary."
+proposed_patch:
+  target: payment preflight template
+  change: require provider sovereignty, idempotency, financial audit, refund/settlement, and live-money hard-stop rows
+open_risks:
+  - future Founder / Gate financial decision required
+not_authorized:
+  - runtime / production / release / MVP / active contract

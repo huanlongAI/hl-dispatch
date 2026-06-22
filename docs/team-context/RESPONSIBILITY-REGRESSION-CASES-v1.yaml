@@ -1,0 +1,230 @@
+{
+  "schema": "responsibility-regression-cases:v1",
+  "registry_version": "ROLE-REGISTRY-v1",
+  "cases": [
+    {
+      "id": "reject_payment_provider_test_readiness_assigned_to_ops",
+      "description": "支付供应商测试环境业务就绪不能派给运维。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_payment_provider_test_readiness_assigned_to_ops",
+        "task_type": "payment_provider_test_business_readiness",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "reject_payment_code_traffic_switch_assigned_to_ops",
+      "description": "支付代码流量开关不能派给运维。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_payment_code_traffic_switch_assigned_to_ops",
+        "task_type": "payment_code_traffic_switch",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "reject_reconciliation_business_validation_assigned_to_ops",
+      "description": "对账业务验证不能派给运维。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_reconciliation_business_validation_assigned_to_ops",
+        "task_type": "reconciliation_business_validation",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "accept_server_deployment_assigned_to_ops",
+      "description": "服务器部署属于运维职责。",
+      "expected_decision": "ACCEPT",
+      "payload": {
+        "task_id": "accept_server_deployment_assigned_to_ops",
+        "task_type": "server_deployment",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "reject_github_codeup_sync_topology_design_assigned_to_ops",
+      "description": "GitHub / 云效同步拓扑设计不能派给运维。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_github_codeup_sync_topology_design_assigned_to_ops",
+        "task_type": "github_codeup_sync_topology_design",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "reject_technical_selection_assigned_to_business_operations",
+      "description": "技术选型不能派给运营。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_technical_selection_assigned_to_business_operations",
+        "task_type": "technical_selection",
+        "assignee_role": "business-operations",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "review_required_merchant_private_key_assigned_to_product",
+      "description": "商户私钥先进入 REVIEW_REQUIRED，不正式派给产品。",
+      "expected_decision": "REVIEW_REQUIRED",
+      "payload": {
+        "task_id": "review_required_merchant_private_key_assigned_to_product",
+        "task_type": "merchant_private_key",
+        "assignee_role": "product-customer-payment",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "reject_payment_release_declared_as_deployment_only",
+      "description": "支付上线任务不能只声明为部署。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_payment_release_declared_as_deployment_only",
+        "task_type": "payment_release_declared_deployment_only",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "reject_runtime_secret_injection_without_authorization_ref",
+      "description": "运行时密钥注入缺少授权引用时拒绝。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_runtime_secret_injection_without_authorization_ref",
+        "task_type": "runtime_secret_injection",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": []
+      }
+    },
+    {
+      "id": "reject_stale_responsibility_source",
+      "description": "使用过期职责真源时拒绝。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_stale_responsibility_source",
+        "task_type": "server_deployment",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v0",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "review_required_unknown_task_type_auto_assignment",
+      "description": "未知任务类型不能自动派发。",
+      "expected_decision": "REVIEW_REQUIRED",
+      "payload": {
+        "task_id": "review_required_unknown_task_type_auto_assignment",
+        "task_type": "unknown_task_type",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "auto_dispatch": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "review_required_unresolved_high_risk_formal_assignment",
+      "description": "未解析高风险责任被正式派发时进入 REVIEW_REQUIRED。",
+      "expected_decision": "REVIEW_REQUIRED",
+      "payload": {
+        "task_id": "review_required_unresolved_high_risk_formal_assignment",
+        "task_type": "real_payment_traffic_release",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "accept_role_person_mapping_change_without_contract_change",
+      "description": "角色对应人员变化不要求改写职责契约。",
+      "expected_decision": "ACCEPT",
+      "payload": {
+        "task_id": "accept_role_person_mapping_change_without_contract_change",
+        "task_type": "server_deployment",
+        "assignee_role": "ops",
+        "assignee_github": "replacement-gate-r",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "reject_bypassing_formal_publisher",
+      "description": "尝试绕过正式发布器时拒绝。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_bypassing_formal_publisher",
+        "task_type": "server_deployment",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "direct_release_bypass",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    }
+  ]
+}

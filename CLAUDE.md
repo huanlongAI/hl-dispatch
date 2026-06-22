@@ -27,6 +27,13 @@ doc-review / task-assign / decision-request / architect / ops / pm / priority-p0
 - 飞书群：#指挥台（cmd）/ #工程（eng）/ #任务（task）/ #PM工作台（pm）
 - 详见 `FEISHU-GITHUB-COLLABORATION-SPEC.md`
 
+## GitHub Issue 中文门禁
+
+- 本仓 GitHub Issue / Comment 面向团队协作，标题、正文和评论必须包含足够简体中文说明；英文术语、命令、路径、字段名和日志可以保留，但不能提交纯英文内容。
+- 在执行 `gh issue create`、`gh issue comment` 或 `gh issue edit` 前，必须先把即将写入的标题/正文/评论传给 `scripts/preflight-github-language-write.py` 本地验证。
+- 本地 preflight 失败时禁止写入 GitHub；GitHub Actions language gate 是事后检测，不能替代写前检查。
+- 结构化负责人 YAML 只有在 `check-github-language-gate.py` 明确允许的格式下可以不含中文；普通 AI 状态同步、投影回写、执行结果和裁决简报不得使用纯英文。
+
 ## 任务派发防错规则
 
 涉及前端 App / 场景前端构建、云效触发入口、Codeup 同步、构建日志、产物版本、包号或分发入口时，必须先按下面规则判断 Owner：

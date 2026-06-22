@@ -8,7 +8,9 @@ from pathlib import Path
 
 
 SCRIPT = Path(__file__).resolve().parent / "check-github-language-gate.py"
+PREFLIGHT_SCRIPT = Path(__file__).resolve().parent / "preflight-github-language-write.py"
 WORKFLOW = Path(__file__).resolve().parents[1] / ".github/workflows/github-language-gate.yml"
+CLAUDE = Path(__file__).resolve().parents[1] / "CLAUDE.md"
 
 
 def run_gate(event, github_output_path=None):
@@ -23,6 +25,14 @@ def run_gate(event, github_output_path=None):
             capture_output=True,
             text=True,
         )
+
+
+def run_preflight(args):
+    return subprocess.run(
+        [sys.executable, str(PREFLIGHT_SCRIPT), *args],
+        capture_output=True,
+        text=True,
+    )
 
 
 class GitHubLanguageGateTests(unittest.TestCase):
@@ -360,6 +370,85 @@ class GitHubLanguageGateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         payload = json.loads(result.stdout)
         self.assertIn("ai_output_evidence_required", payload["errors"])
+
+    def test_local_preflight_rejects_english_issue_comment_before_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            body_path = Path(tmp) / "body.md"
+            body_path.write_text(
+                "Status: reminder projection completed. Next: wait for YAML replies.",
+                encoding="utf-8",
+            )
+
+            result = run_preflight(
+                [
+                    "--kind",
+                    "issue_comment",
+                    "--issue-number",
+                    "380",
+                    "--body-file",
+                    str(body_path),
+                ]
+            )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "failed")
+        self.assertIn("comment_missing_chinese", payload["errors"])
+
+    def test_local_preflight_accepts_chinese_issue_comment_before_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            body_path = Path(tmp) / "body.md"
+            body_path.write_text(
+                "状态：提醒投影已完成。下一步：等待负责人在 GitHub 回复 YAML。",
+                encoding="utf-8",
+            )
+
+            result = run_preflight(
+                [
+                    "--kind",
+                    "issue_comment",
+                    "--issue-number",
+                    "380",
+                    "--body-file",
+                    str(body_path),
+                ]
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "passed")
+
+    def test_local_preflight_rejects_english_issue_title_and_body_before_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            body_path = Path(tmp) / "body.md"
+            body_path.write_text(
+                "Purpose: record reminder projection status.",
+                encoding="utf-8",
+            )
+
+            result = run_preflight(
+                [
+                    "--kind",
+                    "issue",
+                    "--title",
+                    "[Status] Reminder projection completed",
+                    "--body-file",
+                    str(body_path),
+                ]
+            )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertIn("title_missing_chinese", payload["errors"])
+        self.assertIn("body_missing_chinese", payload["errors"])
+
+    def test_project_rules_require_local_language_preflight_before_gh_issue_writes(self):
+        rules = CLAUDE.read_text(encoding="utf-8")
+
+        self.assertIn("scripts/preflight-github-language-write.py", rules)
+        self.assertIn("gh issue create", rules)
+        self.assertIn("gh issue comment", rules)
+        self.assertIn("gh issue edit", rules)
 
 
 if __name__ == "__main__":

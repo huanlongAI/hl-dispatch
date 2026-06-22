@@ -9,6 +9,9 @@ body:
         ## 任务派发
         请按清单逐项执行，完成后勾选并在评论区说明。
 
+        P2-B 边界：本模板只采集结构化字段 `task_type` / `registry_version` / `assignee_role`，供职责门禁和人工裁决使用；不自动写入 GitHub，不写入飞书 / Project / Base，不触发真实发布器，不授权真实支付流量，不接触商户私钥。
+        商户私钥、真实支付流量、对账证据、未知任务类型等高风险或未解析项必须先按 `REVIEW_REQUIRED` 处理。
+
         派发提醒：涉及前端 App / 场景前端真实构建证据时，执行角色选 Frontend-Lead；涉及 GitHub -> Codeup / 云效代码仓同步证据时，执行角色选 Infra-A；Gate-R 只承接其有权限的运维发布、部署、回滚路径。
 
   - type: input
@@ -20,15 +23,56 @@ body:
       required: true
 
   - type: dropdown
+    id: task-type
+    attributes:
+      label: "任务类型 task_type"
+      description: "选择 ROLE-REGISTRY-v1 中的稳定 task_type；无法判断时选 unknown_task_type，先进入 REVIEW_REQUIRED。"
+      options:
+        - server_deployment - 服务器部署、环境搭建、部署执行和运维验收
+        - runtime_env_delivery - 运行环境交付、部署路径准备和回滚路径准备
+        - release_rollback - 发布回滚执行和运维侧回滚验证
+        - frontend_actual_build_evidence - 前端真实构建证据
+        - github_codeup_sync_evidence - GitHub 到 Codeup / 云效同步证据
+        - github_codeup_sync_topology_design - GitHub / Codeup / 云效同步拓扑设计
+        - payment_provider_test_business_readiness - 支付供应商测试环境业务就绪判断
+        - payment_code_traffic_switch - 支付代码流量开关或支付链路流量控制
+        - reconciliation_business_validation - 对账业务口径验证
+        - reconciliation_evidence - 真实对账证据或结算证据
+        - technical_selection - 技术选型或跨系统工程策略裁决
+        - merchant_private_key - 商户私钥、证书或签名材料
+        - real_payment_traffic_release - 真实支付流量放量
+        - payment_release_declared_deployment_only - 支付上线被声明为仅部署
+        - runtime_secret_injection - 运行时密钥注入或敏感配置写入
+        - unknown_task_type - 未知任务类型，必须 REVIEW_REQUIRED
+    validations:
+      required: true
+
+  - type: dropdown
+    id: registry-version
+    attributes:
+      label: "职责真源版本 registry_version"
+      description: "当前职责门禁真源版本；若任务依据不是该版本，先停止派发并更新真源判断。"
+      options:
+        - ROLE-REGISTRY-v1
+    validations:
+      required: true
+
+  - type: dropdown
     id: assignee-role
     attributes:
-      label: "执行角色"
+      label: "执行角色 assignee_role"
+      description: "选择 ROLE-OWNERS-v1 中的稳定 role id；职责契约绑定 role id，不绑定个人 handle。"
       options:
-        - 架构审计师（Gate-H）
-        - 运维工程师（Gate-R）
-        - 双仓同步 Owner（Infra-A）
-        - 前端负责人（Frontend-Lead）
-        - 全员协作
+        - founder - L0-Founder / 创始人
+        - architect - Gate-H / 架构审计师
+        - ops - Gate-R / 运维工程师
+        - backend - Infra-A / 双仓同步 Owner
+        - frontend-lead - Frontend-Lead / 前端负责人
+        - product - PM-A / 商品与销售能力包
+        - product-customer-payment - PM-B / 客户与支付能力包
+        - product-capability-pack - PM-C / 能力包规格书
+        - qa-owner - QA Owner / 当前空缺，需裁决
+        - business-operations - 运营角色 / 非自动技术 Owner
     validations:
       required: true
 

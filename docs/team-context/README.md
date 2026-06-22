@@ -2,6 +2,21 @@
 
 本目录是 P0 团队职责门禁的 repo file SSOT（唯一事实源）投影，用于在任务派发前统一校验“任务类型是否能派给某个角色”。
 
+## 中文摘要
+
+本目录沉淀团队职责门禁的 P0 统一校验材料。它把职责契约、当前 Owner 映射、输入 schema、回归用例和校验脚本放在同一个 repo file 路径下，供任务派发前判断是否可以把某类任务交给某个角色。
+
+本轮只解决“先统一校验”的问题，不收敛发布器，不授权真实支付、真实 provider、真实 secret、生产 runtime 或自动合并。商户私钥、真实支付流量、真实对账证据等未解析高风险项统一返回 `REVIEW_REQUIRED`。
+
+## 术语说明
+
+- P0：本轮最低可用交付，只建立职责真源、校验器和回归用例。
+- P1：后续发布器收敛阶段，不在本目录当前实现范围内。
+- SSOT：Single Source of Truth，唯一事实源；本目录使用 GitHub Issue / PR / repo file 作为任务和反馈真源。
+- role id：稳定角色标识，例如 `ops`、`backend`、`frontend-lead`；职责契约绑定 role id，不绑定个人 handle。
+- Owner 投影：从 `TEAM.yml` 派生的当前人员映射，只用于把 role id 映射到 GitHub handle。
+- `REVIEW_REQUIRED`：需要 Founder / Gate 裁决后才能正式派发，不代表授权执行。
+
 ## P0 scope
 
 - `ROLE-REGISTRY-v1.yaml`: 职责契约真源，绑定 role id，不绑定人员 handle。

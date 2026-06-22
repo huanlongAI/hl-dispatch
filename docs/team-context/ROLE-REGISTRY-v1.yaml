@@ -1,0 +1,175 @@
+{
+  "schema": "role-registry:v1",
+  "version": "ROLE-REGISTRY-v1",
+  "status": "p0_unified_validation",
+  "published_at": "2026-06-22",
+  "allowed_decisions": [
+    "ACCEPT",
+    "REJECT",
+    "REVIEW_REQUIRED"
+  ],
+  "source_refs": [
+    "Founder decision 2026-06-22: P0 hl-dispatch responsibility source + validator + regression cases",
+    "CLAUDE.md: 任务派发防错规则",
+    "TEAM.yml: roles and active roster",
+    "AGENTS.md: GitHub Issue / PR / repo file as SSOT"
+  ],
+  "scope": [
+    "P0 只统一职责校验与回归用例。",
+    "职责契约绑定 role id，不绑定人员 handle。",
+    "Context Atlas 只作导航，不作职责真源。"
+  ],
+  "non_effects": [
+    "不授权真实支付流量。",
+    "不接触商户私钥。",
+    "不声明对账证据已具备。",
+    "不收敛发布器；发布器收敛留到 P1。"
+  ],
+  "formal_entrypoints": [
+    "github_issue",
+    "github_pr",
+    "draft_pr",
+    "repo_file"
+  ],
+  "forbidden_entrypoints": [
+    "direct_release_bypass",
+    "informal_release_bypass",
+    "feishu_task",
+    "feishu_dm",
+    "runtime_direct"
+  ],
+  "task_types": {
+    "server_deployment": {
+      "summary": "服务器部署、环境搭建、部署执行和运维验收。",
+      "allowed_roles": [
+        "ops"
+      ],
+      "disallowed_roles": [],
+      "default_decision": "REJECT"
+    },
+    "runtime_env_delivery": {
+      "summary": "运行环境交付、部署路径准备和回滚路径准备。",
+      "allowed_roles": [
+        "ops"
+      ],
+      "disallowed_roles": [],
+      "default_decision": "REJECT"
+    },
+    "release_rollback": {
+      "summary": "发布回滚执行和运维侧回滚验证。",
+      "allowed_roles": [
+        "ops"
+      ],
+      "disallowed_roles": [],
+      "default_decision": "REJECT"
+    },
+    "frontend_actual_build_evidence": {
+      "summary": "前端真实构建位置、执行人、commit SHA、构建日志、产物版本和分发入口。",
+      "allowed_roles": [
+        "frontend-lead"
+      ],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REJECT"
+    },
+    "github_codeup_sync_evidence": {
+      "summary": "GitHub main 到 Codeup / 云效代码仓同步、同步证据和一致性证明。",
+      "allowed_roles": [
+        "backend"
+      ],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REJECT"
+    },
+    "github_codeup_sync_topology_design": {
+      "summary": "GitHub / Codeup / 云效同步拓扑、责任边界和一致性设计。",
+      "allowed_roles": [
+        "architect",
+        "backend"
+      ],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REVIEW_REQUIRED"
+    },
+    "payment_provider_test_business_readiness": {
+      "summary": "支付供应商测试环境的业务就绪判断。",
+      "allowed_roles": [
+        "product-customer-payment"
+      ],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REVIEW_REQUIRED"
+    },
+    "payment_code_traffic_switch": {
+      "summary": "支付代码流量开关、切流策略或支付链路流量控制。",
+      "allowed_roles": [],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REVIEW_REQUIRED"
+    },
+    "reconciliation_business_validation": {
+      "summary": "对账业务口径验证，不等同于部署或运维环境检查。",
+      "allowed_roles": [],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REVIEW_REQUIRED"
+    },
+    "reconciliation_evidence": {
+      "summary": "真实对账证据、财务口径证据或支付结算证据。",
+      "allowed_roles": [],
+      "disallowed_roles": [],
+      "default_decision": "REVIEW_REQUIRED",
+      "risk_status": "unresolved_high_risk"
+    },
+    "technical_selection": {
+      "summary": "技术选型、架构方案选择或跨系统工程策略裁决。",
+      "allowed_roles": [
+        "architect",
+        "founder"
+      ],
+      "disallowed_roles": [
+        "business-operations",
+        "ops",
+        "product",
+        "product-customer-payment",
+        "product-capability-pack"
+      ],
+      "default_decision": "REJECT"
+    },
+    "merchant_private_key": {
+      "summary": "商户私钥、证书、签名材料或等价敏感凭据。",
+      "allowed_roles": [],
+      "disallowed_roles": [],
+      "default_decision": "REVIEW_REQUIRED",
+      "risk_status": "unresolved_high_risk"
+    },
+    "real_payment_traffic_release": {
+      "summary": "真实支付流量、真实 provider、真实计费 / 退款 / 结算链路放量。",
+      "allowed_roles": [],
+      "disallowed_roles": [],
+      "default_decision": "REVIEW_REQUIRED",
+      "risk_status": "unresolved_high_risk"
+    },
+    "payment_release_declared_deployment_only": {
+      "summary": "支付上线任务仅声明为部署，但实际包含支付流量或业务上线含义。",
+      "allowed_roles": [],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REJECT"
+    },
+    "runtime_secret_injection": {
+      "summary": "运行时密钥注入、secret 挂载或敏感配置写入。",
+      "allowed_roles": [],
+      "disallowed_roles": [],
+      "default_decision": "REVIEW_REQUIRED",
+      "requires_authorization_ref": true
+    }
+  }
+}

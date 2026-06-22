@@ -1,0 +1,99 @@
+{
+  "schema": "role-owners:v1",
+  "version": "ROLE-OWNERS-v1",
+  "source_refs": [
+    "TEAM.yml",
+    "CLAUDE.md"
+  ],
+  "notes": [
+    "本文件只投影角色到 GitHub handle 的当前映射，不存放飞书 open_id、user_id、message id 或 webhook。",
+    "职责契约绑定 role id，不绑定人员 handle；人员变化只更新本文件，不要求改写 ROLE-REGISTRY-v1。"
+  ],
+  "role_aliases": {
+    "Gate-R": "ops",
+    "运维": "ops",
+    "Infra-A": "backend",
+    "后端基础设施": "backend",
+    "Frontend-Lead": "frontend-lead",
+    "前端负责人": "frontend-lead",
+    "PM-B": "product-customer-payment",
+    "客户与支付 PM": "product-customer-payment",
+    "Founder": "founder",
+    "创始人": "founder",
+    "Gate-H": "architect",
+    "架构": "architect",
+    "运营": "business-operations"
+  },
+  "roles": {
+    "founder": {
+      "name": "L0-Founder",
+      "github": "tongzhenghui",
+      "status": "active",
+      "source_role": "TEAM.yml roles.founder",
+      "responsibility_projection": "创建 Issue/PR、合并裁决、最终审批"
+    },
+    "architect": {
+      "name": "Gate-H",
+      "github": "xujiuming",
+      "status": "active",
+      "source_role": "TEAM.yml roles.architect",
+      "responsibility_projection": "架构设计审查、契约变更审查、代码规范审查、Gate H 技术验收"
+    },
+    "ops": {
+      "name": "Gate-R",
+      "github": "ZDragonMeta",
+      "status": "active_public_lane",
+      "source_role": "TEAM.yml roles.ops",
+      "responsibility_projection": "运维发布、部署、回滚、环境搭建、OPS 执行、Gate R 运维验收"
+    },
+    "backend": {
+      "name": "Infra-A",
+      "github": "wp159951",
+      "status": "active",
+      "source_role": "TEAM.yml roles.backend",
+      "responsibility_projection": "GitHub ↔ Codeup 同步、后端核心开发与工程证据回填"
+    },
+    "frontend-lead": {
+      "name": "Frontend-Lead",
+      "github": "663548110",
+      "status": "active",
+      "source_role": "TEAM.yml roles.frontend-lead",
+      "responsibility_projection": "前端团队协调、Flutter/设计系统协作、PR 统筹；前端 App / 场景前端真实构建证据 Owner"
+    },
+    "product": {
+      "name": "PM-A",
+      "github": "zoucong121",
+      "status": "active",
+      "source_role": "TEAM.yml roles.product",
+      "responsibility_projection": "PM·商品与销售能力包"
+    },
+    "product-customer-payment": {
+      "name": "PM-B",
+      "github": "zhuyang1204",
+      "status": "active",
+      "source_role": "TEAM.yml roles.product-customer-payment",
+      "responsibility_projection": "PM·客户与支付能力包"
+    },
+    "product-capability-pack": {
+      "name": "PM-C",
+      "github": "cuitiantian0704",
+      "status": "active",
+      "source_role": "TEAM.yml roles.product-capability-pack",
+      "responsibility_projection": "PM·能力包规格书与 team-memory 记忆沉淀"
+    },
+    "qa-owner": {
+      "name": "QA-Owner",
+      "github": "",
+      "status": "vacant",
+      "source_role": "TEAM.yml roles.qa-owner",
+      "responsibility_projection": "QA 独立质量 Owner，待创始人重新指定"
+    },
+    "business-operations": {
+      "name": "Business-Operations",
+      "github": "",
+      "status": "not_active_roster_role",
+      "source_role": "derived guardrail role for regression coverage",
+      "responsibility_projection": "当前 TEAM.yml 未列为可自动派发角色，不作为技术选型或工程责任 Owner"
+    }
+  }
+}

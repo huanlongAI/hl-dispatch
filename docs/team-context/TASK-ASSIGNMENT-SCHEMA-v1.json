@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hl-dispatch-task-assignment-schema-v1",
+  "title": "hl-dispatch task assignment validation case",
+  "type": "object",
+  "required": [
+    "id",
+    "payload",
+    "expected_decision"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "expected_decision": {
+      "type": "string",
+      "enum": [
+        "ACCEPT",
+        "REJECT",
+        "REVIEW_REQUIRED"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "task_id",
+        "task_type",
+        "assignee_role",
+        "registry_version",
+        "assignment_entrypoint"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assignee_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assignee_github": {
+          "type": "string"
+        },
+        "registry_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assignment_entrypoint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formal_assignment": {
+          "type": "boolean"
+        },
+        "auto_dispatch": {
+          "type": "boolean"
+        },
+        "authorization_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

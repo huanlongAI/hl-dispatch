@@ -6,12 +6,12 @@ Status: P1_READ_ONLY_TOOLING_WITH_COMMAND_SNAPSHOT
 
 ## 中文摘要
 
-本文定义 `hl-progress` 只读导出器的实现口径。导出器从 GitHub Issue、PR 和仓库文件读取事实，生成 `hl-progress-work-item:v0.1` 或 `engineering-command-snapshot:v0.1` 投影；它不写 GitHub、飞书、多维表格或 Obsidian，也不产生运行时、生产、发布或验收授权。
+本文定义 `hl-progress` 只读导出器的实现口径。导出器从 GitHub Issue、PR 和仓库文件读取事实，生成 `hl-progress-work-item:v0.1` 或 `engineering-command-snapshot:v0.2` 投影；它不写 GitHub、飞书、多维表格或 Obsidian，也不产生运行时、生产、发布或验收授权。
 
 ## 术语说明
 
 - `hl-progress-export:v0.1`：面向进度治理的基础 JSON 导出格式。
-- `engineering-command-snapshot:v0.1`：大辉子工程指挥快照，用于收敛当前主线、候选动作、授权缺口和本地卫生告警。
+- `engineering-command-snapshot:v0.2`：大辉子工程指挥快照，用于收敛当前主线、候选动作、授权缺口和本地卫生告警；默认 30 分钟 TTL，候选动作只作为 `AI_ADMISSION_GATE` 输入。
 - `candidate_actions`：只读候选动作，表示需要人工或 GitHub 后续处理的提示，不等于写回、授权、验收或关闭。
 - `hygiene`：本地 Git 工作区和 `PROGRESS.json` 的卫生告警，只用于提示 stale、dirty、ahead、behind 等风险。
 
@@ -30,7 +30,7 @@ It normalizes GitHub Issues, PRs, and repository file references into `hl-progre
 
 It is not a Feishu writer, Bitable writer, GitHub writeback tool, task platform, dashboard authority, or completion evidence source.
 
-With `--snapshot`, the same read-only input is summarized as `engineering-command-snapshot:v0.1`. The snapshot is the Dahuizi engineering command control-plane projection: it groups work into lanes, applies a WIP cap of 4 current mainlines, reports authorization gaps, emits candidate actions, and includes local hygiene warnings. It remains a projection only.
+With `--snapshot`, the same read-only input is summarized as `engineering-command-snapshot:v0.2`. The snapshot is the Dahuizi engineering command control-plane projection: it groups work into lanes, applies a WIP cap of 4 current mainlines, reports authorization gaps, emits candidate actions, and includes local hygiene warnings. It remains a projection only.
 
 ## Boundary
 
@@ -128,16 +128,19 @@ Snapshot mode should use `--state all` when merged PR readback candidates are re
 
 Each item uses the `hl-progress-work-item:v0.1` schema from `HL_PROGRESS_GOVERNANCE_LOOP_v0.1.md`.
 
-Snapshot output uses `engineering-command-snapshot:v0.1`:
+Snapshot output uses `engineering-command-snapshot:v0.2`:
 
 ```json
 {
-  "schema": "engineering-command-snapshot:v0.1",
+  "schema": "engineering-command-snapshot:v0.2",
   "source": "github",
   "repo": "huanlongAI/hl-dispatch",
   "generated_at": "2026-06-23T00:00:00Z",
-  "expires_at": "2026-06-23T06:00:00Z",
+  "expires_at": "2026-06-23T00:30:00Z",
+  "snapshot_ttl_minutes": 30,
   "source_queries": [],
+  "source_coverage": {},
+  "snapshot_completeness": { "status": "complete", "missing": [] },
   "wip_limit": 4,
   "health": "yellow",
   "lanes": [
@@ -150,6 +153,8 @@ Snapshot output uses `engineering-command-snapshot:v0.1`:
   "candidate_actions": [],
   "hygiene": [],
   "warnings": [],
+  "snapshot_hash": "<sha256>",
+  "receipt": {},
   "work_items": [],
   "external_writes": []
 }

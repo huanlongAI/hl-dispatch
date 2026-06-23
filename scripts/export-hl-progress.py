@@ -12,7 +12,7 @@ from urllib.parse import quote
 
 EXPORT_SCHEMA = "hl-progress-export:v0.1"
 ITEM_SCHEMA = "hl-progress-work-item:v0.1"
-SNAPSHOT_SCHEMA = "engineering-command-snapshot:v0.1"
+SNAPSHOT_SCHEMA = "engineering-command-snapshot:v0.2"
 SOURCE_SYSTEM = "github"
 ISSUE_JSON_FIELDS = "number,title,url,state,labels,assignees,updatedAt,body"
 PR_JSON_FIELDS = "number,title,url,state,labels,assignees,updatedAt,body,isDraft,reviewDecision,author,mergedAt"
@@ -112,6 +112,10 @@ def parse_utc(value):
 
 def plus_hours_utc(value, hours):
     return (parse_utc(value) + timedelta(hours=hours)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def plus_minutes_utc(value, minutes):
+    return (parse_utc(value) + timedelta(minutes=minutes)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def normalize_label(label):
@@ -500,6 +504,27 @@ def source_query_summary(normalized, repo):
     ]
 
 
+def source_coverage(normalized, repo):
+    return {
+        SOURCE_SYSTEM: {
+            "repo": repo,
+            "issues": len(normalized["issues"]),
+            "pull_requests": len(normalized["pull_requests"]),
+            "repo_files": len(normalized["files"]),
+        }
+    }
+
+
+def snapshot_completeness(normalized):
+    missing = []
+    if not normalized["issues"] and not normalized["pull_requests"] and not normalized["files"]:
+        missing.append("github_sources")
+    return {
+        "status": "complete" if not missing else "incomplete",
+        "missing": missing,
+    }
+
+
 def open_issue_index(normalized):
     index = {}
     for issue in normalized["issues"]:
@@ -630,6 +655,8 @@ def action_for_decision(item):
         "task_id": item["task_id"],
         "source": primary_link(item),
         "reason": "GitHub source carries a Founder/Gate decision signal.",
+        "recommendation_only": True,
+        "required_gate": "AI_ADMISSION_GATE",
         "external_write": False,
     }
 
@@ -641,6 +668,8 @@ def action_for_readback(item, linked_open_issues):
         "source": primary_link(item),
         "target_issue_urls": [issue["url"] for issue in linked_open_issues if issue.get("url")],
         "reason": "Merged PR references an open GitHub issue; readback is required before closing or accepting.",
+        "recommendation_only": True,
+        "required_gate": "AI_ADMISSION_GATE",
         "external_write": False,
     }
 
@@ -651,6 +680,8 @@ def action_for_hygiene(incident):
         "task_id": incident.get("repo_path") or incident.get("path") or "local-hygiene",
         "source": incident.get("repo_path") or incident.get("path") or "local",
         "reason": incident.get("detail") or incident.get("type") or "local hygiene warning",
+        "recommendation_only": True,
+        "required_gate": "AI_ADMISSION_GATE",
         "external_write": False,
     }
 
@@ -668,9 +699,12 @@ def build_engineering_command_snapshot(
     generated_at=None,
     repo=None,
     wip_limit=4,
-    ttl_hours=6,
+    ttl_minutes=30,
+    ttl_hours=None,
     hygiene=None,
 ):
+    if ttl_hours is not None:
+        ttl_minutes = ttl_hours * 60
     normalized = normalize_input(raw_source)
     generated_at = generated_at or now_utc()
     repo = repo or normalized["repo"]
@@ -712,13 +746,16 @@ def build_engineering_command_snapshot(
         candidate_actions.append(action_for_hygiene(incident))
 
     lanes = [{"name": name, "items": lane_items[name]} for name in LANE_NAMES]
-    return {
+    snapshot = {
         "schema": SNAPSHOT_SCHEMA,
         "source": SOURCE_SYSTEM,
         "repo": repo,
         "generated_at": generated_at,
-        "expires_at": plus_hours_utc(generated_at, ttl_hours),
+        "expires_at": plus_minutes_utc(generated_at, ttl_minutes),
+        "snapshot_ttl_minutes": ttl_minutes,
         "source_queries": source_query_summary(normalized, repo),
+        "source_coverage": source_coverage(normalized, repo),
+        "snapshot_completeness": snapshot_completeness(normalized),
         "wip_limit": wip_limit,
         "health": snapshot_health(warnings, hygiene, candidate_actions),
         "lanes": lanes,
@@ -739,6 +776,18 @@ def build_engineering_command_snapshot(
         "work_items": export["items"],
         "external_writes": [],
     }
+    snapshot_hash = canonical_hash(snapshot)
+    snapshot["snapshot_hash"] = snapshot_hash
+    snapshot["receipt"] = {
+        "schema": "engineering-command-snapshot-receipt:v0.1",
+        "snapshot_hash": snapshot_hash,
+        "repo": repo,
+        "generated_at": generated_at,
+        "expires_at": snapshot["expires_at"],
+        "snapshot_ttl_minutes": ttl_minutes,
+        "wip_limit": wip_limit,
+    }
+    return snapshot
 
 
 def primary_link(item):
@@ -815,6 +864,7 @@ def render_engineering_command_snapshot(snapshot):
         f"- Repo: `{snapshot['repo']}`",
         f"- Generated At: `{snapshot['generated_at']}`",
         f"- Expires At: `{snapshot['expires_at']}`",
+        f"- Snapshot TTL Minutes: {snapshot.get('snapshot_ttl_minutes', 'n/a')}",
         f"- Health: `{snapshot['health']}`",
         f"- WIP Limit: {snapshot['wip_limit']}",
         f"- External Writes: {len(snapshot['external_writes'])}",
@@ -839,7 +889,8 @@ def render_engineering_command_snapshot(snapshot):
     else:
         for action in snapshot["candidate_actions"]:
             lines.append(
-                f"- `{action['type']}` | `{action['task_id']}` | external_write: `{action['external_write']}` | {action['reason']}"
+                f"- `{action['type']}` | `{action['task_id']}` | external_write: `{action['external_write']}` | "
+                f"recommendation_only: `{action.get('recommendation_only', False)}` | required_gate: `{action.get('required_gate', 'n/a')}` | {action['reason']}"
             )
     lines.append("")
     lines.append("## Hygiene")
@@ -1107,9 +1158,10 @@ def main(argv=None):
     parser.add_argument("--file-ref", action="append", default=[], help="Local repo file path to include as GitHub file evidence.")
     parser.add_argument("--source-ref", default="main", help="Git ref used to form GitHub blob URLs for --file-ref.")
     parser.add_argument("--generated-at", help="Override generated_at for deterministic tests.")
-    parser.add_argument("--snapshot", action="store_true", help="Emit engineering-command-snapshot:v0.1 instead of raw hl-progress export.")
+    parser.add_argument("--snapshot", action="store_true", help="Emit engineering-command-snapshot:v0.2 instead of raw hl-progress export.")
     parser.add_argument("--wip-limit", type=int, default=4, help="Maximum current lane items in --snapshot mode.")
-    parser.add_argument("--snapshot-ttl-hours", type=int, default=6, help="Snapshot expiry window in hours.")
+    parser.add_argument("--snapshot-ttl-minutes", type=int, help="Snapshot expiry window in minutes. Defaults to 30.")
+    parser.add_argument("--snapshot-ttl-hours", type=int, help="Legacy-compatible snapshot expiry window in hours.")
     parser.add_argument("--no-hygiene", action="store_true", help="Disable local Git / PROGRESS.json hygiene collection in --snapshot mode.")
     parser.add_argument("--hygiene-repo", action="append", default=[], help="Local Git repo path to inspect read-only for snapshot hygiene.")
     parser.add_argument("--progress-file", action="append", default=[], help="PROGRESS.json path to inspect read-only for staleness.")
@@ -1123,6 +1175,11 @@ def main(argv=None):
             raw_source = load_live_source(args.state, args.limit, args.label, args.file_ref, repo=args.repo, ref=args.source_ref)
         generated_at = args.generated_at or now_utc()
         if args.snapshot:
+            ttl_minutes = args.snapshot_ttl_minutes
+            if ttl_minutes is None and args.snapshot_ttl_hours is not None:
+                ttl_minutes = args.snapshot_ttl_hours * 60
+            if ttl_minutes is None:
+                ttl_minutes = 30
             hygiene = []
             if not args.no_hygiene:
                 hygiene = collect_hygiene(
@@ -1136,7 +1193,7 @@ def main(argv=None):
                 generated_at=generated_at,
                 repo=args.repo,
                 wip_limit=args.wip_limit,
-                ttl_hours=args.snapshot_ttl_hours,
+                ttl_minutes=ttl_minutes,
                 hygiene=hygiene,
             )
         else:

@@ -6,7 +6,7 @@ Status: ACTIVE_GOAL_CONTRACT
 
 ## 中文摘要
 
-本文定义 `hl-progress` 长期工程进度治理循环。GitHub Issue、PR 和仓库文件仍是唯一事实源；飞书、多维表格、Project、仪表盘和报告都只是投影。新增的 `engineering-command-snapshot:v0.1` 只用于大辉子指挥扫描：收敛 4 条当前主线、识别等待裁决和合并回读、暴露授权缺口与本地卫生风险，不扩大任何运行时、生产、发布、权限或写回授权。
+本文定义 `hl-progress` 长期工程进度治理循环。GitHub Issue、PR 和仓库文件仍是唯一事实源；飞书、多维表格、Project、仪表盘和报告都只是投影。当前的 `engineering-command-snapshot:v0.2` 只用于大辉子指挥扫描：收敛 4 条当前主线、识别等待裁决和合并回读、暴露授权缺口与本地卫生风险，不扩大任何运行时、生产、发布、权限或写回授权。
 
 本循环的核心目的不是新增流程，而是把已经存在的任务、证据、阻塞、裁决和验收状态整理成可重复生成的读模型。任何报告都必须能回到 GitHub 真源；如果只有聊天记录、提醒、仪表盘状态或人工口头结论，就只能作为提示，不能推动工程状态变化。这样可以降低重复开入口、误把提醒当授权、误把测试通过当生产许可的风险。
 
@@ -14,7 +14,7 @@ Status: ACTIVE_GOAL_CONTRACT
 
 - GitHub SSOT：GitHub 作为唯一事实源，所有治理判断必须能回到 Issue、PR 或仓库文件。
 - `hl-progress-work-item:v0.1`：单个工作项的标准化读模型。
-- `engineering-command-snapshot:v0.1`：工作项之上的指挥快照，按 current、waiting_decision、waiting_readback、queued、history 分 lane 汇总。
+- `engineering-command-snapshot:v0.2`：工作项之上的指挥快照，按 current、waiting_decision、waiting_readback、queued、history 分 lane 汇总；默认 30 分钟 TTL，候选动作必须停在 `AI_ADMISSION_GATE` dry-run 输入层。
 - WIP limit：当前主线并行上限，本版本固定为 4。
 - Founder / Gate receipt：Founder 或 Gate 在 GitHub 真源里的明确回执；没有回执时不得推导 runtime、production 或 release 授权。
 
@@ -138,15 +138,22 @@ Required invariants:
 - `projection.source_hash` must change when source facts change.
 - Missing fields are reported as `unknown` plus `warnings`; they are not invented.
 
-The upper-level command projection is `engineering-command-snapshot:v0.1`.
+The upper-level command projection is `engineering-command-snapshot:v0.2`.
 
 ```yaml
-schema: engineering-command-snapshot:v0.1
+schema: engineering-command-snapshot:v0.2
 generated_at: "<ISO-8601 timestamp>"
 expires_at: "<ISO-8601 timestamp>"
+snapshot_ttl_minutes: 30
 source_queries:
   - system: github
     repo: "<owner/repo>"
+source_coverage:
+  github:
+    repo: "<owner/repo>"
+snapshot_completeness:
+  status: complete | incomplete
+  missing: []
 wip_limit: 4
 health: green | yellow | red
 lanes:
@@ -164,6 +171,8 @@ lanes:
           founder_gate_receipt_url: ""
 candidate_actions:
   - type: merge_readback_candidate | status_reconcile_candidate | hygiene_incident | memory_writeback_candidate | decision_request_candidate
+    recommendation_only: true
+    required_gate: AI_ADMISSION_GATE
     external_write: false
 hygiene:
   - type: dirty_worktree | ahead_worktree | behind_worktree | stale_worktree | stale_progress
@@ -174,7 +183,7 @@ Snapshot invariants:
 
 - `current` has a hard cap of 4 items; overflow moves to `queued` with a warning.
 - `merged_pending_readback` is emitted when a merged PR references an open GitHub issue.
-- Candidate actions are read-only prompts; they are not GitHub writeback, Feishu notification, Bitable mutation, Obsidian memory write, acceptance, or authorization.
+- Candidate actions are read-only prompts; they are not GitHub writeback, Feishu notification, Bitable mutation, Obsidian memory write, acceptance, or authorization. Any formal AI output based on them must pass `AI_ADMISSION_GATE`; Stage B keeps the gate dry-run only.
 - PM readiness, assignee, Feishu reminder, CI green, PR review, or Bitable state never imply runtime / production / release authorization.
 - Payment, provider, production, deployment, release, secrets, settlement, billing, refund, and real user data remain gated unless the GitHub source contains a concrete Founder / Gate receipt URL.
 
@@ -253,7 +262,7 @@ Daily loop:
 
 1. Read GitHub issue / PR / taskbook deltas.
 2. Normalize active work into `hl-progress-work-item:v0.1`.
-3. Build `engineering-command-snapshot:v0.1` with 4 current mainlines, decision lane, readback lane, queue, history, authorization gaps, and local hygiene.
+3. Build `engineering-command-snapshot:v0.2` with 4 current mainlines, decision lane, readback lane, queue, history, authorization gaps, and local hygiene.
 4. Report stale work, blockers, missing evidence, and decision-required items.
 5. Produce action projection only for items with concrete `next_action`, decision, blocker, readback, hygiene, or acceptance signal.
 6. Update Feishu / dashboard projection only after GitHub source exists and a separate projection gate is approved.

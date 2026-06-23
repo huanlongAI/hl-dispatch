@@ -307,10 +307,18 @@ class HLProgressExporterTests(unittest.TestCase):
             ],
         )
 
-        self.assertEqual(snapshot["schema"], "engineering-command-snapshot:v0.1")
+        self.assertEqual(snapshot["schema"], "engineering-command-snapshot:v0.2")
         self.assertEqual(snapshot["generated_at"], "2026-06-23T00:00:00Z")
-        self.assertEqual(snapshot["expires_at"], "2026-06-23T06:00:00Z")
+        self.assertEqual(snapshot["expires_at"], "2026-06-23T00:30:00Z")
+        self.assertEqual(snapshot["snapshot_ttl_minutes"], 30)
         self.assertEqual(snapshot["wip_limit"], 4)
+        self.assertEqual(snapshot["source_coverage"]["github"]["issues"], 7)
+        self.assertEqual(snapshot["source_coverage"]["github"]["pull_requests"], 1)
+        self.assertEqual(snapshot["snapshot_completeness"], {"status": "complete", "missing": []})
+        self.assertRegex(snapshot["snapshot_hash"], r"^[0-9a-f]{64}$")
+        self.assertEqual(snapshot["receipt"]["schema"], "engineering-command-snapshot-receipt:v0.1")
+        self.assertEqual(snapshot["receipt"]["snapshot_hash"], snapshot["snapshot_hash"])
+        self.assertEqual(snapshot["receipt"]["expires_at"], snapshot["expires_at"])
         self.assertTrue(snapshot["source_queries"])
         self.assertEqual({lane["name"] for lane in snapshot["lanes"]}, {"current", "waiting_decision", "waiting_readback", "queued", "history"})
 
@@ -332,6 +340,8 @@ class HLProgressExporterTests(unittest.TestCase):
         self.assertTrue(any(action["type"] == "decision_request_candidate" for action in snapshot["candidate_actions"]))
         self.assertTrue(any(action["type"] == "hygiene_incident" for action in snapshot["candidate_actions"]))
         self.assertTrue(all(action["external_write"] is False for action in snapshot["candidate_actions"]))
+        self.assertTrue(all(action["recommendation_only"] is True for action in snapshot["candidate_actions"]))
+        self.assertTrue(all(action["required_gate"] == "AI_ADMISSION_GATE" for action in snapshot["candidate_actions"]))
         self.assertIn("wip_limit_exceeded", snapshot["warnings"])
         self.assertEqual(snapshot["hygiene"][0]["type"], "dirty_worktree")
 
@@ -439,9 +449,36 @@ class HLProgressExporterTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stderr)
         payload = json.loads(result.stdout)
-        self.assertEqual(payload["schema"], "engineering-command-snapshot:v0.1")
+        self.assertEqual(payload["schema"], "engineering-command-snapshot:v0.2")
+        self.assertEqual(payload["snapshot_ttl_minutes"], 30)
+        self.assertEqual(payload["expires_at"], "2026-06-23T00:30:00Z")
         self.assertEqual(payload["external_writes"], [])
         self.assertTrue(payload["candidate_actions"])
+
+    def test_snapshot_cli_accepts_explicit_ttl_minutes(self):
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(SCRIPT),
+                "--input",
+                str(SNAPSHOT_FIXTURE),
+                "--generated-at",
+                "2026-06-23T00:00:00Z",
+                "--format",
+                "json",
+                "--snapshot",
+                "--snapshot-ttl-minutes",
+                "45",
+                "--no-hygiene",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["snapshot_ttl_minutes"], 45)
+        self.assertEqual(payload["expires_at"], "2026-06-23T00:45:00Z")
 
 
 if __name__ == "__main__":

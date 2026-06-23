@@ -242,8 +242,12 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         preflight = publisher_preflight.build_preflight(plan)
         calls = []
 
-        def fake_runner(args):
-            calls.append(args)
+        def fake_write_preflight_runner(args):
+            calls.append(("write_preflight", args))
+            return subprocess.CompletedProcess(args, 0, stdout='{"status":"passed"}\n', stderr="")
+
+        def fake_gh_runner(args):
+            calls.append(("gh", args))
             return subprocess.CompletedProcess(
                 args,
                 0,
@@ -255,7 +259,8 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
             preflight,
             repo="huanlongAI/hl-dispatch",
             execute=True,
-            runner=fake_runner,
+            runner=fake_gh_runner,
+            write_preflight_runner=fake_write_preflight_runner,
         )
 
         self.assertEqual(result["status"], "created")
@@ -272,10 +277,55 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
                 }
             ],
         )
-        self.assertEqual(len(calls), 1)
-        self.assertEqual(calls[0][:5], ["gh", "issue", "create", "--repo", "huanlongAI/hl-dispatch"])
-        self.assertIn("--label", calls[0])
-        self.assertIn("--assignee", calls[0])
+        self.assertEqual([kind for kind, _args in calls], ["write_preflight", "gh"])
+        self.assertIn("preflight-github-language-write.py", calls[0][1][1])
+        self.assertIn("--kind", calls[0][1])
+        self.assertIn("--title", calls[0][1])
+        self.assertEqual(calls[1][1][:5], ["gh", "issue", "create", "--repo", "huanlongAI/hl-dispatch"])
+        self.assertIn("--label", calls[1][1])
+        self.assertIn("--assignee", calls[1][1])
+
+    def test_formal_publisher_execute_stops_when_write_preflight_fails(self):
+        publisher = load_publisher()
+        publisher_preflight = load_publisher_preflight()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+        preflight = publisher_preflight.build_preflight(plan)
+        gh_calls = []
+
+        def fake_write_preflight_runner(args):
+            return subprocess.CompletedProcess(
+                args,
+                1,
+                stdout='{"status":"failed","errors":["title/body language gate failed"]}\n',
+                stderr="",
+            )
+
+        def fake_gh_runner(args):
+            gh_calls.append(args)
+            return subprocess.CompletedProcess(
+                args,
+                0,
+                stdout="https://github.com/huanlongAI/hl-dispatch/issues/999\n",
+                stderr="",
+            )
+
+        result = publisher_preflight.publish_preflight_result(
+            preflight,
+            repo="huanlongAI/hl-dispatch",
+            execute=True,
+            runner=fake_gh_runner,
+            write_preflight_runner=fake_write_preflight_runner,
+        )
+
+        self.assertEqual(result["status"], "failed")
+        self.assertFalse(result["github_write"]["enabled"])
+        self.assertIn("github_language_write_preflight_failed", result["reason_codes"])
+        self.assertEqual(result["external_writes"], [])
+        self.assertEqual(gh_calls, [])
 
     def run_cli(self, payload):
         with tempfile.TemporaryDirectory() as tmp:

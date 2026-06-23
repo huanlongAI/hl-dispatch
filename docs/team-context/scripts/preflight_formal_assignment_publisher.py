@@ -9,6 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 LANGUAGE_GATE = REPO_ROOT / "scripts/check-github-language-gate.py"
+LANGUAGE_WRITE_PREFLIGHT = REPO_ROOT / "scripts/preflight-github-language-write.py"
 
 
 def load_json(path):
@@ -116,6 +117,21 @@ def build_gh_issue_create_args(issue, repo):
     return args
 
 
+def build_language_write_preflight_args(issue, repo):
+    return [
+        sys.executable,
+        str(LANGUAGE_WRITE_PREFLIGHT),
+        "--kind",
+        "issue",
+        "--title",
+        issue.get("title", ""),
+        "--body",
+        issue.get("body", ""),
+        "--target-url",
+        f"https://github.com/{repo}/issues/local-preflight",
+    ]
+
+
 def _default_runner(args):
     return subprocess.run(args, capture_output=True, text=True)
 
@@ -139,7 +155,7 @@ def _base_publish_result(preflight, repo, execute):
     }
 
 
-def publish_preflight_result(preflight, repo, execute=False, runner=None):
+def publish_preflight_result(preflight, repo, execute=False, runner=None, write_preflight_runner=None):
     result = _base_publish_result(preflight, repo, execute)
     issue = preflight.get("github_issue")
     if (
@@ -155,13 +171,25 @@ def publish_preflight_result(preflight, repo, execute=False, runner=None):
         result["reason_codes"] = list(preflight.get("reason_codes", [])) + ["github_language_gate_not_passed"]
         return result
 
+    write_preflight_args = build_language_write_preflight_args(issue, repo)
     gh_args = build_gh_issue_create_args(issue, repo)
     result["ready_to_create_github_issue"] = True
     result["github_issue"] = issue
+    result["write_preflight_command_preview"] = write_preflight_args
     result["command_preview"] = gh_args
 
     if not execute:
         result["status"] = "dry_run_ready"
+        return result
+
+    write_preflight = (write_preflight_runner or _default_runner)(write_preflight_args)
+    result["write_preflight"] = {
+        "returncode": write_preflight.returncode,
+        "stdout": write_preflight.stdout,
+        "stderr": write_preflight.stderr,
+    }
+    if write_preflight.returncode != 0:
+        result["reason_codes"].append("github_language_write_preflight_failed")
         return result
 
     completed = (runner or _default_runner)(gh_args)

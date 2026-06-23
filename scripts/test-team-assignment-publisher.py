@@ -62,6 +62,30 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertEqual(plan["publish_plan"]["target_entrypoint"], "github_issue")
         self.assertEqual(plan["publish_plan"]["action"], "prepare_assignment_payload")
 
+    def test_accept_builds_formal_github_issue_payload_for_later_publisher(self):
+        publisher = load_publisher()
+
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+
+        payload = plan["formal_publisher_payload"]
+        issue = payload["github_issue"]
+        self.assertEqual(payload["schema"], "hl-dispatch-formal-publisher-payload:v1")
+        self.assertEqual(payload["target_entrypoint"], "github_issue")
+        self.assertEqual(payload["responsibility_gate"]["decision"], "ACCEPT")
+        self.assertEqual(payload["responsibility_gate"]["registry_version"], CURRENT_REGISTRY_VERSION)
+        self.assertEqual(issue["title"], "[任务] server_deployment")
+        self.assertEqual(issue["assignees"], ["ZDragonMeta"])
+        self.assertEqual(issue["labels"], ["task-assign", "ops", "priority-p1"])
+        self.assertIn("task_type: server_deployment", issue["body"])
+        self.assertIn("assignee_role: ops", issue["body"])
+        self.assertIn("responsibility_gate_decision: ACCEPT", issue["body"])
+        self.assertFalse(plan["github_write"]["enabled"])
+        self.assertEqual(plan["external_writes"], [])
+
     def test_reject_fails_closed_without_decision_packet(self):
         publisher = load_publisher()
 
@@ -75,6 +99,7 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertTrue(plan["blocked"])
         self.assertTrue(plan["fail_closed"])
         self.assertIsNone(plan["decision_packet"])
+        self.assertIsNone(plan["formal_publisher_payload"])
         self.assertEqual(plan["external_writes"], [])
         self.assertIn("stale_responsibility_source", plan["validation"]["reason_codes"])
 

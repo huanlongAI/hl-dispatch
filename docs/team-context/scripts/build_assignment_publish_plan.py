@@ -14,6 +14,18 @@ from validate_task_assignment import load_structured_file, validate_assignment
 TEAM_CONTEXT = Path(__file__).resolve().parents[1]
 DEFAULT_REGISTRY = TEAM_CONTEXT / "ROLE-REGISTRY-v1.yaml"
 DEFAULT_OWNERS = TEAM_CONTEXT / "ROLE-OWNERS-v1.yaml"
+ROLE_LABELS = {
+    "architect": "architect",
+    "ops": "ops",
+    "product": "pm",
+    "product-customer-payment": "pm",
+    "product-capability-pack": "pm",
+}
+PRIORITY_LABELS = {
+    "P0": "priority-p0",
+    "P1": "priority-p1",
+    "P2": "priority-p2",
+}
 HIGH_RISK_TASK_TYPES = {
     "merchant_private_key",
     "real_payment_traffic_release",
@@ -28,6 +40,69 @@ def _risk_level(payload, validation):
     if HIGH_RISK_REASON_CODES.intersection(validation.get("reason_codes", [])):
         return "high"
     return "medium"
+
+
+def _priority_label(payload):
+    raw_priority = str(payload.get("priority", "") or "").strip().upper()
+    if not raw_priority:
+        return ""
+    priority_key = raw_priority.split(maxsplit=1)[0]
+    return PRIORITY_LABELS.get(priority_key, "")
+
+
+def _github_issue_body(payload, validation):
+    reason_codes = ", ".join(validation.get("reason_codes", [])) or "none"
+    messages = "\n".join(f"- {message}" for message in validation.get("messages", [])) or "- none"
+    return "\n".join(
+        [
+            "## 任务派发",
+            "",
+            "本 Issue payload 由 hl-dispatch 职责门禁 dry-run 发布计划器生成；后续正式发布器只能在门禁 ACCEPT 后消费该 payload。",
+            "",
+            "```yaml",
+            f"task_id: {payload.get('task_id', 'unknown')}",
+            f"task_type: {payload.get('task_type', '')}",
+            f"assignee_role: {validation.get('owner_role', payload.get('assignee_role', ''))}",
+            f"registry_version: {validation.get('registry_version', payload.get('registry_version', ''))}",
+            f"assignment_entrypoint: {payload.get('assignment_entrypoint', '')}",
+            f"responsibility_gate_decision: {validation.get('decision', '')}",
+            f"responsibility_reason_codes: [{reason_codes}]",
+            "```",
+            "",
+            "## 职责门禁消息",
+            messages,
+            "",
+            "## 任务正文",
+            str(payload.get("body", "") or "").strip() or "（未提供正文）",
+        ]
+    )
+
+
+def _formal_publisher_payload(payload, validation, owners):
+    if validation["decision"] != "ACCEPT":
+        return None
+    owner_role = validation.get("owner_role") or payload.get("assignee_role") or ""
+    owner = owners.get("roles", {}).get(owner_role, {})
+    labels = ["task-assign"]
+    role_label = ROLE_LABELS.get(owner_role)
+    if role_label:
+        labels.append(role_label)
+    priority_label = _priority_label(payload)
+    if priority_label:
+        labels.append(priority_label)
+    assignees = [owner["github"]] if str(owner.get("github", "") or "").strip() else []
+    return {
+        "schema": "hl-dispatch-formal-publisher-payload:v1",
+        "target_entrypoint": payload.get("assignment_entrypoint") or "github_issue",
+        "task_id": payload.get("task_id", "unknown"),
+        "responsibility_gate": validation,
+        "github_issue": {
+            "title": payload.get("title") or f"[任务] {payload.get('task_type', 'unknown')}",
+            "body": _github_issue_body(payload, validation),
+            "labels": labels,
+            "assignees": assignees,
+        },
+    }
 
 
 def _decision_packet(payload, validation):
@@ -74,10 +149,11 @@ def _publish_plan(payload, validation):
 
 
 def build_publish_plan(payload, registry_path=None, owners_path=None):
+    owners = load_structured_file(owners_path or DEFAULT_OWNERS)
     validation = validate_assignment(
         payload,
         registry_path=registry_path or DEFAULT_REGISTRY,
-        owners_path=owners_path or DEFAULT_OWNERS,
+        owners_data=owners,
     )
     decision = validation["decision"]
     return {
@@ -91,6 +167,7 @@ def build_publish_plan(payload, registry_path=None, owners_path=None):
         "fail_closed": decision == "REJECT",
         "validation": validation,
         "publish_plan": _publish_plan(payload, validation),
+        "formal_publisher_payload": _formal_publisher_payload(payload, validation, owners),
         "decision_packet": _decision_packet(payload, validation),
         "github_write": {
             "enabled": False,

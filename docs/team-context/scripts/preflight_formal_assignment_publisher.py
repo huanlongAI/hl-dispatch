@@ -2,6 +2,7 @@
 import argparse
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -96,15 +97,115 @@ def build_preflight(plan):
     return result
 
 
+def build_gh_issue_create_args(issue, repo):
+    args = [
+        "gh",
+        "issue",
+        "create",
+        "--repo",
+        repo,
+        "--title",
+        issue.get("title", ""),
+        "--body",
+        issue.get("body", ""),
+    ]
+    for label in issue.get("labels", []):
+        args.extend(["--label", label])
+    for assignee in issue.get("assignees", []):
+        args.extend(["--assignee", assignee])
+    return args
+
+
+def _default_runner(args):
+    return subprocess.run(args, capture_output=True, text=True)
+
+
+def _base_publish_result(preflight, repo, execute):
+    return {
+        "schema": "hl-dispatch-formal-assignment-publisher:v1",
+        "mode": "execute" if execute else "dry_run",
+        "task_id": preflight.get("task_id", "unknown"),
+        "status": "failed",
+        "ready_to_create_github_issue": False,
+        "preflight": preflight,
+        "reason_codes": [],
+        "github_write": {
+            "enabled": False,
+            "operation": "gh issue create",
+            "repo": repo,
+            "reason": "dry-run by default; --execute performs the GitHub write only after explicit approval.",
+        },
+        "external_writes": [],
+    }
+
+
+def publish_preflight_result(preflight, repo, execute=False, runner=None):
+    result = _base_publish_result(preflight, repo, execute)
+    issue = preflight.get("github_issue")
+    if (
+        preflight.get("status") != "passed"
+        or not preflight.get("ready_to_create_github_issue")
+        or not isinstance(issue, dict)
+    ):
+        result["reason_codes"] = list(preflight.get("reason_codes", [])) + ["preflight_not_ready"]
+        return result
+
+    language_gate = preflight.get("language_gate") or {}
+    if language_gate.get("status") != "passed":
+        result["reason_codes"] = list(preflight.get("reason_codes", [])) + ["github_language_gate_not_passed"]
+        return result
+
+    gh_args = build_gh_issue_create_args(issue, repo)
+    result["ready_to_create_github_issue"] = True
+    result["github_issue"] = issue
+    result["command_preview"] = gh_args
+
+    if not execute:
+        result["status"] = "dry_run_ready"
+        return result
+
+    completed = (runner or _default_runner)(gh_args)
+    if completed.returncode != 0:
+        result["reason_codes"].append("gh_issue_create_failed")
+        result["stderr"] = completed.stderr
+        result["stdout"] = completed.stdout
+        return result
+
+    issue_url = completed.stdout.strip()
+    result["status"] = "created"
+    result["github_write"]["enabled"] = True
+    result["github_issue_url"] = issue_url
+    result["external_writes"] = [
+        {
+            "system": "github",
+            "operation": "issue_create",
+            "url": issue_url,
+        }
+    ]
+    return result
+
+
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Dry-run preflight for hl-dispatch formal assignment publisher.")
     parser.add_argument("--input", required=True, help="assignment-publish-plan JSON file")
+    parser.add_argument("--publish", action="store_true", help="Emit or execute the formal GitHub Issue publisher step.")
+    parser.add_argument("--execute", action="store_true", help="Create the GitHub Issue after preflight passes.")
+    parser.add_argument("--repo", default="huanlongAI/hl-dispatch", help="GitHub repository for issue creation.")
     return parser.parse_args(argv)
 
 
 def main(argv=None):
     args = parse_args(argv or sys.argv[1:])
-    result = build_preflight(load_json(args.input))
+    if args.execute and not args.publish:
+        raise SystemExit("--execute requires --publish")
+
+    preflight = build_preflight(load_json(args.input))
+    if args.publish:
+        result = publish_preflight_result(preflight, repo=args.repo, execute=args.execute)
+        print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+        return 0 if result["status"] in {"dry_run_ready", "created"} else 1
+
+    result = preflight
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0 if result["status"] == "passed" else 1
 

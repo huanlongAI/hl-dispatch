@@ -26,6 +26,15 @@ def load_publisher():
     return module
 
 
+def load_publisher_preflight():
+    if not PUBLISHER_PREFLIGHT.exists():
+        raise AssertionError(f"missing publisher preflight: {PUBLISHER_PREFLIGHT}")
+    spec = importlib.util.spec_from_file_location("team_assignment_publisher_preflight", PUBLISHER_PREFLIGHT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def assignment(task_type, assignee_role, **overrides):
     payload = {
         "task_id": f"case-{task_type}",
@@ -188,6 +197,86 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertNotIn("github_issue", preflight)
         self.assertFalse(preflight["github_write"]["enabled"])
 
+    def test_formal_publisher_dry_run_outputs_issue_create_command_without_write(self):
+        publisher = load_publisher()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+
+        result = self.run_publisher_preflight(
+            plan,
+            "--publish",
+            "--repo",
+            "huanlongAI/hl-dispatch",
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        publish = json.loads(result.stdout)
+        self.assertEqual(publish["schema"], "hl-dispatch-formal-assignment-publisher:v1")
+        self.assertEqual(publish["status"], "dry_run_ready")
+        self.assertEqual(publish["mode"], "dry_run")
+        self.assertEqual(publish["preflight"]["status"], "passed")
+        self.assertFalse(publish["github_write"]["enabled"])
+        self.assertEqual(publish["github_write"]["operation"], "gh issue create")
+        self.assertEqual(publish["github_write"]["repo"], "huanlongAI/hl-dispatch")
+        self.assertEqual(publish["external_writes"], [])
+        self.assertEqual(publish["github_issue"]["labels"], ["task-assign", "ops", "priority-p1"])
+        self.assertIn("--repo", publish["command_preview"])
+        self.assertIn("huanlongAI/hl-dispatch", publish["command_preview"])
+        self.assertIn("--title", publish["command_preview"])
+        self.assertIn("[任务] server_deployment", publish["command_preview"])
+        self.assertIn("--label", publish["command_preview"])
+        self.assertIn("--assignee", publish["command_preview"])
+        self.assertIn("ZDragonMeta", publish["command_preview"])
+
+    def test_formal_publisher_execute_uses_gh_issue_create_after_passed_preflight(self):
+        publisher = load_publisher()
+        publisher_preflight = load_publisher_preflight()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+        preflight = publisher_preflight.build_preflight(plan)
+        calls = []
+
+        def fake_runner(args):
+            calls.append(args)
+            return subprocess.CompletedProcess(
+                args,
+                0,
+                stdout="https://github.com/huanlongAI/hl-dispatch/issues/999\n",
+                stderr="",
+            )
+
+        result = publisher_preflight.publish_preflight_result(
+            preflight,
+            repo="huanlongAI/hl-dispatch",
+            execute=True,
+            runner=fake_runner,
+        )
+
+        self.assertEqual(result["status"], "created")
+        self.assertTrue(result["github_write"]["enabled"])
+        self.assertEqual(result["github_write"]["operation"], "gh issue create")
+        self.assertEqual(result["github_issue_url"], "https://github.com/huanlongAI/hl-dispatch/issues/999")
+        self.assertEqual(
+            result["external_writes"],
+            [
+                {
+                    "system": "github",
+                    "operation": "issue_create",
+                    "url": "https://github.com/huanlongAI/hl-dispatch/issues/999",
+                }
+            ],
+        )
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0][:5], ["gh", "issue", "create", "--repo", "huanlongAI/hl-dispatch"])
+        self.assertIn("--label", calls[0])
+        self.assertIn("--assignee", calls[0])
+
     def run_cli(self, payload):
         with tempfile.TemporaryDirectory() as tmp:
             input_path = Path(tmp) / "assignment.json"
@@ -207,7 +296,7 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
                 text=True,
             )
 
-    def run_publisher_preflight(self, plan):
+    def run_publisher_preflight(self, plan, *extra_args):
         with tempfile.TemporaryDirectory() as tmp:
             input_path = Path(tmp) / "plan.json"
             input_path.write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
@@ -217,6 +306,7 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
                     str(PUBLISHER_PREFLIGHT),
                     "--input",
                     str(input_path),
+                    *extra_args,
                 ],
                 capture_output=True,
                 text=True,

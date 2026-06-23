@@ -1,7 +1,7 @@
 {
   "schema": "role-registry:v1",
   "version": "ROLE-REGISTRY-v1",
-  "status": "p0_unified_validation",
+  "status": "p0_unified_validation_p1_publisher_ready",
   "published_at": "2026-06-22",
   "allowed_decisions": [
     "ACCEPT",
@@ -15,7 +15,7 @@
     "AGENTS.md: GitHub Issue / PR / repo file as SSOT"
   ],
   "scope": [
-    "P0 只统一职责校验与回归用例。",
+    "P0 统一职责校验与回归用例；P1 发布器只消费门禁 ACCEPT 后的 formal_publisher_payload。",
     "职责契约绑定 role id，不绑定人员 handle。",
     "Context Atlas 只作导航，不作职责真源。"
   ],
@@ -23,7 +23,7 @@
     "不授权真实支付流量。",
     "不接触商户私钥。",
     "不声明对账证据已具备。",
-    "不收敛发布器；发布器收敛留到 P1。"
+    "不自动创建 GitHub Issue；正式发布器默认 dry-run，写入必须显式 --execute 并通过中文门禁。"
   ],
   "formal_entrypoints": [
     "github_issue",

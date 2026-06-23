@@ -6,7 +6,7 @@
 
 本目录沉淀团队职责门禁的 P0 统一校验材料和 P1 发布器收敛材料。它把职责契约、当前 Owner 映射、输入 schema、回归用例、校验脚本、发布计划器和正式发布器预检放在同一个 repo file 路径下，供任务派发前判断是否可以把某类任务交给某个角色，并生成可审计的 GitHub Issue 发布请求。
 
-P1 发布器默认仍是 dry-run：只在职责门禁 `ACCEPT`、formal publisher payload 存在、目标入口为 `github_issue`、GitHub Issue payload 存在且中文门禁通过后，输出精确 `gh issue create` 参数。只有显式 `--execute` 才会创建 GitHub Issue；本目录不写飞书、Project、Base，不授权真实支付、真实 provider、真实 secret、生产 runtime 或自动合并。商户私钥、真实支付流量、真实对账证据等未解析高风险项统一返回 `REVIEW_REQUIRED`。
+P1 发布器默认仍是 dry-run：只在职责门禁 `ACCEPT`、formal publisher payload 存在、目标入口为 `github_issue`、GitHub Issue payload 存在且中文门禁通过后，输出精确 `gh issue create` 参数。只有同时显式提供 `--execute` 和 `--confirm-github-issue-create` 才会创建 GitHub Issue；本目录不写飞书、Project、Base，不授权真实支付、真实 provider、真实 secret、生产 runtime 或自动合并。商户私钥、真实支付流量、真实对账证据等未解析高风险项统一返回 `REVIEW_REQUIRED`。
 
 ## 术语说明
 
@@ -78,7 +78,7 @@ python3 docs/team-context/scripts/preflight_formal_assignment_publisher.py \
   --repo huanlongAI/hl-dispatch
 ```
 
-正式 GitHub Issue 写入必须先通过 dry-run 输出检查，再由人工明确授权后追加 `--execute`。该执行入口只允许 GitHub Issue，不写飞书、Project、Base 或生产 runtime。
+正式 GitHub Issue 写入必须先通过 dry-run 输出检查，再由人工明确授权后追加 `--execute --confirm-github-issue-create`。该执行入口只允许 GitHub Issue，不写飞书、Project、Base 或生产 runtime。
 
 `.yaml` 文件当前使用 JSON-compatible YAML 子集，避免给本仓新增运行时依赖；若环境提供 PyYAML，校验器也可解析普通 YAML。
 

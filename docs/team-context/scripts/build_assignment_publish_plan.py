@@ -114,7 +114,7 @@ def _decision_packet(payload, validation):
         "required": True,
         "risk_level": _risk_level(payload, validation),
         "decision_item": "是否允许该任务进入正式派发。",
-        "background": "P1-A dry-run 发布计划器只生成裁决包，不写入 GitHub、飞书或外部系统。",
+        "background": "P1 发布计划器只生成裁决包，不写入 GitHub、飞书或外部系统；正式写入必须走正式发布器。",
         "task_type": task_type,
         "owner_role": owner_role,
         "reason_codes": validation.get("reason_codes", []),
@@ -131,20 +131,20 @@ def _publish_plan(payload, validation):
             "target_entrypoint": target_entrypoint,
             "action": "prepare_assignment_payload",
             "ready_for_formal_publisher": True,
-            "manual_or_later_publisher_required": True,
+            "formal_publisher_required": True,
         }
     if decision == "REJECT":
         return {
             "target_entrypoint": target_entrypoint,
             "action": "fail_closed_no_publish",
             "ready_for_formal_publisher": False,
-            "manual_or_later_publisher_required": False,
+            "formal_publisher_required": False,
         }
     return {
         "target_entrypoint": target_entrypoint,
         "action": "decision_packet_only",
         "ready_for_formal_publisher": False,
-        "manual_or_later_publisher_required": False,
+        "formal_publisher_required": False,
     }
 
 
@@ -172,7 +172,7 @@ def build_publish_plan(payload, registry_path=None, owners_path=None):
         "github_write": {
             "enabled": False,
             "operation": "none",
-            "reason": "P1-A is dry-run/preflight only; external writes require a later formal publisher.",
+            "reason": "P1 发布计划器为 dry-run；外部写入必须由正式发布器执行，并显式通过 --execute --confirm-github-issue-create 和中文写前门禁。",
         },
         "external_writes": [],
     }

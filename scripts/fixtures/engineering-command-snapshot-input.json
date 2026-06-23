@@ -1,0 +1,150 @@
+{
+  "repo": "huanlongAI/hl-dispatch",
+  "issues": [
+    {
+      "number": 39,
+      "title": "HK mainline runtime readiness",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/39",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "priority-p0"
+        }
+      ],
+      "assignees": [
+        {
+          "login": "dahuizi"
+        }
+      ],
+      "updatedAt": "2026-06-22T01:02:03Z",
+      "body": "### task_id\nHK-MAINLINE\n\n### status\nbounded_implementation\n\n### risk_path\ngreen\n\n### evidence_state\nlinked\n\n### engineering_scope_confirmed\ntrue\n\n### implementation_authorized\ntrue\n\n### next_action\nKeep runtime evidence bounded to GitHub.\n"
+    },
+    {
+      "number": 242,
+      "title": "[Decision] WorldGraph next gate",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/242",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "decision-request"
+        }
+      ],
+      "assignees": [],
+      "updatedAt": "2026-06-22T02:02:03Z",
+      "body": "### task_id\nWORLDGRAPH-GATE\n\n### status\ndecision_required\n\n### risk_path\nyellow\n\n### evidence_state\nlinked\n\n### next_action\nFounder chooses the next bounded route.\n"
+    },
+    {
+      "number": 245,
+      "title": "Payment provider sandbox readiness",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/245",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "provider"
+        }
+      ],
+      "assignees": [
+        {
+          "login": "backend-a"
+        }
+      ],
+      "updatedAt": "2026-06-22T03:02:03Z",
+      "body": "### task_id\nPAYMENT-PROVIDER\n\n### status\nbounded_implementation\n\n### risk_path\nred\n\n### evidence_state\nlinked\n\n### pm_readiness\ntrue\n\n### runtime_authorized\ntrue\n\n### next_action\nCollect provider sandbox evidence without production access.\n"
+    },
+    {
+      "number": 281,
+      "title": "JH-001 PM capability pack",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/281",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "priority-p1"
+        }
+      ],
+      "assignees": [
+        {
+          "login": "pm-a"
+        }
+      ],
+      "updatedAt": "2026-06-22T04:02:03Z",
+      "body": "### task_id\nJH-001\n\n### status\nbounded_implementation\n\n### risk_path\ngreen\n\n### evidence_state\nlinked\n\n### next_action\nKeep PM readiness separate from runtime authorization.\n"
+    },
+    {
+      "number": 142,
+      "title": "Runtime evidence consolidation",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/142",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "priority-p1"
+        }
+      ],
+      "assignees": [
+        {
+          "login": "engineer-b"
+        }
+      ],
+      "updatedAt": "2026-06-22T05:02:03Z",
+      "body": "### task_id\nRUNTIME-EVIDENCE\n\n### status\npr_evidence\n\n### risk_path\nyellow\n\n### evidence_state\nverified\n\n### next_action\nAttach PR evidence and wait for readback.\n"
+    },
+    {
+      "number": 267,
+      "title": "ServiceOrder engineering understanding",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/267",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "priority-p1"
+        }
+      ],
+      "assignees": [
+        {
+          "login": "engineer-c"
+        }
+      ],
+      "updatedAt": "2026-06-22T06:02:03Z",
+      "body": "### task_id\nSERVICEORDER\n\n### status\nbounded_implementation\n\n### risk_path\nyellow\n\n### evidence_state\nlinked\n\n### next_action\nHold behind four current mainlines.\n"
+    },
+    {
+      "number": 198,
+      "title": "Merged evidence readback target",
+      "url": "https://github.com/huanlongAI/hl-dispatch/issues/198",
+      "state": "OPEN",
+      "labels": [
+        {
+          "name": "feedback-given"
+        }
+      ],
+      "assignees": [
+        {
+          "login": "gate-a"
+        }
+      ],
+      "updatedAt": "2026-06-22T07:02:03Z",
+      "body": "### task_id\nREADBACK-TARGET\n\n### status\nqueued\n\n### risk_path\ngreen\n\n### evidence_state\nlinked\n\n### next_action\nRead back merged PR evidence.\n"
+    }
+  ],
+  "pull_requests": [
+    {
+      "number": 393,
+      "title": "Merge runtime evidence for #198",
+      "url": "https://github.com/huanlongAI/hl-dispatch/pull/393",
+      "state": "CLOSED",
+      "labels": [
+        {
+          "name": "approved"
+        }
+      ],
+      "assignees": [],
+      "author": {
+        "login": "dahuizi"
+      },
+      "isDraft": false,
+      "reviewDecision": "APPROVED",
+      "mergedAt": "2026-06-22T08:02:03Z",
+      "updatedAt": "2026-06-22T08:02:03Z",
+      "body": "Merged evidence for #198.\n\n### task_id\nREADBACK-PR\n\n### risk_path\ngreen\n\n### evidence_state\naccepted\n\n### next_action\nRead back into the linked open issue.\n"
+    }
+  ],
+  "files": []
+}

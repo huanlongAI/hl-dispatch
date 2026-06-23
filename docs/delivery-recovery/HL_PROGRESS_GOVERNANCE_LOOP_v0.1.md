@@ -33,6 +33,14 @@ The loop must answer six questions from GitHub evidence:
 5. What needs Founder / Gate decision?
 6. What is safe to mark accepted, rejected, or archived?
 
+The Dahuizi command snapshot adds five operator questions without changing the fact source:
+
+1. Which 4 current mainlines are in command focus?
+2. Which work is waiting for Founder / Gate decision?
+3. Which merged PRs still need issue readback?
+4. Which authorization fields are missing or explicitly gated?
+5. Which local worktrees or `PROGRESS.json` projections are stale or dirty?
+
 ## 3. Authority Boundary
 
 This contract authorizes docs-only planning and read-only progress projection until a later GitHub SSOT explicitly opens a writeback phase.
@@ -55,6 +63,7 @@ Within this goal taskbook only, plan-internal Green docs / read-only tooling cha
 ```text
 GitHub Issues / PRs / repo files
   -> hl-progress read model
+  -> engineering-command-snapshot read model
   -> normalized task snapshots
   -> action projection / Bitable projection / Founder packet
   -> GitHub decision, PR, gap_report, gate, evidence, owner, blocker update
@@ -69,6 +78,7 @@ Rules:
 - No Action, No Notification remains active.
 - No Context, No AI Guess remains active.
 - Every generated report must include source links and projection timestamp.
+- Engineering command snapshots must carry `external_writes: []`.
 
 ## 5. Minimum Data Model
 
@@ -88,7 +98,7 @@ source:
 owner:
   github: "<handle or unknown>"
   role: founder | dahuizi | pm | engineer | gate | qa | ops | unknown
-status: intake | planned | ready | in_progress | blocked | review | gate_a | gate_b | human_cross_audit | founder_acceptance | done | rejected | archived
+status: intake | planned | ready | in_progress | blocked | review | gate_a | gate_b | human_cross_audit | founder_acceptance | done | rejected | archived | design | decision_required | bounded_implementation | pr_evidence | merged_pending_readback | accepted | closed | queued | history
 risk_path: green | yellow | red | unknown
 evidence_state: none | claimed | linked | verified | accepted
 next_gate: "<gate name or n/a>"
@@ -114,6 +124,46 @@ Required invariants:
 - `projection.source_hash` must change when source facts change.
 - Missing fields are reported as `unknown` plus `warnings`; they are not invented.
 
+The upper-level command projection is `engineering-command-snapshot:v0.1`.
+
+```yaml
+schema: engineering-command-snapshot:v0.1
+generated_at: "<ISO-8601 timestamp>"
+expires_at: "<ISO-8601 timestamp>"
+source_queries:
+  - system: github
+    repo: "<owner/repo>"
+wip_limit: 4
+health: green | yellow | red
+lanes:
+  - name: current | waiting_decision | waiting_readback | queued | history
+    items:
+      - task_id: "<work item id>"
+        authorization:
+          pm_readiness: false
+          engineering_scope_confirmed: false
+          implementation_authorized: false
+          runtime_authorized: false
+          deployment_authorized: false
+          production_authorized: false
+          release_authorized: false
+          founder_gate_receipt_url: ""
+candidate_actions:
+  - type: merge_readback_candidate | status_reconcile_candidate | hygiene_incident | memory_writeback_candidate | decision_request_candidate
+    external_write: false
+hygiene:
+  - type: dirty_worktree | ahead_worktree | behind_worktree | stale_worktree | stale_progress
+external_writes: []
+```
+
+Snapshot invariants:
+
+- `current` has a hard cap of 4 items; overflow moves to `queued` with a warning.
+- `merged_pending_readback` is emitted when a merged PR references an open GitHub issue.
+- Candidate actions are read-only prompts; they are not GitHub writeback, Feishu notification, Bitable mutation, Obsidian memory write, acceptance, or authorization.
+- PM readiness, assignee, Feishu reminder, CI green, PR review, or Bitable state never imply runtime / production / release authorization.
+- Payment, provider, production, deployment, release, secrets, settlement, billing, refund, and real user data remain gated unless the GitHub source contains a concrete Founder / Gate receipt URL.
+
 ## 6. Status Semantics
 
 | Status | Meaning | Exit Evidence |
@@ -131,6 +181,15 @@ Required invariants:
 | `done` | Evidence is accepted and work is closed. | Acceptance link. |
 | `rejected` | Output is rejected or scope is cancelled. | Rejection reason and next action. |
 | `archived` | No active action remains. | Archive reason. |
+| `design` | Scope is being shaped and is not yet bounded implementation. | Engineering scope confirmation or queue decision. |
+| `decision_required` | Founder / Gate decision is required before state can move. | Founder / Gate GitHub SSOT. |
+| `bounded_implementation` | Work may proceed only inside the named implementation boundary. | PR, evidence, blocker, or review request. |
+| `pr_evidence` | PR or evidence is present and waiting review / readback. | Review, merge, gap report, or acceptance. |
+| `merged_pending_readback` | A merged PR references an open issue and needs source readback. | GitHub readback comment / issue update under separate authority. |
+| `accepted` | Evidence is accepted but may still need final closeout. | Acceptance link. |
+| `closed` | Source is closed. | Close reason and source link. |
+| `queued` | Not in the 4-item current command focus. | WIP slot or explicit priority change. |
+| `history` | Historical or archived state. | Source link. |
 
 ## 7. Feishu Bitable Projection
 
@@ -167,6 +226,7 @@ Projection rules:
 |-------|-------|---------------|-----------|
 | P0 | Docs-only contract, data model, taskbook. | This repo docs only. | PR merged with verification. |
 | P1 | Read-only exporter from GitHub Issues / PRs / repo files to JSON and Markdown. | Local artifact output only when explicitly requested. | Offline deterministic tests + live read-only smoke check. |
+| P1.1 | Read-only Dahuizi engineering command snapshot over P1 output plus local hygiene. | Stdout or explicit local artifact only. | Snapshot fixture tests + runbook tests. |
 | P2 | Feishu Bitable projection. | Bitable rows only, no GitHub writeback. | Field mapping, dry-run, and projection ledger. |
 | P3 | Controlled GitHub writeback for selected normalized commands. | GitHub comments / labels / issues only. | Separate Founder / Gate SSOT and rollback plan. |
 | P4 | Optional external SaaS adapter, if needed. | Read-only first. | Separate tool-specific decision. |
@@ -179,9 +239,10 @@ Daily loop:
 
 1. Read GitHub issue / PR / taskbook deltas.
 2. Normalize active work into `hl-progress-work-item:v0.1`.
-3. Report stale work, blockers, missing evidence, and decision-required items.
-4. Produce action projection only for items with concrete `next_action`, decision, blocker, or acceptance signal.
-5. Update Feishu / dashboard projection only after GitHub source exists.
+3. Build `engineering-command-snapshot:v0.1` with 4 current mainlines, decision lane, readback lane, queue, history, authorization gaps, and local hygiene.
+4. Report stale work, blockers, missing evidence, and decision-required items.
+5. Produce action projection only for items with concrete `next_action`, decision, blocker, readback, hygiene, or acceptance signal.
+6. Update Feishu / dashboard projection only after GitHub source exists and a separate projection gate is approved.
 
 Weekly Founder packet:
 

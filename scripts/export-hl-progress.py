@@ -5,13 +5,14 @@ import json
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import quote
 
 
 EXPORT_SCHEMA = "hl-progress-export:v0.1"
 ITEM_SCHEMA = "hl-progress-work-item:v0.1"
+SNAPSHOT_SCHEMA = "engineering-command-snapshot:v0.1"
 SOURCE_SYSTEM = "github"
 ISSUE_JSON_FIELDS = "number,title,url,state,labels,assignees,updatedAt,body"
 PR_JSON_FIELDS = "number,title,url,state,labels,assignees,updatedAt,body,isDraft,reviewDecision,author,mergedAt"
@@ -31,6 +32,15 @@ EMPTY_VALUES = {
 }
 
 STATUS_VALUES = {
+    "design",
+    "decision_required",
+    "bounded_implementation",
+    "pr_evidence",
+    "merged_pending_readback",
+    "accepted",
+    "closed",
+    "queued",
+    "history",
     "intake",
     "planned",
     "ready",
@@ -49,10 +59,59 @@ STATUS_VALUES = {
 EVIDENCE_VALUES = {"none", "claimed", "linked", "verified", "accepted"}
 RISK_VALUES = {"green", "yellow", "red"}
 OWNER_ROLES = {"founder", "dahuizi", "pm", "engineer", "gate", "qa", "ops", "unknown"}
+LANE_NAMES = ("current", "waiting_decision", "waiting_readback", "queued", "history")
+CURRENT_COMMAND_STATES = {"design", "bounded_implementation", "pr_evidence"}
+WAITING_DECISION_STATES = {"decision_required", "blocked"}
+WAITING_READBACK_STATES = {"merged_pending_readback"}
+QUEUED_STATES = {"queued"}
+HISTORY_STATES = {"accepted", "closed", "history", "done", "rejected", "archived"}
+AUTHORIZATION_BOOL_FIELDS = (
+    "pm_readiness",
+    "engineering_scope_confirmed",
+    "implementation_authorized",
+    "runtime_authorized",
+    "deployment_authorized",
+    "production_authorized",
+    "release_authorized",
+)
+TRUE_VALUES = {"true", "yes", "y", "1", "ready", "pass", "passed", "approved", "authorized", "granted"}
+FALSE_VALUES = {"false", "no", "n", "0", "blocked", "denied", "gated", "not_authorized", "not authorized"}
+SENSITIVE_SCOPE_TERMS = {
+    "payment",
+    "provider",
+    "production",
+    "real-user-data",
+    "real user data",
+    "real_user_data",
+    "secrets",
+    "secret",
+    "billing",
+    "refund",
+    "settlement",
+    "deploy",
+    "deployment",
+    "release",
+    "支付",
+    "生产",
+    "真实用户",
+    "供应商",
+    "凭据",
+}
 
 
 def now_utc():
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def parse_utc(value):
+    normalized = (value or "").strip()
+    if not normalized:
+        raise ValueError("empty timestamp")
+    return datetime.fromisoformat(normalized.replace("Z", "+00:00"))
+
+
+def plus_hours_utc(value, hours):
+    return (parse_utc(value) + timedelta(hours=hours)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def normalize_label(label):
@@ -69,6 +128,15 @@ def normalize_key(label):
 
 def normalize_value(value):
     return (value or "").strip().strip()
+
+
+def parse_bool(value):
+    normalized = normalize_key(value)
+    if normalized in TRUE_VALUES:
+        return True
+    if normalized in FALSE_VALUES:
+        return False
+    return False
 
 
 def is_concrete(value):
@@ -408,6 +476,271 @@ def build_export(raw_source, generated_at=None, repo=None):
     }
 
 
+def record_sequence(normalized):
+    records = []
+    for issue in normalized["issues"]:
+        records.append(("issue", issue))
+    for pull_request in normalized["pull_requests"]:
+        records.append(("pull_request", pull_request))
+    for repo_file in normalized["files"]:
+        records.append(("repo_file", repo_file))
+    return records
+
+
+def source_query_summary(normalized, repo):
+    return [
+        {
+            "system": SOURCE_SYSTEM,
+            "repo": repo,
+            "mode": "read_only_projection",
+            "issues": len(normalized["issues"]),
+            "pull_requests": len(normalized["pull_requests"]),
+            "repo_files": len(normalized["files"]),
+        }
+    ]
+
+
+def open_issue_index(normalized):
+    index = {}
+    for issue in normalized["issues"]:
+        number = issue.get("number")
+        if number is None:
+            continue
+        if (issue.get("state") or "").upper() == "OPEN":
+            index[int(number)] = {
+                "number": int(number),
+                "url": issue.get("url") or issue.get("html_url") or "",
+                "title": issue.get("title") or "",
+            }
+    return index
+
+
+def referenced_issue_numbers(record):
+    text = "\n".join([record.get("title") or "", record.get("body") or record.get("content") or ""])
+    return sorted({int(match) for match in re.findall(r"(?<![\w/-])#(\d+)\b", text)})
+
+
+def merged_open_issue_refs(kind, record, open_issues):
+    if kind != "pull_request" or not is_concrete(record.get("mergedAt")):
+        return []
+    refs = []
+    for number in referenced_issue_numbers(record):
+        if number in open_issues:
+            refs.append(open_issues[number])
+    return refs
+
+
+def detect_sensitive_scope(record):
+    labels = " ".join(labels_from(record)).lower()
+    text = "\n".join([record.get("title") or "", record.get("body") or record.get("content") or "", labels]).lower()
+    return any(term in text for term in SENSITIVE_SCOPE_TERMS)
+
+
+def derive_authorization(record, warnings):
+    sections = parse_sections(record.get("body") or record.get("content") or "")
+    authorization = {}
+    for field in AUTHORIZATION_BOOL_FIELDS:
+        authorization[field] = parse_bool(section_value(sections, field))
+    receipt = section_value(sections, "founder_gate_receipt_url", "founder_gate_receipt", "gate_receipt")
+    authorization["founder_gate_receipt_url"] = receipt if is_concrete(receipt) else ""
+
+    if detect_sensitive_scope(record) and not authorization["founder_gate_receipt_url"]:
+        for field in ("runtime_authorized", "deployment_authorized", "production_authorized", "release_authorized"):
+            authorization[field] = False
+        warnings.append("sensitive_scope_gated_without_founder_gate_receipt")
+
+    return authorization
+
+
+def command_state_for(kind, record, item, open_issues):
+    if merged_open_issue_refs(kind, record, open_issues):
+        return "merged_pending_readback"
+
+    status = item["status"]
+    if status in {
+        "design",
+        "decision_required",
+        "bounded_implementation",
+        "pr_evidence",
+        "accepted",
+        "closed",
+        "queued",
+        "history",
+        "blocked",
+    }:
+        return status
+    if item["founder_decision_required"] or status == "founder_acceptance":
+        return "decision_required"
+    if status in {"planned", "ready"}:
+        return "design"
+    if status in {"intake", "in_progress"}:
+        return "bounded_implementation"
+    if status in {"review", "gate_a", "gate_b", "human_cross_audit"}:
+        return "pr_evidence"
+    if status == "done":
+        return "accepted"
+    if status in {"rejected", "archived"}:
+        return "history"
+    if (record.get("state") or "").upper() == "CLOSED":
+        return "closed"
+    return "design"
+
+
+def lane_for_command_state(command_state):
+    if command_state in CURRENT_COMMAND_STATES:
+        return "current"
+    if command_state in WAITING_DECISION_STATES:
+        return "waiting_decision"
+    if command_state in WAITING_READBACK_STATES:
+        return "waiting_readback"
+    if command_state in QUEUED_STATES:
+        return "queued"
+    if command_state in HISTORY_STATES:
+        return "history"
+    return "current"
+
+
+def compact_snapshot_item(kind, record, item, command_state, lane, linked_open_issues=None):
+    warnings = list(item["warnings"])
+    authorization = derive_authorization(record, warnings)
+    return {
+        "schema": ITEM_SCHEMA,
+        "task_id": item["task_id"],
+        "source_kind": kind,
+        "source_number": record.get("number"),
+        "source": item["source"],
+        "owner": item["owner"],
+        "status": item["status"],
+        "command_state": command_state,
+        "lane": lane,
+        "risk_path": item["risk_path"],
+        "evidence_state": item["evidence_state"],
+        "next_gate": item["next_gate"],
+        "next_action": item["next_action"],
+        "founder_decision_required": item["founder_decision_required"],
+        "authorization": authorization,
+        "linked_open_issues": linked_open_issues or [],
+        "warnings": sorted(set(warnings)),
+    }
+
+
+def action_for_decision(item):
+    return {
+        "type": "decision_request_candidate",
+        "task_id": item["task_id"],
+        "source": primary_link(item),
+        "reason": "GitHub source carries a Founder/Gate decision signal.",
+        "external_write": False,
+    }
+
+
+def action_for_readback(item, linked_open_issues):
+    return {
+        "type": "merge_readback_candidate",
+        "task_id": item["task_id"],
+        "source": primary_link(item),
+        "target_issue_urls": [issue["url"] for issue in linked_open_issues if issue.get("url")],
+        "reason": "Merged PR references an open GitHub issue; readback is required before closing or accepting.",
+        "external_write": False,
+    }
+
+
+def action_for_hygiene(incident):
+    return {
+        "type": "hygiene_incident",
+        "task_id": incident.get("repo_path") or incident.get("path") or "local-hygiene",
+        "source": incident.get("repo_path") or incident.get("path") or "local",
+        "reason": incident.get("detail") or incident.get("type") or "local hygiene warning",
+        "external_write": False,
+    }
+
+
+def snapshot_health(warnings, hygiene, candidate_actions):
+    if any(item.get("severity") == "red" for item in hygiene):
+        return "red"
+    if warnings or hygiene or candidate_actions:
+        return "yellow"
+    return "green"
+
+
+def build_engineering_command_snapshot(
+    raw_source,
+    generated_at=None,
+    repo=None,
+    wip_limit=4,
+    ttl_hours=6,
+    hygiene=None,
+):
+    normalized = normalize_input(raw_source)
+    generated_at = generated_at or now_utc()
+    repo = repo or normalized["repo"]
+    export = build_export(normalized, generated_at=generated_at, repo=repo)
+    open_issues = open_issue_index(normalized)
+    lane_items = {name: [] for name in LANE_NAMES}
+    current_items = []
+    candidate_actions = []
+    warnings = []
+
+    for item, (kind, record) in zip(export["items"], record_sequence(normalized)):
+        linked_open_issues = merged_open_issue_refs(kind, record, open_issues)
+        command_state = command_state_for(kind, record, item, open_issues)
+        lane = lane_for_command_state(command_state)
+        snapshot_item = compact_snapshot_item(kind, record, item, command_state, lane, linked_open_issues)
+
+        if lane == "current":
+            current_items.append(snapshot_item)
+        else:
+            lane_items[lane].append(snapshot_item)
+
+        if item["founder_decision_required"] or command_state == "decision_required":
+            candidate_actions.append(action_for_decision(item))
+        if linked_open_issues:
+            candidate_actions.append(action_for_readback(item, linked_open_issues))
+
+    if len(current_items) > wip_limit:
+        warnings.append("wip_limit_exceeded")
+        lane_items["current"].extend(current_items[:wip_limit])
+        for item in current_items[wip_limit:]:
+            item["lane"] = "queued"
+            item["warnings"] = sorted(set(item["warnings"] + ["queued_due_to_wip_limit"]))
+            lane_items["queued"].append(item)
+    else:
+        lane_items["current"].extend(current_items)
+
+    hygiene = list(hygiene or [])
+    for incident in hygiene:
+        candidate_actions.append(action_for_hygiene(incident))
+
+    lanes = [{"name": name, "items": lane_items[name]} for name in LANE_NAMES]
+    return {
+        "schema": SNAPSHOT_SCHEMA,
+        "source": SOURCE_SYSTEM,
+        "repo": repo,
+        "generated_at": generated_at,
+        "expires_at": plus_hours_utc(generated_at, ttl_hours),
+        "source_queries": source_query_summary(normalized, repo),
+        "wip_limit": wip_limit,
+        "health": snapshot_health(warnings, hygiene, candidate_actions),
+        "lanes": lanes,
+        "candidate_actions": candidate_actions,
+        "hygiene": hygiene,
+        "warnings": sorted(set(warnings)),
+        "counts": {
+            "items": export["counts"]["items"],
+            "current": len(lane_items["current"]),
+            "waiting_decision": len(lane_items["waiting_decision"]),
+            "waiting_readback": len(lane_items["waiting_readback"]),
+            "queued": len(lane_items["queued"]),
+            "history": len(lane_items["history"]),
+            "candidate_actions": len(candidate_actions),
+            "hygiene": len(hygiene),
+            "warnings": len(set(warnings)),
+        },
+        "work_items": export["items"],
+        "external_writes": [],
+    }
+
+
 def primary_link(item):
     source = item["source"]
     if source["issue_url"]:
@@ -472,6 +805,207 @@ def render_founder_packet(projection):
         "",
     ]
     return "\n".join(lines)
+
+
+def render_engineering_command_snapshot(snapshot):
+    lines = [
+        "# Engineering Command Snapshot",
+        "",
+        f"- Schema: `{snapshot['schema']}`",
+        f"- Repo: `{snapshot['repo']}`",
+        f"- Generated At: `{snapshot['generated_at']}`",
+        f"- Expires At: `{snapshot['expires_at']}`",
+        f"- Health: `{snapshot['health']}`",
+        f"- WIP Limit: {snapshot['wip_limit']}",
+        f"- External Writes: {len(snapshot['external_writes'])}",
+        "",
+    ]
+    for lane in snapshot["lanes"]:
+        lines.append(f"## {lane['name']}")
+        if not lane["items"]:
+            lines.append("- n/a")
+        else:
+            for item in lane["items"]:
+                warnings = ", ".join(item["warnings"]) if item["warnings"] else "none"
+                lines.append(
+                    f"- `{item['task_id']}` | `{item['command_state']}` | `{item['risk_path']}` | "
+                    f"{item['owner']['github']} | {primary_link(item)} | next: {item['next_action']} | warnings: {warnings}"
+                )
+        lines.append("")
+
+    lines.append("## Candidate Actions")
+    if not snapshot["candidate_actions"]:
+        lines.append("- n/a")
+    else:
+        for action in snapshot["candidate_actions"]:
+            lines.append(
+                f"- `{action['type']}` | `{action['task_id']}` | external_write: `{action['external_write']}` | {action['reason']}"
+            )
+    lines.append("")
+    lines.append("## Hygiene")
+    if not snapshot["hygiene"]:
+        lines.append("- n/a")
+    else:
+        for incident in snapshot["hygiene"]:
+            source = incident.get("repo_path") or incident.get("path") or "local"
+            lines.append(f"- `{incident['type']}` | `{incident['severity']}` | {source} | {incident.get('detail', 'n/a')}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def git_status_hygiene(repo_path, now=None, stale_days=30):
+    repo_path = str(repo_path)
+    result = subprocess.run(
+        ["git", "-C", repo_path, "status", "--porcelain=v2", "--branch"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    dirty_count = 0
+    ahead = 0
+    behind = 0
+    branch = "unknown"
+    for line in result.stdout.splitlines():
+        if line.startswith("# branch.head "):
+            branch = line.split("# branch.head ", 1)[1].strip()
+        elif line.startswith("# branch.ab "):
+            match = re.search(r"\+(\d+)\s+-(\d+)", line)
+            if match:
+                ahead = int(match.group(1))
+                behind = int(match.group(2))
+        elif line and not line.startswith("#"):
+            dirty_count += 1
+
+    incidents = []
+    if dirty_count:
+        incidents.append(
+            {
+                "type": "dirty_worktree",
+                "severity": "yellow",
+                "repo_path": repo_path,
+                "branch": branch,
+                "detail": f"{dirty_count} dirty status entries",
+            }
+        )
+    if ahead:
+        incidents.append(
+            {
+                "type": "ahead_worktree",
+                "severity": "yellow",
+                "repo_path": repo_path,
+                "branch": branch,
+                "detail": f"local branch is ahead by {ahead} commit(s)",
+            }
+        )
+    if behind:
+        incidents.append(
+            {
+                "type": "behind_worktree",
+                "severity": "yellow",
+                "repo_path": repo_path,
+                "branch": branch,
+                "detail": f"local branch is behind by {behind} commit(s)",
+            }
+        )
+    if now:
+        try:
+            last_commit = subprocess.run(
+                ["git", "-C", repo_path, "log", "-1", "--format=%cI"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+            if last_commit:
+                age_days = (parse_utc(now) - parse_utc(last_commit)).days
+                if age_days > stale_days:
+                    incidents.append(
+                        {
+                            "type": "stale_worktree",
+                            "severity": "yellow",
+                            "repo_path": repo_path,
+                            "branch": branch,
+                            "last_commit_at": last_commit,
+                            "age_days": age_days,
+                            "detail": f"last commit is {age_days} day(s) old",
+                        }
+                    )
+        except (OSError, subprocess.CalledProcessError, ValueError):
+            pass
+    return incidents
+
+
+def progress_record_from_file(progress_file):
+    if isinstance(progress_file, dict):
+        return progress_file
+    path = Path(progress_file)
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return {
+        "path": str(path),
+        "updated_at": (
+            payload.get("updated_at")
+            or payload.get("updatedAt")
+            or payload.get("last_updated")
+            or payload.get("lastUpdated")
+        ),
+    }
+
+
+def progress_hygiene(progress_file, now, stale_days):
+    record = progress_record_from_file(progress_file)
+    path = record.get("path") or str(progress_file)
+    updated_at = record.get("updated_at") or record.get("last_updated")
+    if not is_concrete(updated_at):
+        return [
+            {
+                "type": "stale_progress",
+                "severity": "yellow",
+                "path": path,
+                "detail": "PROGRESS.json has no updated_at or last_updated timestamp",
+            }
+        ]
+    age_days = (parse_utc(now) - parse_utc(updated_at)).days
+    if age_days > stale_days:
+        return [
+            {
+                "type": "stale_progress",
+                "severity": "yellow",
+                "path": path,
+                "updated_at": updated_at,
+                "age_days": age_days,
+                "detail": f"PROGRESS.json is {age_days} day(s) old",
+            }
+        ]
+    return []
+
+
+def collect_hygiene(repo_paths=None, progress_files=None, now=None, stale_days=30):
+    now = now or now_utc()
+    incidents = []
+    for repo_path in repo_paths or []:
+        try:
+            incidents.extend(git_status_hygiene(repo_path, now=now, stale_days=stale_days))
+        except (OSError, subprocess.CalledProcessError) as exc:
+            incidents.append(
+                {
+                    "type": "hygiene_scan_failed",
+                    "severity": "yellow",
+                    "repo_path": str(repo_path),
+                    "detail": str(exc),
+                }
+            )
+    for progress_file in progress_files or []:
+        try:
+            incidents.extend(progress_hygiene(progress_file, now, stale_days))
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            incidents.append(
+                {
+                    "type": "progress_scan_failed",
+                    "severity": "yellow",
+                    "path": progress_file.get("path") if isinstance(progress_file, dict) else str(progress_file),
+                    "detail": str(exc),
+                }
+            )
+    return incidents
 
 
 def load_json_file(path):
@@ -573,6 +1107,13 @@ def main(argv=None):
     parser.add_argument("--file-ref", action="append", default=[], help="Local repo file path to include as GitHub file evidence.")
     parser.add_argument("--source-ref", default="main", help="Git ref used to form GitHub blob URLs for --file-ref.")
     parser.add_argument("--generated-at", help="Override generated_at for deterministic tests.")
+    parser.add_argument("--snapshot", action="store_true", help="Emit engineering-command-snapshot:v0.1 instead of raw hl-progress export.")
+    parser.add_argument("--wip-limit", type=int, default=4, help="Maximum current lane items in --snapshot mode.")
+    parser.add_argument("--snapshot-ttl-hours", type=int, default=6, help="Snapshot expiry window in hours.")
+    parser.add_argument("--no-hygiene", action="store_true", help="Disable local Git / PROGRESS.json hygiene collection in --snapshot mode.")
+    parser.add_argument("--hygiene-repo", action="append", default=[], help="Local Git repo path to inspect read-only for snapshot hygiene.")
+    parser.add_argument("--progress-file", action="append", default=[], help="PROGRESS.json path to inspect read-only for staleness.")
+    parser.add_argument("--stale-progress-days", type=int, default=30, help="Age threshold for stale PROGRESS.json hygiene warnings.")
     args = parser.parse_args(argv)
 
     try:
@@ -580,9 +1121,30 @@ def main(argv=None):
             raw_source = load_json_file(args.input)
         else:
             raw_source = load_live_source(args.state, args.limit, args.label, args.file_ref, repo=args.repo, ref=args.source_ref)
-        projection = build_export(raw_source, generated_at=args.generated_at, repo=args.repo)
+        generated_at = args.generated_at or now_utc()
+        if args.snapshot:
+            hygiene = []
+            if not args.no_hygiene:
+                hygiene = collect_hygiene(
+                    repo_paths=args.hygiene_repo or [Path.cwd()],
+                    progress_files=args.progress_file,
+                    now=generated_at,
+                    stale_days=args.stale_progress_days,
+                )
+            projection = build_engineering_command_snapshot(
+                raw_source,
+                generated_at=generated_at,
+                repo=args.repo,
+                wip_limit=args.wip_limit,
+                ttl_hours=args.snapshot_ttl_hours,
+                hygiene=hygiene,
+            )
+        else:
+            projection = build_export(raw_source, generated_at=generated_at, repo=args.repo)
         if args.format == "json":
             payload = json.dumps(projection, ensure_ascii=False, indent=2) + "\n"
+        elif args.snapshot:
+            payload = render_engineering_command_snapshot(projection)
         else:
             payload = render_founder_packet(projection)
     except (OSError, ValueError, json.JSONDecodeError, subprocess.CalledProcessError) as exc:

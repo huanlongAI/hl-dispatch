@@ -4,6 +4,17 @@ Date: 2026-06-12
 
 Status: P1_READ_ONLY_TOOLING_WITH_COMMAND_SNAPSHOT
 
+## 中文摘要
+
+本文定义 `hl-progress` 只读导出器的实现口径。导出器从 GitHub Issue、PR 和仓库文件读取事实，生成 `hl-progress-work-item:v0.1` 或 `engineering-command-snapshot:v0.1` 投影；它不写 GitHub、飞书、多维表格或 Obsidian，也不产生运行时、生产、发布或验收授权。
+
+## 术语说明
+
+- `hl-progress-export:v0.1`：面向进度治理的基础 JSON 导出格式。
+- `engineering-command-snapshot:v0.1`：大辉子工程指挥快照，用于收敛当前主线、候选动作、授权缺口和本地卫生告警。
+- `candidate_actions`：只读候选动作，表示需要人工或 GitHub 后续处理的提示，不等于写回、授权、验收或关闭。
+- `hygiene`：本地 Git 工作区和 `PROGRESS.json` 的卫生告警，只用于提示 stale、dirty、ahead、behind 等风险。
+
 Implementation:
 
 - `scripts/export-hl-progress.py`

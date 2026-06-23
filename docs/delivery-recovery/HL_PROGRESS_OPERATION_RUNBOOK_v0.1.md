@@ -4,6 +4,20 @@ Date: 2026-06-12
 
 Status: GREEN_READ_ONLY_OPERATION
 
+## 中文摘要
+
+本文是 `hl-progress` 只读运行手册，说明如何生成每日扫描、Founder packet、工程指挥快照和多维表格 dry-run 投影。所有命令默认只读，输出用于发现缺口和候选动作；候选动作不是 GitHub 写回、飞书通知、Obsidian 记忆、验收、关闭或授权。
+
+操作者使用本手册时，应先看 GitHub 真源和本地卫生告警，再判断是否需要人工裁决。若输出中出现付款、供应商、生产、发布、真实用户数据或权限扩大相关内容，必须停在候选动作层，不得把快照结果解释为执行许可。
+
+## 术语说明
+
+- Daily Read-Only Scan：每日只读扫描，从 GitHub 读取当前进度并输出基础 work item。
+- Weekly Founder Packet：面向 Founder 的 Markdown 摘要包，帮助查看阻塞、裁决和证据状态。
+- Engineering Command Snapshot：大辉子工程指挥快照，用于自动化输入和人工扫描，不承载事实源。
+- Bitable Dry-Run Projection：飞书多维表格预览映射，只生成 dry-run 输出，不写飞书。
+- Gate Stop Rules：需要停止并等待单独 Founder / Gate SSOT 的边界规则。
+
 This runbook turns the merged P1 / P2 / P3 artifacts into repeatable read-only operations.
 
 It does not authorize Feishu write, Bitable write, GitHub writeback, route / mode / permission changes, branch protection changes, production work, secrets, deployment, release, provider, payment, billing, refund, settlement, or real user data access.

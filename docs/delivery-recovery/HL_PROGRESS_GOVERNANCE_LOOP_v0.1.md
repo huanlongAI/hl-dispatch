@@ -4,6 +4,20 @@ Date: 2026-06-12
 
 Status: ACTIVE_GOAL_CONTRACT
 
+## 中文摘要
+
+本文定义 `hl-progress` 长期工程进度治理循环。GitHub Issue、PR 和仓库文件仍是唯一事实源；飞书、多维表格、Project、仪表盘和报告都只是投影。新增的 `engineering-command-snapshot:v0.1` 只用于大辉子指挥扫描：收敛 4 条当前主线、识别等待裁决和合并回读、暴露授权缺口与本地卫生风险，不扩大任何运行时、生产、发布、权限或写回授权。
+
+本循环的核心目的不是新增流程，而是把已经存在的任务、证据、阻塞、裁决和验收状态整理成可重复生成的读模型。任何报告都必须能回到 GitHub 真源；如果只有聊天记录、提醒、仪表盘状态或人工口头结论，就只能作为提示，不能推动工程状态变化。这样可以降低重复开入口、误把提醒当授权、误把测试通过当生产许可的风险。
+
+## 术语说明
+
+- GitHub SSOT：GitHub 作为唯一事实源，所有治理判断必须能回到 Issue、PR 或仓库文件。
+- `hl-progress-work-item:v0.1`：单个工作项的标准化读模型。
+- `engineering-command-snapshot:v0.1`：工作项之上的指挥快照，按 current、waiting_decision、waiting_readback、queued、history 分 lane 汇总。
+- WIP limit：当前主线并行上限，本版本固定为 4。
+- Founder / Gate receipt：Founder 或 Gate 在 GitHub 真源里的明确回执；没有回执时不得推导 runtime、production 或 release 授权。
+
 GitHub SSOT:
 
 - Current repository file: `docs/delivery-recovery/HL_PROGRESS_GOVERNANCE_LOOP_v0.1.md`

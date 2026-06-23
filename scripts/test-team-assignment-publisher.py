@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEAM_CONTEXT = ROOT / "docs/team-context"
 PUBLISHER = TEAM_CONTEXT / "scripts/build_assignment_publish_plan.py"
+PUBLISHER_PREFLIGHT = TEAM_CONTEXT / "scripts/preflight_formal_assignment_publisher.py"
 REGISTRY = TEAM_CONTEXT / "ROLE-REGISTRY-v1.yaml"
 OWNERS = TEAM_CONTEXT / "ROLE-OWNERS-v1.yaml"
 CURRENT_REGISTRY_VERSION = "ROLE-REGISTRY-v1"
@@ -147,6 +148,46 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertEqual(plan["publication_decision"], "REVIEW_REQUIRED")
         self.assertTrue(plan["decision_packet"]["required"])
 
+    def test_formal_publisher_preflight_accepts_github_issue_payload_without_external_write(self):
+        publisher = load_publisher()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+
+        result = self.run_publisher_preflight(plan)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        preflight = json.loads(result.stdout)
+        self.assertEqual(preflight["schema"], "hl-dispatch-formal-publisher-preflight:v1")
+        self.assertEqual(preflight["status"], "passed")
+        self.assertTrue(preflight["ready_to_create_github_issue"])
+        self.assertEqual(preflight["reason_codes"], [])
+        self.assertEqual(preflight["language_gate"]["status"], "passed")
+        self.assertFalse(preflight["github_write"]["enabled"])
+        self.assertEqual(preflight["github_write"]["operation"], "none")
+        self.assertEqual(preflight["github_issue"]["assignees"], ["ZDragonMeta"])
+        self.assertEqual(preflight["github_issue"]["labels"], ["task-assign", "ops", "priority-p1"])
+
+    def test_formal_publisher_preflight_rejects_review_required_plan(self):
+        publisher = load_publisher()
+        plan = publisher.build_publish_plan(
+            assignment("merchant_private_key", "product-customer-payment"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+
+        result = self.run_publisher_preflight(plan)
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        preflight = json.loads(result.stdout)
+        self.assertEqual(preflight["status"], "failed")
+        self.assertFalse(preflight["ready_to_create_github_issue"])
+        self.assertIn("publication_decision_not_accept", preflight["reason_codes"])
+        self.assertNotIn("github_issue", preflight)
+        self.assertFalse(preflight["github_write"]["enabled"])
+
     def run_cli(self, payload):
         with tempfile.TemporaryDirectory() as tmp:
             input_path = Path(tmp) / "assignment.json"
@@ -161,6 +202,21 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
                     str(REGISTRY),
                     "--owners",
                     str(OWNERS),
+                ],
+                capture_output=True,
+                text=True,
+            )
+
+    def run_publisher_preflight(self, plan):
+        with tempfile.TemporaryDirectory() as tmp:
+            input_path = Path(tmp) / "plan.json"
+            input_path.write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
+            return subprocess.run(
+                [
+                    sys.executable,
+                    str(PUBLISHER_PREFLIGHT),
+                    "--input",
+                    str(input_path),
                 ],
                 capture_output=True,
                 text=True,

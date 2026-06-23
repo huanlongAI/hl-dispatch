@@ -1161,7 +1161,7 @@ def main(argv=None):
     parser.add_argument("--snapshot", action="store_true", help="Emit engineering-command-snapshot:v0.2 instead of raw hl-progress export.")
     parser.add_argument("--wip-limit", type=int, default=4, help="Maximum current lane items in --snapshot mode.")
     parser.add_argument("--snapshot-ttl-minutes", type=int, help="Snapshot expiry window in minutes. Defaults to 30.")
-    parser.add_argument("--snapshot-ttl-hours", type=int, help="Deprecated: snapshot expiry window in hours.")
+    parser.add_argument("--snapshot-ttl-hours", type=int, help="Legacy-compatible snapshot expiry window in hours.")
     parser.add_argument("--no-hygiene", action="store_true", help="Disable local Git / PROGRESS.json hygiene collection in --snapshot mode.")
     parser.add_argument("--hygiene-repo", action="append", default=[], help="Local Git repo path to inspect read-only for snapshot hygiene.")
     parser.add_argument("--progress-file", action="append", default=[], help="PROGRESS.json path to inspect read-only for staleness.")

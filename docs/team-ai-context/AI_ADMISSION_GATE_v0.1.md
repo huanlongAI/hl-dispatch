@@ -8,6 +8,17 @@ Status: STAGE_B_LOCAL_DRY_RUN
 
 `AI_ADMISSION_GATE` 是唤龙团队 AI 正式输出的本地 dry-run 准入总闸。它消费 `engineering-command-snapshot:v0.2`、职责门禁结果、Context Atlas 导航元数据和授权回执，输出 `ACCEPT | REJECT | REVIEW_REQUIRED` 与绑定 receipt。Stage B 只在 `hl-dispatch` 内落地本地脚本和测试，不启用 GitHub required check，不写 GitHub / 飞书 / 多维表格 / 云效 / team-memory。
 
+本文件的目标是把“AI 可以生成什么”和“AI 什么时候可以发布”拆开处理：脚本只判断本地候选输出是否满足准入条件，不代表生产授权、发布授权或外部写入授权。任何真实 GitHub 写入、云效参数、飞书通知、多维表格更新、team-memory 认可知识写入、运行时动作、生产动作、支付或供应商相关动作，都必须另有 Founder / Gate 的 GitHub 真源回执。
+
+## 术语说明
+
+- 准入总闸：统一判断正式 AI 输出能否进入下一步的本地门禁。
+- 正式 AI 输出：会进入 GitHub、云效、团队任务、代码、配置、契约、发布候选、运行时、生产、支付、供应商、真实数据或动态真源的 AI 产物。
+- 回执：门禁对某一次候选输出生成的可追溯记录，绑定任务、仓库、输出类型、输出哈希、快照哈希、语境版本、职责版本和授权引用。
+- 防重放：禁止把旧回执拿去授权新的任务、新的输出内容、新的快照或新的职责版本。
+- 导航语境：Context Atlas 只帮助找到应读材料，不是事实源，也不能替代 GitHub 真源和 Founder / Gate 回执。
+- 本地 dry-run：只在本仓脚本中计算结果，不创建 Issue、不发评论、不写飞书、不写云效、不写多维表格、不改分支保护。
+
 Implementation:
 
 - `scripts/ai-admission-gate.py`

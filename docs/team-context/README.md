@@ -26,7 +26,7 @@ P1 发布器默认仍是 dry-run：只在职责门禁 `ACCEPT`、formal publishe
 - `scripts/validate_task_assignment.py`: 单条任务派发统一校验器。
 - `scripts/run_regression.py`: 回归用例 runner。
 - `scripts/build_assignment_publish_plan.py`: P1 发布计划器，生成 dry-run 发布计划、裁决包和正式发布 payload。
-- `scripts/preflight_formal_assignment_publisher.py`: P1 正式发布器预检与 GitHub Issue 发布入口；默认 dry-run，仅 `--execute` 写 GitHub。
+- `scripts/preflight_formal_assignment_publisher.py`: P1 正式发布器预检与 GitHub Issue 发布入口；默认 dry-run，仅同时提供 `--execute --confirm-github-issue-create` 才写 GitHub。
 
 P0 统一校验是发布器的前置硬门槛。P1 发布器只消费门禁 `ACCEPT` 后的 `formal_publisher_payload`，默认不创建 GitHub Issue；`REVIEW_REQUIRED` 和 `REJECT` 都 fail closed，不进入正式发布。
 

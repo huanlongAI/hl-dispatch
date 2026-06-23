@@ -87,10 +87,12 @@ python3 scripts/export-hl-progress.py --repo huanlongAI/hl-dispatch --state all 
 
 Expected output:
 
-- `schema: engineering-command-snapshot:v0.1`
+- `schema: engineering-command-snapshot:v0.2`
+- `snapshot_ttl_minutes: 30`
 - `lanes[]`: `current`, `waiting_decision`, `waiting_readback`, `queued`, and `history`
 - `wip_limit: 4`
-- `candidate_actions[]` with `external_write: false`
+- `candidate_actions[]` with `external_write: false`, `recommendation_only: true`, and `required_gate: AI_ADMISSION_GATE`
+- `snapshot_hash` and `receipt`
 - `authorization` fields on each item
 - `hygiene[]` for dirty / ahead / behind / stale worktrees and stale `PROGRESS.json` files when supplied
 - `external_writes: []`
@@ -102,6 +104,7 @@ Rules:
 - PM readiness, issue assignee, Feishu reminder, CI green, PR review, or Bitable state do not authorize runtime, deployment, production, release, provider, payment, or real user data.
 - Payment / provider / production / real-user-data surfaces are gated unless the GitHub source carries a concrete Founder / Gate receipt URL.
 - Candidate actions are read-only prompts for human/GitHub follow-up. They do not write GitHub, close issues, accept evidence, notify Feishu, update Bitable, or update Obsidian.
+- Any formal AI output consuming the snapshot must pass `scripts/ai-admission-gate.py`; Stage B keeps that gate dry-run only.
 
 Automation prompt posture:
 
@@ -144,6 +147,7 @@ Run these before reporting the operation healthy:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-exporter.py
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-ai-admission-gate.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-runbook.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-bitable-projection.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-writeback-proposal.py

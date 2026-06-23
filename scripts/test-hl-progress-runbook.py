@@ -19,6 +19,7 @@ class HLProgressOperationRunbookTests(unittest.TestCase):
             "Status: GREEN_READ_ONLY_OPERATION",
             "Daily Read-Only Scan",
             "Weekly Founder Packet",
+            "Engineering Command Snapshot",
             "Bitable Dry-Run Projection",
             "Gate Stop Rules",
             "Verification Commands",
@@ -31,6 +32,7 @@ class HLProgressOperationRunbookTests(unittest.TestCase):
         for command in [
             "python3 scripts/export-hl-progress.py --repo huanlongAI/hl-dispatch --state open --limit 100 --format json",
             "python3 scripts/export-hl-progress.py --repo huanlongAI/hl-dispatch --state open --limit 100 --format markdown",
+            "python3 scripts/export-hl-progress.py --repo huanlongAI/hl-dispatch --state all --limit 100 --format json --snapshot",
             "python3 scripts/project-hl-progress-bitable.py --input <hl-progress-export.json> --format json",
             "PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-exporter.py",
             "PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-bitable-projection.py",

@@ -4,9 +4,25 @@ Date: 2026-06-12
 
 Status: GREEN_READ_ONLY_OPERATION
 
+## 中文摘要
+
+本文是 `hl-progress` 只读运行手册，说明如何生成每日扫描、Founder packet、工程指挥快照和多维表格 dry-run 投影。所有命令默认只读，输出用于发现缺口和候选动作；候选动作不是 GitHub 写回、飞书通知、Obsidian 记忆、验收、关闭或授权。
+
+操作者使用本手册时，应先看 GitHub 真源和本地卫生告警，再判断是否需要人工裁决。若输出中出现付款、供应商、生产、发布、真实用户数据或权限扩大相关内容，必须停在候选动作层，不得把快照结果解释为执行许可。
+
+## 术语说明
+
+- Daily Read-Only Scan：每日只读扫描，从 GitHub 读取当前进度并输出基础 work item。
+- Weekly Founder Packet：面向 Founder 的 Markdown 摘要包，帮助查看阻塞、裁决和证据状态。
+- Engineering Command Snapshot：大辉子工程指挥快照，用于自动化输入和人工扫描，不承载事实源。
+- Bitable Dry-Run Projection：飞书多维表格预览映射，只生成 dry-run 输出，不写飞书。
+- Gate Stop Rules：需要停止并等待单独 Founder / Gate SSOT 的边界规则。
+
 This runbook turns the merged P1 / P2 / P3 artifacts into repeatable read-only operations.
 
 It does not authorize Feishu write, Bitable write, GitHub writeback, route / mode / permission changes, branch protection changes, production work, secrets, deployment, release, provider, payment, billing, refund, settlement, or real user data access.
+
+The engineering command snapshot is an upper-level projection over `hl-progress-work-item:v0.1`. It is for Dahuizi command scanning only: current lane, decision lane, readback lane, queue, history, authorization gaps, candidate actions, and local hygiene.
 
 ## No External Writes
 
@@ -17,6 +33,7 @@ These commands are safe only because they read GitHub and write stdout by defaul
 - do not write GitHub
 - do not change route / mode / permission
 - do not treat projection as evidence
+- do not treat candidate actions as writeback, authorization, acceptance, or closure
 
 Local artifact output with `--output` is allowed only when the operator explicitly names the local path. External writeback still requires a separate Founder / Gate SSOT.
 
@@ -58,6 +75,42 @@ Rules:
 - Founder decisions still happen in GitHub SSOT, not in the packet.
 - The packet is a projection, not acceptance evidence.
 
+## Engineering Command Snapshot
+
+Purpose: build the Dahuizi command control-plane projection from GitHub facts plus local read-only hygiene. This is the preferred automation input.
+
+Command:
+
+```bash
+python3 scripts/export-hl-progress.py --repo huanlongAI/hl-dispatch --state all --limit 100 --format json --snapshot
+```
+
+Expected output:
+
+- `schema: engineering-command-snapshot:v0.1`
+- `lanes[]`: `current`, `waiting_decision`, `waiting_readback`, `queued`, and `history`
+- `wip_limit: 4`
+- `candidate_actions[]` with `external_write: false`
+- `authorization` fields on each item
+- `hygiene[]` for dirty / ahead / behind / stale worktrees and stale `PROGRESS.json` files when supplied
+- `external_writes: []`
+
+Rules:
+
+- Use `--state all` when merged PR readback candidates matter; merged PRs are closed PRs.
+- The first 4 active items remain in `current`; additional active items move to `queued` with a warning.
+- PM readiness, issue assignee, Feishu reminder, CI green, PR review, or Bitable state do not authorize runtime, deployment, production, release, provider, payment, or real user data.
+- Payment / provider / production / real-user-data surfaces are gated unless the GitHub source carries a concrete Founder / Gate receipt URL.
+- Candidate actions are read-only prompts for human/GitHub follow-up. They do not write GitHub, close issues, accept evidence, notify Feishu, update Bitable, or update Obsidian.
+
+Automation prompt posture:
+
+```text
+Run the snapshot command, report Green / Yellow / Red health, list up to 4 current mainlines, list decision and readback candidates, list authorization gaps, list local hygiene warnings, and do not perform external writes.
+```
+
+Boundary note: the recurring Codex automation file is outside this Huanlong repository. Updating that file requires a separate Founder / Max TaskContract. Until then, this runbook is the source for the intended automation posture.
+
 ## Bitable Dry-Run Projection
 
 Purpose: preview how P1 JSON would map into Feishu Bitable rows without writing Feishu.
@@ -83,6 +136,7 @@ Stop and request a separate Founder / Gate SSOT before any of the following:
 - any action that would close, accept, reject, archive, or unblock work
 - any use of dashboard, Feishu, Bitable, report, PM draft, CI green, or Gate readback as final evidence
 - any work involving production, secrets, provider, payment, billing, refund, settlement, release, deployment, or real user data
+- any write to `.codex/automations`, `_infra/tzh-context-atlas`, `team-memory`, `tzh-memory`, GitHub, Feishu, Bitable, or Obsidian without a separate bounded TaskContract
 
 ## Verification Commands
 
@@ -90,6 +144,7 @@ Run these before reporting the operation healthy:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-exporter.py
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-runbook.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-bitable-projection.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-writeback-proposal.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-action-projection-exporter.py
@@ -108,6 +163,7 @@ Optional live read-only smoke:
 
 ```bash
 python3 scripts/export-hl-progress.py --repo huanlongAI/hl-dispatch --state open --limit 5 --format json
+python3 scripts/export-hl-progress.py --repo huanlongAI/hl-dispatch --state all --limit 5 --format json --snapshot
 ```
 
 ## Reporting Format
@@ -122,6 +178,9 @@ hl-progress read-only scan
 - warnings: <count>
 - blockers: <count or n/a>
 - founder_decision_required: <count or n/a>
+- current_mainlines: <count, max 4>
+- candidate_actions: <count>
+- hygiene: <count>
 - external_writes: none
 - verification: <commands + pass/fail>
 ```

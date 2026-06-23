@@ -72,7 +72,7 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertEqual(plan["publish_plan"]["target_entrypoint"], "github_issue")
         self.assertEqual(plan["publish_plan"]["action"], "prepare_assignment_payload")
 
-    def test_accept_builds_formal_github_issue_payload_for_later_publisher(self):
+    def test_accept_builds_formal_github_issue_payload_for_current_publisher(self):
         publisher = load_publisher()
 
         plan = publisher.build_publish_plan(
@@ -95,6 +95,27 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertIn("responsibility_gate_decision: ACCEPT", issue["body"])
         self.assertFalse(plan["github_write"]["enabled"])
         self.assertEqual(plan["external_writes"], [])
+
+    def test_publish_plan_uses_current_formal_publisher_terms(self):
+        publisher = load_publisher()
+
+        accept_plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+        review_plan = publisher.build_publish_plan(
+            assignment("merchant_private_key", "product-customer-payment"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+        combined_output = json.dumps([accept_plan, review_plan], ensure_ascii=False)
+
+        self.assertTrue(accept_plan["publish_plan"].get("formal_publisher_required"))
+        self.assertNotIn("manual_or_later_publisher_required", accept_plan["publish_plan"])
+        self.assertNotIn("P1-A", combined_output)
+        self.assertNotIn("later formal publisher", combined_output)
+        self.assertIn("正式发布器", review_plan["decision_packet"]["background"])
 
     def test_reject_fails_closed_without_decision_packet(self):
         publisher = load_publisher()

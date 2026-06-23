@@ -145,17 +145,25 @@ def _base_publish_result(preflight, repo, execute):
         "ready_to_create_github_issue": False,
         "preflight": preflight,
         "reason_codes": [],
+        "required_execute_confirmation": "--confirm-github-issue-create",
         "github_write": {
             "enabled": False,
             "operation": "gh issue create",
             "repo": repo,
-            "reason": "dry-run by default; --execute performs the GitHub write only after explicit approval.",
+            "reason": "dry-run by default; --execute requires --confirm-github-issue-create before performing the GitHub write.",
         },
         "external_writes": [],
     }
 
 
-def publish_preflight_result(preflight, repo, execute=False, runner=None, write_preflight_runner=None):
+def publish_preflight_result(
+    preflight,
+    repo,
+    execute=False,
+    confirm_create=False,
+    runner=None,
+    write_preflight_runner=None,
+):
     result = _base_publish_result(preflight, repo, execute)
     issue = preflight.get("github_issue")
     if (
@@ -180,6 +188,10 @@ def publish_preflight_result(preflight, repo, execute=False, runner=None, write_
 
     if not execute:
         result["status"] = "dry_run_ready"
+        return result
+
+    if not confirm_create:
+        result["reason_codes"].append("missing_execute_confirmation")
         return result
 
     write_preflight = (write_preflight_runner or _default_runner)(write_preflight_args)
@@ -218,6 +230,11 @@ def parse_args(argv):
     parser.add_argument("--input", required=True, help="assignment-publish-plan JSON file")
     parser.add_argument("--publish", action="store_true", help="Emit or execute the formal GitHub Issue publisher step.")
     parser.add_argument("--execute", action="store_true", help="Create the GitHub Issue after preflight passes.")
+    parser.add_argument(
+        "--confirm-github-issue-create",
+        action="store_true",
+        help="Required with --execute to confirm the external GitHub Issue write.",
+    )
     parser.add_argument("--repo", default="huanlongAI/hl-dispatch", help="GitHub repository for issue creation.")
     return parser.parse_args(argv)
 
@@ -229,7 +246,12 @@ def main(argv=None):
 
     preflight = build_preflight(load_json(args.input))
     if args.publish:
-        result = publish_preflight_result(preflight, repo=args.repo, execute=args.execute)
+        result = publish_preflight_result(
+            preflight,
+            repo=args.repo,
+            execute=args.execute,
+            confirm_create=args.confirm_github_issue_create,
+        )
         print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
         return 0 if result["status"] in {"dry_run_ready", "created"} else 1
 

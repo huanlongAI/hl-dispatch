@@ -231,6 +231,61 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertIn("--assignee", publish["command_preview"])
         self.assertIn("ZDragonMeta", publish["command_preview"])
 
+    def test_formal_publisher_parse_args_exposes_execute_confirmation_flag(self):
+        publisher_preflight = load_publisher_preflight()
+
+        default_args = publisher_preflight.parse_args(["--input", "/tmp/plan.json", "--publish"])
+        confirmed_args = publisher_preflight.parse_args(
+            [
+                "--input",
+                "/tmp/plan.json",
+                "--publish",
+                "--execute",
+                "--confirm-github-issue-create",
+            ]
+        )
+
+        self.assertFalse(default_args.confirm_github_issue_create)
+        self.assertTrue(confirmed_args.confirm_github_issue_create)
+
+    def test_formal_publisher_execute_requires_create_confirmation_before_any_write(self):
+        publisher = load_publisher()
+        publisher_preflight = load_publisher_preflight()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+        preflight = publisher_preflight.build_preflight(plan)
+        calls = []
+
+        def fake_write_preflight_runner(args):
+            calls.append(("write_preflight", args))
+            return subprocess.CompletedProcess(args, 0, stdout='{"status":"passed"}\n', stderr="")
+
+        def fake_gh_runner(args):
+            calls.append(("gh", args))
+            return subprocess.CompletedProcess(
+                args,
+                0,
+                stdout="https://github.com/huanlongAI/hl-dispatch/issues/999\n",
+                stderr="",
+            )
+
+        result = publisher_preflight.publish_preflight_result(
+            preflight,
+            repo="huanlongAI/hl-dispatch",
+            execute=True,
+            runner=fake_gh_runner,
+            write_preflight_runner=fake_write_preflight_runner,
+        )
+
+        self.assertEqual(result["status"], "failed")
+        self.assertFalse(result["github_write"]["enabled"])
+        self.assertIn("missing_execute_confirmation", result["reason_codes"])
+        self.assertEqual(result["external_writes"], [])
+        self.assertEqual(calls, [])
+
     def test_formal_publisher_execute_uses_gh_issue_create_after_passed_preflight(self):
         publisher = load_publisher()
         publisher_preflight = load_publisher_preflight()
@@ -259,6 +314,7 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
             preflight,
             repo="huanlongAI/hl-dispatch",
             execute=True,
+            confirm_create=True,
             runner=fake_gh_runner,
             write_preflight_runner=fake_write_preflight_runner,
         )
@@ -317,6 +373,7 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
             preflight,
             repo="huanlongAI/hl-dispatch",
             execute=True,
+            confirm_create=True,
             runner=fake_gh_runner,
             write_preflight_runner=fake_write_preflight_runner,
         )

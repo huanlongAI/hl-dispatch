@@ -43,6 +43,8 @@ doc-review / task-assign / decision-request / architect / ops / pm / priority-p0
 - GitHub main -> Codeup / 云效代码仓同步、同步证据、一致性证明派给 Infra-A / 魏鹏。
 - Gate-R / 曾正龙只负责其有权限的运维发布、部署、回滚路径；不要因为任务出现“云效”二字就默认派给运维。
 - 人员与飞书 ID 以 `TEAM.yml` 为本仓派发入口，长期记忆与背景证据见 `team-memory` 的 `CLAUDE.md`、`00-index/TEAM-ROSTER.md`、`indexes/INDEX-org-collaboration.md`。
+- GitHub SSOT Issue / PR 已存在时，owner、DRI、verifier 或 evidence 的飞书私聊催办必须先走 `hl-owner-confirmation-dispatch` 做 route / dry-run 投影预检，再用 `scripts/feishu-direct-message.rb` 发送；禁止绕过 helper 直接裸调 `lark-cli im +messages-send`。
+- 飞书私聊只做提醒投影，不改变 owner/action、confirmation、review 或 evidence 状态；有效回复仍必须回到 GitHub SSOT。
 
 ## Cowork 行为约定
 

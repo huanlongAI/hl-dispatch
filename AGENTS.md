@@ -17,6 +17,7 @@
 - 禁止把 `继续` 理解为继续发评论、继续建入口、继续补总账；默认先只读核实状态，再报告唯一下一步。
 - 禁止主动回填 M1-M5、旧 Issue reconciliation、历史总账同步或流程噪音；除非 Founder 明确裁决要求。
 - 飞书只在 Founder 明确要求催办或通知时发送；飞书送达、已读、完成或评论不得作为 GitHub 状态真源。
+- Huanlong GitHub SSOT 下的 owner / DRI / verifier / evidence 飞书私聊催办，必须先使用 `hl-owner-confirmation-dispatch` 做 route / dry-run 投影预检，再使用 `scripts/feishu-direct-message.rb` dry-run 和 `--execute` 发送；不得直接裸调 `lark-cli im +messages-send`。
 - 必须区分 PM readiness、工程理解确认（legacy: HPRD）、PM understanding pass（legacy: PM HPRD pass）、工程实现、runtime 授权；不得把 Issue 指派、taskbook 合并、CI green、PR review、Feishu 投影解释成 runtime 或生产授权。
 - ServiceOrder 当前执行入口为 `hl-dispatch#267`；不得为同一 ServiceOrder 工程理解确认再新开 HPRD Issue 或新 taskbook，除非 Founder 另行裁决。
 

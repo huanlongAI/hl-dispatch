@@ -51,6 +51,39 @@ def assignment(task_type, assignee_role, **overrides):
     return payload
 
 
+def fresh_admission_snapshot(**overrides):
+    payload = {
+        "schema": "engineering-command-snapshot:v0.2",
+        "repo": "huanlongAI/hl-dispatch",
+        "generated_at": "2026-06-23T00:00:00Z",
+        "expires_at": "2026-06-23T00:30:00Z",
+        "snapshot_ttl_minutes": 30,
+        "wip_limit": 4,
+        "snapshot_hash": "a" * 64,
+        "receipt": {
+            "schema": "engineering-command-snapshot-receipt:v0.1",
+            "snapshot_hash": "a" * 64,
+            "generated_at": "2026-06-23T00:00:00Z",
+            "expires_at": "2026-06-23T00:30:00Z",
+        },
+        "external_writes": [],
+        "source_coverage": {
+            "github": {
+                "repo": "huanlongAI/hl-dispatch",
+                "issues": 1,
+                "pull_requests": 0,
+                "repo_files": 0,
+            }
+        },
+        "snapshot_completeness": {
+            "status": "complete",
+            "missing": [],
+        },
+    }
+    payload.update(overrides)
+    return payload
+
+
 class TeamAssignmentPublisherTests(unittest.TestCase):
     def test_accept_builds_dry_run_plan_without_external_write(self):
         publisher = load_publisher()
@@ -200,6 +233,65 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertEqual(preflight["github_issue"]["assignees"], ["ZDragonMeta"])
         self.assertEqual(preflight["github_issue"]["labels"], ["task-assign", "ops", "priority-p1"])
 
+    def test_formal_publisher_preflight_can_require_ai_admission_gate_without_external_write(self):
+        publisher = load_publisher()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+
+        result = self.run_publisher_preflight(
+            plan,
+            "--require-ai-admission-gate",
+            "--now",
+            "2026-06-23T00:10:00Z",
+            admission_snapshot=fresh_admission_snapshot(),
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        preflight = json.loads(result.stdout)
+        self.assertEqual(preflight["status"], "passed")
+        self.assertTrue(preflight["ready_to_create_github_issue"])
+        self.assertEqual(preflight["reason_codes"], [])
+        self.assertEqual(preflight["admission_gate"]["gate"], "AI_ADMISSION_GATE")
+        self.assertEqual(preflight["admission_gate"]["decision"], "ACCEPT")
+        self.assertEqual(preflight["admission_gate"]["reason_codes"], ["admission_gate_accept"])
+        receipt = preflight["admission_gate"]["receipt"]
+        self.assertEqual(receipt["bound_to"]["task_id"], "case-server_deployment")
+        self.assertEqual(receipt["bound_to"]["output_type"], "github_issue")
+        self.assertEqual(receipt["bound_to"]["target_surface"], "github")
+        self.assertEqual(receipt["bound_to"]["snapshot_hash"], "a" * 64)
+        self.assertRegex(receipt["bound_to"]["output_source_hash"], r"^[0-9a-f]{64}$")
+        self.assertFalse(preflight["github_write"]["enabled"])
+        self.assertEqual(preflight["external_writes"], [])
+
+    def test_formal_publisher_preflight_fails_closed_when_ai_gate_rejects_expired_snapshot(self):
+        publisher = load_publisher()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+
+        result = self.run_publisher_preflight(
+            plan,
+            "--require-ai-admission-gate",
+            "--now",
+            "2026-06-23T00:31:00Z",
+            admission_snapshot=fresh_admission_snapshot(),
+        )
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        preflight = json.loads(result.stdout)
+        self.assertEqual(preflight["status"], "failed")
+        self.assertFalse(preflight["ready_to_create_github_issue"])
+        self.assertIn("ai_admission_gate_not_accept", preflight["reason_codes"])
+        self.assertEqual(preflight["admission_gate"]["decision"], "REJECT")
+        self.assertIn("snapshot_expired", preflight["admission_gate"]["reason_codes"])
+        self.assertNotIn("github_issue", preflight)
+        self.assertFalse(preflight["github_write"]["enabled"])
+
     def test_formal_publisher_preflight_rejects_review_required_plan(self):
         publisher = load_publisher()
         plan = publisher.build_publish_plan(
@@ -252,6 +344,33 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
         self.assertIn("--assignee", publish["command_preview"])
         self.assertIn("ZDragonMeta", publish["command_preview"])
 
+    def test_formal_publisher_dry_run_publish_carries_ai_admission_gate(self):
+        publisher = load_publisher()
+        plan = publisher.build_publish_plan(
+            assignment("server_deployment", "ops", priority="P1"),
+            registry_path=REGISTRY,
+            owners_path=OWNERS,
+        )
+
+        result = self.run_publisher_preflight(
+            plan,
+            "--publish",
+            "--require-ai-admission-gate",
+            "--now",
+            "2026-06-23T00:10:00Z",
+            "--repo",
+            "huanlongAI/hl-dispatch",
+            admission_snapshot=fresh_admission_snapshot(),
+        )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        publish = json.loads(result.stdout)
+        self.assertEqual(publish["status"], "dry_run_ready")
+        self.assertEqual(publish["preflight"]["admission_gate"]["decision"], "ACCEPT")
+        self.assertIsNotNone(publish["preflight"]["admission_gate"]["receipt"])
+        self.assertFalse(publish["github_write"]["enabled"])
+        self.assertEqual(publish["external_writes"], [])
+
     def test_formal_publisher_parse_args_exposes_execute_confirmation_flag(self):
         publisher_preflight = load_publisher_preflight()
 
@@ -268,6 +387,25 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
 
         self.assertFalse(default_args.confirm_github_issue_create)
         self.assertTrue(confirmed_args.confirm_github_issue_create)
+
+    def test_formal_publisher_parse_args_exposes_ai_admission_gate_flags(self):
+        publisher_preflight = load_publisher_preflight()
+
+        args = publisher_preflight.parse_args(
+            [
+                "--input",
+                "/tmp/plan.json",
+                "--require-ai-admission-gate",
+                "--admission-snapshot",
+                "/tmp/snapshot.json",
+                "--now",
+                "2026-06-23T00:10:00Z",
+            ]
+        )
+
+        self.assertTrue(args.require_ai_admission_gate)
+        self.assertEqual(args.admission_snapshot, "/tmp/snapshot.json")
+        self.assertEqual(args.now, "2026-06-23T00:10:00Z")
 
     def test_formal_publisher_execute_requires_create_confirmation_before_any_write(self):
         publisher = load_publisher()
@@ -424,18 +562,23 @@ class TeamAssignmentPublisherTests(unittest.TestCase):
                 text=True,
             )
 
-    def run_publisher_preflight(self, plan, *extra_args):
+    def run_publisher_preflight(self, plan, *extra_args, admission_snapshot=None):
         with tempfile.TemporaryDirectory() as tmp:
             input_path = Path(tmp) / "plan.json"
             input_path.write_text(json.dumps(plan, ensure_ascii=False), encoding="utf-8")
+            args = [
+                sys.executable,
+                str(PUBLISHER_PREFLIGHT),
+                "--input",
+                str(input_path),
+                *extra_args,
+            ]
+            if admission_snapshot is not None:
+                snapshot_path = Path(tmp) / "snapshot.json"
+                snapshot_path.write_text(json.dumps(admission_snapshot, ensure_ascii=False), encoding="utf-8")
+                args.extend(["--admission-snapshot", str(snapshot_path)])
             return subprocess.run(
-                [
-                    sys.executable,
-                    str(PUBLISHER_PREFLIGHT),
-                    "--input",
-                    str(input_path),
-                    *extra_args,
-                ],
+                args,
                 capture_output=True,
                 text=True,
             )

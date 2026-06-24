@@ -6,7 +6,7 @@
 
 本目录沉淀团队职责门禁的 P0 统一校验材料和 P1 发布器收敛材料。它把职责契约、当前 Owner 映射、输入 schema、回归用例、校验脚本、发布计划器和正式发布器预检放在同一个 repo file 路径下，供任务派发前判断是否可以把某类任务交给某个角色，并生成可审计的 GitHub Issue 发布请求。
 
-P1 发布器默认仍是 dry-run：只在职责门禁 `ACCEPT`、formal publisher payload 存在、目标入口为 `github_issue`、GitHub Issue payload 存在且中文门禁通过后，输出精确 `gh issue create` 参数。只有同时显式提供 `--execute` 和 `--confirm-github-issue-create` 才会创建 GitHub Issue；本目录不写飞书、Project、Base，不授权真实支付、真实 provider、真实 secret、生产 runtime 或自动合并。商户私钥、真实支付流量、真实对账证据等未解析高风险项统一返回 `REVIEW_REQUIRED`。
+P1 发布器默认仍是 dry-run：只在职责门禁 `ACCEPT`、formal publisher payload 存在、目标入口为 `github_issue`、GitHub Issue payload 存在且中文门禁通过后，输出精确 `gh issue create` 参数。Stage B-B 可追加本地 `AI_ADMISSION_GATE` 预检，要求新鲜 `engineering-command-snapshot:v0.2` 并把 receipt 带回 dry-run 结果。只有同时显式提供 `--execute` 和 `--confirm-github-issue-create` 才会创建 GitHub Issue；本目录不写飞书、Project、Base，不授权真实支付、真实 provider、真实 secret、生产 runtime 或自动合并。商户私钥、真实支付流量、真实对账证据等未解析高风险项统一返回 `REVIEW_REQUIRED`。
 
 ## 术语说明
 
@@ -26,7 +26,7 @@ P1 发布器默认仍是 dry-run：只在职责门禁 `ACCEPT`、formal publishe
 - `scripts/validate_task_assignment.py`: 单条任务派发统一校验器。
 - `scripts/run_regression.py`: 回归用例 runner。
 - `scripts/build_assignment_publish_plan.py`: P1 发布计划器，生成 dry-run 发布计划、裁决包和正式发布 payload。
-- `scripts/preflight_formal_assignment_publisher.py`: P1 正式发布器预检与 GitHub Issue 发布入口；默认 dry-run，仅同时提供 `--execute --confirm-github-issue-create` 才写 GitHub。
+- `scripts/preflight_formal_assignment_publisher.py`: P1 正式发布器预检与 GitHub Issue 发布入口；默认 dry-run，可用 `--require-ai-admission-gate --admission-snapshot <file>` 增加本地准入总闸预检，仅同时提供 `--execute --confirm-github-issue-create` 才写 GitHub。
 
 P0 统一校验是发布器的前置硬门槛。P1 发布器只消费门禁 `ACCEPT` 后的 `formal_publisher_payload`，默认不创建 GitHub Issue；`REVIEW_REQUIRED` 和 `REJECT` 都 fail closed，不进入正式发布。
 
@@ -77,6 +77,19 @@ python3 docs/team-context/scripts/preflight_formal_assignment_publisher.py \
   --publish \
   --repo huanlongAI/hl-dispatch
 ```
+
+正式发布器 dry-run 加本地准入总闸：
+
+```bash
+python3 docs/team-context/scripts/preflight_formal_assignment_publisher.py \
+  --input /path/to/assignment-publish-plan.json \
+  --publish \
+  --require-ai-admission-gate \
+  --admission-snapshot /path/to/engineering-command-snapshot.json \
+  --repo huanlongAI/hl-dispatch
+```
+
+该命令只在本地计算 `AI_ADMISSION_GATE`，不会启用 GitHub required check，不会修改分支保护，也不会写入 GitHub。若快照缺失、过期或 gate 返回非 `ACCEPT`，正式发布器预检 fail closed。
 
 正式 GitHub Issue 写入必须先通过 dry-run 输出检查，再由人工明确授权后追加 `--execute --confirm-github-issue-create`。该执行入口只允许 GitHub Issue，不写飞书、Project、Base 或生产 runtime。
 

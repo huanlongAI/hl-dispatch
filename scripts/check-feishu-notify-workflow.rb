@@ -147,6 +147,9 @@ end
 
 direct_message_path = File.expand_path("feishu-direct-message.rb", __dir__)
 team_path = File.expand_path("../TEAM.yml", __dir__)
+agents_path = File.expand_path("../AGENTS.md", __dir__)
+claude_path = File.expand_path("../CLAUDE.md", __dir__)
+readme_path = File.expand_path("../README.md", __dir__)
 team = load_yaml(team_path)
 notification_policy = team.fetch("notification_policy")
 
@@ -167,6 +170,16 @@ if notification_policy.fetch("fallback", "").match?(/Feishu group|飞书群|grou
   failures << "TEAM.yml notification_policy must not preserve group fallback for personal progress"
 end
 
+{
+  "AGENTS.md" => agents_path,
+  "CLAUDE.md" => claude_path,
+  "README.md" => readme_path
+}.each do |label, path|
+  source = File.exist?(path) ? File.read(path) : ""
+  failures << "#{label} must route Huanlong owner/DRI/verifier Feishu DM reminders through hl-owner-confirmation-dispatch" unless source.include?("hl-owner-confirmation-dispatch")
+  failures << "#{label} must name scripts/feishu-direct-message.rb as the only manual DM sender" unless source.include?("scripts/feishu-direct-message.rb")
+end
+
 if !File.exist?(direct_message_path)
   failures << "direct-message helper missing: scripts/feishu-direct-message.rb"
 else
@@ -182,6 +195,7 @@ else
   failures << "direct-message helper curl fallback must prefer node-c bot env credentials" unless helper.include?("FEISHU_BOT_APP_ID") && helper.include?("FEISHU_BOT_APP_SECRET")
   failures << "direct-message helper curl fallback must keep direct open_id delivery" unless helper.include?("receive_id_type=open_id")
   failures << "direct-message helper curl fallback must preserve idempotency uuid" unless helper.include?('"uuid"')
+  failures << "direct-message helper must normalize long idempotency keys before Feishu uuid" unless helper.include?("normalized_idempotency_key") && helper.include?("Digest::SHA256")
   failures << "direct-message helper curl fallback must pass JSON via stdin to avoid exposing app_secret in process args" unless helper.include?("--data-binary") && helper.include?("@-") && helper.include?("stdin_data: JSON.generate(payload)")
   failures << "direct-message helper must validate task message context before sending" unless helper.include?("validate_message_quality!") && helper.include?("message_missing_github_url") && helper.include?("message_contains_black_box_phrase")
 
@@ -212,6 +226,64 @@ else
       failures << "direct-message helper planned command must not use --chat-id" if planned.include?("--chat-id")
     rescue JSON::ParserError => e
       failures << "direct-message helper dry-run did not emit JSON: #{e.message}"
+    end
+  end
+
+  escaped_newline_message = "魏鹏，请执行测试任务。背景：验证命令行转义换行。GitHub 是唯一事实源，飞书只是提醒。任务入口：https://github.com/huanlongAI/hl-dispatch/issues/194。\\n请在 GitHub 回复结果。\\n本消息不授权生产。"
+  stdout, stderr, status = Open3.capture3(
+    "ruby",
+    direct_message_path,
+    "--team",
+    team_path,
+    "--github",
+    "wp159951",
+    "--text",
+    escaped_newline_message
+  )
+
+  if !status.success?
+    failures << "direct-message helper escaped newline dry-run failed: #{stderr.strip}"
+  else
+    begin
+      payload = JSON.parse(stdout)
+      planned = Array(payload["planned_command_redacted"])
+      text_index = planned.index("--text")
+      planned_text = text_index ? planned[text_index + 1].to_s : ""
+      failures << "direct-message helper must preserve text argument in dry-run plan" if planned_text.empty?
+      failures << "direct-message helper must convert escaped \\n to real newlines before sending" unless planned_text.include?("\n")
+      failures << "direct-message helper must not send literal \\n sequences to Feishu" if planned_text.include?("\\n")
+    rescue JSON::ParserError => e
+      failures << "direct-message helper escaped newline dry-run did not emit JSON: #{e.message}"
+    end
+  end
+
+  long_key = "owner_confirmation:huanlongAI/hl-dispatch#408:HL-408-VERIFIER-ACCEPTANCE-REMINDER-20260624:v1"
+  stdout, stderr, status = Open3.capture3(
+    "ruby",
+    direct_message_path,
+    "--team",
+    team_path,
+    "--github",
+    "wp159951",
+    "--idempotency-key",
+    long_key,
+    "--text",
+    valid_direct_message
+  )
+
+  if !status.success?
+    failures << "direct-message helper long idempotency dry-run failed: #{stderr.strip}"
+  else
+    begin
+      payload = JSON.parse(stdout)
+      planned = Array(payload["planned_command_redacted"])
+      idempotency_index = planned.index("--idempotency-key")
+      normalized = idempotency_index ? planned[idempotency_index + 1].to_s : ""
+      failures << "direct-message helper dry-run must include normalized idempotency key" if normalized.empty?
+      failures << "direct-message helper must not pass long raw owner_confirmation key to Feishu uuid" if normalized == long_key
+      failures << "direct-message helper normalized idempotency key must use stable hl-dm hash prefix" unless normalized.match?(/\Ahl-dm-[0-9a-f]{32}\z/)
+    rescue JSON::ParserError => e
+      failures << "direct-message helper long idempotency dry-run did not emit JSON: #{e.message}"
     end
   end
 

@@ -10,6 +10,12 @@ CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff]")
 LATIN_WORD_RE = re.compile(r"[A-Za-z][A-Za-z0-9_-]*")
 URL_RE = re.compile(r"https?://\S+")
 FENCED_CODE_BLOCK_RE = re.compile(r"```.*?```", re.DOTALL)
+INLINE_CODE_RE = re.compile(r"`[^`\n]+`")
+FULL_GITHUB_MARKDOWN_LINK_RE = re.compile(
+    r"\[[^\]]*huanlongAI/[A-Za-z0-9_.-]+#\d+[^\]]*\]"
+    r"\(https://github\.com/huanlongAI/[A-Za-z0-9_.-]+/(?:issues|pull)/\d+(?:#[^)]+)?\)"
+)
+GITHUB_NUMBER_REF_RE = re.compile(r"#\d+\b")
 MIN_BODY_CJK_CHARS = 6
 MIN_BODY_CJK_RATIO = 0.2
 LATIN_HEAVY_WORDS = 12
@@ -159,6 +165,30 @@ def validate_ai_output_contract(text):
     return errors
 
 
+def ambiguous_bare_github_refs(text):
+    normalized = FENCED_CODE_BLOCK_RE.sub(" ", text or "")
+    normalized = INLINE_CODE_RE.sub(" ", normalized)
+    normalized = FULL_GITHUB_MARKDOWN_LINK_RE.sub(" ", normalized)
+    normalized = URL_RE.sub(" ", normalized)
+
+    ambiguous_refs = []
+    for match in GITHUB_NUMBER_REF_RE.finditer(normalized):
+        line_start = normalized.rfind("\n", 0, match.start()) + 1
+        token_start = normalized.rfind(" ", line_start, match.start()) + 1
+        token = normalized[token_start : match.end()]
+        if "/" in token:
+            continue
+        ambiguous_refs.append(match.group(0))
+
+    return sorted(set(ambiguous_refs))
+
+
+def validate_github_reference_format(text):
+    if ambiguous_bare_github_refs(text):
+        return ["ambiguous_bare_github_reference"]
+    return []
+
+
 def validate_issue(issue):
     errors = []
     title = issue.get("title") or ""
@@ -170,6 +200,8 @@ def validate_issue(issue):
         errors.append("body_missing_chinese")
     elif body.strip() and chinese_signal_too_weak(body):
         errors.append("body_chinese_ratio_too_low")
+    if body.strip():
+        errors.extend(validate_github_reference_format(body))
 
     return {
         "kind": "issue",
@@ -189,6 +221,8 @@ def validate_comment(comment):
     elif not structured_yaml_allowed and chinese_signal_too_weak(body):
         errors.append("comment_chinese_ratio_too_low")
     errors.extend(validate_ai_output_contract(body))
+    if not structured_yaml_allowed:
+        errors.extend(validate_github_reference_format(body))
 
     return {
         "kind": "issue_comment",

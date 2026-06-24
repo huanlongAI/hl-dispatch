@@ -33,6 +33,7 @@ doc-review / task-assign / decision-request / architect / ops / pm / priority-p0
 - 在执行 `gh issue create`、`gh issue comment` 或 `gh issue edit` 前，必须先把即将写入的标题/正文/评论传给 `scripts/preflight-github-language-write.py` 本地验证。
 - 本地 preflight 失败时禁止写入 GitHub；GitHub Actions language gate 是事后检测，不能替代写前检查。
 - 结构化负责人 YAML 只有在 `check-github-language-gate.py` 明确允许的格式下可以不含中文；普通 AI 状态同步、投影回写、执行结果和裁决简报不得使用纯英文。
+- 普通 Issue / PR 回填正文不得使用裸 `#编号` 指代 GitHub 对象；跨仓库或可能跨仓库的引用必须写成全限定 Markdown 链接，例如 `[huanlongAI/<repo>#<number>](https://github.com/huanlongAI/<repo>/pull/<number>)` 或 `[huanlongAI/<repo>#<number>](https://github.com/huanlongAI/<repo>/issues/<number>)`，避免 GitHub 自动把 `#编号` 解析成本仓同编号 Issue / PR。
 
 ## 任务派发防错规则
 

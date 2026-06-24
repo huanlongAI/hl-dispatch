@@ -8,6 +8,7 @@
 - 唤龙领域 Write-Owner 为 `NODE-E`；`NODE-M` 仅按受控写入、验证门禁、branch protection 与明确 push 确认执行。
 - GitHub Issue / PR / repo file 是任务与反馈 SSOT；飞书、Project、Base 均为 projection。
 - 执行 `gh issue create`、`gh issue comment` 或 `gh issue edit` 前，必须先用 `scripts/preflight-github-language-write.py` 对即将写入的标题/正文/评论做本地中文门禁；失败时禁止写入 GitHub。
+- GitHub 回填正文禁止裸写 `#编号`；必须用全限定 Markdown 链接，例如 `[huanlongAI/<repo>#<number>](https://github.com/huanlongAI/<repo>/pull/<number>)`，防止 GitHub 自动关联到本仓同编号对象。
 - 修改本仓 Agent 入口或投影规则后，运行 Sentinel D-10 / AGENTS 治理漂移检查。
 
 ## 当前入口纪律

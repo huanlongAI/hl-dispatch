@@ -155,12 +155,12 @@ items:
 
   - capability_id: biz.customer.asset
     display_name: Customer asset capability
-    dri: PM-B / 朱阳
+    dri: zhoufei1223
     pm_owner: PM-B / 朱阳
     gate_owner: Gate-H / 许久明
     lane: P1_formal_object_chain
     maturity: M2_M3
-    execution_state: SPEC_ONLY
+    execution_state: THIN_SLICE
     risk_class: GATED
     risk_tags:
       - customer_asset_state
@@ -179,14 +179,26 @@ items:
     not_authorized:
       - runtime start
       - active contract claim
+      - active registry
+      - formal OpenAPI creation
+      - facts/events/reason_code registry creation
+      - real customer data
       - live customer asset mutation
+      - real customer asset lock
+      - real customer asset deduction
+      - real customer asset transfer
+      - payment/refund/settlement
+      - database/JPA/Flyway production table
       - identity merge
       - privacy state mutation
-    next_action: Review Customer Asset PM readiness packet and route identity/privacy contract questions through dispatch-side contract decision packet.
-    blocker: Asset state, identity, privacy, contract, and runtime gaps require future Founder/Gate decision.
-    due: CONTRACT-DECISION-PACKET_REVIEW
-    terminal_planning_state: CONTRACT_DECISION_PACKET_READY
+      - deploy/release
+      - MVP or production claim
+    next_action: Execute CARD-002-SLICE-03 fixture-only usage eligibility preview through hl-dispatch issue #408 and hl-platform implementation branch feature/issues-408-customer-asset-slice03-usage-eligibility-preview; CP1 target is one executable spine plus draft implementation PR. SLICE-03 is a slice identifier, not maturity M3, and does not change M0-M9 maturity.
+    blocker: none_for_cp0_dispatch_lock; any runtime, registry, formal contract, real data, mutation, payment, database, deploy, or production need triggers owner pull and stops the bounded path.
+    due: CP1_EXECUTABLE_SPINE
+    terminal_planning_state: CP0_DISPATCH_LOCKED
     ssot_refs:
+      - https://github.com/huanlongAI/hl-dispatch/issues/408
       - hl-dispatch/deliverables/tasks
       - hl-contracts/prd/biz
       - hl-dispatch/docs/delivery-recovery/BIZ-CUSTOMER-ASSET-PM-READINESS-PACKET-v0.1-2026-06-15.md

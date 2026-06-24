@@ -2,11 +2,11 @@
 
 Date: 2026-06-23
 
-Status: STAGE_B_LOCAL_DRY_RUN
+Status: STAGE_B_LOCAL_DRY_RUN_FORMAL_PUBLISHER_PRECHECK
 
 ## 中文摘要
 
-`AI_ADMISSION_GATE` 是唤龙团队 AI 正式输出的本地 dry-run 准入总闸。它消费 `engineering-command-snapshot:v0.2`、职责门禁结果、Context Atlas 导航元数据和授权回执，输出 `ACCEPT | REJECT | REVIEW_REQUIRED` 与绑定 receipt。Stage B 只在 `hl-dispatch` 内落地本地脚本和测试，不启用 GitHub required check，不写 GitHub / 飞书 / 多维表格 / 云效 / team-memory。
+`AI_ADMISSION_GATE` 是唤龙团队 AI 正式输出的本地 dry-run 准入总闸。它消费 `engineering-command-snapshot:v0.2`、职责门禁结果、Context Atlas 导航元数据和授权回执，输出 `ACCEPT | REJECT | REVIEW_REQUIRED` 与绑定 receipt。Stage B-B 已把它接入 `hl-dispatch` 正式发布器 dry-run 预检；仍不启用 GitHub required check，不写 GitHub / 飞书 / 多维表格 / 云效 / team-memory。
 
 本文件的目标是把“AI 可以生成什么”和“AI 什么时候可以发布”拆开处理：脚本只判断本地候选输出是否满足准入条件，不代表生产授权、发布授权或外部写入授权。任何真实 GitHub 写入、云效参数、飞书通知、多维表格更新、team-memory 认可知识写入、运行时动作、生产动作、支付或供应商相关动作，都必须另有 Founder / Gate 的 GitHub 真源回执。
 
@@ -136,6 +136,22 @@ external_writes: []
 
 The receipt is bound to task, repo, output type, output payload hash, target surface, snapshot hash, context version, responsibility registry version, and authorization refs hash. Reusing a receipt for a changed output is rejected with `receipt_binding_mismatch`.
 
+## Formal Publisher Dry-Run Hook
+
+Stage B-B adds an optional local hook in `docs/team-context/scripts/preflight_formal_assignment_publisher.py`.
+
+When the caller passes `--require-ai-admission-gate`, the formal publisher preflight builds an `ai-admission-request:v0.1` from the accepted GitHub Issue payload and the supplied `engineering-command-snapshot:v0.2`, then evaluates `scripts/ai-admission-gate.py` locally.
+
+The hook is fail-closed:
+
+- missing snapshot returns `ai_admission_snapshot_absent`;
+- any gate result other than `ACCEPT` returns `ai_admission_gate_not_accept`;
+- `ACCEPT` carries the local admission receipt into the preflight result;
+- `github_write.enabled` remains `false`;
+- `external_writes` remains `[]`.
+
+This is only a local precheck for the formal publisher. It is not a GitHub required check, branch protection rule, production gate, external write authorization, or release approval.
+
 ## Decision Rules
 
 `REJECT` is returned when:
@@ -212,9 +228,21 @@ Evaluate a gate request:
 python3 scripts/ai-admission-gate.py --input <ai-admission-request.json>
 ```
 
+Run the formal publisher dry-run with the admission gate:
+
+```bash
+python3 docs/team-context/scripts/preflight_formal_assignment_publisher.py \
+  --input <assignment-publish-plan.json> \
+  --publish \
+  --require-ai-admission-gate \
+  --admission-snapshot <engineering-command-snapshot.json> \
+  --repo huanlongAI/hl-dispatch
+```
+
 Verification:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-ai-admission-gate.py
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-team-assignment-publisher.py
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-hl-progress-exporter.py
 ```

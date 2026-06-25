@@ -40,21 +40,21 @@ next_recommended_entry: STAGE_C_TEAM_ENTRY_LOCAL_CLI_DRY_RUN
 
 | ID | 裁决 | 当前投影 | 证据 |
 |---|---|---|---|
-| D1 | Stage B 写入限 `hl-dispatch` | 已遵守 | PR #405、PR #406 均只改 `hl-dispatch` |
+| D1 | Stage B 写入限 `hl-dispatch` | 已遵守 | [huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405)、[huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) 均只改 `hl-dispatch` |
 | D2 | 正式 AI 输出范围按方案 4.1 | 已投影到 gate 文档和脚本 | `docs/team-ai-context/AI_ADMISSION_GATE_v0.1.md` |
 | D3 | TTL30 / WIP4 | 已进入 snapshot policy | `scripts/export-hl-progress.py`、`scripts/ai-admission-gate.py` |
-| D4 | GitHub 最小硬闸先 dry-run，required check 另裁决 | 已遵守 | PR #405、PR #406 未改 branch protection 或 required check |
+| D4 | GitHub 最小硬闸先 dry-run，required check 另裁决 | 已遵守 | [huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405)、[huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) 未改 branch protection 或 required check |
 | D5 | Context Atlas 只在现有 `huanlong_platform` 加 slice，不新建 View | 当前只定义 slice contract，未写 Atlas 实体 | `docs/team-ai-context/AI_ADMISSION_GATE_v0.1.md` |
 | D6 | `ai_loop_control` 暂缓，仅定义接口/证据契约 | 已遵守 | `ai-loop-control-evidence:v0.1` 仅为接口说明 |
-| D7 | 允许本地实施，push 另裁决 | 已按两次 Founder 后续裁决完成 PR #405、#406 | PR #405、PR #406 |
-| D8 | Stage B-B 限 `hl-dispatch`，不启用 required check | 已遵守 | PR #406 |
+| D7 | 允许本地实施，push 另裁决 | 已按两次 Founder 后续裁决完成 [huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405)、[huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) | [huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405)、[huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) |
+| D8 | Stage B-B 限 `hl-dispatch`，不启用 required check | 已遵守 | [huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) |
 
 ## 合并证据
 
 | PR | 内容 | Merge commit | Checks | 状态 |
 |---|---|---|---|---|
-| #405 | Stage B-A：snapshot v0.2、AI admission gate、本地 dry-run 基础设施 | `49ea77762854bed4e21f31715f5916e679f97808` | `sentinel` success、`context-engineering-template-gate` success、`scan` success | MERGED |
-| #406 | Stage B-B：正式发布器 dry-run 接入 `AI_ADMISSION_GATE` | `73f722674e6daf630db76e074755a15bbbda7cf6` | `sentinel` success、`scan` success | MERGED |
+| [huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405) | Stage B-A：snapshot v0.2、AI admission gate、本地 dry-run 基础设施 | `49ea77762854bed4e21f31715f5916e679f97808` | `sentinel` success、`context-engineering-template-gate` success、`scan` success | MERGED |
+| [huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) | Stage B-B：正式发布器 dry-run 接入 `AI_ADMISSION_GATE` | `73f722674e6daf630db76e074755a15bbbda7cf6` | `sentinel` success、`scan` success | MERGED |
 
 ## 上线验收矩阵
 
@@ -67,7 +67,7 @@ next_recommended_entry: STAGE_C_TEAM_ENTRY_LOCAL_CLI_DRY_RUN
 
 | 分组 | 当前状态 | 已有证据 | 主要缺口 |
 |---|---|---|---|
-| A. 计划与真源 | partial | 本文件创建 current status / Tracker / Decisions；PR #405/#406 为 GitHub merge evidence | 全局总计划尚未迁入 repo SSOT；其他仓库链接策略仍未正式落地 |
+| A. 计划与真源 | partial | 本文件创建 current status / Tracker / Decisions；[huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405) / [huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) 为 GitHub merge evidence | 全局总计划尚未迁入 repo SSOT；其他仓库链接策略仍未正式落地 |
 | B. 快照 | partial | `engineering-command-snapshot:v0.2`、TTL30、WIP4、source coverage、completeness、receipt、expired negative test | 发布前重新校验只在本地 dry-run hook 中覆盖；候选误发布负向测试仍需扩展 |
 | C. 复合准入闸 | partial | `AI_ADMISSION_GATE` 输出 `ACCEPT / REJECT / REVIEW_REQUIRED`，支持 receipt 绑定、防重放、本地预检、发布器 fail closed | 无 GitHub required check、无云效挂载、无人工例外完整流程、敏感过滤仍是规则级而非全路径扫描 |
 | D. 团队入口 | not_started | 无 | 缺 `hl-ai start`、`hl-ai submit`、会话包、Codex / Claude / 浏览器 AI 薄适配器 |

@@ -1,0 +1,68 @@
+{
+  "adapter_input_packages": [
+    {
+      "actor": "codex",
+      "id": "codex",
+      "input": {
+        "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+        "mode": "dry_run",
+        "next_allowed_action": "submit_candidate_to_ai_admission_gate",
+        "repo": "huanlongAI/hl-dispatch",
+        "task_id": "HL-AI-C1",
+        "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
+      }
+    },
+    {
+      "actor": "claude",
+      "id": "claude",
+      "input": {
+        "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+        "mode": "dry_run",
+        "next_allowed_action": "submit_candidate_to_ai_admission_gate",
+        "repo": "huanlongAI/hl-dispatch",
+        "task_id": "HL-AI-C1",
+        "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
+      }
+    },
+    {
+      "actor": "browser-ai",
+      "id": "browser-ai",
+      "input": {
+        "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+        "mode": "dry_run",
+        "next_allowed_action": "submit_candidate_to_ai_admission_gate",
+        "repo": "huanlongAI/hl-dispatch",
+        "task_id": "HL-AI-C1",
+        "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
+      },
+      "status": "contract_only"
+    }
+  ],
+  "candidate_output_contract": {
+    "allowed_candidate_actions": [
+      "draft",
+      "dry_run",
+      "prepare_candidate",
+      "submit_to_ai_admission_gate"
+    ],
+    "required_gate": "AI_ADMISSION_GATE",
+    "required_output_fields": [
+      "type",
+      "target_surface",
+      "source_hash"
+    ],
+    "schema": "hl-ai-output-candidate:v0.1"
+  },
+  "external_writes": [],
+  "github_write": {
+    "enabled": false,
+    "operation": "none",
+    "reason": "hl-ai start only builds a local session package; external writes require a later Founder decision."
+  },
+  "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+  "mode": "dry_run",
+  "next_allowed_action": "submit_candidate_to_ai_admission_gate",
+  "repo": "huanlongAI/hl-dispatch",
+  "schema": "hl-ai-session-package:v0.1",
+  "task_id": "HL-AI-C1"
+}

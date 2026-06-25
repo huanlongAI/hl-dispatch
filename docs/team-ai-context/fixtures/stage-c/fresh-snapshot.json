@@ -1,0 +1,28 @@
+{
+  "expires_at": "2026-06-25T00:30:00Z",
+  "external_writes": [],
+  "generated_at": "2026-06-25T00:00:00Z",
+  "receipt": {
+    "expires_at": "2026-06-25T00:30:00Z",
+    "generated_at": "2026-06-25T00:00:00Z",
+    "schema": "engineering-command-snapshot-receipt:v0.1",
+    "snapshot_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "repo": "huanlongAI/hl-dispatch",
+  "schema": "engineering-command-snapshot:v0.2",
+  "snapshot_completeness": {
+    "missing": [],
+    "status": "complete"
+  },
+  "snapshot_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "snapshot_ttl_minutes": 30,
+  "source_coverage": {
+    "github": {
+      "issues": 1,
+      "pull_requests": 0,
+      "repo": "huanlongAI/hl-dispatch",
+      "repo_files": 1
+    }
+  },
+  "wip_limit": 4
+}

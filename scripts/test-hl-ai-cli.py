@@ -202,8 +202,10 @@ class HLAICLITests(unittest.TestCase):
         self.assertTrue(STAGE_C_STATUS_DOC.exists(), f"missing Stage C status: {STAGE_C_STATUS_DOC}")
         status_doc = STAGE_C_STATUS_DOC.read_text(encoding="utf-8")
 
-        self.assertIn("Status: STAGE_C_LOCAL_TEAM_ENTRY_DRY_RUN_ACTIVE", status_doc)
+        self.assertIn("Status: STAGE_C_MERGED_READBACK_RECONCILED", status_doc)
         self.assertIn("## 术语说明", status_doc)
+        self.assertIn("merged_pr: https://github.com/huanlongAI/hl-dispatch/pull/415", status_doc)
+        self.assertIn("feature_branch_deleted: true", status_doc)
         self.assertIn("team_context_enforced: false", status_doc)
         self.assertIn("github_required_check_enabled: false", status_doc)
         self.assertIn("external_writes_enabled: false", status_doc)

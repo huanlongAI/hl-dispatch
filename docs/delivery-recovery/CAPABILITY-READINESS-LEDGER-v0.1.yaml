@@ -135,8 +135,8 @@ items:
     idempotency_retry: missing
     reason_trace: partial
     events_facts_audit: missing
-    evidence_mode: generated_only
-    gate_h: missing
+    evidence_mode: independent_verified
+    gate_h: not_required_for_fixture_only_slice; new gate decision required for runtime, formal contract, real data, mutation, payment, database, release, or production expansion
     not_authorized:
       - runtime start
       - provider integration
@@ -155,12 +155,12 @@ items:
 
   - capability_id: biz.customer.asset
     display_name: Customer asset capability
-    dri: PM-B / 朱阳
+    dri: zhoufei1223
     pm_owner: PM-B / 朱阳
     gate_owner: Gate-H / 许久明
     lane: P1_formal_object_chain
     maturity: M2_M3
-    execution_state: SPEC_ONLY
+    execution_state: THIN_SLICE
     risk_class: GATED
     risk_tags:
       - customer_asset_state
@@ -179,18 +179,37 @@ items:
     not_authorized:
       - runtime start
       - active contract claim
+      - active registry
+      - formal OpenAPI creation
+      - facts/events/reason_code registry creation
+      - real customer data
       - live customer asset mutation
+      - real customer asset lock
+      - real customer asset deduction
+      - real customer asset transfer
+      - payment/refund/settlement
+      - database/JPA/Flyway production table
       - identity merge
       - privacy state mutation
-    next_action: Review Customer Asset PM readiness packet and route identity/privacy contract questions through dispatch-side contract decision packet.
-    blocker: Asset state, identity, privacy, contract, and runtime gaps require future Founder/Gate decision.
-    due: CONTRACT-DECISION-PACKET_REVIEW
-    terminal_planning_state: CONTRACT_DECISION_PACKET_READY
+      - deploy/release
+      - MVP or production claim
+    next_action: No further action for CARD-002-SLICE-03 after Founder acceptance with CP4 regularization; prepare any future CustomerAsset work as a new v1.0 Capability Value Slice with its own DRI, scope, verifier, and not_authorized boundary.
+    blocker: none_for_fixture_only_closeout; runtime, registry, formal contract, real data, mutation, payment, database, deploy, release, or production remain not authorized and require a new owner or Founder decision.
+    due: CLOSED_FOR_CURRENT_SCOPE
+    terminal_planning_state: ACTIVATION_CYCLE_1_ACCEPTED_WITH_CP4_REGULARIZATION
     ssot_refs:
+      - https://github.com/huanlongAI/hl-dispatch/issues/408
+      - https://github.com/huanlongAI/hl-dispatch/issues/408#issuecomment-4795359769
+      - https://github.com/huanlongAI/hl-platform/pull/156
+      - https://github.com/huanlongAI/hl-platform/pull/156#issuecomment-4795335623
+      - https://github.com/huanlongAI/hl-dispatch/pull/409
+      - https://github.com/huanlongAI/hl-dispatch/pull/413
       - hl-dispatch/deliverables/tasks
       - hl-contracts/prd/biz
       - hl-dispatch/docs/delivery-recovery/BIZ-CUSTOMER-ASSET-PM-READINESS-PACKET-v0.1-2026-06-15.md
-    learning_patch_required: true
+    learning_patch_required: false
+    learning_patch_decision: CONTEXT_PATCH_RECORDED
+    learning_patch_summary: Founder final acceptance must precede implementation merge; independent verifier approval is not merge authorization; DRI final acceptance candidate is required before CP3 Founder packet unless Founder explicitly regularizes an already-merged bounded artifact.
 
   - capability_id: biz.offer.catalog
     display_name: Offer catalog capability

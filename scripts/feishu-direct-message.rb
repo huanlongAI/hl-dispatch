@@ -4,6 +4,7 @@
 
 require "json"
 require "date"
+require "digest"
 require "open3"
 require "optparse"
 require "yaml"
@@ -15,6 +16,7 @@ class DirectMessageError < StandardError; end
 
 DEFAULT_TEAM_PATH = File.expand_path("../TEAM.yml", __dir__)
 GITHUB_URL_RE = %r{https://github\.com/huanlongAI/[^\s，。；、）)]+}
+FEISHU_UUID_SAFE_RE = /\A[A-Za-z0-9_-]{1,50}\z/.freeze
 TASK_CONTEXT_TERMS = %w[背景 上下文 目标 为什么 来源]
 TASK_ACTION_TERMS = %w[请在 请执行 请回复 请查看 请处理 下一步 要做 回复]
 TASK_BOUNDARY_TERMS = [
@@ -116,6 +118,7 @@ def resolve_recipient(team, options)
 end
 
 def build_command(options, open_id)
+  idempotency_key = normalized_idempotency_key(options[:idempotency_key])
   command = [
     options[:lark_cli],
     "im",
@@ -132,7 +135,7 @@ def build_command(options, open_id)
     command += ["--markdown", options[:markdown]]
   end
 
-  command += ["--idempotency-key", options[:idempotency_key]] if options[:idempotency_key]
+  command += ["--idempotency-key", idempotency_key] if idempotency_key
   command
 end
 
@@ -175,8 +178,17 @@ def parse_options(argv)
   if options[:text] && options[:markdown]
     raise DirectMessageError, "provide only one of --text or --markdown"
   end
+  options[:text] = normalized_message_body(options[:text]) if options[:text]
+  options[:markdown] = normalized_message_body(options[:markdown]) if options[:markdown]
 
   options
+end
+
+def normalized_message_body(value)
+  value.to_s
+       .gsub("\\r\\n", "\n")
+       .gsub("\\n", "\n")
+       .gsub("\\r", "\n")
 end
 
 def message_body(options)
@@ -231,6 +243,14 @@ def retryable_transport_error?(text)
     "timeout",
     "eof"
   ].any? { |marker| normalized.include?(marker) }
+end
+
+def normalized_idempotency_key(value)
+  raw = value.to_s.strip
+  return nil if raw.empty?
+  return raw if raw.match?(FEISHU_UUID_SAFE_RE)
+
+  "hl-dm-#{Digest::SHA256.hexdigest(raw)[0, 32]}"
 end
 
 def capture_with_retry(command, max_attempts:, retry_sleep_seconds:)
@@ -340,7 +360,8 @@ def direct_message_payload(options, open_id)
     "msg_type" => "text",
     "content" => JSON.generate(content)
   }
-  payload["uuid"] = options[:idempotency_key] if options[:idempotency_key]
+  idempotency_key = normalized_idempotency_key(options[:idempotency_key])
+  payload["uuid"] = idempotency_key if idempotency_key
   payload
 end
 

@@ -1,5 +1,8 @@
 # HL Capability Operating Rules Implementation Plan v0.1
 
+> Status: SUPERSEDED_FOR_EXECUTION_BY_HL-AI-NATIVE-VALUE-STREAM-OPERATING-MODEL-v1.0
+> Historical note: retained as planning evidence; the 8-item docs-first rollout is no longer the default execution plan.
+
 > Status: FULL_LANDING_PLAN_DRAFT
 > Date: 2026-06-14
 > Scope: complete landing plan for operating rules, Ledger, first capability cycle, future contract/runtime decision packets, and review cadence

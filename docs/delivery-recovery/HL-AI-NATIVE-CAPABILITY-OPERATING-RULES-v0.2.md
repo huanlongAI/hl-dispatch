@@ -1,5 +1,8 @@
 # HL AI-Native Capability Operating Rules v0.2
 
+> Status: SUPERSEDED_BY_HL-AI-NATIVE-VALUE-STREAM-OPERATING-MODEL-v1.0
+> Historical note: retained for traceability; do not use as the active execution authority.
+
 > Status: OPERATING_RULES_DRAFT_FOR_LANDING
 > Date: 2026-06-14
 > Owner: Founder / hl-dispatch operating layer

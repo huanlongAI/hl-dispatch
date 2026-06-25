@@ -21,6 +21,12 @@ PM-led capability packages use a separate execution shape: Founder / AI capabili
 - Do not build a full task platform before recovery work starts.
 - No action item means no Feishu notification and no public status comment refresh.
 
+## Active Operating Model
+
+- `HL-AI-NATIVE-VALUE-STREAM-OPERATING-MODEL-v1.0.md`: 当前 active dispatch-side operating model，用于唤龙 AI 原生能力价值切片执行。它取代 v0.2 capability operating rules 和旧 implementation plan 的执行权威；不授权 runtime、registry、formal contract、real data、mutation、payment、database、production、release 或 MVP claim。
+- `HL-AI-NATIVE-CAPABILITY-OPERATING-RULES-v0.2.md`: 仅保留为历史溯源；active execution 已由 v1.0 取代。
+- `HL-CAPABILITY-OPERATING-RULES-IMPLEMENTATION-PLAN-v0.1.md`: 仅保留为历史规划证据；active execution 已由 v1.0 取代。
+
 ## Required Files
 
 - `DELIVERY_RECOVERY_IMPLEMENTATION_CONTRACT_v0.1.md`: canonical implementation contract.

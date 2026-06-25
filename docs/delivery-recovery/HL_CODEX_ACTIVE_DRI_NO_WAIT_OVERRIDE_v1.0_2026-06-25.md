@@ -7,6 +7,20 @@
 
 ---
 
+## 中文摘要
+
+本指令把当前已授权的唤龙能力、平台与契约工作默认执行方式调整为 `EXECUTE_WITHIN_AUTHORIZED_BOUNDARY`：在既有授权、任务边界和仓库门禁内，Codex 应直接完成可逆、可验证、低风险的机械执行工作，并把成员 DRI 的注意力留给价值判断、范围判断、owner 拉入和最终验收。
+
+本指令不改变 GitHub / Git / 仓库文件 / contract SSOT / registry 的真源地位，不授权 production、release、真实数据、资金、身份、隐私、合同、active registry、正式对外接口或不可逆业务事实变更，也不绕过 Team review、branch protection、required checks、secret 边界、dirty worktree 保护或 Founder 明确保留的裁决权。
+
+## 术语说明
+
+- `DRI`：Directly Responsible Individual，当前价值切片的直接负责人，负责 next_action、范围判断、owner 拉入和验收候选责任。
+- `EXECUTE_WITHIN_AUTHORIZED_BOUNDARY`：在已存在授权、任务边界、仓库规则和验证门禁内直接执行，不把普通机械工作重新升级为 Founder 裁决。
+- `Owner`：对某一判断、范围、技术或业务事实具有责任的团队角色，不等同于仓库 Write-Owner 或 GitHub 合并权限。
+- `Founder Decision Packet`：只有在价值目标、正式边界、高影响风险或组合优先级需要 Founder 裁决时才生成的裁决包。
+- `Ledger`：GitHub / 仓库文件中的真实状态记录或追踪账，不包括飞书投影、聊天记忆或本地 runtime 缓存。
+
 ## 0. Founder 运行裁决
 
 从本指令生效起，Codex 不再以“只读复核—列出等待项—向 Founder 提供 A/B/C 选项”作为默认工作方式。

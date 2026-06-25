@@ -175,6 +175,8 @@ class HLAICLITests(unittest.TestCase):
 
         entry_doc = STAGE_C_ENTRY_DOC.read_text(encoding="utf-8")
         long_loop_doc = LONG_LOOP_DOC.read_text(encoding="utf-8")
+        for doc in [entry_doc, long_loop_doc]:
+            self.assertIn("## 术语说明", doc)
         self.assertIn("scripts/hl-ai.py start", entry_doc)
         self.assertIn("scripts/hl-ai.py submit", entry_doc)
         self.assertIn("TEAM-CONTEXT-ENFORCED", long_loop_doc)
@@ -201,6 +203,7 @@ class HLAICLITests(unittest.TestCase):
         status_doc = STAGE_C_STATUS_DOC.read_text(encoding="utf-8")
 
         self.assertIn("Status: STAGE_C_LOCAL_TEAM_ENTRY_DRY_RUN_ACTIVE", status_doc)
+        self.assertIn("## 术语说明", status_doc)
         self.assertIn("team_context_enforced: false", status_doc)
         self.assertIn("github_required_check_enabled: false", status_doc)
         self.assertIn("external_writes_enabled: false", status_doc)

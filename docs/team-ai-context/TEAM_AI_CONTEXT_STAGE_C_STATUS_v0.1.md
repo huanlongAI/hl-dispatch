@@ -10,6 +10,14 @@ Status: STAGE_C_LOCAL_TEAM_ENTRY_DRY_RUN_ACTIVE
 
 当前结论：总计划仍未完结，团队上下文工程仍未全面生效。Stage C 的本地 CLI 入口让团队可以用自然语言目标生成 session package，并把候选 AI 输出转成 `AI_ADMISSION_GATE` 输入；它只是后续试运行和 required check 裁决前的本地证据层。
 
+## 术语说明
+
+- Stage C：团队入口本地 dry-run 阶段，目标是形成可复用的会话包、候选输出包和负向回归。
+- Tracker：本文的分阶段状态表，只是本地 repo file 记录，不创建外部 Issue。
+- Decisions：Founder 已裁决事项的本地回读，不重复提交同一裁决。
+- local_done：本地实现和测试已有证据，但不代表远端合并或全面生效。
+- deferred：暂缓项，只在未来条件触发时重新提交裁决。
+
 ## 当前状态
 
 ```yaml

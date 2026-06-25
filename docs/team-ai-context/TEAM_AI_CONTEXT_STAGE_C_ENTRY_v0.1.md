@@ -10,6 +10,14 @@ Status: STAGE_C_LOCAL_TEAM_ENTRY_DRY_RUN
 
 Stage C 的目标不是启用 `TEAM-CONTEXT-ENFORCED`，而是让团队成员先用自然语言目标生成本地 session package，再把候选 AI 输出提交给 `AI_ADMISSION_GATE` 形成可审计结果。只有本地证据稳定后，后续 push / PR / required check / 云效 / Context Atlas / ai_loop_control 才进入新的 Founder 裁决。
 
+## 术语说明
+
+- `hl-ai start`：从自然语言目标生成本地 session package 的命令。
+- `hl-ai submit`：把候选 AI 输出、本地 session package 和 snapshot 组装成 `AI_ADMISSION_GATE` 输入并 dry-run 校验的命令。
+- session package：一次 AI 协作入口的本地会话包，包含目标、边界和 adapter 输入。
+- adapter input package：给 Codex、Claude、browser-ai 等执行器读取的薄输入包。
+- candidate action：候选输出声明的动作；任何外部发布动作都必须 fail closed 并等待裁决。
+
 ## CLI contract
 
 ### start

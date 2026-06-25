@@ -8,6 +8,14 @@ Status: LONG_LOOP_LOCAL_TRACKER_ACTIVE
 
 本文把唤龙团队 AI 上下文工程剩余步骤重规划为长程闭环。当前闭环只在 `hl-dispatch` 本地 repo file 和 dry-run 脚本中生效，不代表总计划完结，不代表 `TEAM-CONTEXT-ENFORCED`，不代表 required check、云效、Context Atlas 或生产链路已经启用。
 
+## 术语说明
+
+- 长程闭环：把剩余阶段拆成可验证、可暂停、可复审的连续任务链。
+- dry-run：只在本地生成和校验结果，不执行外部写入。
+- `TEAM-CONTEXT-ENFORCED`：团队上下文工程全面启用状态；当前仍为 false。
+- future_condition_triggered_decision：未来条件触发裁决；只有出现新证据、试运行结果或范围变化时才提交 Founder 裁决。
+- required check：GitHub 分支保护里的必过检查；当前未启用。
+
 ## 当前状态分层
 
 ```yaml

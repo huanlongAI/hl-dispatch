@@ -1,0 +1,27 @@
+{
+  "authorization": {
+    "authorization_refs": [
+      "stage-c-local-dry-run"
+    ],
+    "founder_gate_receipt_url": "https://github.com/huanlongAI/hl-dispatch/pull/407"
+  },
+  "candidate_action": "dry_run",
+  "context": {
+    "context_id": "huanlong_platform",
+    "context_status": "draft",
+    "context_version": "TEAM_AI_CONTEXT_STAGE_C_ENTRY_v0.1",
+    "source_truth_from_context_view": false
+  },
+  "output": {
+    "source_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "summary": "Create a local dry-run GitHub issue candidate.",
+    "target_surface": "github",
+    "type": "github_issue"
+  },
+  "responsibility_gate": {
+    "decision": "ACCEPT",
+    "registry_version": "ROLE-REGISTRY-v1"
+  },
+  "schema": "hl-ai-output-candidate:v0.1",
+  "task_id": "HL-AI-C1"
+}

@@ -135,8 +135,8 @@ items:
     idempotency_retry: missing
     reason_trace: partial
     events_facts_audit: missing
-    evidence_mode: independent_verified
-    gate_h: not_required_for_fixture_only_slice; new gate decision required for runtime, formal contract, real data, mutation, payment, database, release, or production expansion
+    evidence_mode: generated_only
+    gate_h: missing
     not_authorized:
       - runtime start
       - provider integration
@@ -174,8 +174,8 @@ items:
     idempotency_retry: missing
     reason_trace: partial
     events_facts_audit: missing
-    evidence_mode: generated_only
-    gate_h: missing
+    evidence_mode: independent_verified
+    gate_h: not_required_for_fixture_only_slice; new gate decision required for runtime, formal contract, real data, mutation, payment, database, release, or production expansion
     not_authorized:
       - runtime start
       - active contract claim

@@ -237,7 +237,7 @@ class GitHubLanguageGateTests(unittest.TestCase):
                         "<!-- ai-output:v1 -->\n"
                         "【类型】status_update\n"
                         "【结论】DS-1A sandbox pilot evidence accepted，未声明 production ready。\n"
-                        "【依据】PR #110；CI sentinel success；integration test evidence 已记录。\n"
+                        "【依据】[huanlongAI/hl-dispatch#110](https://github.com/huanlongAI/hl-dispatch/pull/110)；CI sentinel success；integration test evidence 已记录。\n"
                         "【当前状态】accepted\n"
                         "【下一步唯一动作】Package Owner 更新 Task Snapshot。\n"
                         "【需要人处理】Package Owner\n"
@@ -261,7 +261,7 @@ class GitHubLanguageGateTests(unittest.TestCase):
                         "<!-- ai-output:v1 -->\n"
                         "【类型】status_update\n"
                         "【结论】已完成。\n"
-                        "【依据】PR #110\n"
+                        "【依据】[huanlongAI/hl-dispatch#110](https://github.com/huanlongAI/hl-dispatch/pull/110)\n"
                         "【当前状态】accepted\n"
                         "【下一步唯一动作】关闭。\n"
                         "【需要人处理】Package Owner\n"
@@ -284,7 +284,7 @@ class GitHubLanguageGateTests(unittest.TestCase):
                         "<!-- ai-output:v1 -->\n"
                         "【类型】普通同步\n"
                         "【结论】继续推进整体治理。\n"
-                        "【依据】PR #110\n"
+                        "【依据】[huanlongAI/hl-dispatch#110](https://github.com/huanlongAI/hl-dispatch/pull/110)\n"
                         "【当前状态】doing\n"
                         "【下一步唯一动作】继续推进。\n"
                         "【需要人处理】无\n"
@@ -308,9 +308,9 @@ class GitHubLanguageGateTests(unittest.TestCase):
                         "<!-- ai-output:v1 -->\n"
                         "【类型】status_update\n"
                         "【结论】继续推进整体治理。\n"
-                        "【依据】PR #110\n"
+                        "【依据】[huanlongAI/hl-dispatch#110](https://github.com/huanlongAI/hl-dispatch/pull/110)\n"
                         "【当前状态】doing\n"
-                        "【下一步唯一动作】@xujiuming 在 PR #110 补 integration test。\n"
+                        "【下一步唯一动作】@xujiuming 在 [huanlongAI/hl-dispatch#110](https://github.com/huanlongAI/hl-dispatch/pull/110) 补 integration test。\n"
                         "【需要人处理】@xujiuming\n"
                         "【不确定项】无\n"
                     ),
@@ -418,6 +418,53 @@ class GitHubLanguageGateTests(unittest.TestCase):
         payload = json.loads(result.stdout)
         self.assertEqual(payload["status"], "passed")
 
+    def test_local_preflight_rejects_bare_github_number_reference_before_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            body_path = Path(tmp) / "body.md"
+            body_path.write_text(
+                "状态：实现 PR #156 已更新，等待复审。",
+                encoding="utf-8",
+            )
+
+            result = run_preflight(
+                [
+                    "--kind",
+                    "issue_comment",
+                    "--issue-number",
+                    "408",
+                    "--body-file",
+                    str(body_path),
+                ]
+            )
+
+        self.assertEqual(result.returncode, 1)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "failed")
+        self.assertIn("ambiguous_bare_github_reference", payload["errors"])
+
+    def test_local_preflight_accepts_full_github_markdown_reference_before_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            body_path = Path(tmp) / "body.md"
+            body_path.write_text(
+                "状态：实现 PR [huanlongAI/hl-platform#156](https://github.com/huanlongAI/hl-platform/pull/156) 已更新，等待复审。",
+                encoding="utf-8",
+            )
+
+            result = run_preflight(
+                [
+                    "--kind",
+                    "issue_comment",
+                    "--issue-number",
+                    "408",
+                    "--body-file",
+                    str(body_path),
+                ]
+            )
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["status"], "passed")
+
     def test_local_preflight_rejects_english_issue_title_and_body_before_write(self):
         with tempfile.TemporaryDirectory() as tmp:
             body_path = Path(tmp) / "body.md"
@@ -449,6 +496,7 @@ class GitHubLanguageGateTests(unittest.TestCase):
         self.assertIn("gh issue create", rules)
         self.assertIn("gh issue comment", rules)
         self.assertIn("gh issue edit", rules)
+        self.assertIn("[huanlongAI/<repo>#<number>](https://github.com/huanlongAI/<repo>/pull/<number>)", rules)
 
 
 if __name__ == "__main__":

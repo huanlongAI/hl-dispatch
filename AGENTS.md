@@ -13,6 +13,10 @@
 
 ## 当前入口纪律
 
+- Founder 于 2026-06-25 发布 `FOUNDER_ACTIVE_EXECUTION_OVERRIDE`：
+  `docs/delivery-recovery/HL_CODEX_ACTIVE_DRI_NO_WAIT_OVERRIDE_v1.0_2026-06-25.md` 为当前 Codex 主动闭环执行覆盖。
+  默认模式为 `EXECUTE_WITHIN_AUTHORIZED_BOUNDARY`；已授权、可逆、边界内的 AI 可执行工作应直接推进，不得把 ordinary readiness pack、普通 PR 创建、普通 owner 回包、普通 check / gate 重跑写成 `WAITING_FOUNDER_DECISION`。
+  仅当价值目标、`scope_in / scope_out / not_authorized`、正式真源、production / release / 真实数据 / 资金 / 身份 / 隐私 / 合同、不可逆风险、owner 冲突或组合优先级真实变化时，才提交 Founder 裁决简报。
 - 每条推进线只能有一个当前执行入口；HPRD、PM 评审和受限实现优先在同一入口连续推进，不默认新开 Issue / taskbook / PR。
 - GitHub 写入前必须先确认：是否推进真实状态；是否会新增入口；是否只是状态刷新、反链、reconciliation 或旧治理回填。若只是解释或刷新，不写入。
 - 禁止把 `继续` 理解为继续发评论、继续建入口、继续补总账；默认先只读核实状态，再报告唯一下一步。

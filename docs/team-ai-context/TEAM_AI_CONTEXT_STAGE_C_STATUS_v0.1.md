@@ -2,38 +2,40 @@
 
 Date: 2026-06-25
 
-Status: STAGE_C_LOCAL_TEAM_ENTRY_DRY_RUN_ACTIVE
+Status: STAGE_C_MERGED_READBACK_RECONCILED
 
 ## 中文摘要
 
-本文是唤龙团队 AI 上下文工程 Stage C 的本地状态、Tracker 和 Decisions 记录。Stage C 只在 `hl-dispatch` 中建立团队入口 dry-run、session package、adapter input package 和第一批负向回归，不启用 GitHub required check，不修改 branch protection，不写飞书、云效、Context Atlas、team-memory 或生产运行态。
+本文是唤龙团队 AI 上下文工程 Stage C 的合并后状态回读、Tracker 和 Decisions 记录。Stage C 已通过 [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) 合并到 `main`，并完成远端 feature branch 清理；它只在 `hl-dispatch` 中建立团队入口 dry-run、session package、adapter input package 和第一批负向回归，不启用 GitHub required check，不修改 branch protection，不写飞书、云效、Context Atlas、team-memory 或生产运行态。
 
-当前结论：总计划仍未完结，团队上下文工程仍未全面生效。Stage C 的本地 CLI 入口让团队可以用自然语言目标生成 session package，并把候选 AI 输出转成 `AI_ADMISSION_GATE` 输入；它只是后续试运行和 required check 裁决前的本地证据层。
+当前结论：Stage C 已合并并完成分支清理；总计划仍未完结，团队上下文工程仍未全面生效。Stage C 的本地 CLI 入口让团队可以用自然语言目标生成 session package，并把候选 AI 输出转成 `AI_ADMISSION_GATE` 输入；它只是后续试运行和 required check 裁决前的本地证据层。
 
 ## 术语说明
 
 - Stage C：团队入口本地 dry-run 阶段，目标是形成可复用的会话包、候选输出包和负向回归。
 - Tracker：本文的分阶段状态表，只是本地 repo file 记录，不创建外部 Issue。
 - Decisions：Founder 已裁决事项的本地回读，不重复提交同一裁决。
-- local_done：本地实现和测试已有证据，但不代表远端合并或全面生效。
+- merged_done：本地实现、测试、PR 合并和远端分支清理已有证据，但不代表全面生效。
 - deferred：暂缓项，只在未来条件触发时重新提交裁决。
 
 ## 当前状态
 
 ```yaml
 schema: team-ai-context-stage-c-status:v0.1
-status: STAGE_C_LOCAL_TEAM_ENTRY_DRY_RUN_ACTIVE
+status: STAGE_C_MERGED_READBACK_RECONCILED
 repo: huanlongAI/hl-dispatch
 local_repo_path: /Users/tzhEngineering/Workspace/01_Repos/huanlong/hl-dispatch
-branch: codex/team-ai-context-stage-c-local-loop-20260625
-base_origin_main: 7ea0f234a75b26b72ef19f5f3b9010761ea42487
+main_merge_commit: 1ddf87331458c31c7b3f764687ee9a77f251dc19
+merged_pr: https://github.com/huanlongAI/hl-dispatch/pull/415
+merged_at: 2026-06-25T06:44:35Z
+feature_branch_deleted: true
 team_context_enforced: false
 github_required_check_enabled: false
 branch_protection_changed: false
 external_writes_enabled: false
 context_atlas_entity_written: false
 ai_loop_control_implemented: false
-next_recommended_entry: STAGE_C_LOCAL_VERIFICATION_THEN_PUSH_PR_DECISION
+next_recommended_entry: STAGE_C_TEAM_DRY_RUN_ENTRY_DECISION
 ```
 
 ## 已裁决
@@ -46,19 +48,19 @@ next_recommended_entry: STAGE_C_LOCAL_VERIFICATION_THEN_PUSH_PR_DECISION
 | D4 | GitHub 最小硬闸先 dry-run，required check 另裁决 | 未启用 required check |
 | D5 | Context Atlas 只在现有 `huanlong_platform` 加 slice，不新建 View | 当前未写 Context Atlas |
 | D6 | `ai_loop_control` 暂缓，仅定义接口 / 证据契约 | 当前未实现状态机 |
-| D7 | 允许本地实施，不 push 前另裁决 | 当前无 push |
+| D7 | 允许本地实施，不 push 前另裁决 | Stage C push / PR / merge / branch delete 已分别裁决并完成 |
 
 ## Stage C 本地交付
 
 | 项 | 状态 | 证据 |
 |---|---|---|
-| `hl-ai start` | local_done | `scripts/hl-ai.py` |
-| `hl-ai submit` | local_done | `scripts/hl-ai.py` |
-| session package 样例 | local_done | `docs/team-ai-context/fixtures/stage-c/session-package.json` |
-| GitHub Issue candidate 样例 | local_done | `docs/team-ai-context/fixtures/stage-c/github-issue-candidate.json` |
-| fresh snapshot 样例 | local_done | `docs/team-ai-context/fixtures/stage-c/fresh-snapshot.json` |
-| Stage C 入口文档 | local_done | `docs/team-ai-context/TEAM_AI_CONTEXT_STAGE_C_ENTRY_v0.1.md` |
-| 长程闭环总账 | local_done | `docs/team-ai-context/TEAM_AI_CONTEXT_LONG_LOOP_v0.1.md` |
+| `hl-ai start` | merged_done | `scripts/hl-ai.py`; [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| `hl-ai submit` | merged_done | `scripts/hl-ai.py`; [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| session package 样例 | merged_done | `docs/team-ai-context/fixtures/stage-c/session-package.json`; [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| GitHub Issue candidate 样例 | merged_done | `docs/team-ai-context/fixtures/stage-c/github-issue-candidate.json`; [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| fresh snapshot 样例 | merged_done | `docs/team-ai-context/fixtures/stage-c/fresh-snapshot.json`; [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| Stage C 入口文档 | merged_done | `docs/team-ai-context/TEAM_AI_CONTEXT_STAGE_C_ENTRY_v0.1.md`; [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| 长程闭环总账 | merged_done | `docs/team-ai-context/TEAM_AI_CONTEXT_LONG_LOOP_v0.1.md`; [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
 
 ## Negative regression 第一批
 
@@ -74,9 +76,9 @@ next_recommended_entry: STAGE_C_LOCAL_VERIFICATION_THEN_PUSH_PR_DECISION
 
 | 阶段 | 状态 | 下一动作 | 暂停条件 |
 |---|---|---|---|
-| Stage C-1 | local_done | 完整验证后提交 push / PR 裁决简报 | push / PR |
-| Stage C-2 | local_done | 真实成员试运行前准备入口裁决包 | GitHub Issue / 团队外部通知 |
-| Stage C-3 | local_done | 根据试运行数据扩展第二批负向回归 | required check / 云效 |
+| Stage C-1 | merged_done | 真实成员试运行前准备入口裁决包 | GitHub Issue / 团队外部通知 |
+| Stage C-2 | merged_done | 真实成员试运行前准备入口裁决包 | GitHub Issue / 团队外部通知 |
+| Stage C-3 | merged_done | 根据试运行数据扩展第二批负向回归 | required check / 云效 |
 | Stage D | deferred | Context Atlas slice 裁决简报 | Context Atlas 写入 |
 | Stage E | deferred | `ai_loop_control` 仓库与状态机裁决简报 | ai_loop_control 实现 |
 | Stage F | deferred | GitHub required check / branch protection 裁决简报 | branch protection |
@@ -88,8 +90,7 @@ next_recommended_entry: STAGE_C_LOCAL_VERIFICATION_THEN_PUSH_PR_DECISION
 
 | 条件 | 需要裁决 |
 |---|---|
-| 本地验证通过，准备远端协作 | 是否允许 push / PR |
-| PR 合并后进入真实团队使用 | 是否允许创建 GitHub Issue 或团队试运行入口 |
+| 进入真实团队试运行 | 是否允许创建 GitHub Issue 或团队试运行入口 |
 | 需要 Context Atlas 实体 slice | 是否允许写 `_infra/tzh-context-atlas` 或相关仓 |
 | 需要 `ai_loop_control` 实现 | 确认实际仓库、状态机范围、成本记录和 merge-readback |
 | dry-run 证据稳定 | 是否启用 GitHub required check |

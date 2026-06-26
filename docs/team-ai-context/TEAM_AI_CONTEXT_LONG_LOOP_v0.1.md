@@ -2,11 +2,11 @@
 
 Date: 2026-06-25
 
-Status: LONG_LOOP_LOCAL_TRACKER_ACTIVE
+Status: LONG_LOOP_STAGE_C_MERGED_READBACK_RECONCILED
 
 ## 中文摘要
 
-本文把唤龙团队 AI 上下文工程剩余步骤重规划为长程闭环。当前闭环只在 `hl-dispatch` 本地 repo file 和 dry-run 脚本中生效，不代表总计划完结，不代表 `TEAM-CONTEXT-ENFORCED`，不代表 required check、云效、Context Atlas 或生产链路已经启用。
+本文把唤龙团队 AI 上下文工程剩余步骤重规划为长程闭环。Stage C 已通过 [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) 合并到 `main`，并完成远端 feature branch 清理。当前闭环只在 `hl-dispatch` repo file 和 dry-run 脚本中生效，不代表总计划完结，不代表 `TEAM-CONTEXT-ENFORCED`，不代表 required check、云效、Context Atlas 或生产链路已经启用。
 
 ## 术语说明
 
@@ -21,13 +21,16 @@ Status: LONG_LOOP_LOCAL_TRACKER_ACTIVE
 ```yaml
 schema: team-ai-context-long-loop:v0.1
 repo: huanlongAI/hl-dispatch
-status: LONG_LOOP_LOCAL_TRACKER_ACTIVE
+status: LONG_LOOP_STAGE_C_MERGED_READBACK_RECONCILED
+stage_c_merged_pr: https://github.com/huanlongAI/hl-dispatch/pull/415
+stage_c_merge_commit: 1ddf87331458c31c7b3f764687ee9a77f251dc19
+stage_c_feature_branch_deleted: true
 team_context_enforced: false
 github_required_check_enabled: false
 external_writes_enabled: false
 context_atlas_entity_written: false
 ai_loop_control_implemented: false
-next_recommended_entry: STAGE_C_TEAM_ENTRY_LOCAL_CLI_DRY_RUN
+next_recommended_entry: STAGE_C_TEAM_DRY_RUN_ENTRY_DECISION
 ```
 
 ## 长程闭环
@@ -37,9 +40,9 @@ next_recommended_entry: STAGE_C_TEAM_ENTRY_LOCAL_CLI_DRY_RUN
 | Stage B-A | done | 本地 `AI_ADMISSION_GATE` dry-run | [huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405) |
 | Stage B-B | done | 正式 publisher 可接 admission gate | [huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) |
 | Stage B-C | done | Tracker / Decisions / 验收矩阵 repo file | [huanlongAI/hl-dispatch#407](https://github.com/huanlongAI/hl-dispatch/pull/407) |
-| Stage C-1 | active | `hl-ai start` / `hl-ai submit` 本地团队入口 | `scripts/hl-ai.py`、`scripts/test-hl-ai-cli.py` |
-| Stage C-2 | active | session package 与 adapter input package 样例 | `docs/team-ai-context/fixtures/stage-c/` |
-| Stage C-3 | active | negative regression 第一批 | `scripts/test-hl-ai-cli.py` |
+| Stage C-1 | done | `hl-ai start` / `hl-ai submit` 本地团队入口 | [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| Stage C-2 | done | session package 与 adapter input package 样例 | [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
+| Stage C-3 | done | negative regression 第一批 | [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415) |
 | Stage D | deferred | Context Atlas `huanlong_platform` slice | future_condition_triggered_decision |
 | Stage E | deferred | `ai_loop_control` 状态机 | future_condition_triggered_decision |
 | Stage F | deferred | GitHub required check / 云效挂载 | future_condition_triggered_decision |
@@ -53,21 +56,20 @@ next_recommended_entry: STAGE_C_TEAM_ENTRY_LOCAL_CLI_DRY_RUN
 - GitHub 最小硬闸先 dry-run；required check 另裁决。
 - Context Atlas 只允许未来在现有 `huanlong_platform` 加 slice，不新建 View。
 - `ai_loop_control` 暂缓，仅定义接口和证据契约。
-- 本地实施允许；push / PR / merge 另裁决。
+- 本地实施允许；Stage C 的 push / PR / merge / branch delete 已分别裁决并完成。
 
 ## 等待 owner/action
 
 当前唯一 owner：NODE-E / dahuizi。
 
-当前唯一动作：完成 Stage C 本地 CLI dry-run、样例包、负向回归和状态记录。
+当前唯一动作：准备真实成员试运行入口裁决包。
 
-当前真实阻塞：无本地阻塞；远端发布、跨仓写入、外部系统挂载都不是当前动作。
+当前真实阻塞：无本地阻塞；真实成员试运行入口、跨仓写入、外部系统挂载都不是当前动作。
 
 ## 未来条件触发裁决
 
 | 条件 | 裁决事项 |
 |---|---|
-| Stage C 本地测试和文档完成 | 是否允许 push / PR |
 | 进入真实团队试运行 | 是否允许创建 GitHub Issue 或团队入口 |
 | 需要写 Context Atlas 实体 | 是否允许写 `_infra/tzh-context-atlas` 或相关仓 |
 | 需要实现 `ai_loop_control` | 确认仓库、状态机范围和写入边界 |

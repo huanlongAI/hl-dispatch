@@ -9,6 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts/hl-ai.py"
+AGENTS_DOC = ROOT / "AGENTS.md"
 TEAM_AI_CONTEXT = ROOT / "docs/team-ai-context"
 STAGE_C_ENTRY_DOC = TEAM_AI_CONTEXT / "TEAM_AI_CONTEXT_STAGE_C_ENTRY_v0.1.md"
 LONG_LOOP_DOC = TEAM_AI_CONTEXT / "TEAM_AI_CONTEXT_LONG_LOOP_v0.1.md"
@@ -74,6 +75,33 @@ def candidate(**overrides):
             "founder_gate_receipt_url": "https://github.com/huanlongAI/hl-dispatch/pull/407",
             "authorization_refs": ["stage-c-local-dry-run"],
         },
+    }
+    payload.update(overrides)
+    return payload
+
+
+def change_bundle(**overrides):
+    payload = {
+        "schema": "hl-change-bundle:v1",
+        "task_id": "HL-AI-LANDING-1",
+        "source_dispatch_id": "air-dispatch-landing-1",
+        "source_node": "NODE-C",
+        "source_role": "xiaofeifei",
+        "repository": "huanlongAI/hl-dispatch",
+        "base_sha": "a" * 40,
+        "target_paths": ["docs/team-ai-context/TEAM_AI_CONTEXT_STAGE_C_STATUS_v0.1.md"],
+        "file_manifest": [
+            {
+                "path": "docs/team-ai-context/TEAM_AI_CONTEXT_STAGE_C_STATUS_v0.1.md",
+                "operation": "modify",
+                "mode_before": "100644",
+                "mode_after": "100644",
+                "content_sha256": "b" * 64,
+            }
+        ],
+        "patch_sha256": "c" * 64,
+        "claimed_validation": [{"command": "python3 scripts/test-hl-ai-cli.py", "status": "pass"}],
+        "created_at": "2026-06-25T00:00:00Z",
     }
     payload.update(overrides)
     return payload
@@ -163,6 +191,71 @@ class HLAICLITests(unittest.TestCase):
         self.assertEqual(submit["external_writes"], [])
         self.assertFalse(submit["github_write"]["enabled"])
 
+    def test_execute_builds_landing_intake_without_direct_github_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            bundle_path = tmp_path / "bundle.json"
+            outbox_path = tmp_path / "outbox"
+            bundle_path.write_text(json.dumps(change_bundle(), ensure_ascii=False), encoding="utf-8")
+
+            result = self.run_cli("execute", "--bundle", str(bundle_path), "--outbox", str(outbox_path))
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            execute = json.loads(result.stdout)
+            self.assertEqual(execute["schema"], "hl-ai-execute-result:v1")
+            self.assertEqual(execute["intake"]["schema"], "hl-landing-intake:v1")
+            self.assertEqual(execute["intake"]["change_bundle"]["schema"], "hl-change-bundle:v1")
+            self.assertEqual(execute["status"], "accepted_local_outbox")
+            self.assertEqual(execute["next_allowed_action"], "trusted_landing_control_plane_readback")
+            self.assertEqual(execute["external_writes"], [])
+            self.assertFalse(execute["github_write"]["enabled"])
+            self.assertTrue(Path(execute["outbox_ref"]).exists())
+
+    def test_readback_reads_machine_receipt_without_closing_value_slice(self):
+        receipt = {
+            "schema": "hl-landing-receipt:v1",
+            "task_id": "HL-AI-LANDING-1",
+            "landing_state": "LANDING_DONE",
+            "value_slice_state": "VALUE_SLICE_NOT_CLOSED",
+            "activation_state": "INACTIVE",
+            "machine_facts": {"pr": "https://github.com/huanlongAI/hl-dispatch/pull/999"},
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            receipt_path = Path(tmp) / "receipt.json"
+            receipt_path.write_text(json.dumps(receipt, ensure_ascii=False), encoding="utf-8")
+
+            result = self.run_cli("readback", "--receipt", str(receipt_path))
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            readback = json.loads(result.stdout)
+            self.assertEqual(readback["schema"], "hl-ai-readback-result:v1")
+            self.assertEqual(readback["landing_state"], "LANDING_DONE")
+            self.assertEqual(readback["value_slice_state"], "VALUE_SLICE_NOT_CLOSED")
+            self.assertEqual(readback["activation_state"], "INACTIVE")
+            self.assertFalse(readback["github_write"]["enabled"])
+
+    def test_close_refuses_to_treat_landing_done_as_value_slice_closed(self):
+        receipt = {
+            "schema": "hl-landing-receipt:v1",
+            "task_id": "HL-AI-LANDING-1",
+            "landing_state": "LANDING_DONE",
+            "value_slice_state": "VALUE_SLICE_NOT_CLOSED",
+            "activation_state": "INACTIVE",
+            "machine_facts": {"merge_sha": "d" * 40},
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            receipt_path = Path(tmp) / "receipt.json"
+            receipt_path.write_text(json.dumps(receipt, ensure_ascii=False), encoding="utf-8")
+
+            result = self.run_cli("close", "--receipt", str(receipt_path), "--closure-policy", "POLICY_CLOSE")
+
+            self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+            close = json.loads(result.stdout)
+            self.assertEqual(close["schema"], "hl-ai-close-result:v1")
+            self.assertEqual(close["status"], "blocked")
+            self.assertIn("value_slice_not_closed", close["reason_codes"])
+            self.assertFalse(close["github_write"]["enabled"])
+
     def test_stage_c_docs_and_fixtures_match_cli_contract(self):
         for path in [
             STAGE_C_ENTRY_DOC,
@@ -179,6 +272,10 @@ class HLAICLITests(unittest.TestCase):
             self.assertIn("## 术语说明", doc)
         self.assertIn("scripts/hl-ai.py start", entry_doc)
         self.assertIn("scripts/hl-ai.py submit", entry_doc)
+        self.assertIn("scripts/hl-ai.py execute", entry_doc)
+        self.assertIn("scripts/hl-ai.py readback", entry_doc)
+        self.assertIn("scripts/hl-ai.py close", entry_doc)
+        self.assertIn("hl-ai execute 只生成本地 Landing intake", entry_doc)
         self.assertIn("TEAM-CONTEXT-ENFORCED", long_loop_doc)
         self.assertIn("future_condition_triggered_decision", long_loop_doc)
 
@@ -202,14 +299,27 @@ class HLAICLITests(unittest.TestCase):
         self.assertTrue(STAGE_C_STATUS_DOC.exists(), f"missing Stage C status: {STAGE_C_STATUS_DOC}")
         status_doc = STAGE_C_STATUS_DOC.read_text(encoding="utf-8")
 
-        self.assertIn("Status: STAGE_C_LOCAL_TEAM_ENTRY_DRY_RUN_ACTIVE", status_doc)
+        self.assertIn("Status: STAGE_C_MERGED_READBACK_RECONCILED", status_doc)
         self.assertIn("## 术语说明", status_doc)
+        self.assertIn("merged_pr: https://github.com/huanlongAI/hl-dispatch/pull/415", status_doc)
+        self.assertIn("feature_branch_deleted: true", status_doc)
         self.assertIn("team_context_enforced: false", status_doc)
         self.assertIn("github_required_check_enabled: false", status_doc)
         self.assertIn("external_writes_enabled: false", status_doc)
         self.assertIn("Context Atlas", status_doc)
         self.assertIn("ai_loop_control", status_doc)
         self.assertIn("future_condition_triggered_decision", status_doc)
+
+    def test_agents_entry_discipline_uses_stable_execution_outcomes_without_readonly_default(self):
+        self.assertTrue(AGENTS_DOC.exists(), f"missing AGENTS.md: {AGENTS_DOC}")
+        agents = AGENTS_DOC.read_text(encoding="utf-8")
+
+        self.assertIn("DONE / BLOCKED / NEEDS_DECISION", agents)
+        self.assertIn("Founder 当前会话裁决", agents)
+        self.assertNotIn("默认先只读核实状态", agents)
+        self.assertNotIn("hl-platform#158", agents)
+        self.assertNotIn("hl-platform#162", agents)
+        self.assertNotIn("hl-dispatch#281", agents)
 
     def run_submit(self, candidate_payload, snapshot_payload, *extra_args, now):
         with tempfile.TemporaryDirectory() as tmp:

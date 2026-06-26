@@ -14,9 +14,10 @@
 ## 当前入口纪律
 
 - 每条推进线只能有一个当前执行入口；HPRD、PM 评审和受限实现优先在同一入口连续推进，不默认新开 Issue / taskbook / PR。
-- GitHub 写入前必须先确认：是否推进真实状态；是否会新增入口；是否只是状态刷新、反链、reconciliation 或旧治理回填。若只是解释或刷新，不写入。
-- 禁止把 `继续` 理解为继续发评论、继续建入口、继续补总账；默认先只读核实状态，再报告唯一下一步。
-- 禁止主动回填 M1-M5、旧 Issue reconciliation、历史总账同步或流程噪音；除非 Founder 明确裁决要求。
+- Founder 当前会话裁决若明确授权推进，Codex 应在仓库规则、任务边界、required checks 和 review gate 内连续执行可逆实施动作；不得把普通 commit、push、PR 创建、review 修复或 check 重跑重新升级为 Founder 普通确认。
+- GitHub 写入前必须确认：是否推进真实状态、是否会新增入口、是否只是状态刷新 / 反链 / reconciliation / 旧治理回填。若只是解释或刷新，不写入；若当前裁决授权推进真实状态，则在唯一入口内执行并留证。
+- 对同一推进线只报告稳定执行终态：`DONE / BLOCKED / NEEDS_DECISION`。不得以“是否继续”“等待普通确认”“默认只读复核”作为终态。
+- 禁止主动回填 M1-M5、旧 Issue reconciliation、历史总账同步或流程噪音；除非 Founder 明确裁决要求或当前唯一实施入口需要对账收口。
 - 飞书只在 Founder 明确要求催办或通知时发送；飞书送达、已读、完成或评论不得作为 GitHub 状态真源。
 - Huanlong GitHub SSOT 下的 owner / DRI / verifier / evidence 飞书私聊催办，必须先使用 `hl-owner-confirmation-dispatch` 做 route / dry-run 投影预检，再使用 `scripts/feishu-direct-message.rb` dry-run 和 `--execute` 发送；不得直接裸调 `lark-cli im +messages-send`。
 - 必须区分 PM readiness、工程理解确认（legacy: HPRD）、PM understanding pass（legacy: PM HPRD pass）、工程实现、runtime 授权；不得把 Issue 指派、taskbook 合并、CI green、PR review、Feishu 投影解释成 runtime 或生产授权。

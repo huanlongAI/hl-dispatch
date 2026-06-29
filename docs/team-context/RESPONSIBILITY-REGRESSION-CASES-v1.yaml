@@ -83,6 +83,54 @@
       }
     },
     {
+      "id": "reject_testing_deployment_version_evidence_assigned_to_ops",
+      "description": "testing 当前部署版本证据整理不能派给运维；Gate-R 只保障流水线和环境能力。",
+      "expected_decision": "REJECT",
+      "payload": {
+        "task_id": "reject_testing_deployment_version_evidence_assigned_to_ops",
+        "task_type": "testing_deployment_version_evidence",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "accept_testing_deployment_version_evidence_assigned_to_architect",
+      "description": "testing 当前部署版本证据整理归当前 DRI / 架构 owner 回填。",
+      "expected_decision": "ACCEPT",
+      "payload": {
+        "task_id": "accept_testing_deployment_version_evidence_assigned_to_architect",
+        "task_type": "testing_deployment_version_evidence",
+        "assignee_role": "architect",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
+      "id": "accept_runtime_infra_support_assigned_to_ops",
+      "description": "流水线平台、K8S、网络、镜像仓库、权限、节点、部署或回滚执行问题属于运维环境侧支持。",
+      "expected_decision": "ACCEPT",
+      "payload": {
+        "task_id": "accept_runtime_infra_support_assigned_to_ops",
+        "task_type": "runtime_infra_support",
+        "assignee_role": "ops",
+        "registry_version": "ROLE-REGISTRY-v1",
+        "assignment_entrypoint": "github_issue",
+        "formal_assignment": true,
+        "authorization_refs": [
+          "founder-decision-2026-06-22"
+        ]
+      }
+    },
+    {
       "id": "reject_technical_selection_assigned_to_business_operations",
       "description": "技术选型不能派给运营。",
       "expected_decision": "REJECT",

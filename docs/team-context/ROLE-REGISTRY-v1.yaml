@@ -55,6 +55,24 @@
       "disallowed_roles": [],
       "default_decision": "REJECT"
     },
+    "runtime_infra_support": {
+      "summary": "运行环境侧支持触发：流水线平台、K8S、网络、镜像仓库、权限、节点、部署或回滚执行问题；不包含 testing 当前部署版本证据整理。",
+      "allowed_roles": [
+        "ops"
+      ],
+      "disallowed_roles": [],
+      "default_decision": "REJECT"
+    },
+    "testing_deployment_version_evidence": {
+      "summary": "testing 环境当前部署版本证据整理：source commit、artifact/image、pipeline run、namespace app-server 状态，以及是否包含目标 PR；属于当前 DRI / 架构 owner 证据回填，不等同于流水线平台保障。",
+      "allowed_roles": [
+        "architect"
+      ],
+      "disallowed_roles": [
+        "ops"
+      ],
+      "default_decision": "REJECT"
+    },
     "release_rollback": {
       "summary": "发布回滚执行和运维侧回滚验证。",
       "allowed_roles": [

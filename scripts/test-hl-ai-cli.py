@@ -14,6 +14,11 @@ TEAM_AI_CONTEXT = ROOT / "docs/team-ai-context"
 STAGE_C_ENTRY_DOC = TEAM_AI_CONTEXT / "TEAM_AI_CONTEXT_STAGE_C_ENTRY_v0.1.md"
 LONG_LOOP_DOC = TEAM_AI_CONTEXT / "TEAM_AI_CONTEXT_LONG_LOOP_v0.1.md"
 STAGE_C_STATUS_DOC = TEAM_AI_CONTEXT / "TEAM_AI_CONTEXT_STAGE_C_STATUS_v0.1.md"
+PLAN_DOC = TEAM_AI_CONTEXT / "PLAN-v0.3.md"
+TRACKER_DOC = TEAM_AI_CONTEXT / "TRACKER.md"
+DECISIONS_DOC = TEAM_AI_CONTEXT / "DECISIONS.md"
+ROLLOUT_DOC = TEAM_AI_CONTEXT / "ROLLOUT.md"
+RUNBOOK_DOC = TEAM_AI_CONTEXT / "RUNBOOK.md"
 STAGE_C_FIXTURES = TEAM_AI_CONTEXT / "fixtures/stage-c"
 
 
@@ -260,6 +265,11 @@ class HLAICLITests(unittest.TestCase):
         for path in [
             STAGE_C_ENTRY_DOC,
             LONG_LOOP_DOC,
+            PLAN_DOC,
+            TRACKER_DOC,
+            DECISIONS_DOC,
+            ROLLOUT_DOC,
+            RUNBOOK_DOC,
             STAGE_C_FIXTURES / "session-package.json",
             STAGE_C_FIXTURES / "github-issue-candidate.json",
             STAGE_C_FIXTURES / "fresh-snapshot.json",
@@ -268,7 +278,7 @@ class HLAICLITests(unittest.TestCase):
 
         entry_doc = STAGE_C_ENTRY_DOC.read_text(encoding="utf-8")
         long_loop_doc = LONG_LOOP_DOC.read_text(encoding="utf-8")
-        for doc in [entry_doc, long_loop_doc]:
+        for doc in [entry_doc, long_loop_doc, PLAN_DOC.read_text(encoding="utf-8")]:
             self.assertIn("## 术语说明", doc)
         self.assertIn("scripts/hl-ai.py start", entry_doc)
         self.assertIn("scripts/hl-ai.py submit", entry_doc)
@@ -278,6 +288,7 @@ class HLAICLITests(unittest.TestCase):
         self.assertIn("hl-ai execute 只生成本地 Landing intake", entry_doc)
         self.assertIn("TEAM-CONTEXT-ENFORCED", long_loop_doc)
         self.assertIn("future_condition_triggered_decision", long_loop_doc)
+        self.assertIn("plan_ssot: docs/team-ai-context/PLAN-v0.3.md", long_loop_doc)
 
         result = self.run_cli(
             "submit",
@@ -299,9 +310,11 @@ class HLAICLITests(unittest.TestCase):
         self.assertTrue(STAGE_C_STATUS_DOC.exists(), f"missing Stage C status: {STAGE_C_STATUS_DOC}")
         status_doc = STAGE_C_STATUS_DOC.read_text(encoding="utf-8")
 
-        self.assertIn("Status: STAGE_C_MERGED_READBACK_RECONCILED", status_doc)
+        self.assertIn("Status: STAGE_C_AND_PLAN_REPO_SSOT_RECONCILED", status_doc)
         self.assertIn("## 术语说明", status_doc)
         self.assertIn("merged_pr: https://github.com/huanlongAI/hl-dispatch/pull/415", status_doc)
+        self.assertIn("landing_client_pr: https://github.com/huanlongAI/hl-dispatch/pull/418", status_doc)
+        self.assertIn("plan_ssot: docs/team-ai-context/PLAN-v0.3.md", status_doc)
         self.assertIn("feature_branch_deleted: true", status_doc)
         self.assertIn("team_context_enforced: false", status_doc)
         self.assertIn("github_required_check_enabled: false", status_doc)

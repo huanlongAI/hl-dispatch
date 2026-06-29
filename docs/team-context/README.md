@@ -40,6 +40,11 @@ P0 统一校验是发布器的前置硬门槛。P1 发布器只消费门禁 `ACC
 
 商户私钥、真实支付流量、真实对账证据等未解析高风险项在 P0 统一落到 `REVIEW_REQUIRED`。这不是授权，不代表可进入真实支付、真实 provider、真实 secret 或生产 runtime。
 
+已知派发边界：
+
+- `testing_deployment_version_evidence`: testing 当前部署版本证据整理，归当前 DRI / 架构 owner 回填；不得因为证据里包含 pipeline、image、namespace、云效或环境字样自动派给 Gate-R / ops。
+- `runtime_infra_support`: 流水线平台、K8S、网络、镜像仓库、权限、节点、部署或回滚执行问题，归 Gate-R / ops 环境侧支持。
+
 ## Usage
 
 单条校验：

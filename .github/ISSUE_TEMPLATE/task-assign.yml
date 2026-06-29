@@ -12,7 +12,7 @@ body:
         P2-B 边界：本模板只采集结构化字段 `task_type` / `registry_version` / `assignee_role`，供职责门禁和人工裁决使用；不自动写入 GitHub，不写入飞书 / Project / Base，不触发真实发布器，不授权真实支付流量，不接触商户私钥。
         商户私钥、真实支付流量、对账证据、未知任务类型等高风险或未解析项必须先按 `REVIEW_REQUIRED` 处理。
 
-        派发提醒：涉及前端 App / 场景前端真实构建证据时，执行角色选 Frontend-Lead；涉及 GitHub -> Codeup / 云效代码仓同步证据时，执行角色选 Infra-A；Gate-R 只承接其有权限的运维发布、部署、回滚路径。
+        派发提醒：涉及前端 App / 场景前端真实构建证据时，执行角色选 Frontend-Lead；涉及 GitHub -> Codeup / 云效代码仓同步证据时，执行角色选 Infra-A；涉及 testing 当前部署版本证据整理时，执行角色选 Gate-H / 架构 owner；Gate-R 只承接其有权限的运维发布、部署、回滚路径和环境侧支持。
 
   - type: input
     id: task-name
@@ -30,6 +30,8 @@ body:
       options:
         - server_deployment - 服务器部署、环境搭建、部署执行和运维验收
         - runtime_env_delivery - 运行环境交付、部署路径准备和回滚路径准备
+        - runtime_infra_support - 流水线平台、K8S、网络、镜像仓库、权限、节点、部署或回滚执行问题
+        - testing_deployment_version_evidence - testing 当前部署版本证据整理
         - release_rollback - 发布回滚执行和运维侧回滚验证
         - frontend_actual_build_evidence - 前端真实构建证据
         - github_codeup_sync_evidence - GitHub 到 Codeup / 云效同步证据

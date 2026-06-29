@@ -71,6 +71,21 @@ REQUIRED_REGRESSION_CASES = [
         "REJECT",
     ),
     (
+        "reject_testing_deployment_version_evidence_assigned_to_ops",
+        assignment("testing_deployment_version_evidence", "ops"),
+        "REJECT",
+    ),
+    (
+        "accept_testing_deployment_version_evidence_assigned_to_architect",
+        assignment("testing_deployment_version_evidence", "architect"),
+        "ACCEPT",
+    ),
+    (
+        "accept_runtime_infra_support_assigned_to_ops",
+        assignment("runtime_infra_support", "ops"),
+        "ACCEPT",
+    ),
+    (
         "reject_technical_selection_assigned_to_business_operations",
         assignment("technical_selection", "business-operations"),
         "REJECT",

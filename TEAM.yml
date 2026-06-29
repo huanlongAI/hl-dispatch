@@ -8,12 +8,13 @@
 # 本文件仅保留角色代号、GitHub handle、飞书 open_id/user_id，不存放邮箱
 # 离职或退出协作的成员必须从 active roles 中移除，不保留 GitHub handle
 
-version: 2026-06-12
+version: 2026-06-29
 lark_id_verified_at: 2026-05-14
 source_refs:
   - team-memory/00-index/TEAM-ROSTER.md
   - TEAM-COLLAB-SPEC v2.1
   - Founder roster correction 2026-06-12: product-engineering team has 11 people only
+  - Founder roster correction 2026-06-29: 李维已离职；liwei333 当前人名为盛云
 
 notification_policy:
   mainline_process: AI native工程通知 via FEISHU_WEBHOOK_ENGINEERING
@@ -46,6 +47,7 @@ github_access_model:
 roles:
   founder:
     name: L0-Founder
+    display_name: 童正辉
     github: tongzhenghui
     lark:
       open_id: ou_19e0b7a896b60cfe1b82d827377d8cf3
@@ -54,6 +56,7 @@ roles:
 
   architect:
     name: Gate-H
+    display_name: 许久明
     github: xujiuming
     lark:
       open_id: ou_fd0d9589180d00c88c31af6a32f782ea
@@ -63,6 +66,7 @@ roles:
 
   ops:
     name: Gate-R
+    display_name: 曾正龙
     github: ZDragonMeta
     lark:
       open_id: ou_a06976b0fae3df1c6c3c22736453fc97
@@ -76,6 +80,7 @@ roles:
 
   product:
     name: PM-A
+    display_name: 邹骢
     github: zoucong121
     lark:
       open_id: ou_2f78c29411a569f06bedd960e3e3e9cb
@@ -85,6 +90,7 @@ roles:
 
   product-customer-payment:
     name: PM-B
+    display_name: 朱阳
     github: zhuyang1204
     lark:
       open_id: ou_6ee95fc4bc20eebee3c9b119d5bc7c66
@@ -94,6 +100,7 @@ roles:
 
   product-capability-pack:
     name: PM-C
+    display_name: 崔田恬
     github: cuitiantian0704
     lark:
       open_id: ou_fa50b6abdc78aa23ee4d55ecb8698b54
@@ -119,6 +126,7 @@ roles:
 
   backend:
     name: Infra-A
+    display_name: 魏鹏
     github: wp159951
     lark:
       open_id: ou_fd38bcf8f91c3c835ec0113bf38562e3
@@ -132,7 +140,8 @@ roles:
     responsibility: Java/PHP 后端任务执行；当前 Founder 确认活跃成员仅周飞
     labels: [task-assign]
     members:
-      - github: zhoufei1223
+      - name: 周飞
+        github: zhoufei1223
         lark:
           open_id: ou_bc43ed6288e25b8b1b07daf212bff522
           user_id: 3358e79e
@@ -153,6 +162,7 @@ roles:
 
   frontend-lead:
     name: Frontend-Lead
+    display_name: 胡杰威
     github: "663548110"
     lark:
       open_id: ou_62e4620fcd2897bc4c982104005b2ec8
@@ -166,13 +176,15 @@ roles:
     responsibility: Flutter 转型、前端任务执行；当前 Founder 确认活跃成员仅盛云
     labels: [task-assign]
     members:
-      - github: liwei333
+      - name: 盛云
+        github: liwei333
         lark:
           open_id: ou_3056723a78519db5db05677c0e13eec4
           user_id: 54eca463
 
   design-lead:
     name: Design-Lead
+    display_name: 童静
     github: tongjing2026-glitch
     lark:
       open_id: ou_af324e778885668785e3515ef130d307

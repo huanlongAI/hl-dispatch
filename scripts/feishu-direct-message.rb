@@ -39,11 +39,17 @@ BLACK_BOX_PHRASES = [
   "runtime 那个",
   "HPRD 已确认但无证据"
 ].freeze
+INACTIVE_STATUS_PATTERN = /vacant|pending|departed|inactive|read_only|离职|清理|不作为|待确认/i
+
+def display_name(entry)
+  entry["display_name"].to_s.strip
+end
 
 def public_recipient(entry)
   {
     "role" => entry["role"],
-    "name" => entry["name"],
+    "name" => display_name(entry),
+    "role_name" => entry["role_name"] || entry["name"],
     "github" => entry["github"],
     "status" => entry["status"].to_s.empty? ? "active" : entry["status"]
   }
@@ -51,7 +57,7 @@ end
 
 def active_entry?(entry)
   status = entry["status"].to_s
-  return false if status.match?(/vacant|pending|departed|inactive|离职|清理|不作为|待确认/i)
+  return false if status.match?(INACTIVE_STATUS_PATTERN)
 
   true
 end
@@ -70,6 +76,8 @@ def team_entries(team)
       entries << {
         "role" => role_id,
         "name" => role["name"],
+        "role_name" => role["name"],
+        "display_name" => role["display_name"],
         "github" => role["github"],
         "lark" => role["lark"],
         "status" => role["status"]
@@ -81,6 +89,8 @@ def team_entries(team)
         entries << {
           "role" => role_id,
           "name" => member["name"] || member["github"],
+          "role_name" => role["name"],
+          "display_name" => member["display_name"] || member["name"],
           "github" => member["github"],
           "lark" => member["lark"],
           "status" => member["status"] || role["status"]
@@ -110,11 +120,20 @@ def resolve_recipient(team, options)
   target = options[:github] || options[:role]
   raise DirectMessageError, "recipient not found in TEAM.yml: #{target}" unless entry
   raise DirectMessageError, "recipient is not an active notification target: #{target}" unless active_entry?(entry)
+  require_display_name!(entry, target)
 
   open_id = normalize_lark(entry)["open_id"].to_s
   raise DirectMessageError, "recipient missing Feishu open_id: #{target}" if open_id.empty?
 
   [entry, open_id]
+end
+
+def require_display_name!(entry, target)
+  name = display_name(entry)
+  github = entry["github"].to_s
+  return unless name.empty? || (!github.empty? && name.casecmp(github).zero?)
+
+  raise DirectMessageError, "recipient missing current human display_name in TEAM.yml: #{target}"
 end
 
 def build_command(options, open_id)

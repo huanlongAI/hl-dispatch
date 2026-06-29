@@ -1,5 +1,9 @@
 # Team AI Context Core Identities
 
+## 中文摘要
+
+本文记录团队 AI 上下文启动时必须知道的核心身份事实。当前重点是防止把“新者辉”误判为普通成员账号：新者辉是 `xinzhehui -> NODE-D` 智能体路由，需要通过 Air Task Contract 和 tier2 dispatch 触发产品体验验收；若目标节点无法执行，应记录为 `NODE-D_DISPATCH_BLOCKED`，不是产品验收失败。
+
 ## 术语说明
 
 - Core identity：团队 AI 上下文启动时必须知道的基础身份事实，不等同于普通成员通讯录。

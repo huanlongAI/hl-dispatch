@@ -34,6 +34,7 @@ jobs.each do |job_name, job|
 end
 
 failures = []
+inactive_status_pattern = /vacant|pending|departed|inactive|read_only|离职|清理|不作为|待确认/i
 
 if workflow_source.match?(/^\s*issue_comment:\s*$/)
   failures << "feishu-notify workflow must not trigger directly on issue_comment.created"
@@ -152,6 +153,31 @@ claude_path = File.expand_path("../CLAUDE.md", __dir__)
 readme_path = File.expand_path("../README.md", __dir__)
 team = load_yaml(team_path)
 notification_policy = team.fetch("notification_policy")
+roles = team.fetch("roles")
+active_roster_handles = team.fetch("active_roster").values.flatten.map(&:to_s)
+
+if active_roster_handles.include?("lw2012888")
+  failures << "TEAM.yml active_roster must not include departed member lw2012888"
+end
+
+roles.each do |role_id, role|
+  next unless role.is_a?(Hash)
+
+  role_status = role["status"].to_s
+  if !role["github"].to_s.empty? && !role_status.match?(inactive_status_pattern) && role["display_name"].to_s.strip.empty?
+    failures << "TEAM.yml role #{role_id} has active github recipient but missing display_name"
+  end
+
+  Array(role["members"]).each do |member|
+    next unless member.is_a?(Hash)
+
+    member_status = (member["status"] || role["status"]).to_s
+    next if member["github"].to_s.empty? || member_status.match?(inactive_status_pattern)
+
+    display_name = (member["display_name"] || member["name"]).to_s.strip
+    failures << "TEAM.yml role #{role_id} member #{member["github"]} missing human name/display_name" if display_name.empty?
+  end
+end
 
 unless notification_policy.fetch("mainline_process", "").include?("AI native工程通知") &&
        notification_policy.fetch("mainline_process", "").include?("FEISHU_WEBHOOK_ENGINEERING")
@@ -198,6 +224,8 @@ else
   failures << "direct-message helper must normalize long idempotency keys before Feishu uuid" unless helper.include?("normalized_idempotency_key") && helper.include?("Digest::SHA256")
   failures << "direct-message helper curl fallback must pass JSON via stdin to avoid exposing app_secret in process args" unless helper.include?("--data-binary") && helper.include?("@-") && helper.include?("stdin_data: JSON.generate(payload)")
   failures << "direct-message helper must validate task message context before sending" unless helper.include?("validate_message_quality!") && helper.include?("message_missing_github_url") && helper.include?("message_contains_black_box_phrase")
+  failures << "direct-message helper must require current human display_name before sending" unless helper.include?("require_display_name!") && helper.include?("recipient missing current human display_name")
+  failures << "direct-message helper inactive status guard must include read_only recipients" unless helper.include?("INACTIVE_STATUS_PATTERN") && helper.include?("read_only")
 
   valid_direct_message = "魏鹏，请执行测试任务。背景：验证飞书私聊必须附上下文。GitHub 是唯一事实源，飞书只是提醒。任务入口：https://github.com/huanlongAI/hl-dispatch/issues/194。请在 GitHub 回复结果。本消息不授权生产。"
 
@@ -220,6 +248,8 @@ else
       failures << "direct-message helper dry-run must not perform writes" unless payload["write_performed"] == false
       failures << "direct-message helper must report direct_message delivery" unless payload["delivery"] == "direct_message"
       failures << "direct-message helper must resolve GitHub recipient" unless payload.dig("recipient", "github") == "wp159951"
+      failures << "direct-message helper must expose current display name, not role code or handle" unless payload.dig("recipient", "name") == "魏鹏"
+      failures << "direct-message helper must preserve role_name separately" unless payload.dig("recipient", "role_name") == "Infra-A"
       failures << "direct-message helper dry-run must redact open_id" if stdout.include?("ou_")
       planned = Array(payload["planned_command_redacted"])
       failures << "direct-message helper planned command must use --user-id" unless planned.include?("--user-id")
@@ -304,6 +334,38 @@ else
          bad_stderr.include?("message_contains_black_box_phrase:收到，继续")
     failures << "direct-message helper context-free rejection must name missing context, GitHub URL, and black-box phrase"
   end
+
+  liwei333_message = "盛云，请查看前端任务。背景：验证 liwei333 当前人名解析。GitHub 是唯一事实源，飞书只是提醒。任务入口：https://github.com/huanlongAI/hl-scene-app/pull/63。请在 GitHub 回复结果。本消息不授权生产。"
+  liwei_stdout, liwei_stderr, liwei_status = Open3.capture3(
+    "ruby",
+    direct_message_path,
+    "--team",
+    team_path,
+    "--github",
+    "liwei333",
+    "--text",
+    liwei333_message
+  )
+  if !liwei_status.success?
+    failures << "direct-message helper liwei333 display-name dry-run failed: #{liwei_stderr.strip}"
+  else
+    payload = JSON.parse(liwei_stdout)
+    failures << "direct-message helper must resolve liwei333 as 盛云" unless payload.dig("recipient", "name") == "盛云"
+    failures << "direct-message helper must preserve frontend-team role_name" unless payload.dig("recipient", "role_name") == "Frontend-Team"
+  end
+
+  _departed_stdout, departed_stderr, departed_status = Open3.capture3(
+    "ruby",
+    direct_message_path,
+    "--team",
+    team_path,
+    "--github",
+    "lw2012888",
+    "--text",
+    valid_direct_message
+  )
+  failures << "direct-message helper must reject departed/stale lw2012888 recipient" if departed_status.success?
+  failures << "direct-message helper departed/stale rejection must report recipient not found" unless departed_stderr.include?("recipient not found in TEAM.yml")
 end
 
 if failures.any?

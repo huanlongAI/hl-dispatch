@@ -19,6 +19,8 @@ Stage C 的目标不是启用 `TEAM-CONTEXT-ENFORCED`，而是让团队成员先
 - `hl-ai close`：只在机器回执满足 closure policy 时形成本地 close 结果；`LANDING_DONE` 不等于 `VALUE_SLICE_CLOSED`。
 - session package：一次 AI 协作入口的本地会话包，包含目标、边界和 adapter 输入。
 - adapter input package：给 Codex、Claude、browser-ai 等执行器读取的薄输入包。
+- `required_context_artifacts`：session package 要求执行器启动时读取的最小上下文文件清单。
+- `identity_resolution_rules`：session package 内置的核心身份解析规则，用于避免把 AI 路由误判为普通人员账号。
 - candidate action：候选输出声明的动作；任何外部发布动作都必须 fail closed 并等待裁决。
 
 ## CLI contract
@@ -38,6 +40,8 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/hl-ai.py start \
 - `schema: hl-ai-session-package:v0.1`
 - `mode: dry_run`
 - `adapter_input_packages`: `codex`、`claude`、`browser-ai`
+- `required_context_artifacts`: 至少包含 `docs/team-ai-context/PLAN-v0.3.md` 和 `docs/team-ai-context/CORE-IDENTITIES.md`
+- `identity_resolution_rules`: 至少包含 `xinzhehui -> NODE-D`，默认 dispatch mode 为 `product-experience`
 - `next_allowed_action: submit_candidate_to_ai_admission_gate`
 - `github_write.enabled: false`
 - `external_writes: []`

@@ -23,6 +23,33 @@ ALLOWED_CANDIDATE_ACTIONS = {
     "prepare_candidate",
     "submit_to_ai_admission_gate",
 }
+REQUIRED_CONTEXT_ARTIFACTS = [
+    {
+        "id": "team_ai_context_plan",
+        "path": "docs/team-ai-context/PLAN-v0.3.md",
+        "required": True,
+        "purpose": "Load the current team AI context plan, status boundaries, and enforcement state.",
+    },
+    {
+        "id": "team_ai_context_core_identities",
+        "path": "docs/team-ai-context/CORE-IDENTITIES.md",
+        "required": True,
+        "purpose": "Resolve foundational AI route identities, especially xinzhehui -> NODE-D.",
+    },
+]
+IDENTITY_RESOLUTION_RULES = {
+    "xinzhehui": {
+        "identity": "新者辉",
+        "route": "xinzhehui -> NODE-D",
+        "node": "NODE-D",
+        "role": "Design",
+        "owner_kind": "agent_route_not_human_account",
+        "dispatch_contract": "Air Task Contract",
+        "dispatch_mode": "product-experience",
+        "blocked_status": "NODE-D_DISPATCH_BLOCKED",
+        "source": "docs/team-ai-context/CORE-IDENTITIES.md",
+    }
+}
 
 
 def load_json(path):
@@ -52,6 +79,8 @@ def load_ai_admission_gate():
 
 
 def build_session_package(task_id, goal, actor, repo):
+    required_context_artifacts = [dict(item) for item in REQUIRED_CONTEXT_ARTIFACTS]
+    identity_resolution_rules = json.loads(json.dumps(IDENTITY_RESOLUTION_RULES, ensure_ascii=False))
     base_input = {
         "task_id": task_id,
         "repo": repo,
@@ -59,6 +88,8 @@ def build_session_package(task_id, goal, actor, repo):
         "mode": "dry_run",
         "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes.",
         "next_allowed_action": "submit_candidate_to_ai_admission_gate",
+        "required_context_artifacts": required_context_artifacts,
+        "identity_resolution_rules": identity_resolution_rules,
     }
     return {
         "schema": SESSION_SCHEMA,
@@ -67,6 +98,8 @@ def build_session_package(task_id, goal, actor, repo):
         "repo": repo,
         "goal": goal,
         "next_allowed_action": "submit_candidate_to_ai_admission_gate",
+        "required_context_artifacts": required_context_artifacts,
+        "identity_resolution_rules": identity_resolution_rules,
         "candidate_output_contract": {
             "schema": CANDIDATE_SCHEMA,
             "allowed_candidate_actions": sorted(ALLOWED_CANDIDATE_ACTIONS),

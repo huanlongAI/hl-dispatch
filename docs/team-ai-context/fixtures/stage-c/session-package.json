@@ -5,9 +5,36 @@
       "id": "codex",
       "input": {
         "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+        "identity_resolution_rules": {
+          "xinzhehui": {
+            "blocked_status": "NODE-D_DISPATCH_BLOCKED",
+            "dispatch_contract": "Air Task Contract",
+            "dispatch_mode": "product-experience",
+            "identity": "新者辉",
+            "node": "NODE-D",
+            "owner_kind": "agent_route_not_human_account",
+            "role": "Design",
+            "route": "xinzhehui -> NODE-D",
+            "source": "docs/team-ai-context/CORE-IDENTITIES.md"
+          }
+        },
         "mode": "dry_run",
         "next_allowed_action": "submit_candidate_to_ai_admission_gate",
         "repo": "huanlongAI/hl-dispatch",
+        "required_context_artifacts": [
+          {
+            "id": "team_ai_context_plan",
+            "path": "docs/team-ai-context/PLAN-v0.3.md",
+            "purpose": "Load the current team AI context plan, status boundaries, and enforcement state.",
+            "required": true
+          },
+          {
+            "id": "team_ai_context_core_identities",
+            "path": "docs/team-ai-context/CORE-IDENTITIES.md",
+            "purpose": "Resolve foundational AI route identities, especially xinzhehui -> NODE-D.",
+            "required": true
+          }
+        ],
         "task_id": "HL-AI-C1",
         "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
       }
@@ -17,9 +44,36 @@
       "id": "claude",
       "input": {
         "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+        "identity_resolution_rules": {
+          "xinzhehui": {
+            "blocked_status": "NODE-D_DISPATCH_BLOCKED",
+            "dispatch_contract": "Air Task Contract",
+            "dispatch_mode": "product-experience",
+            "identity": "新者辉",
+            "node": "NODE-D",
+            "owner_kind": "agent_route_not_human_account",
+            "role": "Design",
+            "route": "xinzhehui -> NODE-D",
+            "source": "docs/team-ai-context/CORE-IDENTITIES.md"
+          }
+        },
         "mode": "dry_run",
         "next_allowed_action": "submit_candidate_to_ai_admission_gate",
         "repo": "huanlongAI/hl-dispatch",
+        "required_context_artifacts": [
+          {
+            "id": "team_ai_context_plan",
+            "path": "docs/team-ai-context/PLAN-v0.3.md",
+            "purpose": "Load the current team AI context plan, status boundaries, and enforcement state.",
+            "required": true
+          },
+          {
+            "id": "team_ai_context_core_identities",
+            "path": "docs/team-ai-context/CORE-IDENTITIES.md",
+            "purpose": "Resolve foundational AI route identities, especially xinzhehui -> NODE-D.",
+            "required": true
+          }
+        ],
         "task_id": "HL-AI-C1",
         "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
       }
@@ -29,9 +83,36 @@
       "id": "browser-ai",
       "input": {
         "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+        "identity_resolution_rules": {
+          "xinzhehui": {
+            "blocked_status": "NODE-D_DISPATCH_BLOCKED",
+            "dispatch_contract": "Air Task Contract",
+            "dispatch_mode": "product-experience",
+            "identity": "新者辉",
+            "node": "NODE-D",
+            "owner_kind": "agent_route_not_human_account",
+            "role": "Design",
+            "route": "xinzhehui -> NODE-D",
+            "source": "docs/team-ai-context/CORE-IDENTITIES.md"
+          }
+        },
         "mode": "dry_run",
         "next_allowed_action": "submit_candidate_to_ai_admission_gate",
         "repo": "huanlongAI/hl-dispatch",
+        "required_context_artifacts": [
+          {
+            "id": "team_ai_context_plan",
+            "path": "docs/team-ai-context/PLAN-v0.3.md",
+            "purpose": "Load the current team AI context plan, status boundaries, and enforcement state.",
+            "required": true
+          },
+          {
+            "id": "team_ai_context_core_identities",
+            "path": "docs/team-ai-context/CORE-IDENTITIES.md",
+            "purpose": "Resolve foundational AI route identities, especially xinzhehui -> NODE-D.",
+            "required": true
+          }
+        ],
         "task_id": "HL-AI-C1",
         "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
       },
@@ -60,9 +141,36 @@
     "reason": "hl-ai start only builds a local session package; external writes require a later Founder decision."
   },
   "goal": "派发 server_deployment 给 ops，并先走本地 dry-run。",
+  "identity_resolution_rules": {
+    "xinzhehui": {
+      "blocked_status": "NODE-D_DISPATCH_BLOCKED",
+      "dispatch_contract": "Air Task Contract",
+      "dispatch_mode": "product-experience",
+      "identity": "新者辉",
+      "node": "NODE-D",
+      "owner_kind": "agent_route_not_human_account",
+      "role": "Design",
+      "route": "xinzhehui -> NODE-D",
+      "source": "docs/team-ai-context/CORE-IDENTITIES.md"
+    }
+  },
   "mode": "dry_run",
   "next_allowed_action": "submit_candidate_to_ai_admission_gate",
   "repo": "huanlongAI/hl-dispatch",
+  "required_context_artifacts": [
+    {
+      "id": "team_ai_context_plan",
+      "path": "docs/team-ai-context/PLAN-v0.3.md",
+      "purpose": "Load the current team AI context plan, status boundaries, and enforcement state.",
+      "required": true
+    },
+    {
+      "id": "team_ai_context_core_identities",
+      "path": "docs/team-ai-context/CORE-IDENTITIES.md",
+      "purpose": "Resolve foundational AI route identities, especially xinzhehui -> NODE-D.",
+      "required": true
+    }
+  ],
   "schema": "hl-ai-session-package:v0.1",
   "task_id": "HL-AI-C1"
 }

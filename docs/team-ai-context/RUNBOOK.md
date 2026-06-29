@@ -19,6 +19,8 @@ Status: RUNBOOK_REPO_SSOT_ACTIVE
 
 ### 生成 session package
 
+输出包会携带 `required_context_artifacts` 和 `identity_resolution_rules`。执行器必须读取 `docs/team-ai-context/CORE-IDENTITIES.md`，并把 `xinzhehui -> NODE-D` 识别为 AI 路由，不得等待普通 GitHub / 飞书账号。
+
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/hl-ai.py start \
   --task-id HL-AI-C1 \

@@ -11,6 +11,29 @@
 - GitHub 回填正文禁止裸写 `#编号`；必须用全限定 Markdown 链接，例如 `[huanlongAI/<repo>#<number>](https://github.com/huanlongAI/<repo>/pull/<number>)`，防止 GitHub 自动关联到本仓同编号对象。
 - 修改本仓 Agent 入口或投影规则后，运行 Sentinel D-10 / AGENTS 治理漂移检查。
 
+## Boundary Engine v0.1
+
+- Engine Gate decides when possible.
+- Loss Budget decides small accepted losses.
+- Hard Gate stops.
+- Never ask TZH to continue.
+- Run to terminal state.
+- Do not present A/B/C for obvious next steps.
+
+Terminal states:
+
+- MERGED
+- AUTO_MERGE_QUEUED
+- PR_READY_WAITING_REVIEW
+- PR_READY_NO_MERGE
+- WAIT_CI
+- WAIT_REVIEW
+- WAIT_EXTERNAL
+- ESCALATED_BATCH
+- STOP_FAILED_GATE
+- STOP_RISK_BOUNDARY
+- STOP_BUDGET
+
 ## 当前入口纪律
 
 - 每条推进线只能有一个当前执行入口；HPRD、PM 评审和受限实现优先在同一入口连续推进，不默认新开 Issue / taskbook / PR。

@@ -25,7 +25,194 @@ permissions:
   pull-requests: write
   issues: write
 jobs:
+  boundary-engine:
+    name: Boundary Engine gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout hl-dispatch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Boundary Engine protected path check
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          PR_LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+
+          event_name = os.environ.get("EVENT_NAME", "")
+          base_sha = (os.environ.get("BASE_SHA") or "").strip()
+          head_sha = (os.environ.get("HEAD_SHA") or "HEAD").strip()
+
+          if event_name != "pull_request":
+              print(f"Boundary Engine protected path check: non-pull_request event {event_name}; PASS")
+              sys.exit(0)
+
+          def git_output(args: list[str]) -> str:
+              return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout
+
+          if not base_sha or set(base_sha) == {"0"}:
+              try:
+                  base_sha = git_output(["rev-parse", f"{head_sha}^"]).strip()
+              except subprocess.CalledProcessError:
+                  print("Boundary Engine protected path check: no comparable base; PASS")
+                  sys.exit(0)
+
+          changed_paths = git_output(["diff", "--name-only", base_sha, head_sha]).splitlines()
+          protected_prefixes = (
+              ".github/ISSUE_TEMPLATE/",
+              "docs/team-context/",
+          )
+          protected_exact = {
+              "SECURITY-POLICY.md",
+              "TEAM.yml",
+              "scripts/feishu-direct-message.rb",
+              "scripts/preflight-github-language-write.py",
+          }
+          touched = [
+              path
+              for path in changed_paths
+              if path in protected_exact or any(path.startswith(prefix) for prefix in protected_prefixes)
+          ]
+          labels = json.loads(os.environ.get("PR_LABELS") or "[]")
+          if touched and "boundary-engine-protected-path-ok" not in labels:
+              print("Boundary Engine protected path check: FAIL")
+              print("Protected paths require explicit review label boundary-engine-protected-path-ok:")
+              print("\n".join(touched))
+              sys.exit(1)
+          print("Boundary Engine protected path check: PASS")
+          PY
+      - name: Boundary Engine diff-size check
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          MAX_CHANGED_FILES: "25"
+          MAX_CHANGED_LINES: "800"
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          import subprocess
+          import sys
+
+          event_name = os.environ.get("EVENT_NAME", "")
+          base_sha = (os.environ.get("BASE_SHA") or "").strip()
+          head_sha = (os.environ.get("HEAD_SHA") or "HEAD").strip()
+          max_files = int(os.environ["MAX_CHANGED_FILES"])
+          max_lines = int(os.environ["MAX_CHANGED_LINES"])
+
+          if event_name != "pull_request":
+              print(f"Boundary Engine diff-size check: non-pull_request event {event_name}; PASS")
+              sys.exit(0)
+
+          def git_output(args: list[str]) -> str:
+              return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout
+
+          if not base_sha or set(base_sha) == {"0"}:
+              try:
+                  base_sha = git_output(["rev-parse", f"{head_sha}^"]).strip()
+              except subprocess.CalledProcessError:
+                  print("Boundary Engine diff-size check: no comparable base; PASS")
+                  sys.exit(0)
+
+          rows = git_output(["diff", "--numstat", base_sha, head_sha]).splitlines()
+          changed_files = len(rows)
+          changed_lines = 0
+          for row in rows:
+              additions, deletions, *_path = row.split("\t")
+              changed_lines += int(additions) if additions.isdigit() else 0
+              changed_lines += int(deletions) if deletions.isdigit() else 0
+
+          if changed_files > max_files or changed_lines > max_lines:
+              print("Boundary Engine diff-size check: FAIL")
+              print(f"changed_files={changed_files} max={max_files}")
+              print(f"changed_lines={changed_lines} max={max_lines}")
+              sys.exit(1)
+          print(f"Boundary Engine diff-size check: PASS changed_files={changed_files} changed_lines={changed_lines}")
+          PY
+      - name: Boundary Engine changed-line secret scan
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          import re
+          import subprocess
+          import sys
+
+          event_name = os.environ.get("EVENT_NAME", "")
+          base_sha = (os.environ.get("BASE_SHA") or "").strip()
+          head_sha = (os.environ.get("HEAD_SHA") or "HEAD").strip()
+
+          if event_name != "pull_request":
+              print(f"Boundary Engine changed-line secret scan: non-pull_request event {event_name}; PASS")
+              sys.exit(0)
+
+          def git_output(args: list[str]) -> str:
+              return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout
+
+          if not base_sha or set(base_sha) == {"0"}:
+              try:
+                  base_sha = git_output(["rev-parse", f"{head_sha}^"]).strip()
+              except subprocess.CalledProcessError:
+                  print("Boundary Engine changed-line secret scan: no comparable base; PASS")
+                  sys.exit(0)
+
+          diff_text = git_output(["diff", "--unified=0", "--no-ext-diff", base_sha, head_sha])
+          added_lines = [
+              line[1:]
+              for line in diff_text.splitlines()
+              if line.startswith("+") and not line.startswith("+++")
+          ]
+          patterns = {
+              "github_token": re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{20,}\b"),
+              "github_pat": re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}\b"),
+              "openai_key": re.compile(r"\bsk-[A-Za-z0-9]{20,}\b"),
+              "private_key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+              "url_credentials": re.compile(r"https?://[^/\s:@]+:[^@\s]+@"),
+              "bearer_token": re.compile(
+                  r"authorization:\s*bearer\s+(?!<|\$\{|TOKEN|REDACTED|EXAMPLE)[A-Za-z0-9._~+/=-]{16,}",
+                  re.IGNORECASE,
+              ),
+          }
+          findings: list[str] = []
+          added_text = "\n".join(added_lines)
+          for name, pattern in patterns.items():
+              if pattern.search(added_text):
+                  findings.append(name)
+          if findings:
+              print("Boundary Engine changed-line secret scan: FAIL")
+              print("\n".join(findings))
+              sys.exit(1)
+          print(f"Boundary Engine changed-line secret scan: PASS scanned_added_lines={len(added_lines)}")
+          PY
+      - name: Run repo-local verification
+        run: |
+          set -euo pipefail
+          for test_file in scripts/test-*.py scripts/test_*.py; do
+            PYTHONDONTWRITEBYTECODE=1 python3 "$test_file"
+          done
+          ruby -c scripts/check-feishu-notify-workflow.rb
+          ruby -c scripts/feishu-direct-message.rb
+          git diff --check
+
   sentinel:
+    needs: boundary-engine
     uses: huanlongAI/sentinel-shared/.github/workflows/consistency-sentinel.yml@main
     secrets:
       # LLM provider credentials are consumed only by sentinel-shared provider router.

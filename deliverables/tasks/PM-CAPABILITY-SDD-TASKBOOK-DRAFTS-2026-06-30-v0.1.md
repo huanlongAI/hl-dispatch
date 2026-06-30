@@ -5,6 +5,18 @@
 > 上游矩阵：`deliverables/tasks/PM-CAPABILITY-FRONTLOAD-MATRIX-2026-06-30-v0.1.yaml`  
 > 状态：PMO draft index for owner completion，owner 尚未回包确认。  
 
+## 中文摘要
+
+本文件是 PM 能力包 SDD 产品任务书草案索引，用于指导各 owner 回填完整产品设计、需求规格、用户流程、验收场景、契约依据和 AI 消费上下文。它只定义任务书格式、owner 草案索引和回包要求，不代表 PM 最终确认，也不授权实现、runtime、部署、生产或发布。
+
+## 术语说明
+
+- SDD 产品任务书：能力包级产品设计 / 需求规格 / PRD，供 Founder、PM、工程 owner、QA 和 AI 实现线程共同消费。
+- Owner 回包：PM owner 基于本草案提交自己的最终产品任务书或边界卡。
+- 边界卡：P2 / P3 能力包本轮只记录范围、依赖、风险、非目标和复审触发条件，不深写实现规格。
+- GATED 边界：支付、真实用户数据、客户资产变更、provider、runtime、生产和发布等必须等待 Founder / Gate 裁决的范围。
+- Adjacent 观察项：与本轮 15 个能力包有关但不计入本轮 PM 前置任务的相邻 registry 项。
+
 ## 0. 使用边界
 
 本文件是 SDD 产品任务书草案索引，不是轻量准备包，不是 PM 本人最终回包，不是 Founder / Gate 裁决，不是工程 owner 理解确认，也不是 implementation / runtime / deployment / production / release 授权。

@@ -6,6 +6,18 @@
 > SDD 任务书草案：`deliverables/tasks/PM-CAPABILITY-SDD-TASKBOOK-DRAFTS-2026-06-30-v0.1.md`  
 > 真源：GitHub Issue / PR 与 `hl-contracts`。飞书 / Bitable 只做投影。  
 
+## 中文摘要
+
+本任务书把 PM 能力包前置计划从“轻量准备包”纠正为 SDD 产品任务书 / PRD 产出线。目标是让 15 个能力包都有 owner、状态、缺口、下一步和 GATED 边界；P0 / P1 能力包深写完整产品设计、需求规格、用户流程、验收场景和 AI 消费上下文，P2 / P3 本轮只做边界卡。本文档不授权工程实现、runtime、部署、生产或发布。
+
+## 术语说明
+
+- SDD 产品任务书：面向人类和 AI 的完整产品文档，包含产品设计、需求规格、PRD、验收场景、契约上下文和禁止推断项。
+- PM owner：负责补齐能力包产品规格的人，不等于工程实现 owner。
+- GATED：需要 Founder / Gate 另行裁决的范围，通常包括支付、provider、真实用户数据、资产变更、runtime、生产和发布。
+- PMO_TBD：尚未由 Founder 分派的 owner 占位；保持待分派状态，不得派工程。
+- 首个受限工程切片：后续工程理解确认的输入，只描述最小可实现边界，不构成实现授权。
+
 ## 0. 执行结论
 
 采用 **全量盘点 + 分级深写**。

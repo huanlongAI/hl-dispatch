@@ -19,6 +19,7 @@ TRACKER_DOC = TEAM_AI_CONTEXT / "TRACKER.md"
 DECISIONS_DOC = TEAM_AI_CONTEXT / "DECISIONS.md"
 ROLLOUT_DOC = TEAM_AI_CONTEXT / "ROLLOUT.md"
 RUNBOOK_DOC = TEAM_AI_CONTEXT / "RUNBOOK.md"
+CORE_IDENTITIES_DOC = TEAM_AI_CONTEXT / "CORE-IDENTITIES.md"
 STAGE_C_FIXTURES = TEAM_AI_CONTEXT / "fixtures/stage-c"
 
 
@@ -139,6 +140,18 @@ class HLAICLITests(unittest.TestCase):
         adapter_ids = [adapter["id"] for adapter in package["adapter_input_packages"]]
         self.assertEqual(adapter_ids, ["codex", "claude", "browser-ai"])
         self.assertEqual(package["adapter_input_packages"][0]["actor"], "codex")
+        context_paths = [item["path"] for item in package["required_context_artifacts"]]
+        self.assertIn("docs/team-ai-context/PLAN-v0.3.md", context_paths)
+        self.assertIn("docs/team-ai-context/CORE-IDENTITIES.md", context_paths)
+        identity_rules = package["identity_resolution_rules"]
+        self.assertEqual(identity_rules["xinzhehui"]["route"], "xinzhehui -> NODE-D")
+        self.assertEqual(identity_rules["xinzhehui"]["dispatch_mode"], "product-experience")
+        self.assertEqual(identity_rules["xinzhehui"]["blocked_status"], "NODE-D_DISPATCH_BLOCKED")
+        for adapter in package["adapter_input_packages"]:
+            self.assertEqual(adapter["input"]["required_context_artifacts"], package["required_context_artifacts"])
+            self.assertEqual(adapter["input"]["identity_resolution_rules"], package["identity_resolution_rules"])
+        session_fixture = json.loads((STAGE_C_FIXTURES / "session-package.json").read_text(encoding="utf-8"))
+        self.assertEqual(package, session_fixture)
 
     def test_submit_builds_ai_admission_request_and_accepts_fresh_github_issue_candidate(self):
         result = self.run_submit(candidate(), fresh_snapshot(), now="2026-06-25T00:10:00Z")
@@ -270,6 +283,7 @@ class HLAICLITests(unittest.TestCase):
             DECISIONS_DOC,
             ROLLOUT_DOC,
             RUNBOOK_DOC,
+            CORE_IDENTITIES_DOC,
             STAGE_C_FIXTURES / "session-package.json",
             STAGE_C_FIXTURES / "github-issue-candidate.json",
             STAGE_C_FIXTURES / "fresh-snapshot.json",
@@ -286,9 +300,23 @@ class HLAICLITests(unittest.TestCase):
         self.assertIn("scripts/hl-ai.py readback", entry_doc)
         self.assertIn("scripts/hl-ai.py close", entry_doc)
         self.assertIn("hl-ai execute 只生成本地 Landing intake", entry_doc)
+        self.assertIn("required_context_artifacts", entry_doc)
+        self.assertIn("identity_resolution_rules", entry_doc)
         self.assertIn("TEAM-CONTEXT-ENFORCED", long_loop_doc)
         self.assertIn("future_condition_triggered_decision", long_loop_doc)
         self.assertIn("plan_ssot: docs/team-ai-context/PLAN-v0.3.md", long_loop_doc)
+        self.assertIn("docs/team-ai-context/CORE-IDENTITIES.md", PLAN_DOC.read_text(encoding="utf-8"))
+        self.assertIn("docs/team-ai-context/CORE-IDENTITIES.md", RUNBOOK_DOC.read_text(encoding="utf-8"))
+
+        core_identities_doc = CORE_IDENTITIES_DOC.read_text(encoding="utf-8")
+        self.assertIn("新者辉", core_identities_doc)
+        self.assertIn("xinzhehui", core_identities_doc)
+        self.assertIn("NODE-D", core_identities_doc)
+        self.assertIn("active_first_window", core_identities_doc)
+        self.assertIn("product-experience", core_identities_doc)
+        self.assertIn("Air Task Contract", core_identities_doc)
+        self.assertIn("不是普通成员账号", core_identities_doc)
+        self.assertIn("NODE-D_DISPATCH_BLOCKED", core_identities_doc)
 
         result = self.run_cli(
             "submit",

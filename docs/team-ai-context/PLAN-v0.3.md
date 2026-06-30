@@ -29,6 +29,7 @@ Status: PLAN_REPO_SSOT_ACTIVE
 | `docs/team-ai-context/ROLLOUT.md` | Stage D-G 推进、试运行、全面启用和回滚计划 |
 | `docs/team-ai-context/RUNBOOK.md` | 本地运行、验证、门禁、异常处理 |
 | `docs/team-ai-context/AI_ADMISSION_GATE_v0.1.md` | 准入闸接口和证据契约 |
+| `docs/team-ai-context/CORE-IDENTITIES.md` | 团队 AI 启动必须读取的核心身份和 AI 路由事实 |
 | `docs/team-ai-context/TEAM_AI_CONTEXT_LONG_LOOP_v0.1.md` | 长程闭环状态摘要 |
 
 历史阶段文件保留为证据，不再作为唯一当前真源。
@@ -59,6 +60,7 @@ next_recommended_entry: STAGE_D_CONTEXT_ATLAS_SLICE_DECISION_PACKAGE
 | 工程工作项与流水线执行 | 云效 |
 | 工程指挥状态、职责、生命周期和授权规则 | `hl-dispatch` |
 | 角色与人员映射 | `hl-dispatch` |
+| 核心 AI 身份、节点路由和非人员 owner 解析 | `docs/team-ai-context/CORE-IDENTITIES.md` + PPR / AUM registries |
 | 上下文发现、选择和装载规则 | `tzh-context-atlas` |
 | AI 任务状态、轨迹、成本、重试和协调 | `ai_loop_control` |
 | 业务契约 | `hl-contracts` |
@@ -113,7 +115,7 @@ next_recommended_entry: STAGE_D_CONTEXT_ATLAS_SLICE_DECISION_PACKAGE
 | Stage B-A | done | 本地 `AI_ADMISSION_GATE` dry-run | [huanlongAI/hl-dispatch#405](https://github.com/huanlongAI/hl-dispatch/pull/405) |
 | Stage B-B | done | 正式 publisher dry-run 接入准入闸 | [huanlongAI/hl-dispatch#406](https://github.com/huanlongAI/hl-dispatch/pull/406) |
 | Stage B-C | done | Tracker / Decisions / 验收矩阵 repo file | [huanlongAI/hl-dispatch#407](https://github.com/huanlongAI/hl-dispatch/pull/407) |
-| Stage C | done | 本地团队入口、session package、adapter input、第一批负向回归 | [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415)、[huanlongAI/hl-dispatch#418](https://github.com/huanlongAI/hl-dispatch/pull/418) |
+| Stage C | done | 本地团队入口、session package、adapter input、核心身份装载、第一批负向回归 | [huanlongAI/hl-dispatch#415](https://github.com/huanlongAI/hl-dispatch/pull/415)、[huanlongAI/hl-dispatch#418](https://github.com/huanlongAI/hl-dispatch/pull/418) |
 | Stage D | not_started | Context Atlas `huanlong_platform` 条件切片 | 只允许在未来裁决后写实体 |
 | Stage E | not_started | `ai_loop_control` 状态机和 merge-readback | 当前只定义接口和证据契约 |
 | Stage F | not_started | GitHub required check / 云效挂载 | 需要 Founder 单独裁决 |
@@ -127,7 +129,7 @@ next_recommended_entry: STAGE_D_CONTEXT_ATLAS_SLICE_DECISION_PACKAGE
 | A. 计划与真源 | done | 本文件、`TRACKER.md`、`DECISIONS.md`、`ROLLOUT.md`、`RUNBOOK.md` | 需合入 main 后成为远端真源 |
 | B. 快照 | partial | snapshot v0.2、TTL30、WIP4、source coverage、completeness、receipt、过期负向测试 | 发布前强制重新校验仍限本地 dry-run |
 | C. 复合准入闸 | partial | `AI_ADMISSION_GATE`、receipt 绑定、防重放、本地预检、publisher fail closed | 无 required check、无云效挂载、人工例外流程未完整实现 |
-| D. 团队入口 | partial | `hl-ai start`、`submit`、`execute`、`readback`、`close`、fixtures、CLI tests | 仍未接真实团队使用和正式入口 |
+| D. 团队入口 | partial | `hl-ai start`、`submit`、`execute`、`readback`、`close`、核心身份规则、fixtures、CLI tests | 仍未接真实团队使用和正式入口 |
 | E. Context Atlas | not_started | 已有 slice 目标和边界 | 未写实体、无版本回执、无 Usage Summary |
 | F. `ai_loop_control` | not_started | evidence contract | 未确认真实仓库能力、无状态机、无成本记录 |
 | G. 负向回归 | partial | 已覆盖过期快照、缺 receipt、候选误发布、unsupported surface、Landing close 边界 | 缺完整 26 项负向回归 |

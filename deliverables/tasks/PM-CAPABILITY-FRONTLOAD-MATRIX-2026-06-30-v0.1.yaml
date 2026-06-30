@@ -5,6 +5,21 @@ source_of_truth:
   product_specs: "huanlongAI/hl-contracts:prd/biz/@main"
   pmo_snapshot: "huanlongAI/hl-dispatch engineering-command-snapshot:v0.2 generated 2026-06-30T02:08:27Z"
 purpose: "PM capability SDD product-taskbook baseline for human and AI consumption; not an implementation, runtime, deployment, production, release, or active registry authorization."
+founder_decision:
+  decided_on: "2026-06-30"
+  decision: "Option B accepted after E dual review: conditionally accept the PM SDD roadmap, correct Gate/classification/owner semantics, then proceed to owner readback."
+  effects:
+    - "biz.aftersales.service is GATED."
+    - "biz.analytics.dashboard is P2/GATED_READONLY."
+    - "biz.product uses Zhu Yang as DRI and Zou Cong as reviewer."
+    - "biz.supply.warehouse stays P2 boundary-card only."
+    - "biz.hardware.pos is PMO + Gate risk-card only."
+    - "biz.infra.bpm moves to architecture/governance lane."
+    - "STORE-P0 source anchors and field-mapping back-links must be attached to StoreResource and OfferCatalog."
+  authorization_effect: "No implementation, backend, runtime, deployment, production, release, provider, real-data, Feishu, Bitable, Obsidian, or external write authorization is created by this decision."
+status_semantics:
+  lifecycle_active: "Blueprint/registry lifecycle only; it does not mean runtime route, active registry rollout, production usage, or release authorization."
+  pm_owner_assignment: "PM owner or DRI means product-spec/taskbook responsibility only; it is not an engineering owner assignment."
 wip_policy:
   engineering_current_limit: 4
   pmo_observed_current: 4
@@ -92,9 +107,14 @@ capabilities:
         - prd/biz/Cap-Spec-Biz.StoreResource.Reason-Codes.v0.1.md
       contract_gap:
         - prd/biz/CONTRACT-GAP-Biz.StoreResource.v0.1.md
-    gap: "Needs StoreResource SDD product taskbook aligned to STORE-P0 client UI, user flow, functional requirements, contract fields, and first backend slice."
+    source_anchors:
+      store_p0_parent_issue: "huanlongAI/hl-scene-app#56"
+      store_p0_client_slice: "huanlongAI/hl-scene-app:apps/store-app/README.md"
+      store_p0_evidence: "huanlongAI/hl-scene-app:docs/evidence/issue-56/README.md"
+      store_p0_design: "https://www.figma.com/design/HZxav4vhN8k9OpILNdbR3K/%E9%97%A8%E5%BA%97app?node-id=0-1&t=OVQqXH3CSNkQ9TDe-1"
+    gap: "Needs StoreResource SDD product taskbook aligned to STORE-P0 parent issue #56, store-app fixture UI, user flows, functional requirements, contract fields, and field-mapping evidence."
     priority: P0_SDD_DEEP
-    next_action: "Zhu Yang maps StoreResource SDD product taskbook to the STORE-P0 parent taskbook and identifies the first safe slice."
+    next_action: "Zhu Yang maps StoreResource SDD product taskbook to STORE-P0 source anchors and submits a UI flow / client fixture field / contract field / acceptance-evidence mapping before any backend slice."
     gated: false
     gated_reason: ""
 
@@ -183,9 +203,13 @@ capabilities:
         - prd/biz/Cap-Spec-Biz.OfferCatalog.Reason-Codes.v0.1.md
       contract_gap:
         - prd/biz/CONTRACT-GAP-Biz.OfferCatalog.v0.1.md
-    gap: "Needs OfferCatalog SDD product taskbook delta aligned to StoreResource and client service catalog flows."
+    source_anchors:
+      store_p0_parent_issue: "huanlongAI/hl-scene-app#56"
+      store_p0_client_slice: "huanlongAI/hl-scene-app:apps/store-app/README.md"
+      store_p0_design: "https://www.figma.com/design/HZxav4vhN8k9OpILNdbR3K/%E9%97%A8%E5%BA%97app?node-id=0-1&t=OVQqXH3CSNkQ9TDe-1"
+    gap: "Needs OfferCatalog SDD product taskbook delta aligned to StoreResource, STORE-P0 client service/catalog surfaces, user flows, and contract fields."
     priority: P1_SDD_DEEP
-    next_action: "Zhu Yang prepares an OfferCatalog SDD product taskbook delta after StoreResource P0 SDD taskbook is submitted."
+    next_action: "Zhu Yang prepares an OfferCatalog SDD product taskbook delta after StoreResource P0 mapping is submitted; include STORE-P0 UI/flow/source anchors and avoid runtime-ready claims."
     gated: false
     gated_reason: ""
 
@@ -213,18 +237,20 @@ capabilities:
   - capability_id: biz.product
     blueprint_relation: direct_blueprint
     lifecycle: active
-    pm_owner: PMO_TBD
-    owner_status: pending_assignment
+    pm_owner: zhuyang1204
+    owner_reviewers:
+      - zoucong121
+    owner_status: founder_decided_dri_with_review
     existing_artifacts:
       cap_spec: []
       acceptance: []
       reason_codes: []
       contract_gap: []
-    gap: "No current v0.1 Cap-Spec set found under prd/biz on main; historical onboarding says this was an early PM-A starter but current owner must be reconfirmed."
+    gap: "No current v0.1 Cap-Spec set found under prd/biz on main; dual-end audit shows legacy Product material exists but must be rewritten from old /products paths to current /hk Gateway semantics with idempotency, audit, and reason_code trace."
     priority: P1_SDD_DEEP
-    next_action: "PMO requests Founder owner confirmation, then drafts Product SDD product taskbook before any engineering slice."
-    gated: false
-    gated_reason: ""
+    next_action: "Zhu Yang drafts the Product SDD taskbook; Zou Cong reviews product/sales boundary; Gate/architecture review legacy /products -> /hk rewrite risks before any engineering slice."
+    gated: true
+    gated_reason: "Price update, product status change, commercial impact, /hk Gateway rewrite, idempotency, audit, and reason_code trace require Gate review before implementation."
 
   - capability_id: biz.supply.warehouse
     blueprint_relation: direct_blueprint
@@ -239,7 +265,7 @@ capabilities:
       contract_gap: []
     gap: "Reason-code carrier exists, but no SDD product taskbook or acceptance set found under prd/biz on main."
     priority: P2_LIGHTWEIGHT
-    next_action: "PMO prepares boundary card and owner recommendation; do not start implementation."
+    next_action: "PMO prepares a P2 boundary card only; do not assign engineering or deep-write implementation until a later Founder review trigger."
     gated: false
     gated_reason: ""
 
@@ -269,11 +295,11 @@ capabilities:
       acceptance: []
       reason_codes: []
       contract_gap: []
-    gap: "Blueprint has zero key_actions; current value is reporting/read-model only and needs data boundary clarification."
-    priority: P3_BACKLOG
-    next_action: "PMO records lightweight boundary card; defer deep SDD taskbook work until reporting data sources are settled."
+    gap: "Blueprint has zero key_actions and dual-end review has a read-only waiver; current work is reporting/read-model only and needs data source, metric definition, export/share, and cross-tenant boundary clarification."
+    priority: P2_GATED_READONLY
+    next_action: "PMO records a P2/GATED_READONLY boundary card; no export/share/cross-tenant access/metric-definition change without explicit Gate confirmation and audit."
     gated: true
-    gated_reason: "Analytics may expose real business data; requires data access gate."
+    gated_reason: "Read-only waiver only; real business data, cross-tenant access, metric changes, export/share, or any write/action trigger expires the waiver and requires Gate."
 
   - capability_id: biz.hardware.pos
     blueprint_relation: direct_blueprint
@@ -287,7 +313,7 @@ capabilities:
       contract_gap: []
     gap: "No current SDD product taskbook found; external POS hardware and payment adjacency require separate risk treatment."
     priority: P3_BACKLOG
-    next_action: "PMO records lightweight boundary card and defers until payment/provider and hardware ownership are clear."
+    next_action: "PMO plus Gate records a hardware/provider/payment risk card only; defer owner assignment and implementation until hardware/provider boundaries are explicitly authorized."
     gated: true
     gated_reason: "Hardware integration and payment adjacency are gated."
 
@@ -301,11 +327,11 @@ capabilities:
       acceptance: []
       reason_codes: []
       contract_gap: []
-    gap: "No current SDD product taskbook found; likely depends on SalesOrder, ServiceOrder, and CustomerAsset."
-    priority: P3_BACKLOG
-    next_action: "PMO records lightweight dependency card; do not deep-write until upstream order and asset specs are accepted."
-    gated: false
-    gated_reason: ""
+    gap: "No current SDD product taskbook found; blueprint includes refund apply/approve, exchange, and card transfer actions, and the package depends on SalesOrder, ServiceOrder, and CustomerAsset."
+    priority: GATED
+    next_action: "PMO records a GATED dependency card only; do not deep-write or dispatch engineering until upstream order/asset specs and Gate constraints are accepted."
+    gated: true
+    gated_reason: "Refund approval and card transfer are high/critical actions touching payment, customer asset, and aftersales compensation."
 
   - capability_id: biz.infra.bpm
     blueprint_relation: direct_blueprint
@@ -317,9 +343,9 @@ capabilities:
       acceptance: []
       reason_codes: []
       contract_gap: []
-    gap: "No SDD product taskbook found; this may be infrastructure/workflow platform capability rather than ordinary PM-led business package."
-    priority: P3_BACKLOG
-    next_action: "PMO asks Founder whether this stays in PM backlog or moves to architecture/governance lane."
+    gap: "No SDD product taskbook found; Founder B decision moves this to the architecture/governance lane rather than an ordinary PM-led business package."
+    priority: GOVERNANCE_LANE
+    next_action: "PMO/architecture governance prepares a workflow-engine boundary and authorization risk note; do not assign ordinary PM or implementation work."
     gated: true
     gated_reason: "Workflow engine may alter cross-capability authorization and execution routing."
 

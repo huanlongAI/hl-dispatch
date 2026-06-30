@@ -35,6 +35,61 @@
             "required": true
           }
         ],
+        "required_preflight_checks": {
+          "github_ssot_dependency_sweep": {
+            "blocks_external_writes": false,
+            "forbidden_collapses": [
+              "CI green != runtime acceptance",
+              "image ready != smoke ready",
+              "Feishu signal != GitHub SSOT",
+              "bare #number must not cross repo"
+            ],
+            "github_required_check_enabled": false,
+            "hard_gate_enabled": false,
+            "minimum_evidence": [
+              "principal_issue_or_pr",
+              "linked_issue_or_pr_full_repo_refs",
+              "latest_owner_action",
+              "latest_review_or_smoke_evidence",
+              "known_architecture_or_auth_prerequisites"
+            ],
+            "mode": "dry_run_warn_only",
+            "purpose": "Before owner writeback, status advance, Feishu reminder projection, or Founder brief, sweep the GitHub SSOT dependency graph and warn if prerequisite state was collapsed.",
+            "regression_cases": [
+              {
+                "failure_mode": "missed prerequisite architecture finding",
+                "must_discover": "huanlongAI/hl-platform#142",
+                "principal": "huanlongAI/hl-dispatch#281"
+              }
+            ],
+            "required": false,
+            "state_dimensions": [
+              "image_or_artifact_ready",
+              "auth_or_route_bff_ready",
+              "runtime_smoke_ready",
+              "write_action_deny_ready",
+              "audit_diagnostics_ready",
+              "owner_action_ready",
+              "founder_decision_needed"
+            ],
+            "status_downgrades": [
+              {
+                "from": "READY_FOR_SMOKE",
+                "to": "READY_FOR_SMOKE_IMAGE_ONLY",
+                "when_missing": [
+                  "runtime_smoke_ready"
+                ]
+              },
+              {
+                "from": "WAITING_OWNER_SMOKE_EVIDENCE",
+                "to": "WAITING_AUTH_ROUTE_BFF_GAP_REPORT",
+                "when_missing": [
+                  "auth_or_route_bff_ready"
+                ]
+              }
+            ]
+          }
+        },
         "task_id": "HL-AI-C1",
         "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
       }
@@ -74,6 +129,61 @@
             "required": true
           }
         ],
+        "required_preflight_checks": {
+          "github_ssot_dependency_sweep": {
+            "blocks_external_writes": false,
+            "forbidden_collapses": [
+              "CI green != runtime acceptance",
+              "image ready != smoke ready",
+              "Feishu signal != GitHub SSOT",
+              "bare #number must not cross repo"
+            ],
+            "github_required_check_enabled": false,
+            "hard_gate_enabled": false,
+            "minimum_evidence": [
+              "principal_issue_or_pr",
+              "linked_issue_or_pr_full_repo_refs",
+              "latest_owner_action",
+              "latest_review_or_smoke_evidence",
+              "known_architecture_or_auth_prerequisites"
+            ],
+            "mode": "dry_run_warn_only",
+            "purpose": "Before owner writeback, status advance, Feishu reminder projection, or Founder brief, sweep the GitHub SSOT dependency graph and warn if prerequisite state was collapsed.",
+            "regression_cases": [
+              {
+                "failure_mode": "missed prerequisite architecture finding",
+                "must_discover": "huanlongAI/hl-platform#142",
+                "principal": "huanlongAI/hl-dispatch#281"
+              }
+            ],
+            "required": false,
+            "state_dimensions": [
+              "image_or_artifact_ready",
+              "auth_or_route_bff_ready",
+              "runtime_smoke_ready",
+              "write_action_deny_ready",
+              "audit_diagnostics_ready",
+              "owner_action_ready",
+              "founder_decision_needed"
+            ],
+            "status_downgrades": [
+              {
+                "from": "READY_FOR_SMOKE",
+                "to": "READY_FOR_SMOKE_IMAGE_ONLY",
+                "when_missing": [
+                  "runtime_smoke_ready"
+                ]
+              },
+              {
+                "from": "WAITING_OWNER_SMOKE_EVIDENCE",
+                "to": "WAITING_AUTH_ROUTE_BFF_GAP_REPORT",
+                "when_missing": [
+                  "auth_or_route_bff_ready"
+                ]
+              }
+            ]
+          }
+        },
         "task_id": "HL-AI-C1",
         "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
       }
@@ -113,6 +223,61 @@
             "required": true
           }
         ],
+        "required_preflight_checks": {
+          "github_ssot_dependency_sweep": {
+            "blocks_external_writes": false,
+            "forbidden_collapses": [
+              "CI green != runtime acceptance",
+              "image ready != smoke ready",
+              "Feishu signal != GitHub SSOT",
+              "bare #number must not cross repo"
+            ],
+            "github_required_check_enabled": false,
+            "hard_gate_enabled": false,
+            "minimum_evidence": [
+              "principal_issue_or_pr",
+              "linked_issue_or_pr_full_repo_refs",
+              "latest_owner_action",
+              "latest_review_or_smoke_evidence",
+              "known_architecture_or_auth_prerequisites"
+            ],
+            "mode": "dry_run_warn_only",
+            "purpose": "Before owner writeback, status advance, Feishu reminder projection, or Founder brief, sweep the GitHub SSOT dependency graph and warn if prerequisite state was collapsed.",
+            "regression_cases": [
+              {
+                "failure_mode": "missed prerequisite architecture finding",
+                "must_discover": "huanlongAI/hl-platform#142",
+                "principal": "huanlongAI/hl-dispatch#281"
+              }
+            ],
+            "required": false,
+            "state_dimensions": [
+              "image_or_artifact_ready",
+              "auth_or_route_bff_ready",
+              "runtime_smoke_ready",
+              "write_action_deny_ready",
+              "audit_diagnostics_ready",
+              "owner_action_ready",
+              "founder_decision_needed"
+            ],
+            "status_downgrades": [
+              {
+                "from": "READY_FOR_SMOKE",
+                "to": "READY_FOR_SMOKE_IMAGE_ONLY",
+                "when_missing": [
+                  "runtime_smoke_ready"
+                ]
+              },
+              {
+                "from": "WAITING_OWNER_SMOKE_EVIDENCE",
+                "to": "WAITING_AUTH_ROUTE_BFF_GAP_REPORT",
+                "when_missing": [
+                  "auth_or_route_bff_ready"
+                ]
+              }
+            ]
+          }
+        },
         "task_id": "HL-AI-C1",
         "write_boundary": "hl-dispatch local files only; no GitHub, Feishu, Yunxiao, Context Atlas, or production writes."
       },
@@ -171,6 +336,61 @@
       "required": true
     }
   ],
+  "required_preflight_checks": {
+    "github_ssot_dependency_sweep": {
+      "blocks_external_writes": false,
+      "forbidden_collapses": [
+        "CI green != runtime acceptance",
+        "image ready != smoke ready",
+        "Feishu signal != GitHub SSOT",
+        "bare #number must not cross repo"
+      ],
+      "github_required_check_enabled": false,
+      "hard_gate_enabled": false,
+      "minimum_evidence": [
+        "principal_issue_or_pr",
+        "linked_issue_or_pr_full_repo_refs",
+        "latest_owner_action",
+        "latest_review_or_smoke_evidence",
+        "known_architecture_or_auth_prerequisites"
+      ],
+      "mode": "dry_run_warn_only",
+      "purpose": "Before owner writeback, status advance, Feishu reminder projection, or Founder brief, sweep the GitHub SSOT dependency graph and warn if prerequisite state was collapsed.",
+      "regression_cases": [
+        {
+          "failure_mode": "missed prerequisite architecture finding",
+          "must_discover": "huanlongAI/hl-platform#142",
+          "principal": "huanlongAI/hl-dispatch#281"
+        }
+      ],
+      "required": false,
+      "state_dimensions": [
+        "image_or_artifact_ready",
+        "auth_or_route_bff_ready",
+        "runtime_smoke_ready",
+        "write_action_deny_ready",
+        "audit_diagnostics_ready",
+        "owner_action_ready",
+        "founder_decision_needed"
+      ],
+      "status_downgrades": [
+        {
+          "from": "READY_FOR_SMOKE",
+          "to": "READY_FOR_SMOKE_IMAGE_ONLY",
+          "when_missing": [
+            "runtime_smoke_ready"
+          ]
+        },
+        {
+          "from": "WAITING_OWNER_SMOKE_EVIDENCE",
+          "to": "WAITING_AUTH_ROUTE_BFF_GAP_REPORT",
+          "when_missing": [
+            "auth_or_route_bff_ready"
+          ]
+        }
+      ]
+    }
+  },
   "schema": "hl-ai-session-package:v0.1",
   "task_id": "HL-AI-C1"
 }

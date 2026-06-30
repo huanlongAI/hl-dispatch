@@ -147,9 +147,33 @@ class HLAICLITests(unittest.TestCase):
         self.assertEqual(identity_rules["xinzhehui"]["route"], "xinzhehui -> NODE-D")
         self.assertEqual(identity_rules["xinzhehui"]["dispatch_mode"], "product-experience")
         self.assertEqual(identity_rules["xinzhehui"]["blocked_status"], "NODE-D_DISPATCH_BLOCKED")
+        preflight = package["required_preflight_checks"]["github_ssot_dependency_sweep"]
+        self.assertEqual(preflight["mode"], "dry_run_warn_only")
+        self.assertFalse(preflight["required"])
+        self.assertFalse(preflight["hard_gate_enabled"])
+        self.assertFalse(preflight["github_required_check_enabled"])
+        self.assertFalse(preflight["blocks_external_writes"])
+        self.assertIn("image_or_artifact_ready", preflight["state_dimensions"])
+        self.assertIn("auth_or_route_bff_ready", preflight["state_dimensions"])
+        self.assertIn("runtime_smoke_ready", preflight["state_dimensions"])
+        self.assertIn("write_action_deny_ready", preflight["state_dimensions"])
+        self.assertIn("audit_diagnostics_ready", preflight["state_dimensions"])
+        self.assertIn("CI green != runtime acceptance", preflight["forbidden_collapses"])
+        self.assertIn("image ready != smoke ready", preflight["forbidden_collapses"])
+        self.assertIn("Feishu signal != GitHub SSOT", preflight["forbidden_collapses"])
+        self.assertIn("bare #number must not cross repo", preflight["forbidden_collapses"])
+        self.assertEqual(
+            preflight["regression_cases"][0],
+            {
+                "principal": "huanlongAI/hl-dispatch#281",
+                "must_discover": "huanlongAI/hl-platform#142",
+                "failure_mode": "missed prerequisite architecture finding",
+            },
+        )
         for adapter in package["adapter_input_packages"]:
             self.assertEqual(adapter["input"]["required_context_artifacts"], package["required_context_artifacts"])
             self.assertEqual(adapter["input"]["identity_resolution_rules"], package["identity_resolution_rules"])
+            self.assertEqual(adapter["input"]["required_preflight_checks"], package["required_preflight_checks"])
         session_fixture = json.loads((STAGE_C_FIXTURES / "session-package.json").read_text(encoding="utf-8"))
         self.assertEqual(package, session_fixture)
 
@@ -302,11 +326,21 @@ class HLAICLITests(unittest.TestCase):
         self.assertIn("hl-ai execute 只生成本地 Landing intake", entry_doc)
         self.assertIn("required_context_artifacts", entry_doc)
         self.assertIn("identity_resolution_rules", entry_doc)
+        self.assertIn("required_preflight_checks", entry_doc)
+        self.assertIn("GitHub SSOT Dependency Sweep", entry_doc)
+        self.assertIn("warn-only", entry_doc)
         self.assertIn("TEAM-CONTEXT-ENFORCED", long_loop_doc)
         self.assertIn("future_condition_triggered_decision", long_loop_doc)
         self.assertIn("plan_ssot: docs/team-ai-context/PLAN-v0.3.md", long_loop_doc)
-        self.assertIn("docs/team-ai-context/CORE-IDENTITIES.md", PLAN_DOC.read_text(encoding="utf-8"))
-        self.assertIn("docs/team-ai-context/CORE-IDENTITIES.md", RUNBOOK_DOC.read_text(encoding="utf-8"))
+        plan_doc = PLAN_DOC.read_text(encoding="utf-8")
+        runbook_doc = RUNBOOK_DOC.read_text(encoding="utf-8")
+        self.assertIn("docs/team-ai-context/CORE-IDENTITIES.md", plan_doc)
+        self.assertIn("GitHub SSOT Dependency Sweep", plan_doc)
+        self.assertIn("READY_FOR_SMOKE_IMAGE_ONLY", plan_doc)
+        self.assertIn("huanlongAI/hl-platform#142", plan_doc)
+        self.assertIn("docs/team-ai-context/CORE-IDENTITIES.md", runbook_doc)
+        self.assertIn("WAITING_AUTH_ROUTE_BFF_GAP_REPORT", runbook_doc)
+        self.assertIn("huanlongAI/hl-platform#142", runbook_doc)
 
         core_identities_doc = CORE_IDENTITIES_DOC.read_text(encoding="utf-8")
         self.assertIn("新者辉", core_identities_doc)

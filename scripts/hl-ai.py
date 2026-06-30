@@ -50,6 +50,57 @@ IDENTITY_RESOLUTION_RULES = {
         "source": "docs/team-ai-context/CORE-IDENTITIES.md",
     }
 }
+REQUIRED_PREFLIGHT_CHECKS = {
+    "github_ssot_dependency_sweep": {
+        "mode": "dry_run_warn_only",
+        "required": False,
+        "hard_gate_enabled": False,
+        "github_required_check_enabled": False,
+        "blocks_external_writes": False,
+        "purpose": "Before owner writeback, status advance, Feishu reminder projection, or Founder brief, sweep the GitHub SSOT dependency graph and warn if prerequisite state was collapsed.",
+        "minimum_evidence": [
+            "principal_issue_or_pr",
+            "linked_issue_or_pr_full_repo_refs",
+            "latest_owner_action",
+            "latest_review_or_smoke_evidence",
+            "known_architecture_or_auth_prerequisites",
+        ],
+        "state_dimensions": [
+            "image_or_artifact_ready",
+            "auth_or_route_bff_ready",
+            "runtime_smoke_ready",
+            "write_action_deny_ready",
+            "audit_diagnostics_ready",
+            "owner_action_ready",
+            "founder_decision_needed",
+        ],
+        "forbidden_collapses": [
+            "CI green != runtime acceptance",
+            "image ready != smoke ready",
+            "Feishu signal != GitHub SSOT",
+            "bare #number must not cross repo",
+        ],
+        "status_downgrades": [
+            {
+                "from": "READY_FOR_SMOKE",
+                "to": "READY_FOR_SMOKE_IMAGE_ONLY",
+                "when_missing": ["runtime_smoke_ready"],
+            },
+            {
+                "from": "WAITING_OWNER_SMOKE_EVIDENCE",
+                "to": "WAITING_AUTH_ROUTE_BFF_GAP_REPORT",
+                "when_missing": ["auth_or_route_bff_ready"],
+            },
+        ],
+        "regression_cases": [
+            {
+                "principal": "huanlongAI/hl-dispatch#281",
+                "must_discover": "huanlongAI/hl-platform#142",
+                "failure_mode": "missed prerequisite architecture finding",
+            }
+        ],
+    }
+}
 
 
 def load_json(path):
@@ -81,6 +132,7 @@ def load_ai_admission_gate():
 def build_session_package(task_id, goal, actor, repo):
     required_context_artifacts = [dict(item) for item in REQUIRED_CONTEXT_ARTIFACTS]
     identity_resolution_rules = json.loads(json.dumps(IDENTITY_RESOLUTION_RULES, ensure_ascii=False))
+    required_preflight_checks = json.loads(json.dumps(REQUIRED_PREFLIGHT_CHECKS, ensure_ascii=False))
     base_input = {
         "task_id": task_id,
         "repo": repo,
@@ -90,6 +142,7 @@ def build_session_package(task_id, goal, actor, repo):
         "next_allowed_action": "submit_candidate_to_ai_admission_gate",
         "required_context_artifacts": required_context_artifacts,
         "identity_resolution_rules": identity_resolution_rules,
+        "required_preflight_checks": required_preflight_checks,
     }
     return {
         "schema": SESSION_SCHEMA,
@@ -100,6 +153,7 @@ def build_session_package(task_id, goal, actor, repo):
         "next_allowed_action": "submit_candidate_to_ai_admission_gate",
         "required_context_artifacts": required_context_artifacts,
         "identity_resolution_rules": identity_resolution_rules,
+        "required_preflight_checks": required_preflight_checks,
         "candidate_output_contract": {
             "schema": CANDIDATE_SCHEMA,
             "allowed_candidate_actions": sorted(ALLOWED_CANDIDATE_ACTIONS),

@@ -18,6 +18,7 @@ Status: PLAN_REPO_SSOT_ACTIVE
 - dry-run：只在本地生成和校验结果，不执行外部写入。
 - required check：GitHub 分支保护里的必过检查；当前未启用。
 - `TEAM-CONTEXT-ENFORCED`：所有正式发布路径强制使用统一上下文与准入规则；当前为 false。
+- GitHub SSOT Dependency Sweep：状态推进或 owner/action 回填前的 GitHub 依赖扫查；当前仅以 `hl-ai start` session package 的 dry-run / warn-only 合同存在，不是硬门禁。
 
 ## 权威文件
 
@@ -69,6 +70,43 @@ next_recommended_entry: STAGE_D_CONTEXT_ATLAS_SLICE_DECISION_PACKAGE
 | 个人查阅与可视化 | Obsidian |
 
 `hl-dispatch` 不复制 Context Atlas 的完整上下文，不复制云效工作项，不复制 team-memory approved knowledge。Context Atlas 不保存动态快照正文，不成为角色或授权真源。`ai_loop_control` 不绕过 `AI_ADMISSION_GATE`，不自行裁决组织职责。
+
+## GitHub SSOT Dependency Sweep
+
+本计划新增本地预检合同 `required_preflight_checks.github_ssot_dependency_sweep`。它解决 #281 暴露的问题：只围绕 principal Issue 轮询会漏掉跨仓前置依赖，例如 `huanlongAI/hl-dispatch#281` 必须发现并纳入判断 `huanlongAI/hl-platform#142` 的 auth / route / BFF 架构前置登记。
+
+当前生效边界：
+
+- 只由 `hl-ai start` 输出到 session package 和 adapter input package。
+- 模式为 dry-run / warn-only。
+- 不启用 GitHub required check。
+- 不修改 branch protection。
+- 不写 GitHub、飞书、云效、Context Atlas 或 team-memory。
+- 不自动降级正式 GitHub 状态；只要求执行器在回填、提醒或简报前显式暴露依赖缺口。
+
+最小扫查维度：
+
+| 维度 | 说明 |
+|---|---|
+| `image_or_artifact_ready` | image、fixture、artifact 或可运行制品是否已准备好 |
+| `auth_or_route_bff_ready` | auth、route、BFF 或多端接入前置是否已确认 |
+| `runtime_smoke_ready` | 目标环境 smoke 是否真实完成 |
+| `write_action_deny_ready` | mutation / production / payment / database 等越界动作是否有 DENY 证据 |
+| `audit_diagnostics_ready` | audit / diagnostics 证据是否足以复核 |
+| `owner_action_ready` | 当前唯一 owner 和唯一动作是否仍有效 |
+| `founder_decision_needed` | 是否出现 scope、权限或验收边界变化，需要 Founder 裁决 |
+
+禁止状态坍缩：
+
+- `CI green != runtime acceptance`
+- `image ready != smoke ready`
+- `Feishu signal != GitHub SSOT`
+- `bare #number must not cross repo`
+
+典型降级提醒：
+
+- 若只有 image / artifact 准备好，但缺 runtime smoke，报告 `READY_FOR_SMOKE_IMAGE_ONLY`，不得写成完整 `READY_FOR_SMOKE`。
+- 若发现 auth / route / BFF 前置缺口，报告 `WAITING_AUTH_ROUTE_BFF_GAP_REPORT`，不得继续催办 smoke 证据。
 
 ## 正式 AI 产出范围
 

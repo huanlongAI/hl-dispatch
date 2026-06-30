@@ -1,0 +1,351 @@
+schema: pm-capability-frontload-matrix:v0.1
+generated_on: "2026-06-30"
+source_of_truth:
+  capability_blueprint: "huanlongAI/hl-contracts:rules/biz-capabilities-blueprint.yaml@main"
+  product_specs: "huanlongAI/hl-contracts:prd/biz/@main"
+  pmo_snapshot: "huanlongAI/hl-dispatch engineering-command-snapshot:v0.2 generated 2026-06-30T02:08:27Z"
+purpose: "PM capability SDD product-taskbook baseline for human and AI consumption; not an implementation, runtime, deployment, production, release, or active registry authorization."
+wip_policy:
+  engineering_current_limit: 4
+  pmo_observed_current: 4
+  pmo_observed_queued: 11
+  frontload_lane_changes_engineering_wip: false
+required_sdd_taskbook_fields:
+  - product_goal
+  - users_and_scenarios
+  - user_flows
+  - business_boundary
+  - product_rules
+  - data_and_contract_context
+  - ai_consumption_context
+  - first_bounded_engineering_slice
+  - acceptance_scenarios
+  - contract_gaps
+  - founder_or_gate_questions
+default_gate:
+  pm_sdd_taskbook_is_authorization: false
+  engineering_understanding_pass_is_runtime_authorization: false
+  runtime_authorized: false
+  deployment_authorized: false
+  production_authorized: false
+  release_authorized: false
+capabilities:
+  - capability_id: biz.service.order
+    blueprint_relation: derived_from_contract_gap
+    lifecycle: candidate_only
+    pm_owner: zoucong121
+    owner_status: assigned_by_existing_taskbook
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.ServiceOrder.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.ServiceOrder.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.ServiceOrder.Reason-Codes.v0.1.md
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.ServiceOrder.v0.1.md
+        - prd/biz/CONTRACT-GAP-FormalObjectChain.DS-8-ServiceOrderLifecycleBoundary.v0.1.md
+        - prd/biz/CONTRACT-GAP-FormalObjectChain.DS-9-ServiceOrderLifecycleContractPlanning.v0.1.md
+        - prd/biz/CONTRACT-GAP-FormalObjectChain.DS-10A-ServiceOrderLifecycleFactsProposal.v0.1.md
+        - prd/biz/CONTRACT-GAP-FormalObjectChain.DS-11A-ServiceOrderLifecycleObservationFactsRegistryProposal.v0.1.md
+    gap: "Needs complete SDD product taskbook/PRD that covers service-order product goal, user flow, rules, acceptance scenarios, and the first bounded engineering slice."
+    priority: P0_SDD_DEEP
+    next_action: "Zou Cong submits the ServiceOrder SDD product taskbook under the existing ServiceOrder SSOT entry; no duplicate HPRD or implementation task."
+    gated: true
+    gated_reason: "Customer asset changes, lifecycle runtime, active registry, and production remain unauthorized."
+
+  - capability_id: biz.booking.fulfillment
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: zoucong121
+    owner_status: assigned_by_default_plan
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.BookingFulfillment.v0.1.md
+        - prd/biz/Cap-Spec-Biz.BookingFulfillment.Fulfillment.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.BookingFulfillment.Acceptance.v0.1.md
+        - prd/biz/Cap-Spec-Biz.BookingFulfillment.Fulfillment.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.BookingFulfillment.Reason-Codes.v0.1.md
+        - prd/biz/Cap-Spec-Biz.BookingFulfillment.Fulfillment.Reason-Codes.v0.1.md
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.BookingFulfillment.v0.1.md
+        - prd/biz/CONTRACT-GAP-Biz.BookingFulfillment.Fulfillment.v0.1.md
+    gap: "Needs PM closure on the first M4/M5-adjacent slice and dependency split against service order and customer profile."
+    priority: P0_SDD_DEEP
+    next_action: "Zou Cong prepares a BookingFulfillment SDD product taskbook delta, not a new full Cap-Spec, focused on product flow, acceptance, and one bounded engineering slice."
+    gated: true
+    gated_reason: "Runtime effectiveness, real booking traffic, rollback, and production remain unauthorized."
+
+  - capability_id: biz.store.resource
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: zhuyang1204
+    owner_status: assigned_by_default_plan
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.StoreResource.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.StoreResource.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.StoreResource.Reason-Codes.v0.1.md
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.StoreResource.v0.1.md
+    gap: "Needs StoreResource SDD product taskbook aligned to STORE-P0 client UI, user flow, functional requirements, contract fields, and first backend slice."
+    priority: P0_SDD_DEEP
+    next_action: "Zhu Yang maps StoreResource SDD product taskbook to the STORE-P0 parent taskbook and identifies the first safe slice."
+    gated: false
+    gated_reason: ""
+
+  - capability_id: biz.customer.asset
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: zhuyang1204
+    owner_status: assigned_by_existing_taskbook
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.CustomerAsset.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.CustomerAsset.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.CustomerAsset.Reason-Codes.v0.1.md
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.CustomerAsset.v0.1.md
+    gap: "Needs first bounded implementation slice that does not mutate real customer balance, asset, payment, or settlement data."
+    priority: P0_SDD_DEEP
+    next_action: "Zhu Yang submits CustomerAsset SDD product taskbook from the existing customer asset SSOT entry."
+    gated: true
+    gated_reason: "Customer asset mutations and real user data remain gated."
+
+  - capability_id: biz.sales.order
+    blueprint_relation: derived_from_biz.flow.sales
+    lifecycle: candidate_only
+    pm_owner: cuitiantian0704
+    owner_status: assigned_by_existing_taskbook
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.SalesOrder.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.SalesOrder.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.SalesOrder.Reason-Codes.v0.1.md
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.SalesOrder.v0.1.md
+    gap: "Needs SalesOrder SDD product taskbook and explicit relation to legacy biz.flow.sales actions."
+    priority: P0_SDD_DEEP
+    next_action: "Cui Tiantian submits SalesOrder SDD product taskbook and keeps template quality checks for SDD outputs."
+    gated: false
+    gated_reason: ""
+
+  - capability_id: biz.customer.profile
+    blueprint_relation: direct_blueprint
+    lifecycle: draft_candidate
+    pm_owner: cuitiantian0704
+    owner_status: assigned_by_existing_confirmation
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-FREEZE-001-Freeze-Decision.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S2-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S3-Relationship-Model-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S4-Submit-Booking-Customer-Precheck-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S5-Guest-Customer-Booking-Scope-History-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S6-Voiceprint-Consent-Sensitive-Data-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S7-Reason-Code-Outcome-Notification-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S8-Facts-Events-Audit-Notification-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S9-OpenAPI-Generation-Gate-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S11-Active-Registration-And-Freeze-Candidates.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S12-Active-Registration-Plan.v0.1.md
+        - prd/biz/Cap-Spec-Biz.CustomerProfile.CP-S13-Freeze-Readiness-Package.v0.1.md
+      acceptance: []
+      reason_codes:
+        - reasoncodes/biz-customer-profile-reasoncodes.v0.1.yaml
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.CustomerProfile.CP-FREEZE-001.v0.1.md
+        - prd/biz/CONTRACT-GAP-Biz.CustomerProfile.Batch-CP-FREEZE-001.v0.1.md
+    gap: "Needs single Founder-readable SDD 产品任务书摘要 that collapses candidate slices into one PM handoff without upgrading lifecycle."
+    priority: P1_SDD_DEEP
+    next_action: "Cui Tiantian prepares a CustomerProfile SDD product taskbook consolidation; no active route or implementation assignment."
+    gated: true
+    gated_reason: "draft_candidate lifecycle, sensitive customer profile data, and active registration remain gated."
+
+  - capability_id: biz.offer.catalog
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: zhuyang1204
+    owner_status: assigned_by_default_plan
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.OfferCatalog.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.OfferCatalog.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.OfferCatalog.Reason-Codes.v0.1.md
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.OfferCatalog.v0.1.md
+    gap: "Needs OfferCatalog SDD product taskbook delta aligned to StoreResource and client service catalog flows."
+    priority: P1_SDD_DEEP
+    next_action: "Zhu Yang prepares an OfferCatalog SDD product taskbook delta after StoreResource P0 SDD taskbook is submitted."
+    gated: false
+    gated_reason: ""
+
+  - capability_id: biz.payment.checkout
+    blueprint_relation: direct_blueprint
+    lifecycle: draft_candidate
+    pm_owner: zoucong121
+    owner_status: assigned_by_default_plan
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.PaymentCheckout.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.PaymentCheckout.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.PaymentCheckout.Reason-Codes.v0.1.md
+        - reasoncodes/biz-payment-checkout-reasoncodes.v0.1.yaml
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.PaymentCheckout.v0.1.md
+    gap: "Needs provider-free PaymentCheckout SDD product taskbook summary; no real provider, billing, refund, settlement, secret, staging, or production path."
+    priority: GATED
+    next_action: "Zou Cong may document candidate-only business questions; Founder/Gate receipt required before any provider or runtime work."
+    gated: true
+    gated_reason: "payment/provider/real-money scope is always gated."
+
+  - capability_id: biz.product
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: PMO_TBD
+    owner_status: pending_assignment
+    existing_artifacts:
+      cap_spec: []
+      acceptance: []
+      reason_codes: []
+      contract_gap: []
+    gap: "No current v0.1 Cap-Spec set found under prd/biz on main; historical onboarding says this was an early PM-A starter but current owner must be reconfirmed."
+    priority: P1_SDD_DEEP
+    next_action: "PMO requests Founder owner confirmation, then drafts Product SDD product taskbook before any engineering slice."
+    gated: false
+    gated_reason: ""
+
+  - capability_id: biz.supply.warehouse
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: PMO_TBD
+    owner_status: pending_assignment
+    existing_artifacts:
+      cap_spec: []
+      acceptance: []
+      reason_codes:
+        - reasoncodes/biz-supply-reasoncodes.v0.1.yaml
+      contract_gap: []
+    gap: "Reason-code carrier exists, but no SDD product taskbook or acceptance set found under prd/biz on main."
+    priority: P2_LIGHTWEIGHT
+    next_action: "PMO prepares boundary card and owner recommendation; do not start implementation."
+    gated: false
+    gated_reason: ""
+
+  - capability_id: biz.marketing.promotion
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: PMO_TBD
+    owner_status: pending_assignment
+    existing_artifacts:
+      cap_spec: []
+      acceptance: []
+      reason_codes: []
+      contract_gap: []
+    gap: "No SDD product taskbook or contract gap found; likely depends on customer asset and payment boundaries."
+    priority: P2_LIGHTWEIGHT
+    next_action: "PMO prepares a lightweight boundary card after CustomerAsset SDD taskbook is stable."
+    gated: true
+    gated_reason: "Benefits, coupons, membership, and asset effects may touch real customer value."
+
+  - capability_id: biz.analytics.dashboard
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: PMO_TBD
+    owner_status: pending_assignment
+    existing_artifacts:
+      cap_spec: []
+      acceptance: []
+      reason_codes: []
+      contract_gap: []
+    gap: "Blueprint has zero key_actions; current value is reporting/read-model only and needs data boundary clarification."
+    priority: P3_BACKLOG
+    next_action: "PMO records lightweight boundary card; defer deep SDD taskbook work until reporting data sources are settled."
+    gated: true
+    gated_reason: "Analytics may expose real business data; requires data access gate."
+
+  - capability_id: biz.hardware.pos
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: PMO_TBD
+    owner_status: pending_assignment
+    existing_artifacts:
+      cap_spec: []
+      acceptance: []
+      reason_codes: []
+      contract_gap: []
+    gap: "No current SDD product taskbook found; external POS hardware and payment adjacency require separate risk treatment."
+    priority: P3_BACKLOG
+    next_action: "PMO records lightweight boundary card and defers until payment/provider and hardware ownership are clear."
+    gated: true
+    gated_reason: "Hardware integration and payment adjacency are gated."
+
+  - capability_id: biz.aftersales.service
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: PMO_TBD
+    owner_status: pending_assignment
+    existing_artifacts:
+      cap_spec: []
+      acceptance: []
+      reason_codes: []
+      contract_gap: []
+    gap: "No current SDD product taskbook found; likely depends on SalesOrder, ServiceOrder, and CustomerAsset."
+    priority: P3_BACKLOG
+    next_action: "PMO records lightweight dependency card; do not deep-write until upstream order and asset specs are accepted."
+    gated: false
+    gated_reason: ""
+
+  - capability_id: biz.infra.bpm
+    blueprint_relation: direct_blueprint
+    lifecycle: active
+    pm_owner: PMO_TBD
+    owner_status: pending_assignment
+    existing_artifacts:
+      cap_spec: []
+      acceptance: []
+      reason_codes: []
+      contract_gap: []
+    gap: "No SDD product taskbook found; this may be infrastructure/workflow platform capability rather than ordinary PM-led business package."
+    priority: P3_BACKLOG
+    next_action: "PMO asks Founder whether this stays in PM backlog or moves to architecture/governance lane."
+    gated: true
+    gated_reason: "Workflow engine may alter cross-capability authorization and execution routing."
+
+adjacent_registry_items:
+  - capability_id: biz.flow.sales
+    reason_not_counted_in_15: "Legacy broad workflow is represented in PM frontload by biz.sales.order plus biz.booking.fulfillment."
+    lifecycle: active
+    pm_owner: PMO_TBD
+    next_action: "PMO tracks action mapping only; no implementation assignment."
+    gated: true
+    gated_reason: "Overlapping action registry needs Founder/Gate reconciliation before implementation."
+  - capability_id: biz.tenant.entitlement
+    reason_not_counted_in_15: "Current PM frontload plan keeps entitlement as adjacent GATED quota/check-only governance item, not a PM product package."
+    lifecycle: draft_candidate
+    pm_owner: PMO_TBD
+    existing_artifacts:
+      cap_spec:
+        - prd/biz/Cap-Spec-Biz.TenantEntitlement.v0.1.md
+      acceptance:
+        - prd/biz/Cap-Spec-Biz.TenantEntitlement.Acceptance.v0.1.md
+      reason_codes:
+        - prd/biz/Cap-Spec-Biz.TenantEntitlement.Reason-Codes.v0.1.md
+        - reasoncodes/biz-tenant-entitlement-reasoncodes.v0.1.yaml
+      contract_gap:
+        - prd/biz/CONTRACT-GAP-Biz.TenantEntitlement.v0.1.md
+        - prd/biz/CONTRACT-GAP-Biz.TenantEntitlement.RRS-TE-0-QuotaCheckOnly.v0.1.md
+    next_action: "Founder decides whether entitlement remains check-only or becomes an explicit PM-led capability later."
+    gated: true
+    gated_reason: "Entitlement, billing, and quota mutation need explicit Gate receipt."

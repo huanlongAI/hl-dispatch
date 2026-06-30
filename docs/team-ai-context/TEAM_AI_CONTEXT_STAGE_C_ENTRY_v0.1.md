@@ -21,6 +21,8 @@ Stage C 的目标不是启用 `TEAM-CONTEXT-ENFORCED`，而是让团队成员先
 - adapter input package：给 Codex、Claude、browser-ai 等执行器读取的薄输入包。
 - `required_context_artifacts`：session package 要求执行器启动时读取的最小上下文文件清单。
 - `identity_resolution_rules`：session package 内置的核心身份解析规则，用于避免把 AI 路由误判为普通人员账号。
+- `required_preflight_checks`：session package 内置的本地预检清单；当前只包含 GitHub SSOT Dependency Sweep，模式为 dry-run / warn-only，不是 required check。
+- GitHub SSOT Dependency Sweep：在状态推进、owner 回填、飞书提醒或 Founder 简报前，先扫 GitHub principal Issue/PR 和跨仓依赖，避免把局部状态误判为完整可执行状态。
 - candidate action：候选输出声明的动作；任何外部发布动作都必须 fail closed 并等待裁决。
 
 ## CLI contract
@@ -42,6 +44,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/hl-ai.py start \
 - `adapter_input_packages`: `codex`、`claude`、`browser-ai`
 - `required_context_artifacts`: 至少包含 `docs/team-ai-context/PLAN-v0.3.md` 和 `docs/team-ai-context/CORE-IDENTITIES.md`
 - `identity_resolution_rules`: 至少包含 `xinzhehui -> NODE-D`，默认 dispatch mode 为 `product-experience`
+- `required_preflight_checks.github_ssot_dependency_sweep`: dry-run / warn-only；覆盖跨仓 full repo refs、owner action、review / smoke evidence、auth / route / BFF 前置依赖和状态坍缩提醒
 - `next_allowed_action: submit_candidate_to_ai_admission_gate`
 - `github_write.enabled: false`
 - `external_writes: []`
@@ -121,6 +124,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/hl-ai.py close \
 | downstream preflight 要求已有 receipt 但候选缺失 | `failed_closed` | `admission_receipt_missing` |
 | 非 GitHub / 云效 surface | `admission_review_required` | `unsupported_formal_surface` |
 | `LANDING_DONE` 但 `VALUE_SLICE_NOT_CLOSED` | `blocked` | `value_slice_not_closed` |
+| principal 只读到 `huanlongAI/hl-dispatch#281` 而漏扫 `huanlongAI/hl-platform#142` | warn-only dependency gap | `github_ssot_dependency_sweep` |
 
 ## 样例包
 
@@ -139,6 +143,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/hl-ai.py close \
 - `close` 不得把 `LANDING_DONE` 解释为业务切片关闭。
 - 不写 Context Atlas 实体，不写 team-memory approved knowledge。
 - 不实现 `ai_loop_control` 状态机，只保留 evidence contract 对接位。
+- GitHub SSOT Dependency Sweep 当前只随 session package 输出 warn-only 元数据；不降级正式状态、不拦截提交、不替代人工 review。
 - 不启用 required check，不修改 branch protection。
 
 ## 验证

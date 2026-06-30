@@ -6,6 +6,20 @@
 > Scope: capability package rules, planned list, planning logic, current progress
 > Boundary: 本文是评审、复盘、研究材料；不替代 `hl-contracts`、GitHub Issue / PR、Founder / Gate 裁决，也不授权 runtime、HPRD、工程开工、生产发布或真实业务数据接入。
 
+## 中文摘要
+
+本文整理唤龙平台能力包的规则、规划逻辑和当前推进状态，用于交付恢复与治理复盘。核心结论是：能力包不是传统模块清单，而是围绕业务价值流、契约真源、PM 规格、双端交互、Gateway / HK Kernel 接入和 runtime readiness 的分层机制。本文仅作为 review material draft 保存，不改变 `hl-contracts`、GitHub Issue / PR、Founder / Gate 裁决或 runtime 授权边界。
+
+## 术语说明
+
+| 术语 | 说明 |
+|---|---|
+| 能力包 / Capability Package | 围绕业务价值流闭环定义的可审查业务能力边界，不等于代码模块名或一次性 PRD。 |
+| Cap-Spec | PM 产出的能力规格工件，通常包含能力规格、验收场景、reason_code 提案和 Contract Gap。 |
+| Human End | 人类确认、审查、兜底、审计和确定性操作界面，高风险动作必须保留人类确认面。 |
+| Agent End | Agent 可调用的工具、schema、权限、上下文预算、重试、去重和证据路径，不得绕过 Gateway / HK Kernel。 |
+| Runtime capability | `hl-platform` 中可被 Gateway / runtime registry 识别和调度的运行态能力；staging evidence 不等于生产授权。 |
+
 ## 0. 结论摘要
 
 唤龙平台“能力包”当前不是传统模块清单，而是一套从业务价值流、契约治理、PM 规格、双端交互、Gateway / HK Kernel 接入到 runtime readiness 的分层机制。

@@ -56,7 +56,11 @@ Authority: APPROVE_BOUNDARY_ENGINE_OUTER_LOOP_V0_1_MANUAL_TRIGGER
 
 ## Next Recommended Transition
 
-Two stable 8-repo observations have completed since the last onboarding. On the
-next manual trigger, run read-only repo discovery for exactly one safe low-risk
-Huanlong onboarding candidate. If no safe candidate exists, return
-WAIT_EXTERNAL.
+WAIT_CONTEXT_RESOLVE_PHASE5S_REFRESH.
+
+- Boundary Engine onboarding is paused after PR #430 until Context Resolve Phase 5S evidence is refreshed or confirmed still current.
+- No repo onboarding is allowed while this coordination hold is active.
+
+- If PR #430 merges into hl-dispatch/main and hl-dispatch main SHA changes from `1d5ce428f63a45a163307b9e32e8ddc886f568b3`, the Context Resolve PR #166 thread must rerun fresh-mainline PASS evidence from clean origin/main.
+- If hl-dispatch SHA does not change, PR #166 may retain current evidence as current fresh-mainline evidence.
+- After PR #166 reaches PASS, refreshed, or explicitly marked historical-with-no-blocker, Boundary Engine may resume normal transition logic.

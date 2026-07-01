@@ -21,3 +21,4 @@ or automation trigger.
 | 2026-07-01 | Repo Onboarding Batch 06 | MERGED | huanlongAI/guanghe onboarded into the maintenance lane by PR; post-merge hygiene completed. |
 | 2026-07-01 | Expanded 8-Repo Observation Run 01 | WAIT_EXTERNAL | 8 active repos observed; no eligible maintenance event processed. |
 | 2026-07-01 | Expanded 8-Repo Observation Run 02 | WAIT_EXTERNAL | 8 active repos observed; hard-boundary items excluded; no violations. |
+| 2026-07-01 | Outer Loop Drift Correction / PR #430 | PR_READY_WAITING_REVIEW | Boundary Engine docs moved to docs/boundary-engine; onboarding paused pending Context Resolve Phase 5S freshness decision for PR #166. |

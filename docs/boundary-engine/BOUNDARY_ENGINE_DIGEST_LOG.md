@@ -22,3 +22,4 @@ or automation trigger.
 | 2026-07-01 | Expanded 8-Repo Observation Run 01 | WAIT_EXTERNAL | 8 active repos observed; no eligible maintenance event processed. |
 | 2026-07-01 | Expanded 8-Repo Observation Run 02 | WAIT_EXTERNAL | 8 active repos observed; hard-boundary items excluded; no violations. |
 | 2026-07-01 | Outer Loop Drift Correction / PR #430 | PR_READY_WAITING_REVIEW | Boundary Engine docs moved to docs/boundary-engine; onboarding paused pending Context Resolve Phase 5S freshness decision for PR #166. |
+| 2026-07-01 | Context Resolve Phase 5S refresh after PR #430 | MERGED / PASS | PR #166 refreshed fresh-mainline evidence after hl-dispatch main changed to b820693f...; Boundary Engine outer loop can resume manual-triggered operation. |

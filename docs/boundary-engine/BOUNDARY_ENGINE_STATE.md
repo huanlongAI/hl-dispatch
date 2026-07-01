@@ -56,11 +56,10 @@ Authority: APPROVE_BOUNDARY_ENGINE_OUTER_LOOP_V0_1_MANUAL_TRIGGER
 
 ## Next Recommended Transition
 
-WAIT_CONTEXT_RESOLVE_PHASE5S_REFRESH.
+READY_FOR_MANUAL_OUTER_LOOP_RUN.
 
-- Boundary Engine onboarding is paused after PR #430 until Context Resolve Phase 5S evidence is refreshed or confirmed still current.
-- No repo onboarding is allowed while this coordination hold is active.
-
-- If PR #430 merges into hl-dispatch/main and hl-dispatch main SHA changes from `1d5ce428f63a45a163307b9e32e8ddc886f568b3`, the Context Resolve PR #166 thread must rerun fresh-mainline PASS evidence from clean origin/main.
-- If hl-dispatch SHA does not change, PR #166 may retain current evidence as current fresh-mainline evidence.
-- After PR #166 reaches PASS, refreshed, or explicitly marked historical-with-no-blocker, Boundary Engine may resume normal transition logic.
+- Context Resolve Phase 5S was refreshed after PR #430.
+- PR #166 is settled / merged.
+- Boundary Engine may resume manual-triggered outer loop.
+- Next manual trigger should read contract/state/log and choose the next valid transition.
+- No unattended automation, scheduler, hooks, MCP, skills, subagents, runtime injection, or global automation is authorized.

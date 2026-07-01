@@ -3,6 +3,18 @@
 Status: manual-trigger only
 Authority: APPROVE_BOUNDARY_ENGINE_OUTER_LOOP_V0_1_MANUAL_TRIGGER
 
+## 中文摘要
+
+本文定义 Boundary Engine 手动外环的最小操作契约。它只用于把唤龙低风险维护通道的重复粘贴指令收敛为仓库内可读规则，不启动自动调度、不创建运行时注入、不改变生产或权限边界。
+
+## 术语说明
+
+- Boundary Engine: 本文件中的维护边界执行规则集合。
+- manual-trigger: 人工手动触发；没有计划任务、后台轮询或无人值守执行。
+- low-risk maintenance lane: 低风险维护通道，仅处理已列明的 repo-local 维护事件。
+- hard boundary: 硬停止边界；发现后必须排除、停止或升级，不得部分执行。
+- digest: 每次手动运行的终态摘要。
+
 ## Purpose
 
 This contract converts repeated pasted Boundary Engine maintenance prompts into a

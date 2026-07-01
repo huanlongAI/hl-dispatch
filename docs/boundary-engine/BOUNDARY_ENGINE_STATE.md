@@ -3,6 +3,18 @@
 Status: manual-trigger state layer
 Authority: APPROVE_BOUNDARY_ENGINE_OUTER_LOOP_V0_1_MANUAL_TRIGGER
 
+## 中文摘要
+
+本文记录 Boundary Engine 手动外环的当前状态。它只保存活跃仓库、最近运行、计数器、风险指标和下一次建议转移，不承担调度、自动执行或运行时注入职责。
+
+## 术语说明
+
+- active repos: 当前纳入低风险维护通道观察的仓库列表。
+- pending repo list: 已知但尚未纳入的候选仓库列表。
+- excluded high-risk repo list: 因风险边界暂不纳入的仓库列表。
+- observation_run_count_since_last_onboarding: 上次 onboarding 之后完成的稳定观察次数。
+- onboarding_batch_count: 已完成的手动 onboarding 批次数。
+
 ## Active Repos
 
 - huanlongAI/hl-dispatch

@@ -1,5 +1,15 @@
 # Boundary Engine Digest Log
 
+## 中文摘要
+
+本文只记录已接受 digest 的简短时间线，用于给下一次手动触发提供状态背景。它不是协议、调度器、自动化入口或运行时控制面。
+
+## 术语说明
+
+- accepted digest: 已被本维护 lane 接受的终态摘要。
+- terminal state: 单次运行结束时返回的状态。
+- notes: 简短事实备注，不写推测性设计。
+
 Concise accepted-digest timeline only. This file is not a protocol, scheduler,
 or automation trigger.
 

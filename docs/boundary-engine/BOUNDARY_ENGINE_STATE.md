@@ -36,11 +36,11 @@ Authority: APPROVE_BOUNDARY_ENGINE_OUTER_LOOP_V0_1_MANUAL_TRIGGER
 
 ## Last Completed Run
 
-- Boundary Engine Huanlong Maintenance Lane Active v0.1, Expanded 8-Repo Observation Run 02
+- Boundary Engine Outer Loop Smoke Run 01
 
 ## Last Terminal State
 
-- WAIT_EXTERNAL across all active repos
+- WAIT_EXTERNAL after one safe maintenance event
 
 ## Counters
 
@@ -56,10 +56,9 @@ Authority: APPROVE_BOUNDARY_ENGINE_OUTER_LOOP_V0_1_MANUAL_TRIGGER
 
 ## Next Recommended Transition
 
-READY_FOR_MANUAL_OUTER_LOOP_RUN.
+RUN_MANUAL_OUTER_LOOP_SMOKE_02.
 
-- Context Resolve Phase 5S was refreshed after PR #430.
-- PR #166 is settled / merged.
-- Boundary Engine may resume manual-triggered outer loop.
-- Next manual trigger should read contract/state/log and choose the next valid transition.
+- Smoke Run 01 accepted the post-resume manual outer loop path.
+- No onboarding is authorized until Smoke Run 02 passes.
+- Next manual trigger should read contract/state/log from fresh hl-dispatch main and run Smoke Run 02.
 - No unattended automation, scheduler, hooks, MCP, skills, subagents, runtime injection, or global automation is authorized.
